@@ -1,0 +1,343 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] 10.2 A Simple Bean</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:57:43 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>Java Beans</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-10-SECT-2">10.2 A Simple Bean</A></h2>
+
+<P CLASS=para>
+As noted above, the AWT components in Java 1.1 can all
+function as beans.  When you write a custom GUI component, it is
+not difficult to make it function as a bean as well.
+<A HREF="ch10_02.htm#JNUT2-CH-10-EX-1">Example 10.1</A>
+shows the definition of a custom component,
+<tt CLASS=literal>MultiLineLabel</tt>, that is also a bean.  This component
+is like the standard <tt CLASS=literal>Label</tt> component, but it can
+display labels that contain more than one line of text.
+
+<P CLASS=para>
+Much of the code in this example is taken up with the
+mechanics of breaking the label into separate lines and
+measuring the size of each of those lines.  From the
+standpoint of custom AWT components, however, the most
+important code is in several required methods that make any
+component work correctly.  First, there is the
+<tt CLASS=literal>paint()</tt> method, of course.  All components
+(including applets) use this method to display themselves on
+the screen.  Second, the <tt CLASS=literal>getPreferredSize()</tt> and
+<tt CLASS=literal>getMinimumSize()</tt> methods return the preferred and
+minimum sizes for the component.  These methods must be
+implemented so that layout managers can correctly lay the
+component out.  (Note, though, that for compatibility with
+Java 1.0, this example defines the deprecated
+<tt CLASS=literal>preferredSize()</tt> and <tt CLASS=literal>minimumSize()</tt> methods
+instead.)
+
+<P CLASS=para>
+<tt CLASS=literal>MultiLineLabel</tt> extends <tt CLASS=literal>Canvas</tt>, which is a
+blank component intended primarily for subclassing.  When a
+component is a subclass of <tt CLASS=literal>Canvas</tt>, it is typically
+given its own native window in the underlying window system.
+In Java 1.1, however, it is possible to define "lightweight"
+custom components by extending <tt CLASS=literal>Component</tt> instead of
+<tt CLASS=literal>Canvas</tt>.  A lightweight component does not have its
+own native window in the underlying window system.
+
+<P CLASS=para>
+What makes this component a bean is that all of its
+properties have <tt CLASS=literal>get</tt> and <tt CLASS=literal>set</tt> accessor
+methods.  Because <tt CLASS=literal>MultiLineLabel</tt> does not respond to
+user input in any way, it does not define any events, so
+there are no event listener registration methods required.
+Although it is not a formal requirement for a bean, most
+beanboxes attempt to instantiate a bean by invoking its
+no-argument constructor.  Thus, a bean should define a
+constructor that expects no arguments.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-10-EX-1">Example 10.1: A Custom AWT Component and JavaBean</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package oreilly.beans.yesno;
+import java.awt.*;
+import java.util.*;
+/**
+ * A custom component that displays multiple lines of text with specified
+ * margins and alignment.  In Java 1.1, we could extend Component instead
+ * of Canvas, making this a more efficient "Lightweight component."
+ */
+public class MultiLineLabel extends Canvas {
+  // User-specified attributes
+  protected String label;             // The label, not broken into lines
+  protected int margin_width;         // Left and right margins
+  protected int margin_height;        // Top and bottom margins
+  protected int alignment;            // The alignment of the text
+  public static final int LEFT = 0, CENTER = 1, RIGHT = 2; // alignment values
+  // Computed state values
+  protected int num_lines;            // The number of lines
+  protected String[] lines;           // The label, broken into lines
+  protected int[] line_widths;        // How wide each line is
+  protected int max_width;            // The width of the widest line
+  protected int line_height;          // Total height of the font
+  protected int line_ascent;          // Font height above baseline
+  protected boolean measured = false; // Have the lines been measured?
+  // Here are five versions of the constructor.
+  public MultiLineLabel(String label, int margin_width,
+                        int margin_height, int alignment) {
+    this.label = label;                 // Remember all the properties.
+    this.margin_width = margin_width;
+    this.margin_height = margin_height;
+    this.alignment = alignment;
+    newLabel();                         // Break the label up into lines.
+  }
+  public MultiLineLabel(String label, int margin_width, int margin_height) {
+    this(label, margin_width, margin_height, LEFT);
+  }
+  public MultiLineLabel(String label, int alignment) {
+    this(label, 10, 10, alignment);
+  }
+  public MultiLineLabel(String label) { this(label, 10, 10, LEFT); }
+  public MultiLineLabel() { this(""); }
+  // Methods to set and query the various attributes of the component.
+  // Note that some query methods are inherited from the superclass.
+  public void setLabel(String label) {
+    this.label = label;
+    newLabel();               // Break the label into lines.
+    measured = false;         // Note that we need to measure lines.
+    repaint();                // Request a redraw.
+  }
+  public void setFont(Font f) {
+    super.setFont(f);         // Tell our superclass about the new font.
+    measured = false;         // Note that we need to remeasure lines.
+    repaint();                // Request a redraw.
+  }
+  public void setForeground(Color c) {
+    super.setForeground(c);   // Tell our superclass about the new color.
+    repaint();                // Request a redraw (size is unchanged).
+  }
+  public void setAlignment(int a) { alignment = a; repaint(); }
+  public void setMarginWidth(int mw) { margin_width = mw; repaint(); }
+  public void setMarginHeight(int mh) { margin_height = mh; repaint(); }
+  public String getLabel() { return label; }
+  public int getAlignment() { return alignment; }
+  public int getMarginWidth() { return margin_width; }
+  public int getMarginHeight() { return margin_height; }
+  /**
+   * This method is called by a layout manager when it wants to
+   * know how big we'd like to be.  In Java 1.1, getPreferredSize() is
+   * the preferred version of this method.  We use this deprecated version
+   * so that this component can interoperate with 1.0 components.
+   */
+  public Dimension preferredSize() {
+    if (!measured) measure();
+    return new Dimension(max_width + 2*margin_width,
+                         num_lines * line_height + 2*margin_height);
+  }
+  /**
+   * This method is called when the layout manager wants to know
+   * the bare minimum amount of space we need to get by.
+   * For Java 1.1, we'd use getMinimumSize().
+   */
+  public Dimension minimumSize() { return preferredSize(); }
+  /**
+   * This method draws the label (same method that applets use).
+   * Note that it handles the margins and the alignment, but that
+   * it doesn't have to worry about the color or font--the superclass
+   * takes care of setting those in the Graphics object we're passed.
+   */
+  public void paint(Graphics g) {
+    int x, y;
+    Dimension size = this.size();  // Use getSize() in Java 1.1.
+    if (!measured) measure();
+    y = line_ascent + (size.height - num_lines * line_height)/2;
+    for(int i = 0; i &lt; num_lines; i++, y += line_height) {
+      switch(alignment) {
+      default:
+      case LEFT:    x = margin_width; break;
+      case CENTER:  x = (size.width - line_widths[i])/2; break;
+      case RIGHT:   x = size.width - margin_width - line_widths[i]; break;
+      }
+      g.drawString(lines[i], x, y);
+    }
+  }
+  /** This internal method breaks a specified label up into an array of lines.
+   *  It uses the StringTokenizer utility class. */
+  protected synchronized void newLabel() {
+    StringTokenizer t = new StringTokenizer(label, "\n");
+    num_lines = t.countTokens();
+    lines = new String[num_lines];
+    line_widths = new int[num_lines];
+    for(int i = 0; i &lt; num_lines; i++) lines[i] = t.nextToken();
+  }
+  /** This internal method figures out how big the font is, and how wide each
+   *  line of the label is, and how wide the widest line is. */
+  protected synchronized void measure() {
+    FontMetrics fm = this.getToolkit().getFontMetrics(this.getFont());
+    line_height = fm.getHeight();
+    line_ascent = fm.getAscent();
+    max_width = 0;
+    for(int i = 0; i &lt; num_lines; i++) {
+      line_widths[i] = fm.stringWidth(lines[i]);
+      if (line_widths[i] &gt; max_width) max_width = line_widths[i];
+    }
+    measured = true;
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-10-SECT-2.1">Packaging a Bean</A></h3>
+
+<P CLASS=para>
+To prepare a bean for use in a beanbox, you must package it
+up in a JAR file, along with any other classes or resource
+files it requires.  (JAR files are "Java archives"; they
+were introduced in <A HREF="ch06_01.htm">Chapter 6, <i>Applets</i></A>.)  Because a
+single bean can have many auxiliary files, and because a JAR
+file can contain multiple beans, the manifest of the JAR
+file must define which of the JAR file entries are beans.
+You create a JAR file with <tt CLASS=literal>c</tt> option to the 
+<I CLASS=emphasis>jar</I> command.  When you use the <tt CLASS=literal>m</tt> option in conjunction
+with <tt CLASS=literal>c</tt>, it tells <I CLASS=emphasis>jar</I> to read a partial
+manifest file that you specify.  <I CLASS=emphasis>jar</I> uses the
+information in your partially-specified manifest file when
+creating the complete manifest for the JAR file.  To
+identify a class file as a bean, you simply add the
+following line to the file's manifest entry:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Java-Bean: True
+</PRE>
+</DIV>
+
+<P CLASS=para>
+So, to package up the <tt CLASS=literal>MultiLineLabel</tt> class in a JAR
+file, you must first create a manifest "stub" file.  Create a
+file, perhaps named <I CLASS=emphasis>manifest.stub</I>, with the following
+contents:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Name: oreilly/beans/MultiLineLabel.class
+Java-Bean: True
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that the forward slashes in the manifest
+file should not be changed to backward slashes on Windows
+systems.  The format of the JAR manifest file requires
+forward slashes to separate directories regardless of the
+platform.
+Having created this partial manifest file, we can now go
+ahead and create the JAR file:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+% jar cfm MultiLineLabel.jar manifest.stub oreilly/beans/MultiLineLabel.class
+</PRE>
+</DIV>
+
+<P CLASS=para>
+(On a Windows system, you do need to replace the forward slashes
+with backslashes in this command line.)  If this bean
+required any auxiliary files, we would specify them on the
+end of the <I CLASS=emphasis>jar</I> command line, along with the class file
+for the bean.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-10-SECT-2.2">Installing a Bean</A></h3>
+
+<P CLASS=para>
+The procedure for installing a bean depends entirely
+upon the beanbox tool that you are using.  For the <I CLASS=emphasis>beanbox</I>
+tool shipped with the BDK, all you need to do is to copy the
+bean's JAR file into the <I CLASS=emphasis>jars/</I> directory within the
+BDK directory.  Once you have done this, the bean will
+appear on the palette of beans every time you start up the
+application.  Alternatively, you can also
+load a bean's JAR file at runtime by selecting the <b>Load JAR</b> option from
+the <b>File</b> menu of <I CLASS=emphasis>beanbox</I>.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Bean Basics</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>A More Complex Bean</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

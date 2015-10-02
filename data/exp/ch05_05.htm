@@ -1,0 +1,952 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.5 Subclassing and Inheritance</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:52:47 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5">5.5 Subclassing and Inheritance</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.IN1"></A><A NAME="CH05.IN2"></A>Classes in Java exist in a class hierarchy. A class in Java can be declared 
+as a <I CLASS=emphasis>subclass</I> of another class using the <tt CLASS=literal>extends</tt> 
+keyword. A subclass <I CLASS=emphasis>inherits</I> variables and 
+methods from its <I CLASS=emphasis>superclass</I> and uses them as 
+if they're declared within the subclass itself: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Animal { 
+    float weight; 
+    ... 
+    void eat() { 
+        ... 
+    } 
+    ... 
+} 
+ 
+class Mammal extends Animal { 
+    int heartRate; 
+    // inherits weight 
+    ... 
+    void breathe() { 
+        ... 
+    } 
+    // inherits eat() 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above example, an object of type <tt CLASS=literal>Mammal</tt> has
+both the instance variable <tt CLASS=literal>weight</tt> and the method
+<tt CLASS=literal>eat()</tt>. They are inherited from
+<tt CLASS=literal>Animal</tt>.
+
+<P CLASS=para>
+A class can extend only one other class. To use the proper
+terminology, Java allows <I CLASS=emphasis>single inheritance</I> of
+class implementation. Later we'll talk about interfaces, which
+take the place of <I CLASS=emphasis>multiple inheritance</I> as it's
+primarily used in C++.
+
+<P CLASS=para>
+A subclass can, of course, be further subclassed. Normally,
+subclassing specializes or refines a class by adding
+variables and methods:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Cat extends Mammal { 
+    boolean longHair; 
+    // inherits weight and heartRate 
+    ... 
+    void purr() { 
+        ... 
+    } 
+    // inherits eat() and breathe()  
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>Cat</tt> class is a type of
+<tt CLASS=literal>Mammal</tt> that is ultimately a type of
+<tt CLASS=literal>Animal</tt>. <tt CLASS=literal>Cat</tt> objects inherit all
+the characteristics of <tt CLASS=literal>Mammal</tt> objects and, in turn,
+<tt CLASS=literal>Animal</tt> objects. <tt CLASS=literal>Cat</tt> also
+provides additional behavior in the form of the
+<tt CLASS=literal>purr()</tt> method and the <tt CLASS=literal>longHair</tt>
+variable. We can denote the class relationship in a diagram, as shown
+in <A HREF="ch05_05.htm#EXJ-CH-5-FIG-3">Figure 5.3</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-5-FIG-3">Figure 5.3: A class hierarchy</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0503.gif" alt="[Graphic: Figure 5-3]" width=503 height=173 border=0>
+
+</DIV>
+
+<P CLASS=para>
+A subclass inherits all members of its superclass not designated 
+as <tt CLASS=literal>private</tt>. As we'll discuss shortly, other 
+levels of visibility affect what inherited members of the class can be 
+seen from outside of the class and its subclasses, but at a minimum, a 
+subclass always has the same set of visible members as its parent. For 
+this reason, the type of a subclass can be considered a subtype of its 
+parent, and instances of the subtype can be used 
+anywhere instances 
+of the supertype are allowed. For example: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Cat simon = new Cat(); 
+Animal creature = simon; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>Cat</tt> <tt CLASS=literal>simon</tt> in the 
+above example can be assigned to the <tt CLASS=literal>Animal</tt> type 
+variable <tt CLASS=literal>creature</tt> because <tt CLASS=literal>Cat</tt> 
+is a subtype of <tt CLASS=literal>Animal</tt>. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.1">Shadowed Variables</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.SHAD1"></A><A NAME="CH05.SHAD2"></A>In the previous section on methods, we saw that a local variable of the 
+same name as an instance variable hides the instance variable. Similarly, 
+an instance variable in a subclass can shadow an instance variable of 
+the same name in its parent class, as shown in <A HREF="ch05_05.htm#EXJ-CH-5-FIG-4">Figure 5.4</A>. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-5-FIG-4">Figure 5.4: The scope of shadowed variables</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0504.gif" alt="[Graphic: Figure 5-4]" width=503 height=243 border=0>
+
+</DIV>
+
+<P CLASS=para>
+In <A HREF="ch05_05.htm#EXJ-CH-5-FIG-4">Figure 5.4</A>, the variable
+<tt CLASS=literal>weight</tt> is declared in three places: as a local
+variable in the method <tt CLASS=literal>foodConsumption()</tt> of the
+class <tt CLASS=literal>Mammal</tt>, as an instance variable of the class
+<tt CLASS=literal>Mammal</tt>, and as an instance variable of the class
+<tt CLASS=literal>Animal</tt>. The actual variable selected depends on the
+scope in which we are working.
+
+<P CLASS=para>
+In the above example, all variables were of the same type. About 
+the only reason for declaring a variable with the same type in a subclass 
+is to provide an alternate initializer. A more important use of shadowed 
+variables involves changing their types. We could, for example, shadow 
+an <tt CLASS=literal>int</tt> variable with a <tt CLASS=literal>double</tt> 
+variable in a subclass that needs decimal values instead 
+of integer values. We do this without changing the existing code because, 
+as its name suggests, when we shadow variables, we don't replace them 
+but instead mask them. Both variables still exist; methods of the 
+superclass see the original variable, and methods of the subclass see the 
+new version. The determination of what variables the various methods see 
+is static and happens at compile-time. 
+
+<P CLASS=para>
+Here's a simple example: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class IntegerCalculator { 
+    int sum; 
+    ... 
+} 
+ 
+class DecimalCalculator extends IntegerCalculator { 
+    double sum; 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, we override the instance variable
+<tt CLASS=literal>sum</tt> to change its type from <tt CLASS=literal>int</tt>
+to <tt CLASS=literal>double</tt>.[3]
+ Methods
+defined in the class <tt CLASS=literal>IntegerCalculator</tt> see the
+integer variable <tt CLASS=literal>sum</tt>, while methods defined in
+<tt CLASS=literal>DecimalCalculator</tt> see the decimal variable
+<tt CLASS=literal>sum</tt>. However, both variables actually exist for a
+given instance of <tt CLASS=literal>DecimalCalculator</tt>, and they can
+have independent values. In fact, any methods that
+<tt CLASS=literal>DecimalCalculator</tt> inherits from
+<tt CLASS=literal>IntegerCalculator</tt> actually see the integer variable
+<tt CLASS=literal>sum</tt>.
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+Note that a better way to design our calculators would be to have an
+abstract <tt CLASS=literal>Calculator</tt> class with two subclasses:
+<tt CLASS=literal>IntegerCalculator</tt> and
+<tt CLASS=literal>DecimalCalculator</tt>.
+</blockquote>
+<P CLASS=para>
+Since both variables exist in
+<tt CLASS=literal>DecimalCalculator</tt>, we need to reference
+the variable inherited from <tt CLASS=literal>IntegerCalculator</tt>. We
+do that using the <tt CLASS=literal>super</tt> reference:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int s = super.sum 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Inside of <tt CLASS=literal>DecimalCalculator</tt>, the <tt CLASS=literal>super</tt> 
+keyword used in this manner refers to the <tt CLASS=literal>sum</tt> 
+variable defined in the superclass. I'll explain the use of <tt CLASS=literal>super</tt> 
+more fully in a bit. 
+
+<P CLASS=para>
+Another important point about shadowed variables has to do with how they 
+work when we refer to an object by way of a less derived type. For example, 
+we can refer to a <tt CLASS=literal>DecimalCalculator</tt> object as 
+an <tt CLASS=literal>IntegerCalculator</tt>. If we do so and then access 
+the variable <tt CLASS=literal>sum</tt>, we get the integer variable, 
+not the decimal one: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+DecimalCalculator dc = new DecimalCalculator(); 
+IntegerCalculator ic = dc; 
+ 
+int s = ic.sum;                  // Accesses IntegerCalculator sum 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+After this detailed explanation, you may still be wondering what
+shadowed variables are good for. Well, to be honest, the usefulness of
+shadowed variables is limited, but it's important to understand the
+concepts before we talk about doing the same thing with
+methods. We'll see a different and more dynamic type
+of behavior with method shadowing, or more correctly,
+<I CLASS=emphasis>method overriding</I>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.2">Overriding Methods</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.OVERR1"></A><A NAME="CH05.OVERR2"></A>In a previous section, we saw we could declare overloaded methods
+(i.e., methods with the same name but a different number or type of
+arguments) within a class. Overloaded method selection works the way I
+described on all methods available to a class, including
+inherited ones. This means that a subclass can define some overloaded
+methods that augment the overloaded methods provided by a superclass.
+
+<P CLASS=para>
+But a subclass does more than that; it can define a method
+that has exactly the <I CLASS=emphasis>same</I> method signature
+(arguments and return type) as a method in its superclass. In that
+case, the method in the subclass <I CLASS=emphasis>overrides</I> the
+method in the superclass and effectively replaces its implementation,
+as shown in <A HREF="ch05_05.htm#EXJ-CH-5-FIG-5">Figure 5.5</A>. Overriding methods to
+change the behavior of objects is another form of
+polymorphism (sub-type polymorphism): the one most people think of when they 
+talk about the power of object-oriented languages.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-5-FIG-5">Figure 5.5: Method overriding</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0505.gif" alt="[Graphic: Figure 5-5]" width=503 height=232 border=0>
+
+</DIV>
+
+<P CLASS=para>
+In <A HREF="ch05_05.htm#EXJ-CH-5-FIG-5">Figure 5.5</A>, <tt CLASS=literal>Mammal</tt>
+overrides the <tt CLASS=literal>reproduce()</tt> method of
+<tt CLASS=literal>Animal</tt>, perhaps to specialize the method for the
+peculiar behavior of <tt CLASS=literal>Mammals</tt> giving live
+birth.[4]
+ The <tt CLASS=literal>Cat</tt> object's
+sleeping behavior is overridden to be different from that of a general
+<tt CLASS=literal>Animal</tt>, perhaps to accommodate cat naps. The
+<tt CLASS=literal>Cat</tt> class also adds the more unique behaviors of
+purring and hunting mice.
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+We'll ignore the platypus, which is an obscure nonovoviviparous
+mammal.
+</blockquote>
+<P CLASS=para>
+From what you've seen so far, overridden methods probably
+look like they shadow methods in superclasses, just as variables
+do. But overridden methods are actually more powerful than that. An
+overridden method in Java acts like a <tt CLASS=literal>virtual</tt>
+method in C++. When there are multiple implementations of a method in
+the inheritance hierarchy of an object, the one in the most derived
+class always overrides the others, even if we refer to
+the object by way of a less derived type. In other words, if we have a
+<tt CLASS=literal>Cat</tt> instance assigned to a variable of the more
+general type <tt CLASS=literal>Animal</tt> and we call its
+<tt CLASS=literal>sleep()</tt> method, we get the
+<tt CLASS=literal>sleep()</tt> method implemented in the
+<tt CLASS=literal>Cat</tt> class, not the one in
+<tt CLASS=literal>Animal</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Cat simon = new Cat(); 
+Animal creature = simon; 
+ 
+creature.sleep();          // Accesses Cat sleep(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In other respects, the variable <tt CLASS=literal>creature</tt> looks
+like an <tt CLASS=literal>Animal</tt>. For example, access to a shadowed
+variable would find the implementation in the
+<tt CLASS=literal>Animal</tt> class, not the <tt CLASS=literal>Cat</tt>
+class. However, because methods are virtual, the appropriate method in
+the <tt CLASS=literal>Cat</tt> class can be located, even though we are
+dealing with an <tt CLASS=literal>Animal</tt> object. This means we
+can deal with specialized objects as if they were more general types
+of objects and still take advantage of their specialized
+implementations of behavior.
+
+<P CLASS=para>
+Much of what you'll be doing when you're writing a
+Java applet or application is overriding methods defined by
+various classes in the Java API. For example, think
+back to the applets we developed in the tutorial in <A HREF="ch02_01.htm">Chapter 2, <i>A First Applet</i></A>. Almost all of the methods we implemented for
+those applets were overridden methods. Recall that we created a
+subclass of <tt CLASS=literal>Applet</tt> for each of the examples. Then
+we overrode various methods: <tt CLASS=literal>init()</tt> set up our
+applet, <tt CLASS=literal>mouseDrag()</tt>
+to handle mouse movement, and <tt CLASS=literal>paint()</tt> to draw our
+applet.
+
+<P CLASS=para>
+A common programming error in Java (at least for me) is to miss
+and accidentally overload a method when trying to override it. Any
+difference in the number or type of arguments or the return type of a
+method produces two overloaded methods instead of a single, overridden
+method. Make it a habit to look twice when overriding methods.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.2.1">Overridden methods and dynamic binding</A></h4>
+
+<P CLASS=para>
+In a previous section, I mentioned that overloaded methods are
+selected by the compiler at compile-time. Overridden methods, on the
+other hand, are selected dynamically at run-time. Even if we create an 
+instance of a subclass our code has never seen before (perhaps a new object 
+type loaded from the network), any overridden methods that it contains will 
+be located and invoked at run-time to replace those that existed when we 
+last compiled our code.
+
+<P CLASS=para>
+In contrast, if we load a new class that implements an
+additional, more specific overloaded method, our code will continue to
+use the implementation it discovered at compile-time. Another
+effect of this is that casting (i.e., explicitly telling the compiler
+to treat an object as one of its assignable types) affects the selection
+of overloaded methods, but not overridden methods.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.2.3">Static method binding</A></h4>
+
+<P CLASS=para>
+Static methods do not belong to any object instance, they are accessed directly
+through a class name, so they are not dynamically selected at run-time like
+instance methods.  That is why static methods are called "static"--they are
+always bound at compile time.  
+
+<P CLASS=para>
+A <tt CLASS=literal>static</tt> method in a superclass can be shadowed
+by another <tt CLASS=literal>static</tt> method in a subclass, as long as
+the original method was not declared <tt CLASS=literal>final</tt>.
+However, you can't override a <tt CLASS=literal>static</tt> method with
+a non<tt CLASS=literal>static</tt> method. In other words, you can't
+change a <tt CLASS=literal>static</tt> method into an instance method
+in a subclass.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch05-SECT3-AUTOID.2">Dynamic method selection and peformance</A></h4>
+
+<P CLASS=para>
+When Java has to dynamically search for overridden methods in
+subclasses, there's a small performance penalty. In languages like
+C++, the default is for methods to act like shadowed variables, so you
+have to explicitly declare the methods you want to be virtual.  Java
+is more dynamic, and the default is for all instance methods to be
+virtual.  In Java you can, however, go the other direction and
+explicitly declare that an instance method can't be overridden, so
+that it will not be subject to dynamic binding and will not suffer in
+terms of performance.
+This is done with the <tt CLASS=literal>final</tt> modifier. We have seen
+<tt CLASS=literal>final</tt> used with variables to effectively make them
+constants. When <tt CLASS=literal>final</tt> is applied to a method, it
+means that that method can't be overridden (in some sense, its
+implementation is constant). <tt CLASS=literal>final</tt> can also be
+applied to an entire class, which means the class can't be subclassed.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch05-SECT3-AUTOID.3">Compiler optimiziations</A></h4>
+
+<P CLASS=para>
+When <i CLASS=command>javac</i>, the Java compiler, is run with the 
+<tt CLASS=literal>-O</tt> switch, it performs certain optimizations. 
+It can inline <tt CLASS=literal>final</tt> methods to improve 
+performance (while slightly increasing the size of the resulting class file). 
+<tt CLASS=literal>private</tt> methods, which are effectively
+<tt CLASS=literal>final</tt>, can also be inlined, and
+<tt CLASS=literal>final</tt> classes may also benefit from more 
+powerful optimizations.
+
+<P CLASS=para>
+
+Another kind of optimization allows you to include debugging code 
+in your Java source without penalty.  Java doesn't have a pre-processor, 
+to explicitly control what source is included, but you can get some of the 
+same effects by making a block of code conditional on a constant (i.e.,
+<tt CLASS=literal>static</tt> and <tt CLASS=literal>final</tt>) 
+variable. 
+The Java compiler is smart enough to remove this code when it 
+determines that it won't be called.  For example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+static final boolean DEBUG = false;
+...
+static void debug (String message) { 
+    if (DEBUG) {
+        System.err.println(message); 
+        // do other stuff
+        ...
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+ 
+If we compile the above code using the -O switch, the compiler will recognize
+that the condition on the DEBUG variable is always false, and the body of 
+the debug() method will be optimized away.  But that's not all--since 
+debug() itself is also final it can be inlined, and an empty inlined method
+generates no code at all.  So, when we compile with DEBUG set to false, 
+calls to the debug() method will generate no residual code at all.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.2.2">Method selection revisited</A></h4>
+
+<P CLASS=para>
+By now you should have a good, intuitive idea as to how methods are selected 
+from the pool of potentially overloaded and overridden method names 
+of a class. If, however, you are dying for a dry definition, I'll 
+provide one now. If you are satisfied with your understanding, you may 
+wish to skip this little exercise in logic. 
+
+<P CLASS=para>
+In a previous section, I offered an inductive rule for
+overloaded method resolution. It said that a method is considered more
+specific than another if its arguments are polymorphically
+assignable to the arguments of the second method. We can now expand
+this rule to include the resolution of overridden methods by adding
+the following condition: to be more specific than another method, the
+type of the class containing the method must also be assignable to the
+type of the class holding the second method.
+
+<P CLASS=para>
+What does that mean? Well, the only classes whose types are
+assignable are classes in the same inheritance hierarchy. So, what
+we're talking about now is the set of all methods of the same name in
+a class or any of its parent or child classes. Since subclass types
+are assignable to superclass types, but not vice versa, the resolution
+is pushed, in the way that we expect, down the chain, towards the
+subclasses. This effectively adds a second dimension to the search,
+in which resolution is pushed down the inheritance tree towards more
+refined classes and, simultaneously, towards the most specific
+overloaded method within a given class.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.2.4">Exceptions and overridden methods</A></h4>
+
+<P CLASS=para>
+When we talked about exception handling in <A HREF="ch04_01.htm">Chapter 4, <i>The Java Language</i></A>,
+there's one thing I didn't mention because it
+wouldn't have made sense then. An important restriction on
+overridden methods is that they must adhere to the
+<tt CLASS=literal>throws</tt> clause of the parent method's
+signature.  If an overridden method throws an exception, the exception must 
+be of the type specified by the parent or a subtype of that exception.
+Because the exception can be a subtype of the one specified by the parent,
+the overridden method can refine the type of exception thrown to go along
+with its new behavior.  For example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// A more refined exception 
+class MeatInedibleException extends InedibleException { ...
+}
+        
+class Animal {
+    void eat( Food f ) throws InedibleException { ...
+}
+class Herbivore extends Animal {
+    void eat( Food f ) throws InedibleException { 
+        if ( f instanceof Meat )
+            throw new MeatInedibleException();
+        ....
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the example above, Animal specifies that it can throw an
+InedibleException from its eat() method.  Herbivore is a subclass
+Animal, so it must be able to do this too.  However, Herbivore's eat()
+method actually throws a more specific exception:
+MeatInedibleException.  It can do this because MeatInedibleException
+is a subtype of InedibleException (remember that Exceptions are
+classes too).  Our calling code's <i CLASS=command>catch</i> clause
+can therefore be more specific:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Animal creature = ...
+try {
+    creature.eat( food );
+} catch ( MeatInedibleException ) {
+    // creature can't eat this food because it's meat
+} catch ( InedibleException ) {
+    // creature can't eat this food
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.3"><I CLASS=emphasis>this</I> and <I CLASS=emphasis>super</I></A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.THIS1"></A><A NAME="CH05.THIS2"></A>The special references <tt CLASS=literal>this</tt> and
+<tt CLASS=literal>super</tt> allow you to refer to the members of the
+current object instance or those of the superclass, respectively.  We
+have seen <tt CLASS=literal>this</tt> used elsewhere to pass a reference
+to the current object and to refer to shadowed instance variables.
+The reference <tt CLASS=literal>super</tt> does the same for the parents
+of a class.  You can use it to refer to members of a superclass that
+have been shadowed or overridden.  A common arrangement is for an
+overridden method in a subclass to do some preliminary work and then
+defer to the method of the superclass to finish the job.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Animal { 
+    void eat( Food f ) throws InedibleException { 
+        // consume food
+    }
+} 
+ 
+class Herbivore extends Animal { 
+    void eat( Food f ) throws InedibleException { 
+        // check if edible
+        ...
+        super.eat( f ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above example, our <tt CLASS=literal>Herbivore</tt> class overrides 
+the <tt CLASS=literal>Animal</tt> <tt CLASS=literal>eat()</tt> method 
+to first do some checking on the food object.
+After doing its job it simply calls the (otherwise overridden) implementation
+of eat() in its superclass, using <tt CLASS=literal>super</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>super</tt> prompts a search for the method or
+variable to begin in the scope of the immediate superclass rather than the 
+current class.  The inherited method or variable found may reside in the 
+immediate superclass, or in a more distant one.  
+The usage of the <tt CLASS=literal>super</tt>
+reference when applied to overridden methods of a superclass is
+special; it tells the method resolution system to stop the dynamic method 
+search at the superclass, instead of in the most derived class (as it 
+otherwise does).  Without <tt CLASS=literal>super</tt>, there would be no 
+way to access overridden methods.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.4">Casting</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.CAST"></A><A NAME="CH05.CAST2"></A><A NAME="CH05.CAST3"></A>As in C++, a <I CLASS=emphasis>cast</I> explicitly tells the compiler
+to change the apparent type of an object reference. Unlike in C++,
+casts in Java are checked both at compile- and at run-time to make
+sure they are legal. Attempting to cast an object to an incompatible
+type at run-time results in a
+<tt CLASS=literal>ClassCastException</tt>. Only casts between objects in
+the same inheritance hierarchy (and as we'll see later, to
+appropriate interfaces) are legal in Java and pass the scrutiny of the
+compiler and the run-time system.
+
+<P CLASS=para>
+Casts in Java affect only the treatment of references; they never change 
+the form of the actual object. This is an important rule to keep in mind. 
+You never change the object pointed to by a reference by casting it; you 
+change only the compiler's (or run-time system's) notion of 
+it. 
+
+<P CLASS=para>
+A cast can be used to <I CLASS=emphasis>narrow</I> the type of a 
+reference--to make it more specific. Often, we'll do this when we have to 
+retrieve an object 
+from a more general type of collection or when it has been previously used 
+as a less derived type. (The prototypical example is using an object in 
+a <tt CLASS=literal>Vector</tt> or <tt CLASS=literal>Hashtable</tt>, 
+as you'll see in <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A>.) Continuing with our <tt CLASS=literal>Cat</tt> 
+example: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Animal creature = ...
+Cat simon = ...
+ 
+creature = simon;        // Okay
+// simon = creature;     // Compile time error, incompatible type 
+simon = (Cat)creature;   // Okay 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We can't reassign the reference in <tt CLASS=literal>creature</tt> to the
+variable <tt CLASS=literal>simon</tt> even though we know it holds an
+instance of a <tt CLASS=literal>Cat</tt> (Simon). 
+We have to perform the indicated cast. 
+This is also called <I CLASS=emphasis>downcasting</I> the reference.
+
+<P CLASS=para>
+Note that an implicit cast was performed when we went the other way to 
+<I CLASS=emphasis>widen</I> the reference <tt CLASS=literal>simon</tt> 
+to type <tt CLASS=literal>Animal</tt> during the first assignment. In this 
+case, an explicit cast would have been legal, but superfluous. 
+
+<P CLASS=para>
+If casting seems complicated, here's a simple way to
+think about it. Basically, you can't lie about what an object is. If
+you have a <tt CLASS=literal>Cat</tt> object, you can cast it to a less
+derived type (i.e., a type above it in the class hierarchy) such as
+<tt CLASS=literal>Animal</tt> or even <tt CLASS=literal>Object</tt>, since all
+Java classes are a subclass of <tt CLASS=literal>Object</tt>. If you have
+an <tt CLASS=literal>Object</tt> you know is a
+<tt CLASS=literal>Cat</tt>, you can downcast the <tt CLASS=literal>Object</tt>
+to be an <tt CLASS=literal>Animal</tt> or a
+<tt CLASS=literal>Cat</tt>. However, if you aren't sure if the
+<tt CLASS=literal>Object</tt> is a <tt CLASS=literal>Cat</tt> or a
+<tt CLASS=literal>Dog</tt> at run-time, you should check it with
+<tt CLASS=literal>instanceof</tt> before you perform the cast. If you get
+the cast wrong, Java throws a <tt CLASS=literal>ClassCastException</tt>.
+
+<P CLASS=para>
+As I mentioned earlier, casting can affect the selection of
+compile-time items like variables and overloaded methods, but not the
+selection of overridden methods. <A HREF="ch05_05.htm#EXJ-CH-5-FIG-6">Figure 5.6</A> shows
+the difference. As shown in the top half of the diagram,
+casting the reference <tt CLASS=literal>simon</tt> to type
+<tt CLASS=literal>Animal</tt> (widening it) affects the selection of
+the shadowed variable <tt CLASS=literal>weight</tt> within it. However, as
+the lower half of the diagram indicates, the cast doesn't affect the
+selection of the overridden method <tt CLASS=literal>sleep()</tt>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-5-FIG-6">Figure 5.6: Casting and its effect on method and variable selection</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0506.gif" alt="[Graphic: Figure 5-6]" width=503 height=313 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.5">Using superclass constructors</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.SUPER"></A><A NAME="CH05.CONSTRUCTORS"></A>When we talked earlier about constructors, we discussed how the
+special statement <tt CLASS=literal>this()</tt> invokes an
+overloaded constructor upon entry to another constructor. Similarly,
+the statement <tt CLASS=literal>super()</tt> explicitly
+invokes the constructor of a superclass. Of course, we also talked
+about how Java makes a chain of constructor calls that includes the
+superclass's constructor, so why use
+<tt CLASS=literal>super()</tt> explicitly?  When Java makes an implicit
+call to the superclass constructor, it calls the default
+constructor. So, if we 
+want to invoke a superclass constructor that
+takes arguments, we have to do so explicitly using
+<tt CLASS=literal>super()</tt>.
+
+<P CLASS=para>
+If we are going to call a superclass constructor with
+<tt CLASS=literal>super()</tt>, it must be the first statement of our
+constructor, just as <tt CLASS=literal>this()</tt> must be the first call
+we make in an overloaded constructor. Here's a simple example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Person { 
+    Person ( String name ) { 
+        //  setup based on name 
+        ... 
+    } 
+    ... 
+} 
+ 
+class Doctor extends Person { 
+    Doctor ( String name, String specialty ) { 
+        super( name ); 
+        // setup based on specialty 
+        ... 
+    } 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, we use <tt CLASS=literal>super()</tt> to take
+advantage of the implementation of the superclass constructor and
+avoid duplicating the code to set up the object based on its name. In
+fact, because the class <tt CLASS=literal>Person</tt> doesn't define a
+default (no arguments) constructor, we have no choice but to call
+<tt CLASS=literal>super()</tt> explicitly. Otherwise, the compiler would
+complain that it couldn't find an appropriate default constructor to
+call. Said another way, if you subclass a class that has only
+constructors that take arguments, you have to invoke one of the
+superclass's constructors explicitly from your subclass
+constructor.
+
+<P CLASS=para>
+Instance variables of the class are initialized upon return
+from the superclass constructor, whether that's due to an explicit
+call via <tt CLASS=literal>super()</tt> or an implicit call to the default
+superclass constructor.
+
+<P CLASS=para>
+We can now give the full story of how constructors are chained together 
+and when instance variable initialization occurs. The rule has three parts 
+and is applied repeatedly for each successive constructor invoked. 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If the first statement of a constructor is an ordinary 
+statement--i.e., not a call to <tt CLASS=literal>this()</tt> or
+<tt CLASS=literal>super()</tt>--Java inserts an implicit call to
+<tt CLASS=literal>super()</tt> to invoke the default constructor of the
+superclass. Upon returning from that call, Java initializes the
+instance variables of the current class and proceeds to execute
+the statements of the current constructor.
+
+<P>
+<li CLASS=listitem>If the first statement of a constructor is a call to a superclass
+constructor via <tt CLASS=literal>super()</tt>, Java invokes the selected
+superclass constructor. Upon its return, Java initializes the current
+class's instance variables and proceeds with the statements
+of the current constructor.
+
+<P>
+<li CLASS=listitem>If the first statement of a constructor is a call to an overloaded
+constructor via <tt CLASS=literal>this()</tt>, Java invokes the selected
+constructor and upon its return simply proceeds with the statements of
+the current constructor. The call to the superclass's constructor
+has happened within the overloaded constructor, either explicitly or
+implicitly, so the initialization of instance variables has already
+occurred.
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-5.6">Abstract Methods and Classes</A></h3>
+
+<P CLASS=para>
+As in C++, a method can be declared with the
+<tt CLASS=literal>abstract</tt> modifier to indicate that it's just a
+prototype.  An abstract method has no body; it's simply a signature 
+definition followed by a semicolon. You can't directly use a class that
+contains an abstract method; you must instead create a subclass that
+implements the abstract method's body.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+abstract vaporMethod( String name ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In Java, a class that contains one or more abstract
+methods must be explicitly declared as an abstract
+class, also using the <tt CLASS=literal>abstract</tt> modifier&nbsp;:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+abstract class vaporClass { 
+    ... 
+    abstract vaporMethod( String name ); 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+An abstract class can contain other,
+nonabstract methods and ordinary variable
+declarations; however, it can't be instantiated. To be used, it must
+be subclassed and its abstract methods must be
+overridden with methods that implement a body. Not all
+abstract methods have to be implemented in a single
+subclass, but a subclass that doesn't override all its
+superclass's abstract methods with actual,
+concrete implementations must also be declared
+<tt CLASS=literal>abstract</tt>.
+
+<P CLASS=para>
+Abstract classes provide a framework for classes that are to be "filled in"
+by the implementor.  
+The <tt CLASS=literal>java.io.InputStream</tt> class, for example, has a
+single abstract method called
+<tt CLASS=literal>read()</tt>. Various subclasses of
+<tt CLASS=literal>InputStream</tt> implement <tt CLASS=literal>read()</tt> in
+their own ways to read from their own sources. The rest of the
+<tt CLASS=literal>InputStream</tt> class, however, provides extended
+functionality built on the simple <tt CLASS=literal>read()</tt>
+method. A subclass of <tt CLASS=literal>InputStream</tt> inherits
+these nonabstract methods that provide
+functionality based on the simple <tt CLASS=literal>read()</tt> method
+that the subclass implements.
+
+<P CLASS=para>
+It's often desirable to specify only the prototypes for a
+whole set of methods and provide no implementation. In C++,
+this would be a purely abstract class. In Java, you
+should instead use an <I CLASS=emphasis>interface</I>. An interface is
+like a purely abstract class; it defines a set of
+methods a class must implement (i.e., the behavior of a
+class). However, unlike in C++, a class in Java can simply say that it
+<tt CLASS=literal>implements</tt> an interface and go about implementing
+those methods. As we'll discuss later, a class that implements
+an interface doesn't have to inherit from any particular part of
+the inheritance hierarchy or use a particular implementation.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Object Destruction</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Packages and Compilation Units</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

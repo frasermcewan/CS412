@@ -1,0 +1,434 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.4 Local Classes</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:52:24 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Inner Classes and Other New Language Features</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-4">5.4 Local Classes</A></h2>
+
+<P CLASS=para>
+<A NAME="CH5.CLASSES-LOCA1"></A><A NAME="CH5.LOCAL-CLASSE1"></A><A NAME="CH5.INNER.CLASSE4"></A>A local class is a class declared locally within a block of
+Java code.  Typically, a local class is defined within a
+method, but local classes can also be defined within static
+initializers and instance initializers of a class. (Instance
+initializers are a new feature of Java 1.1 that we'll see
+later in this chapter.)
+
+<P CLASS=para>
+Because Java code can only appear
+within class definitions, all local classes are nested
+within a containing class.  For this reason, local classes
+share many of the features of member classes.  It is usually
+more appropriate, however, to think of them as an entirely
+separate kind of inner class.  A local class has
+approximately the same relationship to a member class as a
+local variable has to an instance variable of a class.
+Local classes have the following interesting features:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>They are only visible and usable within the block of code in
+which they are defined.
+
+<P>
+<li CLASS=listitem>They can use any <tt CLASS=literal>final</tt> local variables or method
+parameters that are visible from the scope in which they are
+defined.
+[8]
+
+<blockquote class=footnote>
+<P CLASS=para>[8] 
+As we'll see shortly, one of the other language changes in
+Java 1.1 is that local variables and method parameters can
+be declared <tt CLASS=literal>final</tt>.
+</blockquote>
+<P>
+</UL>
+<P CLASS=para>
+The first defining characteristic of a local class is
+obviously that it is local.  Like a local variable, the
+name of a local class is only valid within the block of code
+in which it was defined (and within any blocks nested with
+that block, of course).  In many cases, this is not a
+problem.  If a helper class is used only within a single
+method of a containing class, there is no reason that
+that helper cannot be coded as a local class rather than a
+member class.  
+<A HREF="ch05_04.htm#JNUT2-CH-5-EX-5">Example 5.5</A> 
+shows how we can modify the <tt CLASS=literal>enumerate()</tt> method of
+the <tt CLASS=literal>LinkedList</tt> class we saw in previous examples so
+that it defines the <tt CLASS=literal>Enumerator</tt> class as a local
+class, rather than as a member class.  By doing this, we move the
+definition of the helper class even closer to the location
+where it is used and hopefully improve the clarity of the
+code even further.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-5-EX-5">Example 5.5: Defining and Using a Local Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.util.*;
+public class LinkedList 
+{
+  // Our nested top-level interface.  Body omitted here...
+  public interface Linkable { ... } 
+  // The head of the list
+  /* private */ Linkable head;  
+  // Method bodies omitted here.
+  public void addToHead(Linkable node) { ... }
+  public Linkable removeHead() { ...  }
+  // This method creates and returns an Enumeration object for this 
+  // LinkedList.
+  public Enumeration enumerate() 
+  {
+    // Here's the definition of Enumerator as a local class.
+    class Enumerator implements Enumeration {
+      Linkable current;
+      public Enumerator() { this.current = LinkedList.this.head; }
+      public boolean hasMoreElements() {  return (current != null); }
+      public Object nextElement() {
+        if (current == null) throw new NoSuchElementException("LinkedList");
+        Object value = current;
+        current = current.getNext();
+        return value;
+      }
+    }
+    // Create and return an instance of the Enumerator class defined here.
+    return new Enumerator();
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-4.1">How Local Classes Work</A></h3>
+
+<P CLASS=para>
+A local class is able to refer to fields and methods in
+its containing class for exactly the same reason that
+a member class can--it is passed a hidden reference to
+the containing class in its constructor, and it saves
+that reference away in a <tt CLASS=literal>private</tt> field added by the
+compiler.  Also like member classes, local classes can use
+<tt CLASS=literal>private</tt> fields and methods of their containing
+class, because the compiler inserts any required accessor
+methods.
+[9]
+
+<blockquote class=footnote>
+<P CLASS=para>[9] 
+As previously noted, bugs in the compiler prevent this from
+working correctly in the current versions of the JDK.
+</blockquote>
+<P CLASS=para>
+What makes local classes different from member classes
+is that they have the ability to refer to local variables
+from the scope that defines them.  The crucial restriction on
+this ability, however, is that local classes can only
+reference local variables and parameters that are declared
+<tt CLASS=literal>final</tt>.  The 
+reason for this is apparent from the implementation.  A
+local class can use local variables because the compiler
+automatically gives the class a <tt CLASS=literal>private</tt> instance field to
+hold a copy of each local variable the class refers
+to.  The compiler also adds hidden arguments to each of the
+local class constructors to initialize these automatically
+created <tt CLASS=literal>private</tt> fields to the appropriate values.
+So, in fact, a local class does not
+actually access local variables, but merely its own private
+copies of them.  The only way this can work correctly is if
+the local variables are declared <tt CLASS=literal>final</tt>, so that they
+are guaranteed not to change.  With this guarantee, the
+local class can be assured that its internal copies of the
+variables are "in sync" with the real local variables.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-4.2">New Syntax for Local Classes</A></h3>
+
+<P CLASS=para>
+In Java 1.0, only fields, methods, and classes may be
+declared <tt CLASS=literal>final</tt>.  The addition of local classes to
+Java 1.1 has required a liberalization in the use of the
+<tt CLASS=literal>final</tt> modifier.  It can now be applied to local
+variables, arguments to methods, and even to the exception
+parameter of a <tt CLASS=literal>catch</tt> statement (Local classes can
+refer to <tt CLASS=literal>catch</tt> parameters, just as they can refer to
+method parameters, as long as they are in scope and are
+declared <tt CLASS=literal>final</tt>.)  The meaning of the <tt CLASS=literal>final</tt>
+modifier remains the same in these new uses: once the local
+variable or argument has been assigned a value, that value
+may not be changed.
+
+<P CLASS=para>
+Instances of local classes, like instances of member
+classes, have an enclosing instance that is implicitly
+passed to all constructors of the local class. Local classes
+can use the same new <tt CLASS=literal>this</tt> syntax that member
+classes do to explicitly refer to members of enclosing classes.
+Local classes cannot use the new <tt CLASS=literal>new</tt> and
+<tt CLASS=literal>super</tt> syntax used by member classes, however.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-4.3">Restrictions on Local Classes</A></h3>
+
+<P CLASS=para>
+Like member classes, and for the same reasons, local classes
+cannot contain fields, methods, or classes that are declared
+<tt CLASS=literal>static</tt>.  <tt CLASS=literal>static</tt> members must be declared at
+the top level.  Since nested interfaces are implicitly
+<tt CLASS=literal>static</tt>, local classes may not contain nested
+interface definitions.
+
+<P CLASS=para>
+Another restriction on local classes is that they cannot be
+declared <tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>, <tt CLASS=literal>private</tt>,
+or <tt CLASS=literal>static</tt>.  These modifiers are all used for members
+of classes, and are not allowed with local variable
+declarations; for the same reason they are not allowed with
+local class declarations.
+
+<P CLASS=para>
+And finally, a local class, like a member class, cannot have
+the same name as any of its enclosing classes.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-4.4">Typical Uses of Local Classes</A></h3>
+
+<P CLASS=para>
+<A NAME="CH5.EVENTS-LOCAL1"></A>One common application of local classes is to implement "event
+listeners" for use with the new event model implemented by
+AWT and JavaBeans in Java 1.1.  An event listener is a
+class that implements a specific "listener" interface.  This
+listener is registered with an AWT component, such as a
+<tt CLASS=literal>Button</tt>, or with some other "event source."
+When the <tt CLASS=literal>Button</tt> (or other source) is clicked (or activated
+in some way), it responds to this event by invoking a method
+of the event listener.  Since Java does not support method
+pointers, implementing a pre-defined interface is Java's way
+of defining a "callback" that is notified when some
+event occurs.  The classes used to implement these
+interfaces are often called <I CLASS=emphasis>adapter classes</I>.  Working with
+adapter classes can become quite cumbersome when they all
+must be defined as top-level classes.  But the introduction
+of local classes makes them much easier to use.
+<A HREF="ch05_04.htm#JNUT2-CH-5-EX-6">Example 5.6</A> 
+shows a local class used as an adapter class for handling
+GUI events.
+[10]
+This example
+also shows how a local class can make use of a method parameter
+that is declared <tt CLASS=literal>final</tt>.
+
+<blockquote class=footnote>
+<P CLASS=para>[10] 
+As we'll see in the next section, this adapter class could be
+written more succinctly as an anonymous class.
+</blockquote>
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-5-EX-6">Example 5.6: Using a Local Class as an Adapter</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+// This class implements the functionality of some application.
+public class Application {
+  // These are some constants used as the command argument to doCommand().
+  static final int save = 1;
+  static final int load = 2;
+  static final int quit = 3;
+  // This method dispatches all the commands to the application.  
+  // Body omitted.
+  void doCommand(int command) { }
+  // Other methods of the application omitted...
+}
+// This class defines a GUI for the application.
+class GUI extends Frame {
+  Application app;  // holds a reference to the Application instance
+  // Constructor and other methods omitted here...
+  
+  // This is a convenience method used to create menu items with
+  // a specified label, keyboard shortcut, and command to be executed.
+  // We declare the "command" argument final so the local
+  // ActionListener class can refer to it.
+  MenuItem createMenuItem(String label, char shortcut, final int command) 
+  {
+    // First we create a MenuItem object.
+    MenuItem item = new MenuItem(label, new MenuShortcut(shortcut));
+    // Then we define a local class to serve as our ActionListener.
+    class MenuItemListener implements ActionListener {
+      // Note that this method uses the app field of the enclosing class
+      // and the (final) command argument from its containing scope.
+      public void actionPerformed(ActionEvent e) {
+        app.doCommand(command);
+      }
+    }
+    // Next, we create an instance of our local class that will be
+    // the particular action listener for this MenuItem.
+    ActionListener listener = new MenuItemListener();
+    // Then we register the ActionListener for our new MenuItem.
+    item.addActionListener(listener);
+    // And return the item, ready to be inserted into a menu.
+    return item;
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>createMenuItem()</tt> is the method of interest in
+<A HREF="ch05_04.htm#JNUT2-CH-5-EX-6">Example 5.6</A>.
+It creates a <tt CLASS=literal>MenuItem</tt> object with the specified
+label and keyboard shortcut, and then uses a local class to
+create an <tt CLASS=literal>ActionListener</tt> object for the menu item.
+The <tt CLASS=literal>ActionListener</tt> is responsible for translating
+the selection of the <tt CLASS=literal>MenuItem</tt> into an invocation of
+the application's <tt CLASS=literal>doCommand()</tt> method.  Note that the
+<tt CLASS=literal>command</tt> method parameter is declared <tt CLASS=literal>final</tt>
+so it can be used by the local class.  Also note that the
+local class uses the <tt CLASS=literal>app</tt> field of the class that
+contains it.  Because this is an instance variable instead
+of a local variable, it does not need to be declared
+<tt CLASS=literal>final</tt>.
+
+<P CLASS=para>
+A local class can use fields defined within the local class
+itself or inherited by the local class, <tt CLASS=literal>final</tt>
+local variables and <tt CLASS=literal>final</tt> parameters in the scope of
+the local class 
+definition, and fields defined by or inherited by the
+containing class.
+<A HREF="ch05_04.htm#JNUT2-CH-5-EX-7">Example 5.7</A>
+is a program that demonstrates these various fields and
+variables that are accessible to a local class.  If you can
+make sense of the code, you have a good understanding of
+local classes.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-5-EX-7">Example 5.7: Fields and Variables Accessible to a Local Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class A { protected char a = 'a'; }
+class B { protected char b = 'b'; }
+public class C extends A
+{
+  private char c = 'c';         // Private fields visible to local class.
+  public static char d = 'd';
+  public void createLocalObject(final char e)
+  {
+    final char f = 'f';
+    int i = 0;                  // i not final; not usable by local class.
+    class Local extends B
+    {
+      char g = 'g';
+      public void printVars()
+      {
+        // All of these fields and variables are accessible to this class.
+        System.out.println(g);  // (this.g) g is a field of this class.
+        System.out.println(f);  // f is a final local variable.
+        System.out.println(e);  // e is a final local argument.
+        System.out.println(d);  // (C.this.d) d -- field of containing class.
+        System.out.println(c);  // (C.this.c) c -- field of containing class.
+        System.out.println(b);  // b is inherited by this class.
+        System.out.println(a);  // a is inherited by the containing class.
+      }
+    }
+    Local l = this.new Local(); // Create an instance of the local class
+    l.printVars();              // and call its printVars() method.
+  }
+  
+  public static void main(String[] args)
+  {
+    // Create an instance of the containing class, and invoke the
+    // method that defines and creates the local class.
+    C c = new C();
+    c.createLocalObject('e');   // pass a value for final parameter e.
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Member Classes</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Anonymous Classes</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

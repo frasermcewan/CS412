@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 20] 20.21 java.awt.event.MouseEvent (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:14:11 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch20_20.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 20<br>The java.awt.event Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch20_22.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-20-SECT-21">20.21 java.awt.event.MouseEvent (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-20-SECT-21.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+An event of this type indicates that the user has moved the
+mouse or pressed one of the mouse buttons.
+
+<P CLASS=para>
+Call <tt CLASS=literal>getID()</tt> to determine the specific type of mouse
+event that has occurred.  This method returns one of the
+following seven constants, which corresponds to a method in
+either the <tt CLASS=literal>MouseListener</tt> or
+<tt CLASS=literal>MouseMotionListener</tt> interface.
+
+<P CLASS=para>
+<tt CLASS=literal>MOUSE_PRESSED</tt>
+
+<P CLASS=para>
+The user has pressed a mouse button.
+
+<P CLASS=para>
+<tt CLASS=literal>MOUSE_RELEASED</tt>
+
+<P CLASS=para>
+The user has released a mouse button.
+
+<P CLASS=para>
+<tt CLASS=literal>MOUSE_CLICKED</tt>
+
+<P CLASS=para>
+The user has pressed and released
+a mouse button without any intervening mouse drag.
+
+<P CLASS=para>
+<tt CLASS=literal>MOUSE_DRAGGED</tt>
+
+<P CLASS=para>
+The user has moved the mouse while
+holding a button down
+
+<P CLASS=para>
+<tt CLASS=literal>MOUSE_MOVED</tt>
+
+<P CLASS=para>
+The user has moved the mouse without holding any buttons
+down.
+
+<P CLASS=para>
+<tt CLASS=literal>MOUSE_ENTERED</tt>
+
+<P CLASS=para>
+The mouse pointer has entered the component.
+<tt CLASS=literal>MOUSE_EXITED</tt>
+
+<P CLASS=para>
+The mouse pointer has left the component
+
+<P CLASS=para>
+Use <tt CLASS=literal>getX()</tt> and <tt CLASS=literal>getY()</tt> or <tt CLASS=literal>getPoint()</tt>
+to obtain the coordinates of the mouse event.  Use
+<tt CLASS=literal>translatePoint()</tt> to modify these coordinates by a
+specified amount.
+
+<P CLASS=para>
+Use <tt CLASS=literal>getModifiers()</tt> and other methods and constants
+inherited from <tt CLASS=literal>InputEvent</tt> to determine the mouse
+button or keyboard modifiers that were down when the event
+occurred.  See <tt CLASS=literal>InputEvent</tt> for details.  Note
+that mouse button modifiers are not reported for
+<tt CLASS=literal>MOUSE_RELEASED</tt> events, since, technically, the mouse
+button in question is no longer pressed.  This can be
+surprising. 
+
+<P CLASS=para>
+Use <tt CLASS=literal>getComponent()</tt>, inherited from
+<tt CLASS=literal>ComponentEvent</tt>, to determine over which component the event
+occurred.
+
+<P CLASS=para>
+For mouse events of type <tt CLASS=literal>MOUSE_CLICKED</tt>,
+<tt CLASS=literal>MOUSE_PRESSED</tt>, or <tt CLASS=literal>MOUSE_RELEASED</tt>, call
+<tt CLASS=literal>getClickCount()</tt> to determine how many consecutive
+clicks have occurred.
+
+<P CLASS=para>
+If you are using popup menus, use <tt CLASS=literal>isPopupTrigger()</tt>
+to test whether the current event represents the standard
+platform-dependent popup menu trigger event.  
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>MouseEvent</tt> extends InputEvent {
+    // <tt CLASS=literal>Public Constructor</tt>
+            public <tt CLASS=literal>MouseEvent</tt>(Component <tt CLASS=literal>source</tt>, int <tt CLASS=literal>id</tt>, long <tt CLASS=literal>when</tt>, int <tt CLASS=literal>modifiers</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, 
+            public <tt CLASS=literal>MouseEvent</tt>'u'int <tt CLASS=literal>clickCount</tt>, boolean <tt CLASS=literal>popupTrigger</tt>);
+    // <tt CLASS=literal>Constants</tt>
+            public static final int <tt CLASS=literal>MOUSE_CLICKED</tt>;
+            public static final int <tt CLASS=literal>MOUSE_DRAGGED</tt>;
+            public static final int <tt CLASS=literal>MOUSE_ENTERED</tt>;
+            public static final int <tt CLASS=literal>MOUSE_EXITED</tt>;
+            public static final int <tt CLASS=literal>MOUSE_FIRST</tt>;
+            public static final int <tt CLASS=literal>MOUSE_LAST</tt>;
+            public static final int <tt CLASS=literal>MOUSE_MOVED</tt>;
+            public static final int <tt CLASS=literal>MOUSE_PRESSED</tt>;
+            public static final int <tt CLASS=literal>MOUSE_RELEASED</tt>;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public int <tt CLASS=literal>getClickCount</tt>();
+            public Point <tt CLASS=literal>getPoint</tt>();
+            public int <tt CLASS=literal>getX</tt>();
+            public int <tt CLASS=literal>getY</tt>();
+            public boolean <tt CLASS=literal>isPopupTrigger</tt>();
+            public String <tt CLASS=literal>paramString</tt>();  //<tt CLASS=literal> Overrides ComponentEvent</tt>
+            public synchronized void <tt CLASS=literal>translatePoint</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-20-SECT-21.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Object->EventObject(Serializable)->AWTEvent->ComponentEvent->InputEvent->MouseEvent</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-20-SECT-21.3">Passed To:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>AWTEventMulticaster.mouseClicked(), 
+AWTEventMulticaster.mouseDragged(), 
+AWTEventMulticaster.mouseEntered(), 
+AWTEventMulticaster.mouseExited(), 
+AWTEventMulticaster.mouseMoved(), 
+AWTEventMulticaster.mousePressed(), 
+AWTEventMulticaster.mouseReleased(), 
+Component.processMouseEvent(), 
+Component.processMouseMotionEvent(), 
+MouseAdapter.mouseClicked(), 
+MouseAdapter.mouseEntered(), 
+MouseAdapter.mouseExited(), 
+MouseAdapter.mousePressed(), 
+MouseAdapter.mouseReleased(), 
+MouseListener.mouseClicked(), 
+MouseListener.mouseEntered(), 
+MouseListener.mouseExited(), 
+MouseListener.mousePressed(), 
+MouseListener.mouseReleased(), 
+MouseMotionAdapter.mouseDragged(), 
+MouseMotionAdapter.mouseMoved(), 
+MouseMotionListener.mouseDragged(), 
+MouseMotionListener.mouseMoved()</tt>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch20_20.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch20_22.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.awt.event.MouseAdapter (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.awt.event.MouseListener (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

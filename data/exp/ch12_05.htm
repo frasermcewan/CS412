@@ -1,0 +1,936 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] 12.5 GridBagLayout</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:02:03 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>Layout Managers</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="ch12-SECT1-AUTOID.1">12.5 GridBagLayout</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>GridBagLayout</tt> is a very flexible layout manager
+that allows you to position components relative to one another using
+constraints.  With <tt CLASS=literal>GridBagLayout</tt> (and a fair amount
+of effort) you can create almost any imaginable layout.
+Components are arranged at "logical" coordinates on a abstract grid.
+We'll call them "logical" coordinates because they really designate positions
+in the space of rows and columns formed by the set of components.
+Rows and columns of the grid stretch to different sizes, based on the 
+sizes and constraints of the components they hold.  
+
+<P CLASS=para>
+A row or column in a <tt CLASS=literal>GridBagLayout</tt> expands
+to accommodate the dimensions and 
+constraints of the largest component in its ranks.  
+Individual components may span more than one row or column.  
+Components that aren't as large as their
+grid cell can be "anchored" within their "cell."  They can also be
+set to fill or expand their area in either dimension.   Extra area in
+the grid rows and columns can be parceled out according to the weight
+constraints of the components. Therefore, you can control how various
+components will grow and stretch when a window is resized.
+
+<P CLASS=para>
+<tt CLASS=literal>GridBagLayout</tt> is much easier to use in a
+graphical, WYSIWYG GUI builder
+environment.  That's because working with GridBag is kind of like messing 
+with the "rabbit ears" antennae on your television.  It's not
+particularly difficult 
+to get the results that you want through trial and error, but writing out
+hard and fast rules for how to go about it is difficult.
+In short, 
+<tt CLASS=literal>GridBagLayout</tt> is complex and has some
+quirks.  It is also simply a bit ugly both 
+in model and implementation.  Remember that you can do a lot with nested 
+panels and by composing simpler layout managers within one another.
+If you look back through this chapter, you'll see many examples of composite 
+layouts; it's up to you to determine how far you should go before making
+the break from simpler layout managers to a more complex "do it all in one" 
+layout manager like <tt CLASS=literal>GridBagLayout</tt>.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.1">GridBagConstraints</A></h3>
+
+<P CLASS=para>
+Having said that <tt CLASS=literal>GridBagLayout</tt> is complex
+and a bit ugly, I'm going to contradict myself and say that it's
+surprisingly simple. There is only one constructor with no arguments
+(<tt CLASS=literal>GridBagLayout()</tt>), and there aren't a lot
+of fancy methods to control how the display works. 
+
+<P CLASS=para>
+The appearance of a grid bag layout is controlled by sets of
+<tt CLASS=literal>GridBagConstraints</tt>, and that's where
+things get hairy.  Each component managed by a
+<tt CLASS=literal>GridBagLayout</tt> is associated with a 
+<tt CLASS=literal>GridBagConstraints</tt> 
+object.  <tt CLASS=literal>GridBagConstraints</tt> holds the
+following variables, which we'll describe in detail shortly:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>int gridx, gridy<br>
+<DD>
+
+<P CLASS=para>
+Controls the position of the component on the layout's grid.
+
+<p>
+<DT CLASS=varlistentry>int weightx, weighty<br>
+<DD>
+
+<P CLASS=para>
+Controls how additional space in the row or column is allotted to the
+component. 
+
+<p>
+<DT CLASS=varlistentry>int fill<br>
+<DD>
+
+<P CLASS=para>
+Controls whether the component expands to fill the space allocated to it.
+
+<p>
+<DT CLASS=varlistentry>int gridheight, gridwidth<br>
+<DD>
+
+<P CLASS=para>
+Controls the number of rows or columns the component occupies.
+
+<p>
+<DT CLASS=varlistentry>int anchor<br>
+<DD>
+
+<P CLASS=para>
+Controls the position of the component if there is extra room within
+the space allocated for it.
+
+<p>
+<DT CLASS=varlistentry>int ipadx, ipady<br>
+<DD>
+
+<P CLASS=para>
+Controls padding between the component and the borders of it's area.
+
+<p>
+<DT CLASS=varlistentry>Insets insets<br>
+<DD>
+
+<P CLASS=para>
+Controls padding between the component and neighboring components.</DL>
+<P CLASS=para>
+To make a set of constraints for a component or components, you 
+simply create a new instance of <tt CLASS=literal>GridBagConstraints</tt> and set these public 
+variables to the appropriate values.  There are no pretty constructors,
+and not much else to the class at all.
+
+<P CLASS=para>
+The easiest way to associate a set of constraints with a component is
+to use the version of <tt CLASS=literal>add()</tt> that takes 
+a layout object as an argument, in addition to the component itself.  This 
+puts the component in the container and associates your
+<tt CLASS=literal>GridBagConstraints</tt> object with it.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    Component component = new Label("constrain me, please...");
+    GridBagConstraints constraints = new GridBagConstraints;
+    constraints.gridx = x;
+    constraints.gridy = y;
+    ...
+    add( component, constraints );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can also add a component to a
+<tt CLASS=literal>GridBagLayout</tt> using the single argument
+<tt CLASS=literal>add()</tt> method, and then later calling the
+layout's <tt CLASS=literal>setConstraints()</tt> method directly, to
+pass it the <tt CLASS=literal>GridBagConstraints</tt> object for
+that component. 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    add( component );
+    ...
+    myGridBagLayout.setConstraints( component, constraints );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In either case, the set of constraints is copied when it is applied to
+the component. Therefore, you're free to create a single set of
+<tt CLASS=literal>GridBagConstraints</tt>, modify it as needed,
+and apply it as needed to different objects. You might find it helpful
+to create a helper method that sets the constraints appropriately,
+then adds the method with its constraints to the layout. That's the
+approach we'll take in our examples; our helper method is called
+<tt CLASS=literal>addGB()</tt>, and it takes a component plus a
+pair of coordinates as arguments. These coordinates become the
+<tt CLASS=literal>gridx</tt> and
+<tt CLASS=literal>gridy</tt> values for the constraints. 
+We could expand upon this later and overload
+<tt CLASS=literal>addGB()</tt> to take 
+more parameters for other constraints that we often change from component
+to component.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.2">Grid Coordinates</A></h3>
+
+<P CLASS=para>
+One of the biggest surprises in the
+<tt CLASS=literal>GridBagLayout</tt> is that there's no way to
+specify the size of the grid. There doesn't have to be. The grid size
+is determined implicitly by the constraints of all the objects; the
+layout manager picks dimensions large enough so that everything fits.
+Thus, if you put one component in a layout and set its
+<tt CLASS=literal>gridx</tt> and
+<tt CLASS=literal>gridy</tt> constraints to 25, the layout
+manager creates a 25 x 25 grid, with rows and columns both numbered
+from 0 to 24. If you add a second component with a
+<tt CLASS=literal>gridx</tt> of 30 and a
+<tt CLASS=literal>gridy</tt> of 13, the grid's dimensions change
+to 30 x 25.  You don't have to worry about setting up an appropriate
+number of rows and columns. The layout manager does it automatically,
+as you add components.
+
+<P CLASS=para>
+With this knowledge, we're ready to create some simple displays. We'll
+start by arranging a group of components in a cross shape. We maintain
+explicit <tt CLASS=literal>x</tt> and
+<tt CLASS=literal>y</tt> local variables, setting them as we add
+the components to  
+our grid.  This is partly for clarity, but it can
+be a handy technique when you want to add a number of components in a 
+row or column.  You can simply increment <tt CLASS=literal>gridx</tt>
+or <tt CLASS=literal>gridy</tt> before adding each component. This is
+a simple and problem-free way to achieve relative placement.
+(Later, we'll describe <tt CLASS=literal>GridBagConstraints</tt>'s
+RELATIVE constant, which does relative placement automatically.)
+Here's our first layout:
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-6">Figure 12.6: "A Simple Layout"</A></h4>
+
+
+<p>
+<img align=middle src="./figs/gb1.gif" alt="[Graphic: Figure 12-6]" width=239 height=233 border=0>
+
+
+<p>
+<img align=middle src="./figs/gb1dia.gif" alt="[Graphic: Figure 12-6]" width=217 height=217 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*;
+public class GridBag1 extends java.applet.Applet {
+    GridBagConstraints constraints = new GridBagConstraints();
+    void addGB( Component component, int x, int y  ) {
+        constraints.gridx = x;  
+        constraints.gridy = y;
+        add ( component, constraints );
+    }
+    
+    public void init() {
+        setLayout( new GridBagLayout() );
+        int x, y;  // for clarity
+        addGB( new Button("North"),  x=1,y=0 );
+        addGB( new Button("West"),   x=0,y=1 );
+        addGB( new Button("Center"), x=1,y=1 );
+        addGB( new Button("East"),   x=2,y=1 );
+        addGB( new Button("North"),  x=1,y=2 );
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You probably noticed that the buttons in this example are "clumped"
+together in the center of their display area. Each button is displayed
+at its preferred size, without stretching the button to fill the
+available space.  This is how the layout
+manager behaves when the "weight" constraints are left unset.  We'll 
+talk more about weights in the next two sections.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.3">Fill</A></h3>
+
+<P CLASS=para>
+Now let's make the buttons expand to fill the entire applet. To do so,
+we must take two steps: we must set the
+<tt CLASS=literal>fill</tt> constraint for each button to the
+value <tt CLASS=literal>BOTH</tt>, and we must set the
+<tt CLASS=literal>weightx</tt> and
+<tt CLASS=literal>weighty</tt> values to the same nonzero value.
+Here's the resulting layout, followed by the applet:
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-7">Figure 12.7: Expanded Button Layout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/gb2.gif" alt="[Graphic: Figure 12-7]" width=267 height=239 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+
+    public void init() {
+        setLayout( new GridBagLayout() );
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        constraints.fill = GridBagConstraints.BOTH;
+        int x, y;  // for clarity
+        addGB( new Button("North"),  x=1,y=0 );
+        addGB( new Button("West"),   x=0,y=1 );
+        addGB( new Button("Center"), x=1,y=1 );
+        addGB( new Button("East"),   x=2,y=1 );
+        addGB( new Button("North"),  x=1,y=2 );
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>BOTH</tt> is one of the constants of the
+<tt CLASS=literal>GridBagConstraints</tt> class; it tells the
+component to fill the available space in both directions. The
+following table lists the 
+constants that you can use to set the <tt CLASS=literal>fill</tt>
+field:
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>HORIZONTAL</tt><br>
+<DD>
+
+<P CLASS=para>
+Fill the available horizontal space.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>VERTICAL</tt><br>
+<DD>
+
+<P CLASS=para>
+Fill the available vertical space.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>BOTH</tt><br>
+<DD>
+
+<P CLASS=para>
+Fill the available space in both directions.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NONE</tt><br>
+<DD>
+
+<P CLASS=para>
+Don't fill the available space; display the component at its preferred
+size. </DL>
+<P CLASS=para>
+We set the weight constraints to 1.0; it doesn't matter what they are,
+provided that each component has the same non-zero weight.
+<tt CLASS=literal>fill</tt> doesn't work if the 
+component weights in the direction you're filling are 0, which is the
+default value.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.4">Weighting</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>weightx</tt> and
+<tt CLASS=literal>weighty</tt> variables of a
+<tt CLASS=literal>GridBagConstraints</tt> object determine how
+space is distributed among the columns or rows in a layout. As long as
+you keep things simple, the effect these variables have is fairly
+intuitive: the larger the weight, the greater the amount of space
+allocated to the component. The display below shows what happens if we
+vary the <tt CLASS=literal>weightx</tt> constraint from 0.1 to
+1.0 as we place three buttons in a row.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-8">Figure 12.8: Varied weightx</A></h4>
+
+
+<p>
+<img align=middle src="./figs/gb3a.gif" alt="[Graphic: Figure 12-8]" width=219 height=224 border=0>
+
+
+<p>
+<img align=middle src="./figs/gb3b.gif" alt="[Graphic: Figure 12-8]" width=367 height=224 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    public void init() {
+        setLayout( new GridBagLayout() );
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weighty = 1.0;
+        int x, y; // for clarity
+        constraints.weightx = 0.1;
+        addGB( new Button("one"),   x=0, y=0 );
+        constraints.weightx = 0.5;
+        addGB( new Button("two"),   ++x, y );
+        constraints.weightx = 1.0;
+        addGB( new Button("three"), ++x, y );
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Although the weight values have no real meaning, you might find it
+convenient to use values that add up to 1. When you're working with
+weights, it is best not to get complicated. The effect of combining
+weights with different padding values can be very strange, as can be
+the effect of using different <tt CLASS=literal>weightx</tt> values for
+components in the same column, or different <tt CLASS=literal>weighty</tt>
+values for components in the same row. While it's possible to examine
+the code for the <tt CLASS=literal>GridBagLayout</tt> and figure out
+exactly what it will do in any given situation, it really isn't worth
+the effort.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.5">Spanning rows and columns</A></h3>
+
+<P CLASS=para>
+Perhaps the best feature of the <tt CLASS=literal>GridBaglayout</tt> is
+that it lets you create arrangements in which components span two or
+more rows or columns. To do so, you set the
+<tt CLASS=literal>gridwidth</tt> and <tt CLASS=literal>gridheight</tt>
+variables of the <tt CLASS=literal>GridBagConstraints</tt>.  Here's an
+applet that creates such a display; button one spans two columns
+vertically, and button four spans two horizontally.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-9">Figure 12.9: Layout Using GridBagConstraints</A></h4>
+
+
+<p>
+<img align=middle src="./figs/gb4.gif" alt="[Graphic: Figure 12-9]" width=308 height=289 border=0>
+
+
+<p>
+<img align=middle src="./figs/gb4dia.gif" alt="[Graphic: Figure 12-9]" width=510 height=300 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    public void init() {
+        setLayout( new GridBagLayout() );
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        constraints.fill = GridBagConstraints.BOTH;
+        int x, y;  // for clarity
+        constraints.gridheight = 2; // Span two rows
+        addGB( new Button("one"),   x=0, y=0 );
+        constraints.gridheight = 1; // set it back
+        addGB( new Button("two"),   x=1, y=0 );
+        addGB( new Button("three"), x=2, y=0 );
+        constraints.gridwidth = 2; // Span two columns
+        addGB( new Button("four"),  x=1, y=1 );
+        constraints.gridwidth = 1; // set it back
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The size of each element is controlled by the
+<tt CLASS=literal>gridwidth</tt> and <tt CLASS=literal>gridheight</tt> values
+of its constraints. For button one, we set
+<tt CLASS=literal>gridheight</tt> to 2.  Therefore, it is two cells high;
+its <tt CLASS=literal>gridx</tt> and <tt CLASS=literal>gridy</tt> positions
+are both zero, so it occupies cell (0,0) and the cell directly below
+it, (0,1). Likewise, button four has a <tt CLASS=literal>gridwidth</tt> of
+2 and a <tt CLASS=literal>gridheight</tt> of 1, so it occupies two cells
+horizontally. We place this button in cell (1,1), so it occupies that
+cell and its neighbor, (2,1).
+
+<P CLASS=para>
+In this example, we set the <tt CLASS=literal>fill</tt> to
+<tt CLASS=literal>BOTH</tt>, and
+<tt CLASS=literal>weightx</tt> and
+<tt CLASS=literal>weighty</tt> to 1, for all components. By doing
+so, we told each button to occupy all the space available. Strictly
+speaking, this isn't necessary. However, it makes it easier to see
+exactly how much space each button occupies. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.6">Anchoring</A></h3>
+
+<P CLASS=para>
+If a component is smaller than the space available for it, it is
+centered by default. But centering isn't the only possibility. The
+<tt CLASS=literal>anchor</tt> constraint tells a grid bag layout
+how to position a component within its space. Possible values are:
+<tt CLASS=literal>GridBagConstraints.CENTER</tt>,
+<tt CLASS=literal>NORTH</tt>, <tt CLASS=literal>NORTHEAST</tt>, <tt CLASS=literal>EAST</tt>, <tt CLASS=literal>SOUTHEAST</tt>, <tt CLASS=literal>SOUTH</tt>, <tt CLASS=literal>SOUTHWEST</tt>, <tt CLASS=literal>WEST</tt>, and
+<tt CLASS=literal>NORTHWEST</tt>. For example, an anchor of 
+<tt CLASS=literal>GridBagConstraints.NORTH</tt> centers a
+component at the top of its display area;
+<tt CLASS=literal>SOUTHEAST</tt> places a component at the bottom
+left of its area. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.7">Padding and Insets</A></h3>
+
+<P CLASS=para>
+Another way to control the behavior of a component in a grid bag
+layout is to use padding and insets. Padding is determined by the
+<tt CLASS=literal>ipadx</tt> and
+<tt CLASS=literal>ipady</tt> fields of
+<tt CLASS=literal>GridBagConstraints</tt>. They specify
+additional horizontal and vertical space that is added to the
+component when it is placed in its cell. In the example below, the
+West button is larger because we have set the
+<tt CLASS=literal>ipadx</tt> and
+<tt CLASS=literal>ipady</tt> values of its constraints to 25.
+Therefore, the layout manager gets the button's preferred size and adds 
+25 pixels in each direction to determine the button's actual size. The
+sizes of the other buttons are unchanged because their padding is set
+to 0 (the default), but their spacing is different. The West button is
+unnaturally tall, which means that the middle row of the layout must
+be taller than the others. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-10">Figure 12.10: Layout Using Padding and Insets</A></h4>
+
+
+<p>
+<img align=middle src="./figs/gb5.gif" alt="[Graphic: Figure 12-10]" width=266 height=252 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    public void init() {
+        setLayout( new GridBagLayout() );
+        int x, y;  // for clarity
+        addGB( new Button("North"),  x=1,y=0 );
+        constraints.ipadx = 25;  // set padding
+        constraints.ipady = 25;
+        addGB( new Button("West"),   x=0,y=1 );
+        constraints.ipadx = 0;   // set padding back
+        constraints.ipady = 0;
+        addGB( new Button("Center"), x=1,y=1 );
+        addGB( new Button("East"),   x=2,y=1 );
+        addGB( new Button("North"),  x=1,y=2 );
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Notice that the horizontal padding, <tt CLASS=literal>ipadx</tt>,
+is added on both the left and right sides of the button. Therefore,
+the button grows horizontally by twice the value of
+<tt CLASS=literal>ipadx</tt>. Likewise, the vertical padding,
+<tt CLASS=literal>ipady</tt>, is added on both the top and the
+bottom. 
+
+<P CLASS=para>
+Insets add space between the edges of the component and its cell. They
+are stored in the <tt CLASS=literal>insets</tt> field of
+<tt CLASS=literal>GridBagConstraints</tt>, which is an
+<tt CLASS=literal>Insets</tt> object. An
+<tt CLASS=literal>Insets</tt> object has four fields, to specify
+the margins on the <tt CLASS=literal>top</tt>,
+<tt CLASS=literal>bottom</tt>, <tt CLASS=literal>left</tt>,
+and <tt CLASS=literal>right</tt> of the component. The
+relationship between insets and padding can be confusing. As shown in
+the following diagram, padding is added to the component itself,
+increasing its size. Insets are external to the component and
+represent the margin between the component and its cell. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-11">Figure 12.11: Another Layout Using Padding and Insets</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1211.gif" alt="[Graphic: Figure 12-11]" width=403 height=182 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Padding and weighting have an odd interaction with each other. If you
+use padding, it is best to use the default
+<tt CLASS=literal>weightx</tt> and
+<tt CLASS=literal>weighty</tt> values for each component. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.8">Relative Positioning</A></h3>
+
+<P CLASS=para>
+In all of our grid bag layouts so far, we have specified the
+<tt CLASS=literal>gridx</tt> and <tt CLASS=literal>gridy</tt>
+coordinates of each component explicitly using its constraints.
+There's another alternative: relative positioning.
+
+<P CLASS=para>
+Conceptually, relative positioning is simple: we simply say "put this
+component to the left of (or below) the previous component." To do so,
+set <tt CLASS=literal>gridx</tt> or
+<tt CLASS=literal>gridy</tt> to the constant
+<tt CLASS=literal>GridBagConstraints.RELATIVE</tt>.
+Unfortunately, it's not as simple as this. Here are a couple of
+warnings: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>To place a component to the right of the previous one, set
+<tt CLASS=literal>gridx</tt> to
+<tt CLASS=literal>RELATIVE</tt>, AND use the same
+value for <tt CLASS=literal>gridy</tt> as you used for the
+previous component.
+
+<P>
+<li CLASS=listitem>Similarly, to place a component below the previous one, set
+<tt CLASS=literal>gridy</tt> to
+<tt CLASS=literal>RELATIVE</tt>, AND leave 
+<tt CLASS=literal>gridx</tt> unchanged. 
+
+<P>
+<li CLASS=listitem>Setting both <tt CLASS=literal>gridx</tt> and
+<tt CLASS=literal>gridy</tt> to
+<tt CLASS=literal>RELATIVE</tt> places all the components in one
+row, not in a diagonal line, as you would expect. (This is the
+default.) 
+
+<P>
+</UL>
+<P CLASS=para>
+In other words, if <tt CLASS=literal>gridx</tt> or
+<tt CLASS=literal>gridy</tt> is <tt CLASS=literal>RELATIVE</tt>, you had
+better leave the other value unchanged.  In short,
+<tt CLASS=literal>RELATIVE</tt> makes it easy to arrange a lot of
+components in a row or a column. That's what it was intended for; if
+you try to do something else, you're fighting against the layout
+manager, not working with it.
+
+<P CLASS=para>
+<tt CLASS=literal>GridBagLayout</tt> allows another kind of
+relative positioning, in which you specify where, in a row or a
+column, the component should be placed. To do so, you use
+the <tt CLASS=literal>gridwidth</tt> and
+<tt CLASS=literal>gridheight</tt> fields of
+<tt CLASS=literal>GridBagConstraints</tt>. Setting either of
+these to the constant <tt CLASS=literal>REMAINDER</tt> says that
+the component should be the last item in its row or column, and
+therefore should occupy all the remaining space. Setting either
+<tt CLASS=literal>gridwidth</tt> or
+<tt CLASS=literal>gridheight</tt> to
+<tt CLASS=literal>RELATIVE</tt> says that it should be the second
+to the last item in its row or column. Obviously, you can use these
+constants to create constraints that can't possibly be met; for
+example, you can say that two components must be the last
+component in a row. In these cases, the layout manager tries to
+do something reasonable--but it will almost certainly do something you
+don't want. Again, relative placement works well as long as you don't
+try to twist it into doing something it wasn't designed for. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch12-SECT2-AUTOID.9">Composite layouts</A></h3>
+
+<P CLASS=para>
+Sometimes things don't fall neatly into little boxes. This is true of
+layouts as well as life.  For example, if you want to use some of 
+<tt CLASS=literal>GridBagLayout</tt>'s weighting features for
+part of your GUI, you could create separate layouts for different
+parts of the GUI, and combine them with yet another layout. That's how
+we'll build the pocket calculator interface below. We will use three
+grid bag layouts: one for the first row of buttons (C, %, +), one for
+the last (0, ., =), and one for the applet itself. The master layout
+(the applet's) manages the text field we use for the display, the
+panels containing the first and last rows of buttons, and the twelve
+buttons in the middle.[2]
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+If you're curious, this calculator is based on the ELORG-801, which I
+found in an online "calculator museum": see
+<A HREF="http://www.geocities.com/CapeCanaveral/6747/elorg801.jpg">http://www.geocities.com/CapeCanaveral/6747/elorg801.jpg</A>. 
+</blockquote>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-12">Figure 12.12: The Calculator Applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1212.gif" alt="[Graphic: Figure 12-12]" width=200 height=271 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Here's the code for the <tt CLASS=literal>Calculator</tt> applet.
+It only implements the user interface (i.e., the keyboard); it
+collects everything you type in the display field, until you press C
+(clear).  Figuring
+out how to connect the GUI to some other code that would perform the
+operations is up to you. One strategy would be to send an event to the
+object that does the computation whenever the user presses the equals
+sign. That object could read the contents of the text field, parse it,
+do the computation, and display the results. 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class Calculator extends java.applet.Applet 
+                            implements ContainerListener, ActionListener {
+    GridBagConstraints gbc = new GridBagConstraints(); {
+        gbc.weightx = 1.0;  gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+    }
+    TextField theDisplay = new TextField();
+    public void init() {
+        setFont( new Font("Monospaced", Font.BOLD, 24) );
+        addContainerListener( this );
+        gbc.gridwidth=4;
+        addGB( this, theDisplay, 0, 0 );
+        // make the top row
+        Panel topRow = new Panel(); 
+        topRow.addContainerListener( this );
+        gbc.gridwidth = 1;
+        gbc.weightx = 1.0;
+        addGB( topRow, new Button("C"), 0, 0 );
+        gbc.weightx = 0.33;
+        addGB( topRow, new Button("%"), 1, 0 );
+        gbc.weightx = 1.0;
+        addGB( topRow, new Button("+"), 2, 0 );
+        gbc.gridwidth = 4;
+        addGB( this, topRow, 0, 1 );
+        gbc.weightx = 1.0;  gbc.gridwidth = 1;
+        // make the digits
+        for(int j=0; j&lt;3; j++)
+            for(int i=0; i&lt;3; i++)
+                addGB( this, new Button( "" + ((2-j)*3+i+1) ), i, j+2 );
+        // -, x, and divide
+        addGB( this, new Button("-"), 3, 2 );
+        addGB( this, new Button("x"), 3, 3 );
+        addGB( this, new Button("\u00F7"), 3, 4 );
+        // make the bottom row
+        Panel bottomRow = new Panel(); 
+        bottomRow.addContainerListener( this );
+        gbc.weightx = 1.0;
+        addGB( bottomRow, new Button("0"), 0, 0 );
+        gbc.weightx = 0.33;
+        addGB( bottomRow, new Button("."), 1, 0 );
+        gbc.weightx = 1.0;
+        addGB( bottomRow, new Button("="), 2, 0 );
+        gbc.gridwidth = 4;
+        addGB( this, bottomRow, 0, 5 );
+    }
+    private void addGB( Container cont, Component comp, int x, int y  ) {
+        if ( ! (cont.getLayout() instanceof GridBagLayout) )
+            cont.setLayout( new GridBagLayout() );
+        gbc.gridx = x;  gbc.gridy = y;
+        cont.add( comp, gbc );
+    }
+    public void componentAdded( ContainerEvent e ) {
+        Component comp = e.getChild();
+        if ( comp instanceof Button )
+            ((Button)comp).addActionListener( this );
+    }
+    public void componentRemoved( ContainerEvent e ) { }
+    public void actionPerformed( ActionEvent e ) {
+        if ( e.getActionCommand().equals("C") )
+            theDisplay.setText( "" );
+        else 
+            theDisplay.setText( theDisplay.getText() + e.getActionCommand() );
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Once again, we use an <tt CLASS=literal>addGB()</tt> helper
+method to add components with their constraints to the layout. Before
+discussing how to build the display, let's look at
+<tt CLASS=literal>addGB()</tt>. We said earlier that there are
+three layout managers in our user interface: one for the applet
+itself, one for the panel containing the first row of buttons
+(<tt CLASS=literal>topRow</tt>), and one for the panel containing
+the bottom row of buttons (<tt CLASS=literal>bottomRow</tt>). 
+We use <tt CLASS=literal>addGB()</tt> for all three layouts; its
+first argument specifies the container to add the component to. 
+Thus, when the first argument is <tt CLASS=literal>this</tt>,
+we're adding an object to the applet itself. When the first argument
+is <tt CLASS=literal>topRow</tt>, we're adding a button to the
+first row of buttons. 
+<tt CLASS=literal>addGB()</tt> first checks the container's
+layout manager, and sets it to
+<tt CLASS=literal>GridBagLayout</tt> if it isn't already set
+properly. It then sets the object's position by modifying a set of
+constraints, <tt CLASS=literal>gbc</tt>, and then uses these
+constraints to add the object to the container. 
+<P CLASS=para>
+We use a single set of constraints throughout the applet, modifying
+fields as we see fit. The constraints are created and initialized at
+the beginning of the applet, using a nonstatic initializer block.
+Before
+calling <tt CLASS=literal>addGB()</tt>, we set any fields of
+<tt CLASS=literal>gbc</tt> for which the defaults are
+inappropriate. Thus, for the display itself, we set the 
+grid width to 4, and add the display directly to the applet
+(<tt CLASS=literal>this</tt>). The
+<tt CLASS=literal>add()</tt> method, which is called by
+<tt CLASS=literal>addGB()</tt>, makes a copy of the constraints,
+so we're free to reuse <tt CLASS=literal>gbc</tt> throughout the
+applet. 
+
+<P CLASS=para>
+The first row of buttons (and the last) are the motivation for the
+composite layout. Using a single
+<tt CLASS=literal>GridBagLayout</tt>, it's very difficult (or
+impossible) to create buttons that aren't aligned with the grid; that
+is, you can't say "I want the C button to have a width of 1.5."
+Therefore, <tt CLASS=literal>topRow</tt> has its own layout
+manager, with three horizontal cells, allowing each button in the row
+to have a width of 1. To control the size of the buttons, 
+we set the 
+<tt CLASS=literal>weightx</tt> variables so that the 
+"clear" and "plus" buttons take up more space than the "percent"
+button. We then add the <tt CLASS=literal>topRow</tt> as a whole
+to the applet, with a width of 4. The bottom row is built similarly. 
+
+<P CLASS=para>
+To build the buttons for the digits 1-9, we use a doubly nested loop.
+There's nothing particularly interesting about this loop, except that
+it's probably a bit too clever for good taste. The minus, multiply,
+and divide buttons are also simple: we create a button with the
+appropriate label, and use <tt CLASS=literal>addGB()</tt> to
+place it in the applet. It's worth noting that we used a Unicode
+constant to request a real division sign, rather than wimping out and 
+using a slash. 
+
+<P CLASS=para>
+That's it for the user interface; the only topic left is event
+handling. Each button generates action events; we need to register
+listeners for these events. We'll make the applet the listener for all
+the buttons. To register the applet as a listener, we'll be clever.
+Whenever a component is added to a container, the container generates
+a <tt CLASS=literal>ContainerEvent</tt>. Therefore, we can write
+<tt CLASS=literal>componentAdded()</tt> and
+<tt CLASS=literal>componentRemoved()</tt> methods, declare that
+the applet is a <tt CLASS=literal>ContainerListener</tt>, and use
+<tt CLASS=literal>componentAdded()</tt> to register listeners for
+our buttons. This means that the applet must register as a
+<tt CLASS=literal>ContainerListener</tt> for itself, and for the
+two panels, <tt CLASS=literal>topRow</tt> and
+<tt CLASS=literal>bottomRow</tt>. Our
+<tt CLASS=literal>componentAdded()</tt> method is very simple. It
+calls <tt CLASS=literal>getChild()</tt> to find out what
+component caused the event (i.e., what component was added). If that
+component is a button, it registers the applet as an
+<tt CLASS=literal>ActionListener</tt> for that button. 
+
+<P CLASS=para>
+<tt CLASS=literal>actionPerformed()</tt> is called whenever the
+user presses any button. It clears the display if the user pressed the
+"C" button; otherwise, it appends the button's action command (in this
+case, its label) to the display.
+
+<P CLASS=para>
+Combining layout managers is an extremely useful trick. Granted, this
+applet verges on overkill. You won't often need to create a composite
+layout using multiple grid bags. Composite layouts are most common
+with the <tt CLASS=literal>BorderLayout</tt>; you'll frequently
+use different layout managers for each of a border layout's regions.
+For example, the Center region might be a
+<tt CLASS=literal>ScrollPane</tt>, which has its own
+special-purpose layout manager;
+the East and South regions might be panels managed
+by grid layouts or flow layouts, as appropriate. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>CardLayout</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Nonstandard Layout Managers</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

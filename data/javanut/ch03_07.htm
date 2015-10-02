@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.7 Overriding Methods</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:49:52 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Classes and Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-7">3.7 Overriding Methods</A></h2>
+
+<P CLASS=para>
+<A NAME="CH3.OVERRIDDEN.M1"></A><A NAME="CH3.METHODS3"></A>When a class defines a method using the same name, return
+type, and arguments as a method in its superclass, the method
+in the class <I CLASS=emphasis>overrides</I> the method in the superclass.
+When the method is invoked for an object of the class, it is
+the new definition of the method that is called, not the
+superclass' old definition.
+
+<P CLASS=para>
+Method overriding is an important and useful technique in
+object-oriented programming.  Suppose we define a subclass
+<tt CLASS=literal>Ellipse</tt> of our <tt CLASS=literal>Circle</tt> class.
+[9]
+Then it would
+be important for <tt CLASS=literal>Ellipse</tt> to override the
+<tt CLASS=literal>area()</tt> and <tt CLASS=literal>circumference()</tt> methods of
+<tt CLASS=literal>Circle</tt>.  <tt CLASS=literal>Ellipse</tt> would have to implement new
+versions of these functions because the formulas that apply
+to circles don't work for ellipses.
+
+<blockquote class=footnote>
+<P CLASS=para>[9] 
+This is admittedly a strange thing to do, since,
+mathematically, a circle is a kind of ellipse, and it is
+customary to derive a more specific class from a more
+general one.  Nevertheless, it is a useful example here.
+</blockquote>
+<P CLASS=para>
+Before we go any further with the discussion of method
+overriding, be sure that you understand the difference
+between method overriding and method overloading, which we
+discussed earlier.  As you
+probably recall, method overloading refers to the practice
+of defining multiple methods (in the same class) with the
+same name but with differing argument lists.
+This is very different from method overriding, and it is
+important not to get them confused!
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-7.1">Overriding Is Not Shadowing</A></h3>
+
+<P CLASS=para>
+Although Java treats the variables and methods of a class
+analogously in many ways, method overriding is not like
+variable shadowing at all: You can refer to shadowed variables
+simply by casting an object to the appropriate type.  You
+cannot invoke overridden methods with this technique,
+however.
+<A HREF="ch03_07.htm#JNUT2-CH-3-EX-12">Example 3.12</A>
+illustrates this crucial difference.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-12">Example 3.12: Method Overriding versus Variable Shadowing</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class A {
+    int i = 1;
+    int f() { return i; }
+}
+class B extends A {
+    int i = 2;                          // Shadows variable i in class A.
+    int f() { return -i; }              // Overrides method f in class A.
+}
+public class override_test {
+    public static void main(String args[]) {
+        B b = new B();
+        System.out.println(b.i);     // Refers to B.i; prints 2.
+        System.out.println(b.f());   // Refers to B.f(); prints -2.
+        A a = (A) b;                 // Cast b to an instance of class A.
+        System.out.println(a.i);     // Now refers to A.i; prints 1;
+        System.out.println(a.f());   // Still refers to B.f(); prints -2;
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+While this difference between method overriding and variable
+shadowing may seem surprising at first, a little thought makes
+the purpose clear.  Suppose we have a bunch of
+<tt CLASS=literal>Circle</tt> and <tt CLASS=literal>Ellipse</tt> (a subclass of
+<tt CLASS=literal>Circle</tt>) objects that we are manipulating.  To keep
+track of the circles and ellipses, we store them in an array
+of type <tt CLASS=literal>Circle[]</tt>, casting all the <tt CLASS=literal>Ellipse</tt>
+objects to <tt CLASS=literal>Circle</tt> objects before we store them.
+Then, when we loop through the elements of this array, we
+don't have to know or care whether the element is actually a
+<tt CLASS=literal>Circle</tt> or an <tt CLASS=literal>Ellipse</tt>.  What we do care
+very much about, however, is that the correct value is
+computed when we invoke the <tt CLASS=literal>area()</tt> method of any
+element of the array.  That is, we don't want to use the
+formula for the area of a circle when the object is actually
+an ellipse!
+
+<P CLASS=para>
+Seen in this context, it is not surprising at all that method
+overriding is handled differently by Java than variable
+shadowing.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-7.2">final Methods</A></h3>
+
+<P CLASS=para>
+If a method is declared <tt CLASS=literal>final</tt>, it means that the
+method declaration is the "final" one--that it cannot be
+overridden.  <tt CLASS=literal>static</tt> methods and <tt CLASS=literal>private</tt>
+methods (which we haven't learned about yet) cannot be
+overridden either, nor can the methods of a <tt CLASS=literal>final</tt>
+class.  If a method cannot be overridden, the compiler may
+perform certain optimizations on it, as we'll see below.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-7.3">Dynamic Method Lookup</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.DYNAMIC.METH1"></A>If we have an array of <tt CLASS=literal>Circle</tt> and <tt CLASS=literal>Ellipse</tt>
+objects, how does the compiler know to call the <tt CLASS=literal>Circle area()</tt>
+method or the <tt CLASS=literal>Ellipse area()</tt> method for
+any given item in the array?  The compiler does not know
+this; it can't.  The compiler knows that it does not know,
+however, and produces code that uses "dynamic method lookup"
+at run-time.  
+When the interpreter runs the code, it looks
+up the appropriate <tt CLASS=literal>area()</tt> method to call for each of
+the objects.  That is, when the interpreter interprets
+the expression <tt CLASS=literal>s.area()</tt>, it dynamically looks for an
+<tt CLASS=literal>area()</tt> method associated with the particular object
+referred to by the variable <tt CLASS=literal>s</tt>.  It does not simply
+use the <tt CLASS=literal>area()</tt> method that is statically associated
+with the type of the variable <tt CLASS=literal>s</tt>.
+[10]
+
+<blockquote class=footnote>
+<P CLASS=para>[10] 
+C++ programmers should note that dynamic method lookup is
+what C++ does for <tt CLASS=literal>virtual</tt> functions.  An
+important difference between Java and C++ is that Java does
+not have a <tt CLASS=literal>virtual</tt> keyword; methods in Java
+are "virtual" by default.
+</blockquote>
+<P CLASS=para>
+Dynamic method lookup is fast, but it is not as fast as
+invoking a method directly.  Fortunately, there are a number
+of cases in which Java does not need to use dynamic method
+lookup.  <tt CLASS=literal>static</tt> methods cannot be overridden, so
+they are always invoked directly.  <tt CLASS=literal>private</tt> methods
+(which we haven't learned about yet) are not inherited by
+subclasses and so cannot be overridden by subclasses; this
+means the Java compiler can safely invoke them without
+dynamic method lookup as well.  <tt CLASS=literal>final</tt> methods are
+invoked directly for the same reason: they cannot be
+overridden.  Finally, when a method of a <tt CLASS=literal>final</tt> class
+is invoked through an instance of the class or a subclass
+of it, then it, too, can be invoked without the overhead
+of dynamic lookup.  These <tt CLASS=literal>static</tt>, <tt CLASS=literal>final</tt>, and
+<tt CLASS=literal>private</tt> methods that can be invoked directly are
+also candidates for inlining--i.e., if the methods are
+short, the compiler may simply insert the method body into
+the code rather than inserting a call to the method.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-7.4">Invoking an Overridden Method</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.INVOKING.OVE1"></A>We've seen the important differences between method
+overriding and variable shadowing.  Nevertheless, the Java syntax for
+invoking an overridden method is very similar to the syntax
+for accessing a shadowed variable: both use the
+<tt CLASS=literal>super</tt> keyword.<A NAME="CH3.SUPER.KEYWOR2"></A>
+<A HREF="ch03_07.htm#JNUT2-CH-3-EX-13">Example 3.13</A>
+illustrates this.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-13">Example 3.13: Invoking an Overridden Method</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class A {
+    int i = 1;
+    int f() { return i; }        // A very simple method.
+}
+class B extends A {
+    int i;                       // This variable shadows i in A.
+    int f() {                    // This method overrides f() in A.
+        i = super.i + 1;         // It retrieves A.i this way.
+        return super.f() + i;    // And it invokes A.f() this way.
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Recall that when you use <tt CLASS=literal>super</tt> to refer to a shadowed
+variable, it is the same as casting <tt CLASS=literal>this</tt> to the
+superclass type and accessing the variable through that.  On
+the other hand, using <tt CLASS=literal>super</tt> to invoke an overridden
+method is not the same as casting <tt CLASS=literal>this</tt>.  In this
+case, <tt CLASS=literal>super</tt> has the special purpose of turning off
+dynamic method lookup and invoking the specific method that
+the superclass defines or inherits.
+
+<P CLASS=para>
+In
+<A HREF="ch03_07.htm#JNUT2-CH-3-EX-13">Example 3.13</A>
+we use <tt CLASS=literal>super</tt> to invoke an overridden method that is
+actually defined in the immediate superclass.  <tt CLASS=literal>super</tt>
+also works perfectly well to invoke overridden methods that
+are defined further up the class hierarchy.  This is because
+the overridden method is inherited by the immediate
+superclass, and so the <tt CLASS=literal>super</tt> syntax does in fact
+refer to the correct method.
+
+<P CLASS=para>
+To make this more concrete,
+suppose class <tt CLASS=literal>A</tt> defines method <tt CLASS=literal>f</tt>, and that <tt CLASS=literal>B</tt>
+is a subclass of <tt CLASS=literal>A</tt>, and that <tt CLASS=literal>C</tt> is a subclass 
+of <tt CLASS=literal>B</tt> that overrides method <tt CLASS=literal>f</tt>.  Then you can still use:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+super.f()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+to invoke the overridden method from within class <tt CLASS=literal>C</tt>.  This
+is because class <tt CLASS=literal>B</tt> inherits method <tt CLASS=literal>f</tt> from 
+class <tt CLASS=literal>A</tt>. If classes <tt CLASS=literal>A</tt>, <tt CLASS=literal>B</tt>, and <tt CLASS=literal>C</tt>
+all define method <tt CLASS=literal>f</tt>, however, then
+calling <tt CLASS=literal>super.f()</tt> in class <tt CLASS=literal>C</tt> invokes class <tt CLASS=literal>B</tt>'s
+definition of the method.  In this case, there is no way to
+invoke <tt CLASS=literal>A.f()</tt> from within class <tt CLASS=literal>C</tt>.  <tt CLASS=literal>super.super.f()</tt>
+is not legal Java syntax!
+
+<P CLASS=para>
+It is important to note that <tt CLASS=literal>super</tt> can only be used
+to invoke overridden methods from within the class that does
+the overriding.  With our <tt CLASS=literal>Circle</tt> and <tt CLASS=literal>Ellipse</tt> 
+classes, for example, there is no way to write a program (with or 
+without <tt CLASS=literal>super</tt>) that invokes the <tt CLASS=literal>Circle</tt>
+<tt CLASS=literal>area()</tt> method on an object of type <tt CLASS=literal>Ellipse</tt>.
+The only way to do this is to use <tt CLASS=literal>super</tt> in a method
+within the <tt CLASS=literal>Ellipse</tt> class.
+
+<P CLASS=para>
+Finally, note that this form of <tt CLASS=literal>super</tt> does not have to occur
+in the first statement in a method, as it does when used to
+invoke a superclass constructor method.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-7.5">Finalizer Chaining Revisited</A></h3>
+
+<P CLASS=para>
+Now that we've discussed method overriding and how to invoke
+an overridden method, we can return to the issue of the
+finalizer method that we left dangling earlier on.
+
+<P CLASS=para>
+In Java, constructor methods are automatically chained, but
+finalizer methods are not.  If you define a
+<tt CLASS=literal>finalize()</tt> method to free resources allocated by
+your class, you may be overriding a <tt CLASS=literal>finalize()</tt>
+method in a superclass that frees resources allocated by
+that class.  If your finalizer method does not invoke the
+superclass finalizer, the superclass finalizer never gets called, and
+resources are not deallocated when they should be.
+
+<P CLASS=para>
+To prevent this, you should be sure to invoke the superclass
+<tt CLASS=literal>finalize()</tt> method.  The best time to do this is
+usually after your <tt CLASS=literal>finalize()</tt> method has done all of
+its deallocation.  It is a good idea to add the following call:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+super.finalize();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+as the last line of all your finalizer methods.  You should
+do this even if you know that none of your class's
+superclasses have finalizer methods, because future
+implementations of the class may include one.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Subclasses and Inheritance</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Data Hiding and Encapsulation</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

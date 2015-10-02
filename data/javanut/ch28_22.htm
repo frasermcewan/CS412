@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 28] 28.22 java.net.URL (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:31:19 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch28_21.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 28<br>The java.net Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch28_23.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-28-SECT-22">28.22 java.net.URL (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-28-SECT-22.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class represents a URL (a Uniform Resource Locator) 
+and allows the data referred to by the URL
+to be downloaded. A URL may be specified as a single string
+or with separate protocol, host, port, and file
+specifications. Relative URLs may also be specified with a
+<tt CLASS=literal>String</tt> and the <tt CLASS=literal>URL</tt> object that it is
+relative to.
+
+<P CLASS=para>
+<tt CLASS=literal>getFile()</tt>, <tt CLASS=literal>getHost()</tt>, <tt CLASS=literal>getPort()</tt>,
+<tt CLASS=literal>getProtocol()</tt>, and <tt CLASS=literal>getRef()</tt> return the
+various portions of the URL specified by a <tt CLASS=literal>URL</tt>
+object. <tt CLASS=literal>sameFile()</tt> determines whether a <tt CLASS=literal>URL</tt>
+object refers to the same file as this one.
+
+<P CLASS=para>
+The data or object referred to by a URL may be downloaded
+from the Internet in three ways: through a
+<tt CLASS=literal>URLConnection</tt> created with <tt CLASS=literal>openConnection()</tt>,
+through an <tt CLASS=literal>InputStream</tt> created by
+<tt CLASS=literal>openStream()</tt>, or through <tt CLASS=literal>getContent()</tt>, which
+returns the URL contents directly, if an appropriate
+<tt CLASS=literal>ContentHandler</tt> can be found.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final class <tt CLASS=literal>URL</tt> extends Object implements Serializable {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>URL</tt>(String <tt CLASS=literal>protocol</tt>, String <tt CLASS=literal>host</tt>, int <tt CLASS=literal>port</tt>, String <tt CLASS=literal>file</tt>) throws MalformedURLException;
+            public <tt CLASS=literal>URL</tt>(String <tt CLASS=literal>protocol</tt>, String <tt CLASS=literal>host</tt>, String <tt CLASS=literal>file</tt>) throws MalformedURLException;
+            public <tt CLASS=literal>URL</tt>(String <tt CLASS=literal>spec</tt>) throws MalformedURLException;
+            public <tt CLASS=literal>URL</tt>(URL <tt CLASS=literal>context</tt>, String <tt CLASS=literal>spec</tt>) throws MalformedURLException;
+    // <tt CLASS=literal>Class Methods</tt>
+            public static synchronized void <tt CLASS=literal>setURLStreamHandlerFactory</tt>(URLStreamHandlerFactory <tt CLASS=literal>fac</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>obj</tt>);  //<tt CLASS=literal> Overrides Object</tt>
+            public final Object <tt CLASS=literal>getContent</tt>() throws IOException;
+            public String <tt CLASS=literal>getFile</tt>();
+            public String <tt CLASS=literal>getHost</tt>();
+            public int <tt CLASS=literal>getPort</tt>();
+            public String <tt CLASS=literal>getProtocol</tt>();
+            public String <tt CLASS=literal>getRef</tt>();
+            public int <tt CLASS=literal>hashCode</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public URLConnection <tt CLASS=literal>openConnection</tt>() throws IOException;
+            public final InputStream <tt CLASS=literal>openStream</tt>() throws IOException;
+            public boolean <tt CLASS=literal>sameFile</tt>(URL <tt CLASS=literal>other</tt>);
+            public String <tt CLASS=literal>toExternalForm</tt>();
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+    // <tt CLASS=literal>Protected Instance Methods</tt>
+            protected void <tt CLASS=literal>set</tt>(String <tt CLASS=literal>protocol</tt>, String <tt CLASS=literal>host</tt>, int <tt CLASS=literal>port</tt>, String <tt CLASS=literal>file</tt>, String <tt CLASS=literal>ref</tt>);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-28-SECT-22.2">Passed To:</A></h3>
+
+<P CLASS=para>
+Applet.getAudioClip(), 
+Applet.getImage(), 
+Applet.play(), 
+AppletContext.getAudioClip(), 
+AppletContext.getImage(), 
+AppletContext.showDocument(), 
+HttpURLConnection(), 
+Toolkit.getImage(), 
+URL(), 
+URL.sameFile(), 
+URLConnection(), 
+URLStreamHandler.openConnection(), 
+URLStreamHandler.parseURL(), 
+URLStreamHandler.setURL(), 
+URLStreamHandler.toExternalForm()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-28-SECT-22.3">Returned By:</A></h3>
+
+<P CLASS=para>
+Applet.getCodeBase(), 
+Applet.getDocumentBase(), 
+AppletStub.getCodeBase(), 
+AppletStub.getDocumentBase(), 
+Class.getResource(), 
+ClassLoader.getResource(), 
+ClassLoader.getSystemResource(), 
+URLConnection.getURL()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-28-SECT-22.4">Type Of:</A></h3>
+
+<P CLASS=para>
+URLConnection.url
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch28_21.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch28_23.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.net.UnknownServiceException (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.net.URLConnection (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 25] 25.57 java.lang.String (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:27:40 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_56.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 25<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch25_58.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-57">25.57 java.lang.String (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-57.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> class represents a string of
+characters. A <tt CLASS=literal>String</tt> object is created by the Java
+compiler whenever it encounters a string in
+doublequotes--this method of creation is usually simpler
+than using a constructor.  A number of the methods of this
+class provide useful string manipulation functions.
+<tt CLASS=literal>length()</tt> returns the number of characters in a
+string.  <tt CLASS=literal>charAt()</tt> extracts a character from a
+string.  <tt CLASS=literal>compareTo()</tt> compares two strings.
+<tt CLASS=literal>equalsIgnoreCase()</tt> tests string for equality,
+ignoring case.  <tt CLASS=literal>startsWith()</tt> and <tt CLASS=literal>endsWith()</tt>
+compare the start and end of a string to a specified
+value.  <tt CLASS=literal>indexOf()</tt> and <tt CLASS=literal>lastIndexOf()</tt> search
+forward and backwards in a string for a specified character
+or substring.  <tt CLASS=literal>substring()</tt> returns a substring of a
+string.  <tt CLASS=literal>replace()</tt> creates a new copy of the string
+with one character replaced by another.
+<tt CLASS=literal>toUpperCase()</tt> and <tt CLASS=literal>toLowerCase()</tt> convert the
+case of a string.  <tt CLASS=literal>trim()</tt> strips whitespace from the
+start and end of a string.  <tt CLASS=literal>concat()</tt> concatenates
+two strings, which can also be done with the <tt CLASS=literal>+</tt>
+operator.
+
+<P CLASS=para>
+Note that <tt CLASS=literal>String</tt> objects are immutable--there is no
+<tt CLASS=literal>setCharAt()</tt> method to change the contents.  The
+methods above that return a <tt CLASS=literal>String</tt> do not modify the
+string they are passed, but instead return a modified copy
+of the string.  Use a <tt CLASS=literal>StringBuffer</tt> if you want to
+manipulate the contents of a string, or use
+<tt CLASS=literal>toCharArray()</tt> to convert a string to an array of
+<tt CLASS=literal>char</tt> values.
+
+<P CLASS=para>
+The static <tt CLASS=literal>valueOf()</tt> methods convert various Java
+primitive types to strings.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final class <tt CLASS=literal>String</tt> extends Object implements Serializable {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>String</tt>();
+            public <tt CLASS=literal>String</tt>(String <tt CLASS=literal>value</tt>);
+            public <tt CLASS=literal>String</tt>(char[] <tt CLASS=literal>value</tt>);
+            public <tt CLASS=literal>String</tt>(char[] <tt CLASS=literal>value</tt>, int <tt CLASS=literal>offset</tt>, int <tt CLASS=literal>count</tt>);
+        #   public <tt CLASS=literal>String</tt>(byte[] <tt CLASS=literal>ascii</tt>, int <tt CLASS=literal>hibyte</tt>, int <tt CLASS=literal>offset</tt>, int <tt CLASS=literal>count</tt>);
+        #   public <tt CLASS=literal>String</tt>(byte[] <tt CLASS=literal>ascii</tt>, int <tt CLASS=literal>hibyte</tt>);
+        <b>1.1</b>public <tt CLASS=literal>String</tt>(byte[] <tt CLASS=literal>bytes</tt>, int <tt CLASS=literal>offset</tt>, int <tt CLASS=literal>length</tt>, String <tt CLASS=literal>enc</tt>) throws UnsupportedEncodingException;
+        <b>1.1</b>public <tt CLASS=literal>String</tt>(byte[] <tt CLASS=literal>bytes</tt>, String <tt CLASS=literal>enc</tt>) throws UnsupportedEncodingException;
+        <b>1.1</b>public <tt CLASS=literal>String</tt>(byte[] <tt CLASS=literal>bytes</tt>, int <tt CLASS=literal>offset</tt>, int <tt CLASS=literal>length</tt>);
+        <b>1.1</b>public <tt CLASS=literal>String</tt>(byte[] <tt CLASS=literal>bytes</tt>);
+            public <tt CLASS=literal>String</tt>(StringBuffer <tt CLASS=literal>buffer</tt>);
+    // <tt CLASS=literal>Class Methods</tt>
+            public static String <tt CLASS=literal>copyValueOf</tt>(char[] <tt CLASS=literal>data</tt>, int <tt CLASS=literal>offset</tt>, int <tt CLASS=literal>count</tt>);
+            public static String <tt CLASS=literal>copyValueOf</tt>(char[] <tt CLASS=literal>data</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(Object <tt CLASS=literal>obj</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(char[] <tt CLASS=literal>data</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(char[] <tt CLASS=literal>data</tt>, int <tt CLASS=literal>offset</tt>, int <tt CLASS=literal>count</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(boolean <tt CLASS=literal>b</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(char <tt CLASS=literal>c</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(int <tt CLASS=literal>i</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(long <tt CLASS=literal>l</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(float <tt CLASS=literal>f</tt>);
+            public static String <tt CLASS=literal>valueOf</tt>(double <tt CLASS=literal>d</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public char <tt CLASS=literal>charAt</tt>(int <tt CLASS=literal>index</tt>);
+            public int <tt CLASS=literal>compareTo</tt>(String <tt CLASS=literal>anotherString</tt>);
+            public String <tt CLASS=literal>concat</tt>(String <tt CLASS=literal>str</tt>);
+            public boolean <tt CLASS=literal>endsWith</tt>(String <tt CLASS=literal>suffix</tt>);
+            public boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>anObject</tt>);  //<tt CLASS=literal> Overrides Object</tt>
+            public boolean <tt CLASS=literal>equalsIgnoreCase</tt>(String <tt CLASS=literal>anotherString</tt>);
+        #   public void <tt CLASS=literal>getBytes</tt>(int <tt CLASS=literal>srcBegin</tt>, int <tt CLASS=literal>srcEnd</tt>, byte[] <tt CLASS=literal>dst</tt>, int <tt CLASS=literal>dstBegin</tt>);
+        <b>1.1</b>public byte[] <tt CLASS=literal>getBytes</tt>(String <tt CLASS=literal>enc</tt>) throws UnsupportedEncodingException;
+        <b>1.1</b>public byte[] <tt CLASS=literal>getBytes</tt>();
+            public void <tt CLASS=literal>getChars</tt>(int <tt CLASS=literal>srcBegin</tt>, int <tt CLASS=literal>srcEnd</tt>, char[] <tt CLASS=literal>dst</tt>, int <tt CLASS=literal>dstBegin</tt>);
+            public int <tt CLASS=literal>hashCode</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public int <tt CLASS=literal>indexOf</tt>(int <tt CLASS=literal>ch</tt>);
+            public int <tt CLASS=literal>indexOf</tt>(int <tt CLASS=literal>ch</tt>, int <tt CLASS=literal>fromIndex</tt>);
+            public int <tt CLASS=literal>indexOf</tt>(String <tt CLASS=literal>str</tt>);
+            public int <tt CLASS=literal>indexOf</tt>(String <tt CLASS=literal>str</tt>, int <tt CLASS=literal>fromIndex</tt>);
+            public native String <tt CLASS=literal>intern</tt>();
+            public int <tt CLASS=literal>lastIndexOf</tt>(int <tt CLASS=literal>ch</tt>);
+            public int <tt CLASS=literal>lastIndexOf</tt>(int <tt CLASS=literal>ch</tt>, int <tt CLASS=literal>fromIndex</tt>);
+            public int <tt CLASS=literal>lastIndexOf</tt>(String <tt CLASS=literal>str</tt>);
+            public int <tt CLASS=literal>lastIndexOf</tt>(String <tt CLASS=literal>str</tt>, int <tt CLASS=literal>fromIndex</tt>);
+            public int <tt CLASS=literal>length</tt>();
+            public boolean <tt CLASS=literal>regionMatches</tt>(int <tt CLASS=literal>toffset</tt>, String <tt CLASS=literal>other</tt>, int <tt CLASS=literal>ooffset</tt>, int <tt CLASS=literal>len</tt>);
+            public boolean <tt CLASS=literal>regionMatches</tt>(boolean <tt CLASS=literal>ignoreCase</tt>, int <tt CLASS=literal>toffset</tt>, String <tt CLASS=literal>other</tt>, int <tt CLASS=literal>ooffset</tt>, int <tt CLASS=literal>len</tt>);
+            public String <tt CLASS=literal>replace</tt>(char <tt CLASS=literal>oldChar</tt>, char <tt CLASS=literal>newChar</tt>);
+            public boolean <tt CLASS=literal>startsWith</tt>(String <tt CLASS=literal>prefix</tt>, int <tt CLASS=literal>toffset</tt>);
+            public boolean <tt CLASS=literal>startsWith</tt>(String <tt CLASS=literal>prefix</tt>);
+            public String <tt CLASS=literal>substring</tt>(int <tt CLASS=literal>beginIndex</tt>);
+            public String <tt CLASS=literal>substring</tt>(int <tt CLASS=literal>beginIndex</tt>, int <tt CLASS=literal>endIndex</tt>);
+            public char[] <tt CLASS=literal>toCharArray</tt>();
+        <b>1.1</b>public String <tt CLASS=literal>toLowerCase</tt>(Locale <tt CLASS=literal>locale</tt>);
+            public String <tt CLASS=literal>toLowerCase</tt>();
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+        <b>1.1</b>public String <tt CLASS=literal>toUpperCase</tt>(Locale <tt CLASS=literal>locale</tt>);
+            public String <tt CLASS=literal>toUpperCase</tt>();
+            public String <tt CLASS=literal>trim</tt>();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-57.2">Passed To:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Many methods</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-57.3">Returned By:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Many methods</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-57.4">Type Of:</A></h3>
+
+<P CLASS=para>
+BorderLayout.CENTER, 
+BorderLayout.EAST, 
+BorderLayout.NORTH, 
+BorderLayout.SOUTH, 
+BorderLayout.WEST, 
+File.pathSeparator, 
+File.separator, 
+Font.name, 
+HttpURLConnection.method, 
+HttpURLConnection.responseMessage, 
+InvalidClassException.classname, 
+StreamTokenizer.sval, 
+StringBufferInputStream.buffer
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_56.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch25_58.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.lang.StackOverflowError (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.lang.StringBuffer (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

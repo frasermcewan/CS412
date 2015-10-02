@@ -1,0 +1,384 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] Data Transfer</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:56:54 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-16">16. Data Transfer</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+DataFlavor<br>
+<A HREF="ch16_02.htm">Transferable Interface</A><BR>
+<A HREF="ch16_03.htm">ClipboardOwner Interface</A><BR>
+<A HREF="ch16_04.htm">Clipboard</A><BR>
+<A HREF="ch16_05.htm">StringSelection</A><BR>
+<A HREF="ch16_06.htm">UnsupportedFlavorException</A><BR>
+<A HREF="ch16_07.htm">Reading and Writing the Clipboard</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+One feature that was missing from Java 1.0 was the ability to access the system 
+clipboard. It was impossible to cut and paste data from one program into 
+another. Java 1.1 includes a package called <tt CLASS=literal>java.awt.datatransfer</tt> 
+that supports clipboard operations. Using this package, you can cut an 
+arbitrary object from one program and paste it into another. In theory, 
+you can cut and paste almost anything; in practice, you usually want to 
+cut and paste text strings, so the package provides special support for 
+string operations. The current version allows only one object to be on 
+the clipboard at a time. <A NAME="CH16.DATA"></A>
+
+<P CLASS=para>
+<tt CLASS=literal>java.awt.datatransfer</tt> consists 
+of three classes, two interfaces, and one exception. Objects that can be 
+transferred implement the <tt CLASS=literal>Transferable</tt> 
+interface. The <tt CLASS=literal>Transferable</tt> 
+interface defines methods for working with different <I CLASS=emphasis>flavors</I> 
+of an object. The concept of flavors is basic to Java's clipboard 
+model. Essentially, a flavor is a MIME content type. Any object can be 
+represented in several different ways, each corresponding to a different 
+MIME type. For example, a text string could be represented by a Java <tt CLASS=literal>String</tt> 
+object, an array of Unicode character data, or some kind of rich text that 
+contains font information. The object putting the string on the clipboard 
+provides whatever flavors it is capable of; an object pasting the string 
+from the clipboard takes whatever flavor it can handle. Flavors are represented 
+by the <tt CLASS=literal>DataFlavor</tt> class, and 
+the <tt CLASS=literal>UnsupportedFlavorException</tt> 
+is used when an object asks for a <tt CLASS=literal>DataFlavor</tt> 
+that is not available. 
+
+<P CLASS=para>
+The <tt CLASS=literal>Clipboard</tt> class represents 
+the clipboard itself. There is a single system clipboard, but you can create 
+as many private clipboards as you want. The system clipboard lets you cut 
+and paste between arbitrary applications (for example, Microsoft Word and 
+some Java programs). Private clipboards are useful within a single application, 
+though you could probably figure out some way to export a clipboard to 
+another application using RMI. 
+
+<P CLASS=para>
+To put data on the clipboard, you must implement the <tt CLASS=literal>ClipboardOwner</tt> 
+interface, which provides a means for you to be notified when the data 
+you write is removed from the clipboard. (There isn't any <tt CLASS=literal>ClipboardReader</tt> 
+interface; any object can read from the clipboard.) The final component 
+of the <tt CLASS=literal>datatransfer</tt> package 
+is a special class called <tt CLASS=literal>StringSelection</tt> 
+that facilitates cutting and pasting text strings. 
+
+<P CLASS=para>
+Cutting and pasting isn't the whole story; JavaSoft has also promised 
+drag-and-drop capabilities, but this won't be in the 
+initial release of Java 1.1. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-16-SECT-1">16.1 DataFlavor</A></h2>
+
+<P CLASS=para>
+<A NAME="CH16.DATA2"></A><A NAME="CH16.DATA3"></A><A NAME="CH16.DATA4"></A>A <tt CLASS=literal>DataFlavor</tt> represents a format 
+in which data can be transferred. The <tt CLASS=literal>DataFlavor</tt> class includes two common data flavors; you can create other flavors by extending this class. Flavors are essentially MIME content 
+types and are represented by the standard MIME type strings. An additional 
+content subtype has been added to represent Java classes; 
+the content type of a Java object is:[1]
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+The type name changed to <tt CLASS=literal>x-java-serialized-object</tt> in the 1.1.1 release.
+</blockquote>
+<DIV CLASS=screen>
+<P>
+<PRE>
+application/x-java-serialized-object 
+&lt;classname&gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+For example, the content 
+type of a <tt CLASS=literal>Vector</tt> object would 
+be: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+application/x-java-serialized-object java.util.Vector
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In addition to the content type, a <tt CLASS=literal>DataFlavor</tt> 
+also contains a <I CLASS=emphasis>presentable name</I>. 
+The presentable name is intended to be more comprehensible to humans than 
+the MIME type. For example, the presentable name of a <tt CLASS=literal>VectorFlavor</tt> 
+object might just be "Vector", rather than the complex and 
+lengthy MIME type given previously. Presentable names are useful when a program 
+needs to ask the user which data flavor to use. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-16-SECT-1.1">DataFlavor Methods</A></h3>Variables
+
+<P CLASS=para>
+The <tt CLASS=literal>DataFlavor</tt> class includes 
+two public variables that hold "prebuilt" flavors representing different kinds of text 
+objects. These flavors are used in conjunction with the <tt CLASS=literal>StringSelection</tt> 
+class. Although these flavors are variables for all practical purposes, they are used as constants.
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static DataFlavor stringFlavor <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>stringFlavor</tt> variable is 
+the data flavor for textual data represented as a Java <tt CLASS=literal>String</tt> 
+object. Its MIME type is <tt CLASS=literal>application/x-javaserializedobject 
+String</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static DataFlavor plainTextFlavor <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>plainTextFlavor</tt> variable 
+is the data flavor for standard, Unicode-encoded text. Its MIME type is 
+<tt CLASS=literal>text/plain; charset=unicode</tt>. </DL>
+Constructors
+
+<P CLASS=para>
+The <tt CLASS=literal>DataFlavor</tt> class has two 
+constructors. One creates a <tt CLASS=literal>DataFlavor</tt> 
+given a MIME content type; the other creates a <tt CLASS=literal>DataFlavor</tt> 
+given a Java class and builds the MIME type from the class name. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public DataFlavor(String mimeType, String humanPresentableName) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The first constructor creates an instance of <tt CLASS=literal>DataFlavor</tt> 
+for the <tt CLASS=literal>mimeType</tt> flavor of 
+data. The <tt CLASS=literal>humanPresentableName</tt> 
+parameter should be a more user-friendly name. It might be used in a menu 
+to let the user select a flavor from several possibilities. It might also 
+be used to generate an error message when the <tt CLASS=literal>UnsupportedFlavorException</tt> 
+occurs. The <tt CLASS=literal>plainTextFlavor</tt> 
+uses "Plain Text" as its presentable name. 
+
+<P CLASS=para>
+To read data from the clipboard, a program calls the <tt CLASS=literal>Transferable.getTransferData()</tt> 
+method. If the data is represented by a <tt CLASS=literal>DataFlavor</tt> 
+that doesn't correspond to a Java class (for example, <tt CLASS=literal>plainTextFlavor</tt>), 
+<tt CLASS=literal>getTransferData()</tt> returns an 
+<tt CLASS=literal>InputStream</tt> for you to read 
+the data from. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public DataFlavor(Class representationClass, String humanPresentableName) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The other constructor creates an instance of <tt CLASS=literal>DataFlavor</tt> 
+for the specific Java class <tt CLASS=literal>representationClass</tt>. 
+Again, the <tt CLASS=literal>humanPresentableName</tt> 
+provides a more user-friendly name for use in menus, error messages, or 
+other interactions with users. The <tt CLASS=literal>stringFlavor</tt> 
+uses "Unicode String" as its presentable name. 
+
+<P CLASS=para>
+A program calls <tt CLASS=literal>Transferable.getTransferData()</tt> to
+read data from the clipboard. If the data is represented by a Java
+class, <tt CLASS=literal>getTransferData()</tt> returns an instance of the
+representation class itself. It does not return a
+<tt CLASS=literal>Class</tt> object. For example, if the data flavor is
+<tt CLASS=literal>stringFlavor</tt>, <tt CLASS=literal>getTransferData()</tt>
+returns a <tt CLASS=literal>String</tt>.  </DL>
+Presentations
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getHumanPresentableName() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getHumanPresentableName()</tt> method returns the
+data flavor's presentable name; for example,
+<tt CLASS=literal>stringFlavor.getHumanPresentableName()</tt> returns the
+string "Unicode String".  
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setHumanPresentableName(String humanPresentableName) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setHumanPresentableName()</tt> 
+method changes the data flavor's presentable name to a new <tt CLASS=literal>humanPresentableName</tt>. 
+It is hard to imagine why you would want to change a flavor's name. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getMimeType() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMimeType()</tt> method gets 
+the MIME content type for the <tt CLASS=literal>DataFlavor</tt> 
+as a <tt CLASS=literal>String</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Class getRepresentationClass() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRepresentationClass()</tt> 
+method returns the Java type that is used to represent data of this flavor 
+(i.e., the type that would be returned by the <tt CLASS=literal>getTransferData()</tt>method). 
+It returns the type as a <tt CLASS=literal>Class</tt> 
+object, not an instance of the class itself. Note that all data flavors 
+have a representation class, not just those for which the class is specified 
+explicitly in the constructor. For example, the <tt CLASS=literal>plainTextFlavor.getRepresentationClass()</tt> 
+method returns the class <tt CLASS=literal>java.io.StringReader</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isMimeTypeEqual(String mimeType) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isMimeTypeEqual()</tt> method 
+checks for string equality between <tt CLASS=literal>mimeType</tt> 
+and the data flavor's MIME type string. For some MIME types, this 
+comparison may be too simplistic because character sets may not be present 
+on types like <tt CLASS=literal>text/plain</tt>. 
+Therefore, this method would tell you that the MIME type <tt CLASS=literal>text/plain; 
+charset=unicode</tt> is different from <tt CLASS=literal>text/plain</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final boolean isMimeTypeEqual(DataFlavor dataFlavor) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isMimeTypeEqual()</tt> method 
+checks whether the MIME type of the <tt CLASS=literal>dataFlavor</tt> 
+parameter equals the current data flavor's MIME type. It calls the 
+previous method, and therefore has the same weaknesses. </DL>
+Protected methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String normalizeMimeType(String mimeType) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>normalizeMimeType()</tt> method is used to convert a
+MIME type string into a standard form. Its argument
+is a MIME type, as a <tt CLASS=literal>String</tt>; it returns the new
+normalized MIME type. You would never call
+<tt CLASS=literal>normalizeMimeType()</tt> directly, but you might want to
+override this method if you are creating a subclass of
+<tt CLASS=literal>DataFlavor</tt> and want to change the default
+normalization process. For example, one thing you might do
+with this is add the string <tt CLASS=literal>charset=US-ASCII</tt>
+to the <tt CLASS=literal>text/plain</tt> MIME type if
+it appears without a character set.  
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String normalizeMimeTypeParameter(String parameterName, String 
+parameterValue) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>normalizeMimeTypeParameter()</tt> 
+method is used to convert any parameters associated with MIME types into 
+a standard form. Its arguments are a parameter name (for example, <tt CLASS=literal>charset</tt>) 
+and the parameter's value (for example, <tt CLASS=literal>unicode</tt>). 
+It returns <tt CLASS=literal>parameterValue</tt> normalized. 
+You would never call <tt CLASS=literal>normalizeMimeTypeParameter()</tt> 
+directly, but you might want to override this method if you are creating 
+a subclass of <tt CLASS=literal>DataFlavor</tt> and 
+want to change the default normalization process. For example, parameter 
+values may be case sensitive. You could write a method that would convert 
+the value <tt CLASS=literal>Unicode</tt> to the more 
+appropriate form <tt CLASS=literal>unicode</tt>. 
+
+<P CLASS=para>
+While it may be more trouble than it's worth, carefully overriding these normalization 
+methods might help you to get more predictable results from methods 
+like <tt CLASS=literal>isMimeTypeEqual()</tt>. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean equals(DataFlavor dataFlavor) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>equals()</tt> method defines 
+equality for flavors. Two <tt CLASS=literal>DataFlavor</tt> 
+objects are equal if their MIME type and representation class are equal. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Peer Interfaces</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Transferable Interface</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

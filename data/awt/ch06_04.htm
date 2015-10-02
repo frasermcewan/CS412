@@ -1,0 +1,443 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.4 Window</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:36:49 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Containers</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-4">6.4 Window</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.WINDOW"></A>A <tt CLASS=literal>Window</tt> is a top-level display 
+area that exists outside the browser or applet area you are working in. 
+It has no adornments, such as the borders, window title, or menu bar that 
+a typical window manager might provide. A <tt CLASS=literal>Frame</tt> 
+is a subclass of <tt CLASS=literal>Window</tt> that 
+adds these parts (borders, window title). Normally you will work 
+with the children of <tt CLASS=literal>Window</tt> 
+and not <tt CLASS=literal>Window</tt> directly. However, 
+you might use a <tt CLASS=literal>Window</tt> to create 
+your own pop-up menu or some other GUI component that requires its own 
+window and isn't provided by AWT. This technique isn't as necessary 
+in Java 1.1, which has a <tt CLASS=literal>PopupMenu</tt> 
+component. 
+
+<P CLASS=para>
+The default <tt CLASS=literal>LayoutManager</tt> for 
+<tt CLASS=literal>Window</tt> is <tt CLASS=literal>BorderLayout</tt>, 
+which is described in <A HREF="ch07_03.htm#JAWT-CH-7-SECT-3">BorderLayout</A>. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-4.1">Window Methods</A></h3><A NAME="CH06.WINDOWCLASS"></A>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Window (Frame parent) </I><br>
+<DD>
+
+<P CLASS=para>
+There is one public constructor for <tt CLASS=literal>Window</tt>. 
+It has one parameter, which specifies the 
+<tt CLASS=literal>parent</tt> of the <tt CLASS=literal>Window</tt>. When the <tt CLASS=literal>parent</tt> 
+is minimized, so is the <tt CLASS=literal>Window</tt>. 
+In an application, you must therefore create a <tt CLASS=literal>Frame</tt> 
+before you can create a <tt CLASS=literal>Window</tt>; 
+this isn't much of an inconvenience since you usually need a <tt CLASS=literal>Frame</tt> 
+in which to build your user interface. In an applet, you often do not have 
+access to a <tt CLASS=literal>Frame</tt> to use as 
+the parent, so you can pass <tt CLASS=literal>null</tt> 
+as the argument. 
+
+<P CLASS=para>
+<A HREF="ch06_04.htm#JAWT-CH-6-FIG-2">Figure 6.2</A> shows a simple <tt CLASS=literal>Window</tt> on the left. 
+Notice that there are no borders or window management adornments present. 
+The <tt CLASS=literal>Window</tt> on the right was 
+created by an applet loaded over the network. Notice the warning message 
+you get in the status bar at the bottom of the screen. This is to warn users that the <tt CLASS=literal>Window</tt> 
+was created by an applet that comes from an untrusted source, and you can't 
+necessarily trust it to do what it says. The warning is particularly appropriate 
+for windows, since a user can't necessarily tell whether a window 
+was created by an applet or any other application. It is therefore possible 
+to write applets that mimic windows from well-known applications, to trick 
+the user into giving away passwords, credit card numbers, or other sensitive 
+information. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-2">Figure 6.2: Two windows</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0602.gif" alt="[Graphic: Figure 6-2]" width=503 height=255 border=0>
+
+</DIV>
+
+<P CLASS=para>
+In some environments, you can get the browser's <tt CLASS=literal>Frame</tt> 
+to use with the <tt CLASS=literal>Window</tt>'s 
+constructor. This is one way to create a <tt CLASS=literal>Dialog</tt>, 
+as we shall see. By repeatedly calling <tt CLASS=literal>getParent()</tt> 
+until there are no more parents, you can discover an applet's top-level 
+parent, which should be the browser's <tt CLASS=literal>Frame</tt>. 
+<A HREF="ch06_04.htm#JAWT-CH-6-EX-1">Example 6.1</A> contains the code you would write to do this. You 
+should then check the return value to see if you got a <tt CLASS=literal>Frame</tt> 
+or <tt CLASS=literal>null</tt>. This code is completely 
+nonportable, but you may happen to be in an environment where it works. </DL>
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-6-EX-1">Example 6.1: Finding a Parent Frame</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class ComponentUtilities {
+    public static Frame getTopLevelParent (Component component) {
+        Component c = component;
+        while (c.getParent() != null)
+            c = c.getParent();
+        if (c instanceof Frame)
+            return (Frame)c;
+        else
+            return null;
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+Appearance methods
+
+<P CLASS=para>
+A handful of methods assist with the appearance of the <tt CLASS=literal>Window</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void pack () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>pack()</tt> method resizes the 
+<tt CLASS=literal>Window</tt> to the preferred size 
+of the components it contains and validates the <tt CLASS=literal>Window</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void show () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>show()</tt> method displays 
+the <tt CLASS=literal>Window</tt>. When a <tt CLASS=literal>Window</tt> 
+is initially created it is hidden. If the window is already showing when 
+this method is called, it calls <tt CLASS=literal>toFront()</tt> 
+to bring the window to the foreground. To hide the window, just call 
+the <tt CLASS=literal>hide()</tt> method of <tt CLASS=literal>Component</tt>. After you <tt CLASS=literal>show()</tt> 
+a window, it is validated for you. 
+
+<P CLASS=para>
+The first call to <tt CLASS=literal>show()</tt> for any <tt CLASS=literal>Window</tt> generates a <tt CLASS=literal>WindowEvent</tt> with the ID <tt CLASS=literal>WINDOW_OPENED</tt>.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void dispose () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>dispose()</tt> method releases 
+the resources of the <tt CLASS=literal>Window</tt> 
+by hiding it and removing its peer. Calling this method generates a <tt CLASS=literal>WindowEvent</tt> with the ID <tt CLASS=literal>WINDOW_CLOSED</tt>.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void toFront () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toFront()</tt> method brings 
+the <tt CLASS=literal>Window</tt> to the foreground 
+of the display. This is automatically called if you call <tt CLASS=literal>show()</tt> 
+and the <tt CLASS=literal>Window</tt> is already shown. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void toBack () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toBack()</tt> method puts the 
+<tt CLASS=literal>Window</tt> in the background of 
+the display. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isShowing() <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isShowing()</tt> method returns <tt CLASS=literal>true</tt> if the <tt CLASS=literal>Window</tt> is visible on the screen.</DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Toolkit getToolkit () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getToolkit()</tt> method returns 
+the current <tt CLASS=literal>Toolkit</tt> of the 
+window. The <tt CLASS=literal>Toolkit</tt> provides 
+you with information about the native platform. This will allow you to 
+size the <tt CLASS=literal>Window</tt> based upon 
+the current screen resolution and get images for an application. See <A HREF="ch06_05.htm#JAWT-CH-6-SECT-5.5">Building a New Component from a Window</A> for a usage example. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Locale getLocale () <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLocale()</tt> method retrieves 
+the current <tt CLASS=literal>Locale</tt> of the window, 
+if it has one. Using a <tt CLASS=literal>Locale</tt> 
+allows you to write programs that can adapt themselves to different languages 
+and different regional variants. If no <tt CLASS=literal>Locale</tt> 
+has been set, <tt CLASS=literal>getLocale()</tt> returns 
+the default <tt CLASS=literal>Locale</tt>. The default 
+<tt CLASS=literal>Locale</tt> has a user language 
+of English and no region. To change the default <tt CLASS=literal>Locale</tt>, 
+set the system properties <tt CLASS=literal>user.language</tt> 
+and <tt CLASS=literal>user.region</tt> or call <tt CLASS=literal>Locale.setDefault()</tt> 
+(<tt CLASS=literal>setDefault()</tt> verifies access 
+rights with the security manager).[1] 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ 
+For more on the <tt CLASS=literal>Locale</tt> class, 
+see the <I CLASS=emphasis>Java Fundamental Classes Reference</I> 
+from O'Reilly &amp; Associates.
+</blockquote>
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final String getWarningString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getWarningString()</tt> method 
+returns <tt CLASS=literal>null</tt> or a string that 
+is displayed on the bottom of insecure <tt CLASS=literal>Window</tt> 
+instances. If the <tt CLASS=literal>SecurityManager</tt> 
+says that top-level windows do not get a warning message, this method returns 
+<tt CLASS=literal>null</tt>. If a message is required, 
+the default text is "Warning: Applet Window". However, Java 
+allows the user to change the warning by setting the system property <tt CLASS=literal>awt.appletWarning</tt>. 
+(Netscape Navigator and Internet Explorer do not allow the warning message 
+to be changed. Netscape Navigator's current (V3.0) warning string 
+is "Unsigned Java Applet Window.") The purpose of this string 
+is to warn users that the <tt CLASS=literal>Window</tt> 
+was created by an untrusted source, as opposed to a standard application, 
+and should be used with caution. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component getFocusOwner () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFocusOwner()</tt> method 
+allows you to ask the <tt CLASS=literal>Window</tt> 
+which of its components currently has the input focus. This is useful if 
+you are cutting and pasting from the system clipboard; asking who has the 
+input focus tells you where to put the data you get from the clipboard. 
+The system clipboard is covered in <A HREF="ch16_01.htm">Chapter 16, <i>Data Transfer</i></A>. If no component 
+in the <tt CLASS=literal>Window</tt> has the focus, <tt CLASS=literal>getFocusOwner()</tt> 
+returns <tt CLASS=literal>null</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>Window</tt> peer. This 
+is automatically done when you call the <tt CLASS=literal>show()</tt> 
+method of the <tt CLASS=literal>Window</tt>. If you override this method, first call <tt CLASS=literal>super.addNotify()</tt>, 
+then add your customizations for the new class. Then you can do everything 
+you need to with the information about the newly created peer. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-4.2">Window Events</A></h3>
+
+<P CLASS=para>
+In Java 1.0, a <tt CLASS=literal>Window</tt> peer generates all the events that are 
+generated by the <tt CLASS=literal>Component</tt> 
+class; it does not generate events that are specific to a particular type 
+of component. That is, it generates key events, mouse events, and focus 
+events; it doesn't generate action events or list events. If an event 
+occurs within a child component of a <tt CLASS=literal>Window</tt>, 
+the target of the event is the child component, not the <tt CLASS=literal>Window</tt>. 
+
+<P CLASS=para>
+In addition to the <tt CLASS=literal>Component</tt> 
+events, five events are specific to windows, none of which are passed 
+on by the window's peer. These events happen at the <tt CLASS=literal>Frame</tt> 
+and <tt CLASS=literal>Dialog</tt> level. The events are 
+<tt CLASS=literal>WINDOW_DESTROY</tt>, <tt CLASS=literal>WINDOW_EXPOSE</tt>, 
+<tt CLASS=literal>WINDOW_ICONIFY</tt>, <tt CLASS=literal>WINDOW_DEICONIFY</tt>, 
+and <tt CLASS=literal>WINDOW_MOVED</tt>. The default 
+event handler, <tt CLASS=literal>handleEvent()</tt>, 
+doesn't call a convenience method to handle any of these events. 
+If you want to work with them, you must override <tt CLASS=literal>handleEvent()</tt>. 
+See <A HREF="ch06_05.htm#JAWT-CH-6-SECT-5.4">Frame Events</A> for an example that catches the 
+<tt CLASS=literal>WINDOW_DESTROY</tt> event. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean postEvent (Event e)  <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>postEvent()</tt> method tells 
+the <tt CLASS=literal>Window</tt> to deal with <tt CLASS=literal>Event</tt> 
+<tt CLASS=literal>e</tt>. It calls the <tt CLASS=literal>handleEvent()</tt> method, 
+which returns <tt CLASS=literal>true</tt> if somebody 
+handled <tt CLASS=literal>e</tt> and <tt CLASS=literal>false</tt> 
+if no one handles it. This method, which overrides <tt CLASS=literal>Component.postEvent()</tt>, 
+is necessary because a <tt CLASS=literal>Window</tt> 
+is, by definition, an outermost container, and therefore does not need 
+to post the event to its parent. </DL>
+Listeners and 1.1 event handling
+
+<P CLASS=para>
+With the 1.1 event model, you register listeners for different event types; 
+the listeners are told when the event happens. These methods register listeners 
+and let the <tt CLASS=literal>Window</tt> component 
+inspect its own events.
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addWindowListener(WindowListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addWindowListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in being notified when an <tt CLASS=literal>WindowEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Window</tt> as its target. 
+When such an event occurs, one of the methods in the <tt CLASS=literal>WindowListener</tt> 
+interface is called. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeWindowListener(WindowListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeWindowListener()</tt> 
+method removes <tt CLASS=literal>listener</tt> as 
+an interested listener. If <tt CLASS=literal>listener</tt> 
+is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+every <tt CLASS=literal>AWTEvent</tt> with this <tt CLASS=literal>Window</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>Window</tt>, overriding <tt CLASS=literal>processEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding <tt CLASS=literal>processEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processEvent()</tt>, 
+remember to call <tt CLASS=literal>super.processEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processWindowEvent(WindowEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processWindowEvent()</tt> method 
+receives every <tt CLASS=literal>WindowEvent</tt> with 
+this <tt CLASS=literal>Window</tt> as its target. <tt CLASS=literal>processWindowEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>Window</tt>, overriding <tt CLASS=literal>processWindowEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding <tt CLASS=literal>processWindowEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processWindowEvent()</tt>, 
+you must remember to call <tt CLASS=literal>super.processWindowEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Insets</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Frames</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.6 Internationalization</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:51:11 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>What's New in Java 1.1</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-6">4.6 Internationalization</A></h2>
+
+<P CLASS=para>
+Internationalization
+[1]
+is the process of enabling a program to run internationally.<A NAME="CH4.INTERNATIONA1"></A>
+That is, an internationalized program has the flexibility to
+run correctly in any country.  Once a program has been
+internationalized, enabling it to run in a particular
+country and/or language is merely a matter of "localizing" it
+for that country and language, or <I CLASS=emphasis>locale</I>.
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+This word is sometimes abbreviated I18N, because there are
+18 letters between the first I and the last N.
+</blockquote>
+<P CLASS=para>
+You might think that the main task of localization is the
+matter of translating a program's user-visible text into
+a local language.  While this is an important task,
+it is not by any means the only one.  Other concerns
+include displaying dates and times in the
+customary format for the locale, displaying number and
+currency values in the customary format for the locale, and
+sorting strings in the customary order for the locale.
+
+<P CLASS=para>
+Underlying all these localization issues is the even more
+fundamental issue of character encodings.  Almost every
+useful program must perform input and output of text, and
+before we can even think about textual I/O, we must be able
+to work with the local character encoding standard.  This
+hurdle to internationalization lurks slightly below the
+surface, and is not very "programmer-visible."
+Nevertheless, it is one of the most important and difficult
+issues in internationalization.
+
+<P CLASS=para>
+As described in <A HREF="ch11_01.htm">Chapter 11, <i>Internationalization</i></A>,
+Java 1.1 provides facilities that address all of these
+internationalization issues.  If you write programs that
+correctly make use of these facilities, the task of
+localizing your program for a new country really does boil
+down to the relatively simple matter of hiring a translator
+to convert your program's messages.  With the expansion of
+the global economy, and particularly of the global Internet,
+writing internationalized programs is going to become more
+and more important, and you should begin to take advantage
+of Java's internationalization capabilities right away.
+
+<P CLASS=para>
+There are several distinct pieces to the problem of
+internationalization, and Java's solution to this problem
+also comes in distinct pieces.  The first issue in
+internationalization is the matter of knowing what locale
+a program is running in.  A locale is typically defined as a
+political, geographical, or cultural region that has a
+distinct language or distinct conventions for things such as
+date and time formats.  The notion of a locale is
+encapsulated in Java 1.1 by the <tt CLASS=literal>Locale</tt> class, which
+is part of the <tt CLASS=literal>java.util</tt> package.  Every Java
+program has a default locale, which is inherited from the
+operating system (where it may be set by the user).
+A program can simply rely on this default, or it can
+change the default.  Additionally, all Java methods that
+rely on the default locale also have variants that allow you
+to explicitly specify a locale.  Typically, though, using
+the default locale is exactly what you want to do.
+
+<P CLASS=para>
+Once a program knows what locale it is running in, the most
+fundamental internationalization issue, as noted above, is
+the ability to read and write localized text.  Since Java
+uses the Unicode encoding for its characters and strings,
+any character of any commonly-used modern written language
+is representable in a Java program, which puts Java at a
+huge advantage over older languages such as C and C++.
+Thus, working with localized text is merely a matter of
+converting from the local character encoding to Unicode when
+reading text, such as a file or input from the user, and
+converting from Unicode to the local encoding when writing
+text.  Java's solution to this problem is in the
+<tt CLASS=literal>java.io</tt> package, in the form of a new suite of
+character-based input and output streams (known as "readers"
+and "writers") that complement the existing byte-based input
+and output streams.
+
+<P CLASS=para>
+The <tt CLASS=literal>FileReader</tt> class, for example, is a
+character-based input stream used to read characters (which
+are not the same as bytes in all languages) from a file.
+The <tt CLASS=literal>FileReader</tt> class assumes that the specified file
+is encoded using the default character encoding for the
+default locale, so it converts characters from the local
+encoding to Unicode characters as it reads them.  In most
+cases, this assumption is a good one, so all you need to
+do to internationalize the character set handling of your
+program is to switch from a <tt CLASS=literal>FileInputStream</tt> to a
+<tt CLASS=literal>FileReader</tt> object, and make similar switches for text
+output as well.  On the other hand, if you need to read a
+file that is encoded using some character set other than the
+default character set of the default locale, you can use a
+<tt CLASS=literal>FileInputStream</tt> to read the bytes of the file, and
+then use an <tt CLASS=literal>InputStreamReader</tt> to convert the stream
+of bytes to a stream of characters.  When you create an
+<tt CLASS=literal>InputStreamReader</tt>, you specify the name of the
+encoding in use, and it performs the appropriate
+conversion automatically.
+
+<P CLASS=para>
+As you can see, internationalizing the character set of your
+programs is a simple matter of switching from byte I/O
+streams to character I/O streams.  Internationalizing other
+aspects of your program requires a little more effort.  The
+classes in the <tt CLASS=literal>java.text</tt> package are designed to
+allow you to internationalize your handling of numbers,
+dates, times, string comparisons, and so on.
+<tt CLASS=literal>NumberFormat</tt> is used to convert numbers, monetary
+amounts, and percentages to an appropriate textual format
+for a locale.  Similarly, the <tt CLASS=literal>DateFormat</tt> class,
+along with the <tt CLASS=literal>Calendar</tt> and <tt CLASS=literal>TimeZone</tt> classes
+from the <tt CLASS=literal>java.util</tt> package, are used to display dates
+and times in a locale-specific way.  The <tt CLASS=literal>Collator</tt>
+class is used to compare strings according to the
+alphabetization rules of a given locale, and the
+<tt CLASS=literal>BreakIterator</tt> class is used to locate word, line,
+and sentence boundaries.
+
+<P CLASS=para>
+The final major problem of internationalization is making
+your program flexible enough to display messages (or any
+type of user-visible text, such as the labels on GUI
+buttons) to the user in an appropriate language for the
+current locale.  Typically, this means that the program
+cannot use hard-coded messages and must instead read in a
+set of messages at run-time, based on the locale setting.
+Java provides an easy way to do this.  You define your
+messages as key/value pairs in a <tt CLASS=literal>ResourceBundle</tt>
+subclass.  Then, you create a subclass of
+<tt CLASS=literal>ResourceBundle</tt> for each language or locale your
+application supports, naming each class following a
+convention that includes the locale name.
+At run-time, you can use the
+<tt CLASS=literal>ResourceBundle.getBundle()</tt> method to load the
+appropriate <tt CLASS=literal>ResourceBundle</tt> class for the current
+locale.  The <tt CLASS=literal>ResourceBundle</tt> contains the messages
+your application uses, each associated with a key, that
+serves as the message name.  Using this technique, your application can look
+up a locale-dependent message translation based on a
+locale-independent message name.  Note that this technique
+is useful for things other than textual messages.  It can be
+used to internationalize icons, or any other
+locale-dependent object used by your application.
+
+<P CLASS=para>
+There is one final twist to this problem of
+internationalizing messages.  Often, we want to output
+messages such as, "Error at line 5 of file hello.java.",
+where parts of the message are static, and parts are
+dynamically generated at run-time (such as the line number
+and filename above).  This is further complicated by the fact
+that when we translate such messages the values we
+substitute in at run-time may appear in a different order.
+For example, in some different English speaking locale, we
+might want to display the line above as: "hello.java: error
+at line 5". The <tt CLASS=literal>MessageFormat</tt> class of the
+<tt CLASS=literal>java.text</tt> package allows you to substitute dynamic
+values into static messages in a very flexible way and
+helps tremendously with this situation, particularly when
+used in conjunction with resource bundles.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Other AWT Improvements</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Object Serialization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

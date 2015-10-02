@@ -1,0 +1,706 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.3 Synchronization</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:53:59 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Threads</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-6-SECT-3">6.3 Synchronization</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.SYNCH"></A>Every thread has a life of its own. Normally, a thread goes about its
+business without any regard for what other threads in the application
+are doing. Threads may be time-sliced, which means they can run in
+arbitrary spurts and bursts as directed by the operating system.  On a
+multiprocessor system, it is even possible for many different threads
+to be running simultaneously on different
+CPUs. This section is about coordinating the
+activities of two or more threads, so they can work together and not
+collide in their use of the same address space.
+
+<P CLASS=para>
+Java provides a few simple structures for synchronizing the activities
+of threads. They are all based on the concept of
+<I CLASS=emphasis>monitors</I>, a widely used synchronization scheme
+developed by C.A.R. Hoare. You don't have to know the details
+about how monitors work to be able to use them, but it may help you to
+have a picture in mind.
+
+<P CLASS=para>
+A monitor is essentially a lock. The lock is attached to a resource
+that many threads may need to access, but that should be accessed
+by only one thread at a time. It's not unlike a public restroom at a
+gas station. If the resource is not being used, the thread can acquire
+the lock and access the resource. By the same token, if the restroom
+is unlocked, you can enter and lock the door. When the thread is done,
+it relinquishes the lock, just as you unlock the door and leave it
+open for the next person. However, if another thread already has the
+lock for the resource, all other threads have to wait until the
+current thread finishes and releases the lock, just as if the restroom
+is locked when you arrive, you have to wait until the current occupant
+is done and unlocks the door.
+
+<P CLASS=para>
+Fortunately, Java makes the process of synchronizing access to
+resources quite easy. The language handles setting up and acquiring
+locks; all you have to do is specify which resources require locks.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-6-SECT-3.1">Serializing Methods</A></h3>
+
+<P CLASS=para>
+<A NAME="CH06.SERIAL1"></A><A NAME="CH06.SERIAL2"></A>The most common need for synchronization among threads in Java is to
+serialize their access to some resource, namely an object.  In other
+words, synchronization makes sure only one thread at a time can
+perform certain activities that manipulate an object. In Java, every
+object has a lock associated with it. To be more specific, every class
+and every instance of a class has its own lock. The
+<tt CLASS=literal>synchronized</tt> keyword marks places where a thread
+must acquire the lock before proceeding.
+
+<P CLASS=para>
+For example, say we implemented a <tt CLASS=literal>SpeechSynthesizer</tt> 
+class that contains a <tt CLASS=literal>say()</tt> method. We don't want 
+multiple threads calling <tt CLASS=literal>say()</tt> at the same time or we 
+wouldn't be able to understand anything being said. So we 
+mark the <tt CLASS=literal>say()</tt> method as synchronized, which means that 
+a thread has to acquire the lock on the <tt CLASS=literal>SpeechSynthesizer</tt> 
+object before it can speak:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class SpeechSynthesizer { 
+ 
+    synchronized void say( String words ) { 
+        // Speak 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Because <tt CLASS=literal>say()</tt> is an instance method, a thread has
+to acquire the lock on the particular
+<tt CLASS=literal>SpeechSynthesizer</tt> instance it is using before it
+can invoke the <tt CLASS=literal>say()</tt> method. When
+<tt CLASS=literal>say()</tt> has completed, it gives up the lock, which
+allows the next waiting thread to acquire the lock and run the method.
+Note that it doesn't matter whether the thread is owned by the
+<tt CLASS=literal>SpeechSynthesizer</tt> itself or some other object;
+every thread has to acquire the same lock, that of the
+<tt CLASS=literal>SpeechSynthesizer</tt> instance. If
+<tt CLASS=literal>say()</tt> were a class (static) method instead of an
+instance method, we could still mark it as synchronized. But in this
+case as there is no instance object involved, the lock would be on
+the class object itself.
+
+<P CLASS=para>
+Often, you want to synchronize multiple methods of the same class, so that 
+only one of the methods modifies or examines parts of the class at a time. 
+All static synchronized methods in a class use the same class object 
+lock. By the same token, all instance methods in a class use the 
+same instance object lock. In this way, Java can guarantee that only one 
+of a set of synchronized methods is running at a time. For example, 
+a <tt CLASS=literal>SpreadSheet</tt> class might contain a number of instance 
+variables that represent cell values, as well as some methods that manipulate 
+the cells in a row:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class SpreadSheet { 
+ 
+    int cellA1, cellA2, cellA3; 
+ 
+    synchronized int sumRow() { 
+        return cellA1 + cellA2 + cellA3; 
+    } 
+ 
+    synchronized void setRow( int a1, int a2, int a3 ) { 
+        cellA1 = a1; 
+        cellA2 = a2; 
+        cellA3 = a3; 
+    } 
+... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, both methods <tt CLASS=literal>setRow()</tt> and
+<tt CLASS=literal>sumRow()</tt> access the cell values. You can see that
+problems might arise if one thread were changing the values of the
+variables in <tt CLASS=literal>setRow()</tt> at the same moment another
+thread was reading the values in <tt CLASS=literal>sumRow()</tt>. To
+prevent this, we have marked both methods as synchronized. When
+threads are synchronized, only one will be run at a time. If a thread
+is in the middle of executing <tt CLASS=literal>setRow()</tt> when another
+thread calls <tt CLASS=literal>sumRow()</tt>, the second thread waits
+until the first one is done executing <tt CLASS=literal>setRow()</tt>
+before it gets to run <tt CLASS=literal>sumRow()</tt>. This
+synchronization allows us to preserve the consistency of the
+<tt CLASS=literal>SpreadSheet</tt>. And the best part is that all of this
+locking and waiting is handled by Java; it's transparent to the
+programmer.
+
+<P CLASS=para>
+In addition to synchronizing entire methods, the
+<tt CLASS=literal>synchronized</tt> keyword can be used in a special
+construct to guard arbitrary blocks of code. In this form it also
+takes an explicit argument that specifies the object for which it is
+to acquire a lock:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+synchronized ( myObject ) { 
+    // Functionality that needs to be synced 
+    ... 
+    } 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The code block above can appear in any method.  When it is reached,
+the thread has to acquire the lock on <tt CLASS=literal>myObject</tt>
+before proceeding. In this way, we can have methods (or parts of
+methods) in different classes synchronized the same as methods
+in the same class.
+
+<P CLASS=para>
+A synchronized method is, therefore, equivalent to 
+a method with its statements synchronized on the current object. Thus:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+synchronized void myMethod () { 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+is equivalent to:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+void myMethod () { 
+    synchronized ( this ) { 
+        ... 
+    } 
+} 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-6-SECT-3.2">wait(&nbsp;) and notify(&nbsp;)</A></h3>
+
+<P CLASS=para>
+<A NAME="CH06.WAIT1"></A><A NAME="CH06.WAIT2"></A><A NAME="CH06.WAIT3"></A>With the <tt CLASS=literal>synchronized</tt> keyword, we can serialize the
+execution of complete methods and blocks of code. The
+<tt CLASS=literal>wait()</tt> and <tt CLASS=literal>notify()</tt> methods of
+the <tt CLASS=literal>Object</tt> class extend this capability. Every
+object in Java is a subclass of <tt CLASS=literal>Object</tt>, so every
+object inherits these methods. By using <tt CLASS=literal>wait()</tt> and
+<tt CLASS=literal>notify()</tt>, a thread can give up its hold on a lock
+at an arbitrary point, and then wait for another thread to give it
+back before continuing. All of the coordinated activity still happens
+inside of synchronized blocks, and still only one thread is executing
+at a given time.
+
+<P CLASS=para>
+By executing <tt CLASS=literal>wait()</tt> from a synchronized block, a
+thread gives up its hold on the lock and goes to sleep. A thread might
+do this if it needs to wait for something to happen in another part of
+the application, as you'll see shortly. Later, when the
+necessary event happens, the thread that is running it calls
+<tt CLASS=literal>notify()</tt> from a block synchronized on the same
+object. Now the first thread wakes up and begins trying to acquire the
+lock again.
+
+<P CLASS=para>
+When the first thread manages to reacquire the lock, it continues
+from the point it left off. However, the thread that waited may
+not get the lock immediately (or perhaps ever). It depends on when the
+second thread eventually releases the lock, and which thread manages
+to snag it next. Note also, that the first thread won't wake up
+from the <tt CLASS=literal>wait()</tt> unless another thread calls
+<tt CLASS=literal>notify()</tt>. There is an overloaded version of
+<tt CLASS=literal>wait()</tt>, however, that allows us to specify a
+timeout period. If another thread doesn't call
+<tt CLASS=literal>notify()</tt> in the specified period, the waiting
+thread automatically wakes up.
+
+<P CLASS=para>
+Let's look at a simple scenario to see what's going on. In
+the following example, we'll assume there are three
+threads--one waiting to execute each of the three synchronized
+methods of the <tt CLASS=literal>MyThing</tt> class. We'll call them
+the <tt CLASS=literal>waiter</tt>, <tt CLASS=literal>notifier</tt>, and
+<tt CLASS=literal>related</tt> threads, respectively. Here's a code
+fragment to illustrate:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class MyThing { 
+ 
+    synchronized void waiterMethod() { 
+        // Do some stuff 
+ 
+        // Now we need to wait for notifier to do something 
+        wait(); 
+ 
+        // Continue where we left off 
+    } 
+ 
+    synchronized void notifierMethod() { 
+        // Do some stuff  
+ 
+        // Notify waiter that we've done it 
+        notify(); 
+ 
+        // Do more things 
+    } 
+ 
+    synchronized void relatedMethod() { 
+        // Do some related stuff 
+    } 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Let's assume <tt CLASS=literal>waiter</tt> gets through the gate
+first and begins executing <tt CLASS=literal>waiterMethod()</tt>.  The two
+other threads are initially blocked, trying to acquire the lock for
+the <tt CLASS=literal>MyThing</tt> object. When <tt CLASS=literal>waiter</tt>
+executes the <tt CLASS=literal>wait()</tt> method, it relinquishes its
+hold on the lock and goes to sleep. Now there are now two viable
+threads waiting for the lock. Which thread gets it depends on
+several factors, including chance and the priorities of the
+threads. (We'll discuss thread scheduling in the next section.)
+
+<P CLASS=para>
+Let's say that <tt CLASS=literal>notifier</tt> is the next thread to
+acquire the lock, so it begins to run. <tt CLASS=literal>waiter</tt>
+continues to sleep and <tt CLASS=literal>related</tt> languishes, waiting
+for its turn. When <tt CLASS=literal>notifier</tt> executes the call to
+<tt CLASS=literal>notify()</tt>, Java prods the <tt CLASS=literal>waiter</tt>
+thread, effectively telling it something has
+changed. <tt CLASS=literal>waiter</tt> then wakes up and rejoins
+<tt CLASS=literal>related</tt> in vying for the <tt CLASS=literal>MyThing</tt>
+lock. Note that it doesn't actually receive the lock; it just
+changes from saying "leave me alone" to "I want the
+lock."
+
+<P CLASS=para>
+At this point, <tt CLASS=literal>notifier</tt> still owns the lock and
+continues to hold it until it leaves its synchronized method (or
+perhaps executes a <tt CLASS=literal>wait()</tt> itself&nbsp;). When it
+finally completes, the other two methods get to fight over the
+lock. <tt CLASS=literal>waiter</tt> would like to continue executing
+<tt CLASS=literal>waiterMethod()</tt> from the point it left off,
+while <tt CLASS=literal>unrelated</tt>, which has been patient, would like
+to get started. We'll let you choose your own ending for the
+story.
+
+<P CLASS=para>
+For each call to <tt CLASS=literal>notify()</tt>, Java wakes up just one
+method that is asleep in a <tt CLASS=literal>wait()</tt> call. If there
+are multiple threads waiting, Java picks the first thread on a
+first-in, first-out basis. The <tt CLASS=literal>Object</tt> class also
+provides a <tt CLASS=literal>notifyAll()</tt> call to wake up all waiting
+threads. In most cases, you'll probably want to use
+<tt CLASS=literal>notifyAll()</tt> rather than
+<tt CLASS=literal>notify()</tt>.  Keep in mind that <tt CLASS=literal>notify()</tt> really means "Hey, something related to this object
+has changed. The condition you are waiting for may have changed, so
+check it again." In general, there is no reason to assume
+only one thread at a time is interested in the change or able to act
+upon it. Different threads might look upon whatever has changed in
+different ways.
+
+<P CLASS=para>
+Often, our <tt CLASS=literal>waiter</tt> thread is waiting 
+for a particular condition to change and we will want to sit in a loop 
+like the following:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+... 
+while ( condition != true ) 
+    wait(); 
+... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Other synchronized threads call <tt CLASS=literal>notify()</tt> or
+<tt CLASS=literal>notifyAll()</tt> when they have modified the environment
+so that <tt CLASS=literal>waiter</tt> can check the condition again. This
+is the civilized alternative to polling and sleeping, as you'll
+see the following example.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-6-SECT-3.3">The Message Passer</A></h3>
+
+<P CLASS=para>
+<A NAME="CH06.PRODUCER1"></A><A NAME="CH06.PRODUCER2"></A><A NAME="CH06.PRODUCER3"></A>Now we'll illustrate a classic interaction between two threads:
+a <tt CLASS=literal>Producer</tt> and a <tt CLASS=literal>Consumer</tt>.  A
+producer thread creates messages and places them into a queue, while a
+consumer reads them out and displays them. To be realistic,
+we'll give the queue a maximum depth. And to make things really
+interesting, we'll have our consumer thread be lazy and run much
+slower than the producer. This means that <tt CLASS=literal>Producer</tt>
+occasionally has to stop and wait for <tt CLASS=literal>Consumer</tt> to
+catch up. The example below shows the <tt CLASS=literal>Producer</tt> and
+<tt CLASS=literal>Consumer</tt> classes.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.util.Vector; 
+ 
+class Producer extends Thread { 
+    static final int MAXQUEUE = 5; 
+    private Vector messages = new Vector(); 
+  
+    public void run() { 
+        try { 
+            while ( true ) { 
+                putMessage(); 
+                sleep( 1000 ); 
+            } 
+        }  
+        catch( InterruptedException e ) { } 
+    } 
+ 
+    private synchronized void putMessage() 
+        throws InterruptedException { 
+        
+        while ( messages.size() == MAXQUEUE ) 
+            wait(); 
+        messages.addElement( new java.util.Date().toString() ); 
+        notify(); 
+    } 
+ 
+    // Called by Consumer 
+    public synchronized String getMessage() 
+        throws InterruptedException { 
+        notify(); 
+        while ( messages.size() == 0 ) 
+            wait(); 
+        String message = (String)messages.firstElement(); 
+        messages.removeElement( message ); 
+        return message; 
+    } 
+} 
+ 
+class Consumer extends Thread { 
+    Producer producer; 
+     
+    Consumer(Producer p) { 
+        producer = p; 
+    } 
+  
+    public void run() { 
+        try { 
+            while ( true ) { 
+                String message = producer.getMessage(); 
+                System.out.println("Got message: " + message); 
+                sleep( 2000 ); 
+            } 
+        }  
+        catch( InterruptedException e ) { } 
+    } 
+  
+    public static void main(String args[]) { 
+        Producer producer = new Producer(); 
+        producer.start(); 
+        new Consumer( producer ).start(); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+For convenience, we have included a <tt CLASS=literal>main()</tt> method
+that runs the complete example in the <tt CLASS=literal>Consumer</tt>
+class. It creates a <tt CLASS=literal>Consumer</tt> that is tied to a
+<tt CLASS=literal>Producer</tt> and starts the two classes.  You can run
+the example as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% java Consumer
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The output is the time-stamp messages created by the
+<tt CLASS=literal>Producer</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Got message: Sun Dec 19 03:35:55 CST 1996 
+Got message: Sun Dec 19 03:35:56 CST 1996 
+Got message: Sun Dec 19 03:35:57 CST 1996 
+... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The time stamps initially show a spacing of one second, although they
+appear every two seconds. Our <tt CLASS=literal>Producer</tt> runs faster
+than our <tt CLASS=literal>Consumer</tt>. <tt CLASS=literal>Producer</tt>
+would like to generate a new message every second, while
+<tt CLASS=literal>Consumer</tt> gets around to reading and displaying
+a message only every two seconds. Can you see how long it will take the
+message queue to fill up? What will happen when it does?
+
+<P CLASS=para>
+Let's look at the code. We are using a few new tools
+here. <tt CLASS=literal>Producer</tt> and <tt CLASS=literal>Consumer</tt> are
+subclasses of <tt CLASS=literal>Thread</tt>. It would have been a better
+design decision to have <tt CLASS=literal>Producer</tt> and
+<tt CLASS=literal>Consumer</tt> implement the <tt CLASS=literal>Runnable</tt>
+interface, but we took the slightly easier path and subclassed
+<tt CLASS=literal>Thread</tt>. You should find it fairly simple to use
+the other technique; you might try it as an exercise.
+
+<P CLASS=para>
+The <tt CLASS=literal>Producer</tt> and <tt CLASS=literal>Consumer</tt>
+classes pass messages through an instance of a
+<tt CLASS=literal>java.util.Vector</tt> object. We haven't discussed
+the <tt CLASS=literal>Vector</tt> class yet, but you can think of
+this one as a queue where we add and remove elements in first-in,
+first-out order. See <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A> for more information
+about the <tt CLASS=literal>Vector</tt> class.
+
+<P CLASS=para>
+The important activity is in the synchronized methods:
+<tt CLASS=literal>putMessage()</tt> and
+<tt CLASS=literal>getMessage()</tt>. Although one of the methods is used
+by the <tt CLASS=literal>Producer</tt> thread and the other by the
+<tt CLASS=literal>Consumer</tt> thread, they both live in the
+<tt CLASS=literal>Producer</tt> class because they have to be synchronized
+on the same object to work together. Here they both implicitly use the
+<tt CLASS=literal>Producer</tt> object's lock. If the queue is
+empty, the <tt CLASS=literal>Consumer</tt> blocks in a call in the
+<tt CLASS=literal>Producer</tt>, waiting for another message.
+
+<P CLASS=para>
+Another design option would implement the
+<tt CLASS=literal>getMessage()</tt> method in the
+<tt CLASS=literal>Consumer</tt> class and use a synchronized code block to
+explicitly synchronize on the <tt CLASS=literal>Producer</tt> object. In
+either case, synchronizing on the <tt CLASS=literal>Producer</tt> is
+important because it allows us to have multiple
+<tt CLASS=literal>Consumer</tt> objects that feed on the same
+<tt CLASS=literal>Producer</tt>.
+
+<P CLASS=para>
+<tt CLASS=literal>putMessage()</tt>'s job is to add a new message to
+the queue. It can't do this if the queue is already
+full, so it first checks the number of elements in
+<tt CLASS=literal>messages</tt>. If there is room, it stuffs in another
+time stamp. If the queue is at its limit however,
+<tt CLASS=literal>putMessage()</tt> has to wait until there's
+space. In this situation, <tt CLASS=literal>putMessage()</tt> executes a
+<tt CLASS=literal>wait()</tt> and relies on the consumer to call
+<tt CLASS=literal>notify()</tt> to wake it up after a message has been
+read. Here we have <tt CLASS=literal>putMessage()</tt> testing the
+condition in a loop. In this simple example, the test probably
+isn't necessary; we could assume that when
+<tt CLASS=literal>putMessage()</tt> wakes up, there is a free
+spot. However, this test is another example of good programming
+practice. Before it finishes, <tt CLASS=literal>putMessage()</tt> calls
+<tt CLASS=literal>notify()</tt> itself to prod any
+<tt CLASS=literal>Consumer</tt> that might be waiting on an empty
+queue.
+
+<P CLASS=para>
+<tt CLASS=literal>getMessage()</tt> retrieves a message for the
+<tt CLASS=literal>Consumer</tt>.  It enters a loop like the
+<tt CLASS=literal>Producer</tt>'s, waiting for the queue to have at
+least one element before proceeding. If the queue is empty, it
+executes a <tt CLASS=literal>wait()</tt> and expects the producer to call
+<tt CLASS=literal>notify()</tt> when more items are available. Notice that
+<tt CLASS=literal>getMessage()</tt> makes its own unconditional call to
+<tt CLASS=literal>notify()</tt>. This is a somewhat lazy way of keeping
+the <tt CLASS=literal>Producer</tt> on its toes, so that the queue should
+generally be full. Alternatively, <tt CLASS=literal>getMessage()</tt>
+might test to see if the queue had fallen below a low water mark
+before waking up the producer.
+
+<P CLASS=para>
+Now let's add another <tt CLASS=literal>Consumer</tt> to the
+scenario, just to make things really interesting. Most of the
+necessary changes are in the <tt CLASS=literal>Consumer</tt> class; the
+example below shows the code for the modified class.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Consumer extends Thread { 
+    Producer producer; 
+        String name; 
+     
+    Consumer(String name, Producer producer) { 
+        this.producer = producer; 
+        this.name = name; 
+    } 
+  
+    public void run() { 
+        try { 
+            while ( true ) { 
+                String message = producer.getMessage(); 
+                System.out.println(name + " got message: " + message); 
+                sleep( 2000 ); 
+            } 
+        }  
+        catch( InterruptedException e ) { } 
+    } 
+  
+    public static void main(String args[]) { 
+        Producer producer = new Producer(); 
+        producer.start(); 
+         
+        // Start two this time 
+        new Consumer( "One", producer ).start(); 
+        new Consumer( "Two", producer ).start(); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>Consumer</tt> constructor now takes a string name,
+to identify each consumer. The <tt CLASS=literal>run()</tt> method uses
+this name in the call to <tt CLASS=literal>println()</tt> to identify
+which consumer received the message.
+
+<P CLASS=para>
+The only modification to make in the
+<tt CLASS=literal>Producer</tt> code is to change the call to
+<tt CLASS=literal>notify()</tt> in <tt CLASS=literal>putMessage()</tt> to a
+call to <tt CLASS=literal>notifyAll()</tt>. Now, instead of the consumer
+and producer playing tag with the queue, we can have many players
+waiting on the condition of the queue to change. We might have a
+number of consumers waiting for a message, or we might have the
+producer waiting for a consumer to take a message. Whenever the
+condition of the queue changes, we prod all of the waiting methods to
+reevaluate the situation by calling <tt CLASS=literal>notifyAll()</tt>.
+Note, however, that we don't need to change the call to
+<tt CLASS=literal>notify()</tt> in <tt CLASS=literal>getMessage()</tt>. If a
+<tt CLASS=literal>Consumer</tt> thread is waiting for a message to appear
+in the queue, it's not possible for the
+<tt CLASS=literal>Producer</tt> to be simultaneously waiting because the
+queue is full.
+
+<P CLASS=para>
+Here is some sample output when there are two consumers running, as in
+the <tt CLASS=literal>main()</tt> method shown above:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+One got message: Wed Mar 20 20:00:01 CST 1996 
+Two got message: Wed Mar 20 20:00:02 CST 1996 
+One got message: Wed Mar 20 20:00:03 CST 1996 
+Two got message: Wed Mar 20 20:00:04 CST 1996 
+One got message: Wed Mar 20 20:00:05 CST 1996 
+Two got message: Wed Mar 20 20:00:06 CST 1996 
+One got message: Wed Mar 20 20:00:07 CST 1996 
+Two got message: Wed Mar 20 20:00:08 CST 1996 
+... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We see nice, orderly alternation between the two 
+consumers, as a result of the calls to <tt CLASS=literal>sleep()</tt> in the 
+various methods. Interesting things would happen, however, if we were to 
+remove all of the calls to <tt CLASS=literal>sleep()</tt> and let things run 
+at full speed. The threads would compete and their behavior would depend 
+on whether or not the system is using time slicing. On a time-sliced system, 
+there should be a fairly random distribution between the two consumers, 
+while on a nontime-sliced system, a single consumer could monopolize the 
+messages. And since you're probably wondering about time slicing, let's talk about thread priority 
+and scheduling.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Threading Applets</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Scheduling and Priority</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

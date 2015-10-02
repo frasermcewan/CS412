@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] Applets</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:53:19 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-6">6. Applets</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Introduction to Applets<br>
+<A HREF="ch06_02.htm">A First Applet</A><BR>
+<A HREF="ch06_03.htm">Drawing Graphics</A><BR>
+<A HREF="ch06_04.htm">Handling Events</A><BR>
+<A HREF="ch06_05.htm">Reading Applet Parameters</A><BR>
+<A HREF="ch06_06.htm">Images and Sounds</A><BR>
+<A HREF="ch06_07.htm">JAR Files</A><BR>
+<A HREF="ch06_08.htm">Applet Security Restrictions</A><BR>
+<A HREF="ch06_09.htm">Signed Applets</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+This chapter demonstrates the techniques of applet writing.
+It proceeds from a trivial "Hello World" applet to more
+sophisticated applets. Along the way, it explains how to:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Draw graphics in your applet.
+
+<P>
+<li CLASS=listitem>Handle and respond to simple user input.
+
+<P>
+<li CLASS=listitem>Read and use values of applet parameters, allowing
+customization of an applet.
+
+<P>
+<li CLASS=listitem>Load and display images and load and play sounds.
+
+<P>
+<li CLASS=listitem>Package an applet and related files into a JAR file.
+
+<P>
+<li CLASS=listitem>Attach a digital signature to an applet.
+
+<P>
+</UL>
+<P CLASS=para>
+<A NAME="CH6.APPLETS-1"></A>Study the examples carefully. They are the important part of
+this chapter! You may find it useful to refer to the quick
+reference in <A HREF="ch17_01.htm">Chapter 17, <i>The java.applet Package</i></A>
+while reading these examples.
+
+<P CLASS=para>
+Note that this chapter merely introduces the framework for
+writing applets.  Applets, like other Java programs, use
+features from throughout the Java API. See <A HREF="ch07_01.htm">Chapter 7, <i>Events</i></A>,
+in particular, for details on event processing in Java applets and
+applications.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-1">6.1 Introduction to Applets</A></h2>
+
+<P CLASS=para>
+An applet, as the name implies, is a kind of
+mini-application, designed to be
+run by a Web browser, or in the context of some other
+"applet viewer."  Applets differ from regular applications
+in a number of ways.  One of the most important is that
+there are a number of security restrictions on what applets are
+allowed to do.  An applet often consists of untrusted code,
+so it cannot be allowed access to the local file system, for
+example.  The details of applet security and the restrictions placed
+on applets are discussed at the end of this chapter.
+
+<P CLASS=para>
+From a programmer's standpoint, one of the biggest
+differences between applets and applications is that applets
+do not have a <tt CLASS=literal>main()</tt> method, or other single entry
+point from which the program starts running.  Instead, to
+write an applet, you subclass the <tt CLASS=literal>Applet</tt> class and
+override a number of standard methods.  At appropriate
+times, under well-defined circumstances, the Web browser or
+applet viewer invokes the methods you have defined.
+The applet is not in control of the thread of execution; it
+simply responds when the browser or viewer tells it to.  For
+this reason, the methods you write must take the necessary
+action and return promptly--they are not allowed to enter
+time-consuming (or infinite) loops.  In order to perform a
+time-consuming or repetitive task, such as animation, an
+applet must create its own thread, over which it does have
+complete control.
+
+<P CLASS=para>
+The task of writing an applet, then, comes down to defining
+the appropriate methods.  A number of these methods are
+defined by the <tt CLASS=literal>Applet</tt> class:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>init()</tt><br>
+<DD>
+
+<P CLASS=para>
+Called when the applet is first loaded into the browser or
+viewer.  It is typically used to perform applet
+initialization, in preference to a constructor method.  (The
+Web browser doesn't pass any arguments to an applet's
+constructor method, so defining one isn't too useful.)
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>destroy()</tt><br>
+<DD>
+
+<P CLASS=para>
+Called when the applet is about to be unloaded from the
+browser or viewer.  It should free any resources, other than
+memory, that the applet has allocated.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>start()</tt><br>
+<DD>
+
+<P CLASS=para>
+Called when the applet becomes visible and should start
+doing whatever it is that it does.  Often used with
+animation and with threads.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>stop()</tt><br>
+<DD>
+
+<P CLASS=para>
+Called when the applet becomes temporarily invisible, for
+example, when the user has scrolled it off the screen.
+Tells the applet to stop performing an animation or other
+task.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>getAppletInfo()</tt><br>
+<DD>
+
+<P CLASS=para>
+Called to get information about the applet.  Should return a
+string suitable for display in a dialog box.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>getParameterInfo()</tt><br>
+<DD>
+
+<P CLASS=para>
+Called to obtain information about the parameters the applet
+responds to.  Should return strings describing those
+parameters.</DL>
+<P CLASS=para>
+In addition to these <tt CLASS=literal>Applet</tt> methods,
+there are a number of other methods, inherited
+from superclasses of <tt CLASS=literal>Applet</tt>, that the browser
+invokes at appropriate times, and that an applet should
+override.  The most obvious of these methods is
+<tt CLASS=literal>paint()</tt>, which the browser or viewer invokes to ask
+the applet to draw itself on the screen.  In Java 1.1, a
+related method is <tt CLASS=literal>print()</tt>, which an applet should
+override if it wants to display itself on paper differently
+than it does on the screen.  There are quite a few other
+methods that applets should override to respond to events.
+For example, if an applet wants to respond to mouse clicks,
+it should override <tt CLASS=literal>mouseDown()</tt>.  (As we'll see in
+<A HREF="ch07_01.htm">Chapter 7, <i>Events</i></A>, however, there are other, preferred, ways to
+receive mouse events in Java 1.1.)
+
+<P CLASS=para>
+The <tt CLASS=literal>Applet</tt> class also defines some
+methods that are commonly used by applets:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>getImage()</tt><br>
+<DD>
+
+<P CLASS=para>
+Loads an image file from the network and returns an
+<tt CLASS=literal>Image</tt> object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>getAudioClip()</tt><br>
+<DD>
+
+<P CLASS=para>
+Loads a sound clip from the network and returns an
+<tt CLASS=literal>AudioClip</tt> object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>getParameter()</tt><br>
+<DD>
+
+<P CLASS=para>
+Looks up and returns the value of a named parameter,
+specified in the HTML file that refers to the applet
+with the <tt CLASS=literal>&lt;PARAM&gt;</tt> tag.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>getCodeBase()</tt><br>
+<DD>
+
+<P CLASS=para>
+Returns the base URL from which the applet class file was
+loaded.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>getDocumentBase()</tt><br>
+<DD>
+
+<P CLASS=para>
+Returns the base URL of the HTML file that refers to the
+applet.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>showStatus()</tt><br>
+<DD>
+
+<P CLASS=para>
+Displays a message in the status line of the browser or
+applet viewer.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>getAppletContext()</tt><br>
+<DD>
+
+<P CLASS=para>
+Returns the <tt CLASS=literal>AppletContext</tt> object for the applet.
+<tt CLASS=literal>AppletContext</tt> defines the useful
+<tt CLASS=literal>showDocument()</tt> method that asks the browser to load
+and display a new Web page.</DL>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Other New Features of Java 1.1</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>A First Applet</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

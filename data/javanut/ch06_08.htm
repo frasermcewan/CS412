@@ -1,0 +1,424 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.8 Applet Security Restrictions</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:53:31 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Applets</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-8">6.8 Applet Security Restrictions</A></h2>
+
+<P CLASS=para>
+<A NAME="CH6.SECURITY-1"></A>Applets loaded over the network are usually considered to be
+untrusted code.  (The exception, as we'll see in the next
+section, is when the applet bears the digital signature of an
+entity that you've specified you trust.)  The only way
+to be sure that an untrusted applet cannot perform any
+malicious actions (e.g., deleting your files, sending out
+fake email that looks like it came from you, using your
+computer as a remote file server) is to run it in a tightly
+controlled environment.  For this reason, Web browsers and
+applet viewers carefully restrict what an applet is
+allowed to do.<A NAME="CH6.APPLETS-REST1"></A><A NAME="CH6.ACCESS.RESTR1"></A>
+When designing an applet, you must be aware of a fairly long
+list of things that an applet is not allowed to do.  The
+following list details the security restrictions imposed by the
+<I CLASS=emphasis>appletviewer</I> application in Java 1.1.  Different Web
+browsers and applet viewers may impose somewhat different
+restrictions on applets, and some (including
+<I CLASS=emphasis>appletviewer</I>) may allow the user to relax or customize
+the restrictions.  In general, however, you should assume
+that your applets will be restricted in the following ways:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Untrusted code cannot read from or write to the local
+filesystem.  This means that untrusted code cannot:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Read files.
+
+<P>
+<li CLASS=listitem>List directories.
+
+<P>
+<li CLASS=listitem>Check for the existence of files.
+
+<P>
+<li CLASS=listitem>Obtain the size or modification date of files.
+
+<P>
+<li CLASS=listitem>Obtain the read and write permissions of a file.
+
+<P>
+<li CLASS=listitem>Test whether a filename is a file or directory.
+
+<P>
+<li CLASS=listitem>Write files.
+
+<P>
+<li CLASS=listitem>Delete files.
+
+<P>
+<li CLASS=listitem>Create directories.
+
+<P>
+<li CLASS=listitem>Rename files.
+
+<P>
+<li CLASS=listitem>Read or write from <tt CLASS=literal>FileDescriptor</tt> objects.
+
+<P>
+</UL>
+<P>
+<li CLASS=listitem><I CLASS=emphasis>appletviewer</I> allows a system administrator to set
+properties that allow applets to read and write files within
+a specified list of directories.
+
+<P CLASS=para>
+Untrusted code cannot perform networking operations, except in certain
+restricted ways.  Untrusted code cannot:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Create a network connection to any computer other than the
+one from which the code was itself loaded.
+
+<P>
+<li CLASS=listitem>Listen for network connections on any of the privileged
+ports with numbers less than or equal to 1024.
+
+<P>
+<li CLASS=listitem>Accept network connections on ports less than or equal to
+1024 or from any host other than the one from which the
+code itself was loaded.
+
+<P>
+<li CLASS=listitem>Use multicast sockets.
+
+<P>
+<li CLASS=listitem>Create or register a <tt CLASS=literal>SocketImplFactory</tt>,
+<tt CLASS=literal>URLStreamHandlerFactory</tt>, or
+<tt CLASS=literal>ContentHandlerFactory</tt>.
+
+<P>
+</UL>
+<P>
+<li CLASS=listitem><I CLASS=emphasis>appletviewer</I> uses the "host-of-origin" policy
+described above by default, but can also be configured to
+disallow all networking or to allow all networking.
+
+<P CLASS=para>
+Untrusted code cannot make use of certain system
+facilities.  It cannot:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Exit the Java interpreter by calling <tt CLASS=literal>System.exit()</tt>
+or <tt CLASS=literal>Runtime.exit()</tt>.
+
+<P>
+<li CLASS=listitem>Spawn new processes by calling any of the
+<tt CLASS=literal>Runtime.exec()</tt> methods.
+
+<P>
+<li CLASS=listitem>Dynamically load native code libraries with the
+<tt CLASS=literal>load()</tt> or <tt CLASS=literal>loadLibrary()</tt> methods of
+<tt CLASS=literal>Runtime</tt> or <tt CLASS=literal>System</tt>.
+
+<P>
+</UL>
+<P>
+<li CLASS=listitem>Untrusted code cannot make use of certain AWT facilities.
+One major restriction is that all windows created by
+untrusted code will display a prominent visual indication
+that they have been created by untrusted code and are
+"insecure." This is to prevent untrusted code from spoofing
+the on-screen appearance of trusted code.  Additionally,
+untrusted code cannot:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Initiate a print job.
+
+<P>
+<li CLASS=listitem>Access the system clipboard.
+
+<P>
+<li CLASS=listitem>Access the system event queue.
+
+<P>
+</UL>
+<P>
+<li CLASS=listitem>Untrusted code has restricted access to system properties.
+It cannot call <tt CLASS=literal>System.getProperties()</tt>, and so cannot
+modify or insert properties into the system properties list.
+It can call <tt CLASS=literal>System.getProperty()</tt> to read individual
+properties, but can only read system properties to which it
+has been explicitly granted access.  By default,
+<I CLASS=emphasis>appletviewer</I> grants access to only the following ten
+properties.  Note that <tt CLASS=literal>user.home</tt> and
+<tt CLASS=literal>user.dir</tt> are excluded:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>java.version</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>java.class.version</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>java.vendor</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>java.vendor.url</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>os.name</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>os.version</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>os.arch</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>file.separator</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>path.separator</tt>
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>line.separator</tt>
+
+<P>
+</UL>
+<P>
+<li CLASS=listitem>Untrusted code cannot create or access threads or
+thread groups outside of the thread group in which the
+untrusted code is running.
+
+<P>
+<li CLASS=listitem>Untrusted code has restrictions on the classes it can load
+and define.  It cannot:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Explicitly load classes from the <tt CLASS=literal>sun.*</tt> packages.
+
+<P>
+<li CLASS=listitem>Define classes in any of the <tt CLASS=literal>java.*</tt> or <tt CLASS=literal>sun.*</tt>
+packages.
+
+<P>
+<li CLASS=listitem>Create a <tt CLASS=literal>ClassLoader</tt> object or call any
+<tt CLASS=literal>ClassLoader</tt> methods.
+
+<P>
+</UL>
+<P>
+<li CLASS=listitem>Untrusted code cannot use the <tt CLASS=literal>java.lang.Class</tt>
+reflection methods to obtain information about non-public
+members of a class, unless the class was loaded from the
+same host as the untrusted code.
+
+<P>
+<li CLASS=listitem>Untrusted code has restrictions on its use of the
+<tt CLASS=literal>java.security</tt> package.  It cannot:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Manipulate security identities in any way.
+
+<P>
+<li CLASS=listitem>Set or read security properties.
+
+<P>
+<li CLASS=listitem>List, lookup, insert, or remove security providers.
+
+<P>
+<li CLASS=listitem>Finally, to prevent untrusted code from circumventing all of
+these restrictions, it is not allowed to create or register a
+<tt CLASS=literal>SecurityManager</tt> object.
+
+<P>
+</UL>
+<P>
+</UL>
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-8.1">Local Applet Restrictions</A></h3>
+
+<P CLASS=para>
+When an applet is loaded from the local file system, instead
+of through  a network protocol, Web browsers and applet viewers
+may relax some, or even many, of the above restrictions.  The
+reason for this is that local applets are assumed to be more
+trustworthy than anonymous applets from the network.
+
+<P CLASS=para>
+Intermediate applet security policies are also possible.
+For example, an applet viewer could be written that would
+place fewer restrictions on applets loaded from an internal
+corporate network than on those loaded from the Internet.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-8.2">Applet Security Implementation</A></h3>
+
+<P CLASS=para>
+Implementing the security restrictions described above is
+the responsibility of the <tt CLASS=literal>java.lang.SecurityManager</tt>
+class.  This class defines a number of methods that the
+system calls to check whether a certain operation (such as
+reading a file) is permitted in the current environment.
+Applet viewers create a subclass of <tt CLASS=literal>SecurityManager</tt>
+to implement a particular security policy.  A security
+policy is put in place by instantiating a
+<tt CLASS=literal>SecurityManager</tt> object and registering it with
+<tt CLASS=literal>System.setSecurityManager()</tt>.  (One of the obvious
+security restrictions that must be enforced is that
+untrusted code may not register its own
+<tt CLASS=literal>SecurityManager</tt> object!)
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-8.3">Loading Classes Securely</A></h3>
+
+<P CLASS=para>
+Another component of Java security is the way Java classes
+are loaded over the network.  The
+<tt CLASS=literal>java.lang.ClassLoader</tt> class defines how this is
+done. Applet viewers and Web browsers create
+subclasses of this class that implement security policies and
+define how class files are loaded via various protocols.
+
+<P CLASS=para>
+One important function of the class loader is to ensure that
+loaded classes reside in a separate namespace than classes
+loaded from the local system.  This prevents naming
+conflicts, and also prevents a malicious applet from
+replacing standard Java classes with its own versions.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-8.4">Byte-Code Verification</A></h3>
+
+<P CLASS=para>
+Another important function of the class loader is to ensure
+that all untrusted Java code (generally code loaded over the
+network) is passed through the Java byte-code verification
+process.  This process ensures that the loaded code does not
+violate Java namespace restrictions or type conversion
+restrictions.  It also checks that the code:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Is valid Java Virtual Machine code.
+
+<P>
+<li CLASS=listitem>Does not overflow or underflow the stack.
+
+<P>
+<li CLASS=listitem>Does not use registers incorrectly.
+
+<P>
+<li CLASS=listitem>Does not convert data types illegally.
+
+<P>
+</UL>
+<P CLASS=para>
+The purpose of these checks is to verify that the loaded
+code cannot forge pointers or do memory arithmetic,
+which could give it access to the underlying machine.
+The checks also ensure that the code cannot crash the Java
+interpreter or leave it in an undefined state, which might
+allow malicious code to take advantage of security flaws that could exist
+in some interpreter implementations. Essentially, the byte-code
+verification process protects against code from an "untrusted"
+Java compiler.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-8.5">Denial of Service Attacks</A></h3>
+
+<P CLASS=para>
+The one "security hole" that remains when running an
+untrusted applet is that the applet can perform a "denial of
+service attack" on your computer. For example, it could
+frivolously allocate lots of memory, run many threads, or
+download lots of data. This sort of attack consumes system
+resources and can slow your computer (or your network
+connection) considerably. While this sort of attack by an
+applet is inconvenient, fortunately it cannot usually do any
+significant damage.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>JAR Files</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Signed Applets</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

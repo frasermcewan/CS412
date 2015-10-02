@@ -1,0 +1,727 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] ByteArrayOutputStream</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:33:58 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ByteArrayOutputStream</H1>
+
+<H2>Name</H2>
+
+ByteArrayOutputStream
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.39">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.ByteArrayOutputStream</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.FilterOutputStream</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.40">Description</A></h2>
+
+<P CLASS=para>
+A <tt CLASS=literal>ByteArrayOutputStream</tt> 
+is a stream whose data is written to an internal 
+byte array. None of the methods 
+of this class throws an <tt CLASS=literal>IOException</tt> 
+because the data is written to an array instead of an actual I/O 
+device. 
+
+<P CLASS=para>
+The data for a <tt CLASS=literal>ByteArrayOutputStream</tt> 
+can be sent to another <tt CLASS=literal>OutputStream</tt> 
+using the <tt CLASS=literal>writeTo()</tt> method. 
+A copy of the array can be obtained using the <tt CLASS=literal>toCharArray()</tt> 
+method. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.41">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.io.ByteArrayOutputStream extends java.io.OutputStream {
+  // Variables
+  protected byte[] buf;
+  protected int count;
+
+  // Constructors
+  public ByteArrayOutputStream();
+  public ByteArrayOutputStream(int size);
+  // Instance Methods
+  public synchronized void reset();
+  public int size( );
+  public synchronized byte[] toByteArray();
+  public String toString();
+  public String toString(int hibyte);            // Deprecated in 1.1
+  public String toString(String enc);            // New in 1.1
+  public synchronized void write(int b);
+  public synchronized void write(byte[] b, int off, int len);
+  public synchronized void writeTo(OutputStream out);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.42">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.40">buf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.51">protected byte[] buf</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The buffer that holds data for this stream. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.41">count</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.52">protected int count</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A placeholder that marks the end of the data in the buffer. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.43">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.42">ByteArrayOutputStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.53">public ByteArrayOutputStream()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>ByteArrayOutputStream</tt> 
+with an internal buffer that has a default size of 32 bytes. The buffer 
+grows automatically as data is written to the stream. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.54">public ByteArrayOutputStream(int size)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>size</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial buffer 
+size. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>ByteArrayOutputStream</tt> 
+with an internal buffer that has a size of <tt CLASS=literal>size</tt> 
+bytes. The buffer grows automatically as data is written to the stream. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.44">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.43">reset</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.55">public synchronized void reset()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method discards the current contents of the buffer and
+resets the position of the stream to zero. Subsequent data 
+is written starting at the beginning of the array. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.44">size</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.56">public int size()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of bytes currently stored in this object's 
+internal buffer. It is a count of the number of bytes that have been written 
+to the stream. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.45">toByteArray</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.57">public synchronized byte[] toByteArray()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of the data that has been written to this <tt CLASS=literal>ByteArrayOutputStream</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method copies the data in the internal array and returns a reference 
+to the copy. The returned array is as long as the data that has been written 
+to the stream, i.e., the same as <tt CLASS=literal>size()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.46">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.58">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of the data that has been written to this <tt CLASS=literal>ByteArrayOutputStream</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a reference to a <tt CLASS=literal>String</tt> object that 
+contains a copy of the bytes currently stored in this object's internal 
+buffer. The bytes are assumed to represent characters in the encoding
+that is customary for the native platform, so the bytes are converted
+to Unicode characters based on that assumption.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.59">public String toString(int hibyte)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>hibyte</tt><br>
+<DD>
+
+<P CLASS=para>
+A value to use as 
+the high byte of each character. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of the data that has been written to this <tt CLASS=literal>ByteArrayOutputStream</tt>, 
+where each character in the string has a high byte of <tt CLASS=literal>hibyte</tt> 
+and a low byte taken from the corresponding byte in the array. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method provides a way to convert from bytes to characters. As of 1.1, 
+it is deprecated and replaced with <tt CLASS=literal>toString(String)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.60"><DIV CLASS=screen> <P> <PRE> public String toString(String enc) throws UnsupportedEncodingException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>enc</tt><br>
+<DD>
+
+<P CLASS=para>
+The encoding scheme 
+to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of the data that has been written to this <tt CLASS=literal>ByteArrayOutputStream</tt>, 
+converted from bytes to characters via the named encoding scheme <tt CLASS=literal>enc</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>UnsupportedEncodingException</tt><br>
+<DD>
+
+<P CLASS=para>
+The 
+specified encoding is not supported. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a Java <tt CLASS=literal>String</tt> 
+created from the byte array of this stream. The conversion is performed 
+according to the encoding scheme <tt CLASS=literal>enc</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.47">write</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.61">public synchronized void write(int b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to write. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream.write(int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the low-order 8 bits of the 
+given value into the internal array. If the array 
+is full, a larger array is allocated. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.62">public synchronized void write(byte b[], int off, int len)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+The array to copy from.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>off</tt><br>
+<DD>
+
+<P CLASS=para>
+Offset into the byte array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+Number of bytes to write. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream.write(byte[], int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method copies <tt CLASS=literal>len</tt> bytes 
+to this object's internal array from <tt CLASS=literal>b</tt>, 
+starting <tt CLASS=literal>oset</tt> elements from 
+the beginning of the supplied array <tt CLASS=literal>b</tt>. 
+If the internal array is full, a larger array is allocated. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.48">writeTo</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.63"><DIV CLASS=screen> <P> <PRE> public synchronized void writeTo(OutputStream out) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>out</tt><br>
+<DD>
+
+<P CLASS=para>
+The destination stream. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the contents of this object's internal buffer 
+to the given <tt CLASS=literal>OutputStream</tt>. 
+All the data that has been written to this <tt CLASS=literal>ByteArrayOutputStream</tt> 
+is written to <tt CLASS=literal>out</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.45">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>close()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>flush()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>write(byte[])</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.46">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>OutputStream</tt>, 
+<tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>UnsupportedEncodingException</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ByteArrayInputStream</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>CharArrayReader</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

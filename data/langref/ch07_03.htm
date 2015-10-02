@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.3 The import Directive</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:15:41 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Program Structure</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-7-SECT-3">7.3 The import Directive</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.IMPORT1"></A><A NAME="CH07.IMPORT2"></A><A NAME="CH07.IMPORT3"></A>You can refer to
+classes and interfaces defined in a particular package by qualifying
+their names with the package name and a period. For example, you
+can refer to the <tt CLASS=literal>Socket</tt> class as
+<tt CLASS=literal>java.net.Socket</tt>.
+Using this notation, you could write a declaration like the following:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.net.Socket s = new java.net.Socket();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This declaration is rather verbose. As you can imagine, it
+would quickly become cumbersome to refer to classes this way in
+all of your programs.
+
+<P CLASS=para>
+The <tt CLASS=literal>import</tt> directive
+provides an alternative to prefixing the names of classes and interfaces
+defined in particular packages with their package names. An
+<tt CLASS=literal>import</tt> directive makes definitions from another
+package available by their simple names:
+
+
+<p>
+<img align=middle src="./figs/jlr0704.gif" alt="[Graphic: Figure from the text]" width=424 height=46 border=0>
+
+<P CLASS=para>
+An <tt CLASS=literal>import</tt> directive can only occur after the
+<tt CLASS=literal>package</tt>
+directive in a compilation unit (if there is one) and before any
+class or interface declarations.
+
+<P CLASS=para>
+An <tt CLASS=literal>import</tt> directive with
+an identifier after the package name defines that identifier to
+have the same meaning as the fully qualified class or interface
+name. When an identifier is defined using an <tt CLASS=literal>import</tt>
+directive, the definition exists only from the <tt CLASS=literal>import</tt>
+directive that defines it to the end
+of the compilation unit.
+
+<P CLASS=para>
+For example, you could use the following
+<tt CLASS=literal>import</tt> directive:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.net.Socket;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now the identifier <tt CLASS=literal>Socket</tt> is defined to mean
+<tt CLASS=literal>java.net.Socket</tt>.
+With the above <tt CLASS=literal>import</tt> directive at the beginning
+of a compilation unit, you can rewrite the previous declaration
+as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Socket s = new Socket();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If more than one <tt CLASS=literal>import</tt> directive provides a definition
+for the same identifier, the compiler issues an error message.
+
+<P CLASS=para>
+
+An <tt CLASS=literal>import</tt> directive can also be used to 
+define an identifier as a synonym for the fully qualified name of 
+a class that is declared inside of another class. For example, 
+consider the following class declaration:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package COM.geomaker;
+...
+public class z {
+    ...
+    class zz {
+        ...
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A class in another file can refer to the class
+<tt CLASS=literal>COM.geomaker.z.zz</tt> as just <tt CLASS=literal>zz</tt> if
+the file contains the following <tt CLASS=literal>import</tt> directive:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import COM.geomaker.z.zz;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+An <tt CLASS=literal>import</tt> directive with an asterisk (<tt CLASS=literal>*</tt>)
+after the package name tells the compiler to search the specified
+package when it cannot find a definition for an identifier. In other
+words, this type of <tt CLASS=literal>import</tt> directive makes all
+of the classes and interfaces in the package available by their
+simple names. Here's an example of such an
+<tt CLASS=literal>import</tt> directive:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When the compiler is searching packages specified by this type of
+<tt CLASS=literal>import</tt>
+directive, it issues an error message if it finds the same name
+defined in two different packages.
+
+<P CLASS=para>
+Every package in
+Java is considered separate and distinct, even if the name of a
+package begins with the name of another package. For example, the
+package <tt CLASS=literal>java.awt</tt> is separate and distinct from
+the package <tt CLASS=literal>java.awt.image</tt>. Even though the names
+imply a parent-child relationship, Java recognizes no such relationship
+between packages. Consider the following directive:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This tells
+the Java compiler to search the <tt CLASS=literal>java.awt</tt> package
+for class and interface names; it does not, however, tell the compiler
+to search <tt CLASS=literal>java.awt.image</tt> for such names. For
+that to happen, a compilation unit must also include the following
+directive:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import Java.awt.image.*;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It is important to understand that an <tt CLASS=literal>import</tt> directive
+does not cause the Java compiler to read any class or interface
+definitions. An <tt CLASS=literal>import</tt> directive simply defines
+an identifier as a synonym for a fully qualified class or interface
+name or directs the compiler to search a package when it needs to
+find a definition. The compiler only reads a class or interface
+definition when its finds an actual reference to the class or interface.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch07_01.htm#JLR2-CH-7-SECT-1">Compilation Units</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch07_02.htm#JLR2-CH-7-SECT-2">Packages</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Packages</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Documentation Comments</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

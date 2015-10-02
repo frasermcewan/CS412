@@ -1,0 +1,2622 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 17] Calendar</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:41:22 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 17<br>The java.util Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch17_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Calendar</H1>
+
+<H2>Name</H2>
+
+Calendar
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.8">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.Calendar</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.GregorianCalendar</tt>
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Cloneable</tt>, 
+<tt CLASS=literal>java.io.Serializable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.9">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>Calendar</tt> class is an <tt CLASS=literal>abstract</tt>class that is used to convert between
+<tt CLASS=literal>Date</tt> objects, which represent points in time, and
+calendar fields, like months or days of the week. The JDK 1.0
+<tt CLASS=literal>Date</tt> class included calendar and text-formatting methods. As of JDK 1.1, both of these functions have been
+split off from <tt CLASS=literal>Date</tt> in order to support
+internationalization. As of JDK 1.1, <tt CLASS=literal>Date</tt>
+represents only a point in time, measured in milliseconds. A subclass
+of <tt CLASS=literal>Calendar</tt> examines the
+<tt CLASS=literal>Date</tt> in the context of a particular calendar
+system; a <tt CLASS=literal>Calendar</tt> instance is a locale-sensitive object. Also as of
+JDK 1.1, the <tt CLASS=literal>java.text.DateFormat</tt> class generates and parses strings representing points in time.
+
+<P CLASS=para>
+<tt CLASS=literal>Calendar</tt> defines a number of symbolic constants. They
+represent either fields or values. For example,
+<tt CLASS=literal>MONTH</tt> is a field constant. It can be passed to
+<tt CLASS=literal>get()</tt> and <tt CLASS=literal>set()</tt> to retrieve and
+adjust the month. <tt CLASS=literal>AUGUST</tt>, on the other hand,
+represents a particular month value. Calling
+<tt CLASS=literal>get(Calendar.MONTH)</tt> could return
+<tt CLASS=literal>Calendar.AUGUST</tt>.
+
+<P CLASS=para>
+Internally, <tt CLASS=literal>Calendar</tt> keeps 
+track of a point in time in two ways. First, a "raw" value 
+is maintained, which is simply a count of milliseconds since midnight, 
+January 1, 1970 GMT, or, in other words, a <tt CLASS=literal>Date</tt> object. 
+Second, the calendar keeps track of a number of fields, which are the values 
+that are specific to the <tt CLASS=literal>Calendar</tt> 
+type. These are values such as day of the week, day of the month, and month. 
+The raw millisecond value can be calculated from the field values, or vice 
+versa. 
+
+<P CLASS=para>
+When a <tt CLASS=literal>Date</tt> object is computed 
+from the time fields, there may be insufficient information to compute 
+the raw millisecond value. For example, the year and the month could be 
+set, but not the day of the month. In this case, <tt CLASS=literal>Calendar</tt> 
+uses default information to fill in the missing fields. For <tt CLASS=literal>GregorianCalendar</tt>, 
+the default field values are taken from the date of the epoch, or midnight, 
+January 1, 1970 GMT. 
+
+<P CLASS=para>
+Another problem that can arise when computing a <tt CLASS=literal>Date</tt> 
+object from the time fields is that of inconsistent information in the 
+fields. For example, the time fields could specify "Sunday, March 
+8, 1997" when in fact March 8, 1997 is a Saturday. If the time fields 
+contain inconsistent information, <tt CLASS=literal>Calendar</tt> 
+gives preference to the combinations of fields in the following order: 
+
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>month and day of the week 
+
+<P>
+<li CLASS=listitem>month, week of the month, and day of the week 
+
+<P>
+<li CLASS=listitem>month, day of the week in the month, and day of the week 
+
+<P>
+<li CLASS=listitem>day of the year 
+
+<P>
+<li CLASS=listitem>day of the week and week of the year 
+
+<P>
+<li CLASS=listitem>hour of the day 
+
+<P>
+<li CLASS=listitem>A.M./P.M. and hour of A.M./P.M. 
+
+<P>
+</OL>
+<P CLASS=para>
+There is also the possibility of ambiguity for certain points in time, 
+so the following rules apply. The time 24:00:00 belongs to the next day 
+and midnight is an A.M. time, while noon is a P.M. time. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.10">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.util.Calendar extends java.lang.Object
+                      implements java.lang.Cloneable, java.io.Serializable {
+  // Constants
+  public final static int AM;
+  public final static int AM_PM;
+  public final static int APRIL;
+  public final static int AUGUST;
+  public final static int DATE;
+  public final static int DAY_OF_MONTH;
+  public final static int DAY_OF_WEEK;
+  public final static int DAY_OF_WEEK_IN_MONTH;
+  public final static int DAY_OF_YEAR;
+  public final static int DECEMBER;
+  public final static int DST_OFFSET;
+  public final static int ERA;
+  public final static int FEBRUARY;
+  public final static int FIELD_COUNT;
+  public final static int FRIDAY;
+  public final static int HOUR;
+  public final static int HOUR_OF_DAY;
+  public final static int JANUARY;
+  public final static int JULY;
+  public final static int JUNE;
+  public final static int MARCH;
+  public final static int MAY;
+  public final static int MILLISECOND;
+  public final static int MINUTE;
+  public final static int MONDAY;
+  public final static int MONTH;
+  public final static int NOVEMBER;
+  public final static int OCTOBER;
+  public final static int PM;
+  public final static int SATURDAY;
+  public final static int SECOND;
+  public final static int SEPTEMBER;
+  public final static int SUNDAY;
+  public final static int THURSDAY;
+  public final static int TUESDAY;
+  public final static int UNDECIMBER;
+  public final static int WEDNESDAY;
+  public final static int WEEK_OF_MONTH;
+  public final static int WEEK_OF_YEAR;
+  public final static int YEAR;
+  public final static int ZONE_OFFSET;
+  // Variables
+  protected boolean areFieldsSet;
+  protected int[] fields;
+  protected boolean[] isSet;
+  protected boolean isTimeSet;
+  protected long time;
+  // Constructors
+  protected Calendar();
+  protected Calendar(TimeZone zone, Locale aLocale);
+  // Class Methods
+  public static synchronized Locale[] getAvailableLocales();
+  public static synchronized Calendar getInstance();
+  public static synchronized Calendar getInstance(TimeZone zone);
+  public static synchronized Calendar getInstance(Locale aLocale);
+  public static synchronized Calendar getInstance(TimeZone zone, 
+                                      Locale aLocale);
+  // Instance Methods
+  public abstract void add(int field, int amount);
+  public abstract boolean after(Object when);
+  public abstract boolean before(Object when);
+  public final void clear();
+  public final void clear(int field);
+  public Object clone();
+  public abstract boolean equals(Object when); 
+  public final int get(int field);
+  public int getFirstDayOfWeek();
+  public abstract int getGreatestMinimum(int field);
+  public abstract int getLeastMaximum(int field);
+  public abstract int getMaximum(int field);
+  public int getMinimalDaysInFirstWeek();
+  public abstract int getMinimum(int field);
+  public final Date getTime();
+  public TimeZone getTimeZone();
+  public boolean isLenient();
+  public final boolean isSet(int field);
+  public abstract void roll(int field, boolean up);
+  public final void set(int field, int value);
+  public final void set(int year, int month, int date);
+  public final void set(int year, int month, int date, 
+                       int hour, int minute);
+  public final void set(int year, int month, int date, int hour, 
+                       int minute, int second);
+  public void setFirstDayOfWeek(int value);
+  public void setLenient(boolean lenient);
+  public void setMinimalDaysInFirstWeek(int value);
+  public final void setTime(Date date);
+  public void setTimeZone(TimeZone value);
+  // Protected Instance Methods
+  protected void complete();
+  protected abstract void computeFields();
+  protected abstract void computeTime();
+  protected long getTimeInMillis();
+  protected final int internalGet(int field);
+  protected void setTimeInMillis(long millis);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.11">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.13">AM</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.14">public final static int AM</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents morning times. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.14">AM_PM</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.15">public final static int AM_PM</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the A.M./P.M. 
+flag of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.15">APRIL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.16">public final static int APRIL</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+April. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.16">AUGUST</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.17">public final static int AUGUST</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+August. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.17">DATE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.18">public final static int DATE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the day of the 
+month of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.18">DAY_OF_MONTH</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.19">public final static int DAY_OF_MONTH</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the day of the 
+month of this object. This field is synonymous with <tt CLASS=literal>DATE</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.19">DAY_OF_WEEK</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.20">public final static int DAY_OF_WEEK</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the day of the 
+week of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.20">DAY_OF_WEEK_IN_MONTH</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.21">public final static int DAY_OF_WEEK_IN_MONTH</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the day of the 
+week in the current month. For example, February 10, 1997, has a <tt CLASS=literal>DAY_OF_WEEK_IN_MONTH</tt> 
+value of <tt CLASS=literal>2</tt> because it is the second Monday in February for that year. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.21">DAY_OF_YEAR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.22">public final static int DAY_OF_YEAR</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the day of the 
+year of this object. January 1 is the first day of the year. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.22">DECEMBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.23">public final static int DECEMBER</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+December. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.23">DST_OFFSET</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.24">public final static int DST_OFFSET</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the offset due 
+to daylight savings time, in milliseconds, of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.24">ERA</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.25">public final static int ERA</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the era of this 
+object. A Gregorian calendar has two eras, BC and AD. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.25">FEBRUARY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.26">public final static int FEBRUARY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+February. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.26">FIELD_COUNT</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.27">public final static int FIELD_COUNT</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that represents the number of attribute 
+fields for <tt CLASS=literal>Calendar</tt> objects. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.27">FRIDAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.28">public final static int FRIDAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the day Friday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.28">HOUR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.29">public final static int HOUR</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the hour of 
+this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.29">HOUR_OF_DAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.30">public final static int HOUR_OF_DAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the hour of 
+the day of this object. A time of 1:00 P.M. has an <tt CLASS=literal>HOUR</tt> 
+value of 1, but an <tt CLASS=literal>HOUR_OF_DAY</tt> 
+value of 13. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.30">JANUARY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.31">public final static int JANUARY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+January. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.31">JULY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.32">public final static int JULY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+July. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.32">JUNE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.33">public final static int JUNE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+June. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.33">MARCH</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.34">public final static int MARCH</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+March. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.34">MAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.35">public final static int MAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+May. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.35">MILLISECOND</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.36">public final static int MILLISECOND</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the milliseconds 
+of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.36">MINUTE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.37">public final static int MINUTE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the minutes 
+of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.37">MONDAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.38">public final static int MONDAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the day Monday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.38">MONTH</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.39">public final static int MONTH</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the month of 
+this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.39">NOVEMBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.40">public final static int NOVEMBER</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+November. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.40">OCTOBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.41">public final static int OCTOBER</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+October. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.41">PM</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.42">public final static int PM</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents afternoon and 
+evening times. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.42">SATURDAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.43">public final static int SATURDAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the day Saturday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.43">SECOND</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.44">public final static int SECOND</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the seconds 
+of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.44">SEPTEMBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.45">public final static int SEPTEMBER</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the month of 
+September. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.45">SUNDAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.46">public final static int SUNDAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the day Sunday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.46">THURSDAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.47">public final static int THURSDAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the day Thursday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.47">TUESDAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.48">public final static int TUESDAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the day Tuesday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.48">UNDECIMBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.49">public final static int UNDECIMBER</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the thirteenth 
+month used in lunar calendars. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.49">WEDNESDAY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.50">public final static int WEDNESDAY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant value that represents the day Wednesday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.50">WEEK_OF_MONTH</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.51">public final static int WEEK_OF_MONTH</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the week of 
+the month of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.51">WEEK_OF_YEAR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.52">public final static int WEEK_OF_YEAR</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the week of 
+the year of this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.52">YEAR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.53">public final static int YEAR</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the year of 
+this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.53">ZONE_OFFSET</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.54">public final static int ZONE_OFFSET</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the raw time 
+zone offset, in milliseconds, of this object. The value should be added 
+to GMT to get local time. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.12">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.54">areFieldsSet</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.55">protected boolean areFieldsSet</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates 
+if the time fields of this <tt CLASS=literal>Calendar</tt> 
+have been set. These fields can be computed from the raw millisecond time 
+value. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.55">fields</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.56">protected int[] fields</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+An array that stores the time field values for 
+this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.56">isSet</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.57">protected boolean[] isSet</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+An array that contains a flag for each entry 
+in the <tt CLASS=literal>fields</tt> array. The value 
+of each flag indicates if the corresponding entry in <tt CLASS=literal>fields</tt> 
+has been set for this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.57">isTimeSet</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.58">protected boolean isTimeSet</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates 
+if the raw millisecond time value of this <tt CLASS=literal>Calendar</tt> 
+has been set. The value can be computed from the time fields. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.58">time</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.59">protected long time</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The raw time value for this <tt CLASS=literal>Calendar</tt>. 
+The value is the number of milliseconds since midnight, January 1, 1970 
+GMT. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.13">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.59">Calendar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.60">protected Calendar()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates <tt CLASS=literal>a Calendar</tt> 
+that uses the system's default time zone and locale. The default 
+time zone is that returned by <tt CLASS=literal>TimeZone.getDefault()</tt>. 
+The default locale is that returned by <tt CLASS=literal>Locale.getDefault()</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.61">protected Calendar(TimeZone zone, Locale aLocale)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>zone</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>TimeZone</tt> 
+to use.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>aLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> 
+to use. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Calendar</tt> 
+that uses the supplied time zone and locale. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.14">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.60">getAvailableLocales</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.62">public static synchronized Locale[] getAvailableLocales()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Locale</tt> objects 
+for which <tt CLASS=literal>Calendar</tt> objects 
+are installed. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an array of locales that have corresponding <tt CLASS=literal>Calendar</tt> 
+objects. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.61">getInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.63">public static synchronized Calendar getInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Calendar</tt> for the default 
+time zone and locale. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a newly constructed <tt CLASS=literal>Calendar</tt> 
+for the default time zone and locale. Future implementations
+of this method may infer the subclass of <tt CLASS=literal>Calendar</tt>
+to instantiate based on the default locale. However, the current
+implementation always returns a <tt CLASS=literal>GregorianCalendar</tt>.
+The default time zone is that 
+
+returned by <tt CLASS=literal>TimeZone.getDefault()</tt>. The 
+default locale is that returned by <tt CLASS=literal>Locale.getDefault()</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.64">public static synchronized Calendar getInstance(TimeZone zone)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>zone</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>TimeZone</tt> 
+to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Calendar</tt> for the given time 
+zone and the default locale. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a newly constructed <tt CLASS=literal>Calendar</tt> 
+for the given time zone and the default locale. Future implementations
+of this method may infer the subclass of <tt CLASS=literal>Calendar</tt>
+to instantiate based on the default locale. However, the current
+implementation always returns a <tt CLASS=literal>GregorianCalendar</tt>.
+The default locale is that 
+returned by <tt CLASS=literal>Locale.getDefault()</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.65">public static synchronized Calendar getInstance(Locale aLocale)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>aLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> 
+to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Calendar</tt> for the given locale 
+and the default time zone. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a newly constructed <tt CLASS=literal>Calendar</tt> 
+for the given locale and the default time zone. Future implementations
+of this method may infer the subclass of <tt CLASS=literal>Calendar</tt>
+to instantiate based on the given locale. However, the current
+implementation always returns a <tt CLASS=literal>GregorianCalendar</tt>.
+The default time zone is 
+that returned by <tt CLASS=literal>TimeZone.getDefault()</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.66">public static synchronized Calendar getInstance(TimeZone zone, Locale aLocale)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>zone</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>TimeZone</tt> 
+to use.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>aLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> 
+to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Calendar</tt> 
+for the given time zone and locale. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a newly constructed <tt CLASS=literal>Calendar</tt> 
+for the given time zone and locale. Future implementations
+of this method may infer the subclass of <tt CLASS=literal>Calendar</tt>
+to instantiate based on the given locale. However, the current
+implementation always returns a <tt CLASS=literal>GregorianCalendar</tt>.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.15">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.62">add</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.67">public abstract void add(int field, int amount)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+The time field to 
+be modified.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>amount</tt><br>
+<DD>
+
+<P CLASS=para>
+The amount to add 
+to the specified field value. This value can be negative. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method adds the given amount to the specified time field. For example, 
+you can compute a date 90 days beyond the current date of this <tt CLASS=literal>Calendar</tt> 
+by calling <tt CLASS=literal>add(Calendar.DATE,</tt> 
+<tt CLASS=literal>90)</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.63">after</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.68">public abstract boolean after(Object when)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>when</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to compare 
+to this <tt CLASS=literal>Calendar</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this object is after 
+<tt CLASS=literal>when</tt>; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>when</tt> is a <tt CLASS=literal>Calendar</tt> 
+object whose value falls before the value of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.64">before</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.69">public abstract boolean before(Object when)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>when</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to compare 
+to this <tt CLASS=literal>Calendar</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this object is before 
+<tt CLASS=literal>when</tt>; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>when</tt> is a <tt CLASS=literal>Calendar</tt> 
+object whose value falls after the value of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.65">clear</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.70">public final void clear()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method clears the values of all of the time 
+fields of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.71">public final void clear(int field)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+The time field to be cleared. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method clears the specified time field by setting its value to 0. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.66">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.72">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this <tt CLASS=literal>Calendar</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>Calendar</tt> 
+and returns it. In other words, the returned <tt CLASS=literal>Calendar</tt> 
+has the same time field values and raw time value as this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.67">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.73">public abstract boolean equals(Object when)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>when</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be compared 
+with this object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; 
+<tt CLASS=literal>false</tt> if they are not. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.equals()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>when</tt> is an instance of <tt CLASS=literal>Calendar</tt> 
+and it contains the same value as the object this method is associated 
+with. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.68">get</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.74">public final int get(int field)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+The time field to 
+be retrieved. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the given time field. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the specified time field. If the fields 
+of this <tt CLASS=literal>Calendar</tt> have not been 
+set, they are set from the raw time value before the requested field is 
+returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.69">getFirstDayOfWeek</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.75">public int getFirstDayOfWeek()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The first day of the week for this Calendar. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the day that is considered the beginning of the week 
+for this <tt CLASS=literal>Calendar</tt>. This value 
+is determined by the <tt CLASS=literal>Locale</tt> 
+of this <tt CLASS=literal>Calendar</tt>. For example, 
+the first day of the week in the United States is Sunday, while in France 
+it is Monday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.70">getGreatestMinimum</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.76">public abstract int getGreatestMinimum(int field)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+A time field constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The highest minimum value for the given time field. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the highest minimum value for the given time field, 
+if the field has a range of minimum values. If the field does not have 
+a range of minimum values, this method is equivalent to <tt CLASS=literal>getMinimum()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.71">getLeastMaximum</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.77">public abstract int getLeastMaximum(int field)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+A time field constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The lowest maximum value for the given time field. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the lowest maximum value for the given time field, 
+if the field has a range of maximum values. If the field does not have 
+a range of maximum values, this method is equivalent to <tt CLASS=literal>getMaximum()</tt>. For example, for a <tt CLASS=literal>GregorianCalendar</tt>, 
+the lowest maximum value of <tt CLASS=literal>DATE_OF_MONTH</tt> 
+is 28. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.72">getMaximum</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.78">public abstract int getMaximum(int field)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+A time field constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The maximum value for the given time field. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the maximum value for the given time field. For example, 
+for a <tt CLASS=literal>GregorianCalendar</tt>, the 
+maximum value of <tt CLASS=literal>DATE_OF_MONTH</tt> 
+is 31. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.73">getMinimalDaysInFirstWeek</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.79">public int getMinimalDaysInFirstWeek()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of days that must be in the first week of the year. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of days that must be in the first week of 
+the year. For example, a value of 7 indicates that the first week of the 
+year must be a full week, while a value of 1 indicates that the first week 
+of the year can contain a single day. This value is determined by the <tt CLASS=literal>Locale</tt> 
+of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.74">getMinimum</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.80">public abstract int getMinimum(int field)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+A time field constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The minimum value for the given time field. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the minimum value for the given time field. For example, 
+for a <tt CLASS=literal>GregorianCalendar</tt>, the 
+minimum value of <tt CLASS=literal>DATE_OF_MONTH</tt> 
+is 1. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.75">getTime</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.81">public final Date getTime()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Date</tt> 
+object that represents the point in time represented by this <tt CLASS=literal>Calendar</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a newly created <tt CLASS=literal>Date</tt> 
+object that is constructed from the value returned by <tt CLASS=literal>getTimeInMillis()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.76">getTimeZone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.82">public TimeZone getTimeZone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>TimeZone</tt> 
+of this <tt CLASS=literal>Calendar</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the <tt CLASS=literal>TimeZone</tt> 
+object for this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.77">isLenient</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.83">public boolean isLenient()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates 
+the leniency of this <tt CLASS=literal>Calendar</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current leniency of this <tt CLASS=literal>Calendar</tt>. 
+A value of <tt CLASS=literal>false</tt> indicates 
+that the <tt CLASS=literal>Calendar</tt> throws exceptions 
+when questionable data is passed to it, while a value of <tt CLASS=literal>true</tt> 
+indicates that the <tt CLASS=literal>Calendar</tt> 
+makes its best guess to interpret questionable data. For example, if the 
+<tt CLASS=literal>Calendar</tt> is being lenient, 
+a date such as 
+
+March 135, 1997 is interpreted as the 134th 
+day after March 1, 1997. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.78">isSet</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.84">public final boolean isSet(int field)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+A time field constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the time field has 
+been set; <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>boolean</tt> 
+value that indicates whether or not the specified time field has been set. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.79">roll</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.85">public abstract void roll(int field, boolean up)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+The time field to 
+be adjusted.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>up</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that indicates if the given field should be incremented. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method adds or subtracts one time unit from the given time field. 
+For example, to increase the current date by one day, you can call <tt CLASS=literal>roll(Calendar.DATE,</tt> 
+<tt CLASS=literal>true)</tt>.
+
+<P CLASS=para>
+The method maintains the field being rolled within its valid range.
+For example, in a calendar system that uses hours and minutes to
+measure time, rolling the minutes up from 59 sets that field to 0.
+By the same token, rolling that field down from 0 sets it to 59.
+
+<P CLASS=para>
+The <tt CLASS=literal>roll()</tt> method does not adjust the value
+of any other field than the one specified by its <tt CLASS=literal>field</tt> 
+argument.  In particular, for calendar systems that have months 
+with different numbers of days, it may be necessary to adjust the 
+month and also year when the day of the month is rolled up. 
+It is the responsibility of the caller of <tt CLASS=literal>roll()</tt> 
+to perform that adjustment.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.80">set</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.86">public final void set(int field, int value)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+The time field to 
+be set.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+The new value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the value of the specified time field. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.87">public final void set(int year, int month, int date)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>year</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+year field.
+
+<DT CLASS=varlistentry><tt CLASS=literal>month</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+month field, where 0 represents the first month.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>date</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+day-of-the-month field. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the values of the year, month, and day-of-the-month 
+fields of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.88"><DIV CLASS=screen> <P> <PRE> public final void set(int year, int month, int date, int hour, int minute) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>year</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+year field.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>month</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+month field, where 0 represents the first month.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>date</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+day-of-the-month field.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>hour</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+hour field.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>minute</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+minute field. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the values of the year, month, day-of-the-month, 
+hour, and minute fields of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.89"><DIV CLASS=screen> <P> <PRE> public final void set(int year, int month, int date, int hour, int minute, int second) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>year</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+year field.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>month</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+month field, where 0 represents the first month.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>date</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+day-of-the-month field.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>hour</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+hour field.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>minute</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+minute field.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>second</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+second field. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the values of the year, month, day-of-the-month, 
+hour, minute, and second fields of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.81">setFirstDayOfWeek</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.90">public void setFirstDayofWeek(int value)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+first day of the week. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the day that is considered the beginning of 
+the week for this <tt CLASS=literal>Calendar</tt>. 
+This value should be determined by the <tt CLASS=literal>Locale</tt> 
+of this <tt CLASS=literal>Calendar</tt>. For example, 
+the first day of the week in the United States is Sunday; in France 
+it's Monday. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.82">setLenient</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.91">public void setLenient(boolean lenient)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>lenient</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies the leniency of this <tt CLASS=literal>Calendar</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the leniency of this <tt CLASS=literal>Calendar</tt>. 
+A value of <tt CLASS=literal>false</tt> specifies 
+that the <tt CLASS=literal>Calendar</tt> throws exceptions 
+when questionable data is passed to it, while a value of <tt CLASS=literal>true</tt> 
+indicates that the <tt CLASS=literal>Calendar</tt> 
+makes its best guess to interpret questionable data. For example, if the 
+<tt CLASS=literal>Calendar</tt> is being lenient, 
+a date such as March 135, 1997 is interpreted as the 135th 
+day after March 1, 1997. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.83">setMinimalDaysInFirstWeek</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.92">public void setMinimalDaysInFirstWeek(int value)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+The value for the 
+minimum number of days in the first week of the year. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the minimum number of days in the first week 
+of the year. For example, a value of 7 indicates the first week of 
+the year must be a full week, while a value of 1 indicates the first 
+week of the year can contain a single day. This value should be determined 
+by the <tt CLASS=literal>Locale</tt> of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.84">setTime</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.93">public final void setTime(Date date)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>date</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Date</tt> 
+object that represents the new time value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the point in time that is represented by this 
+<tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.85">setTimeZone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.94">public void setTimeZone(TimeZone value)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>TimeZone</tt> 
+object that represents the new time zone. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is used to set the time zone of this <tt CLASS=literal>Calendar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.16">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.86">complete</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.95">protected void complete()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method fills out the fields of this <tt CLASS=literal>Calendar</tt> as much as 
+possible by calling <tt CLASS=literal>computeTime()</tt> 
+and <tt CLASS=literal>computeFields()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.87">computeFields</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.96">protected abstract void computeFields()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method calculates the time fields of this 
+<tt CLASS=literal>Calendar</tt> from its raw time 
+value. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.88">computeTime</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.97">protected abstract void computeTime()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method calculates the raw time value of this <tt CLASS=literal>Calendar</tt> from its time 
+field values. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.89">getTimeInMillis</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.98">protected long getTimeInMillis()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The raw time value of this <tt CLASS=literal>Calendar</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the raw time value of this <tt CLASS=literal>Calendar</tt>. 
+The value is measured as the number of milliseconds since midnight, January 
+1, 1970 GMT. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.90">internalGet</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.99">protected final int internalGet(int field)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>field</tt><br>
+<DD>
+
+<P CLASS=para>
+A time field constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the given time field. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the specified time field without 
+first checking to see if it needs to be computed from the raw time value.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.91">setTimeInMillis</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.100">protected void setTimeInMillis(long millis)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>millis</tt><br>
+<DD>
+
+<P CLASS=para>
+The new raw time 
+value for this <tt CLASS=literal>Calendar</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the raw time value of this <tt CLASS=literal>Calendar</tt>. 
+The value is measured as the number of milliseconds since midnight, January 
+1, 1970 GMT. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.17">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.18">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Cloneable</tt>, 
+<tt CLASS=literal>Date</tt>, 
+<tt CLASS=literal>DateFormat</tt>, 
+<tt CLASS=literal>GregorianCalendar</tt>, 
+<tt CLASS=literal>Locale</tt>, 
+<tt CLASS=literal>Serializable</tt>, 
+<tt CLASS=literal>TimeZone</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch17_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>BitSet</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Date</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

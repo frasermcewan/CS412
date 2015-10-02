@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 29] 29.3 java.text.ChoiceFormat (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:32:55 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch29_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 29<br>The java.text Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch29_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-3">29.3 java.text.ChoiceFormat (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-3.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class is a subclass of <tt CLASS=literal>Format</tt> that converts a
+number to a <tt CLASS=literal>String</tt> in a way that is reminiscent of a
+<tt CLASS=literal>switch</tt> statement or an enumerated type.  Each
+<tt CLASS=literal>ChoiceFormat</tt> object has an array of doubles known as
+its "limits" and an array of strings known as its
+"formats."  When the <tt CLASS=literal>format()</tt> method is called to
+format a number <I CLASS=emphasis>x</I>, the <tt CLASS=literal>ChoiceFormat</tt> finds an
+index <I CLASS=emphasis>i</I> such that:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+limits[i] &lt;= x &lt; limits[i+1]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If <I CLASS=emphasis>x</I> is less than the first element of the array,
+the first element is used, and if it is greater than
+the last, the last element is used.  Once the index
+<I CLASS=emphasis>i</I> has been determined, it is used as the index
+into the array of strings, and the indexed string is
+returned as the result of the <tt CLASS=literal>format()</tt> method.
+
+<P CLASS=para>
+A <tt CLASS=literal>ChoiceFormat</tt> object may also be created by
+encoding its "limits" and "formats" into a single string
+known as its "pattern."  A typical pattern looks like the
+one that follows, used to return the singular or plural form of a
+word, based on the numeric value passed to the
+<tt CLASS=literal>format()</tt> method:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+ChoiceFormat cf = new ChoiceFormat("0#errors|1#error|2#errors");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>ChoiceFormat</tt> object created in this way returns
+the string "errors" when it formats the number 0, or any
+number greater than or equal to 2. It returns
+"error" when it formats the number 1.  In the syntax shown
+here, note the pound sign (<tt CLASS=literal>#</tt>) used to separate the
+limit number from the string that corresponds to that case
+and the vertical bar (<tt CLASS=literal>|</tt>) used to separate the
+individual cases.  You can use the <tt CLASS=literal>applyPattern()</tt>
+method to change the pattern used by a <tt CLASS=literal>ChoiceFormat</tt>
+object; use <tt CLASS=literal>toPattern()</tt> to query the pattern it
+uses. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>ChoiceFormat</tt> extends NumberFormat {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>ChoiceFormat</tt>(String <tt CLASS=literal>newPattern</tt>);
+            public <tt CLASS=literal>ChoiceFormat</tt>(double[] <tt CLASS=literal>limits</tt>, String[] <tt CLASS=literal>formats</tt>);
+    // <tt CLASS=literal>Class Methods</tt>
+            public static final double <tt CLASS=literal>nextDouble</tt>(double <tt CLASS=literal>d</tt>);
+            public static double <tt CLASS=literal>nextDouble</tt>(double <tt CLASS=literal>d</tt>, boolean <tt CLASS=literal>positive</tt>);
+            public static final double <tt CLASS=literal>previousDouble</tt>(double <tt CLASS=literal>d</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public void <tt CLASS=literal>applyPattern</tt>(String <tt CLASS=literal>newPattern</tt>);
+            public Object <tt CLASS=literal>clone</tt>();  //<tt CLASS=literal> Overrides NumberFormat</tt>
+            public boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>obj</tt>);  //<tt CLASS=literal> Overrides NumberFormat</tt>
+            public StringBuffer <tt CLASS=literal>format</tt>(long <tt CLASS=literal>number</tt>, StringBuffer <tt CLASS=literal>toAppendTo</tt>,
+            FieldPosition <tt CLASS=literal>status</tt>);  //<tt CLASS=literal> Defines NumberFormat</tt>
+            public StringBuffer <tt CLASS=literal>format</tt>(double <tt CLASS=literal>number</tt>, StringBuffer <tt CLASS=literal>toAppendTo</tt>,
+            FieldPosition <tt CLASS=literal>status</tt>);  //<tt CLASS=literal> Defines NumberFormat</tt>
+            public Object[] <tt CLASS=literal>getFormats</tt>();
+            public double[] <tt CLASS=literal>getLimits</tt>();
+            public int <tt CLASS=literal>hashCode</tt>();  //<tt CLASS=literal> Overrides NumberFormat</tt>
+            public Number <tt CLASS=literal>parse</tt>(String <tt CLASS=literal>text</tt>, ParsePosition <tt CLASS=literal>status</tt>);  //<tt CLASS=literal> Defines NumberFormat</tt>
+            public void <tt CLASS=literal>setChoices</tt>(double[] <tt CLASS=literal>limits</tt>, String[] <tt CLASS=literal>formats</tt>);
+            public String <tt CLASS=literal>toPattern</tt>();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-3.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+Object->Format(Serializable, Cloneable)->NumberFormat(Cloneable)->ChoiceFormat
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch29_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch29_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.text.CharacterIterator (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.text.CollationElementIterator (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] 8.4 Data Transfer with Cut-and-Paste</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:56:03 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8<br>New AWT Features</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-8-SECT-4">8.4 Data Transfer with Cut-and-Paste</A></h2>
+
+<P CLASS=para>
+<A NAME="CH8.CUT.AND.PAST1"></A><A NAME="CH8.DATAFLAVOR.C1"></A>Java 1.1 adds cut-and-paste capabilities to Java
+applications through the classes and interfaces of the
+<tt CLASS=literal>java.awt.datatransfer</tt> package.  The
+<tt CLASS=literal>DataFlavor</tt> class is perhaps the most central of
+these classes.  It represents the type of data to be
+transferred.  Every data flavor consists of a human-readable
+name and a data type specification.  The data type can be
+specified in one of two ways: with a Java <tt CLASS=literal>Class</tt>
+object or with a MIME type string.  These two different
+ways of specifying the data type reflect two different ways
+of transferring the data.  When the data type is specified
+as a class object, objects of that type are transferred
+using the object serialization mechanism (which is
+discussed in <A HREF="ch09_01.htm">Chapter 9, <i>Object Serialization</i></A>).  In
+<A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A>,
+for example, the <tt CLASS=literal>DataFlavor</tt> is specified using the
+<tt CLASS=literal>Class</tt> object for <tt CLASS=literal>java.util.Vector</tt>.  This means that
+data is transferred as a serialized <tt CLASS=literal>Vector</tt> object.  It
+also means that the <tt CLASS=literal>DataFlavor</tt> object has an implicit
+MIME type of:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+application/x-java-serialized-object; class=java.util.Vector
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The data type of a <tt CLASS=literal>DataFlavor</tt> can also be specified
+as a MIME type.  In this case, data is transferred through a
+stream--the recipient of the data receives a <tt CLASS=literal>Reader</tt>
+stream from which it can read textual data.  In this case,
+the recipient usually has to parse the data according
+to the rules of the specified MIME type.
+
+<P CLASS=para>
+The <tt CLASS=literal>Transferable</tt> interface is another important
+piece of the AWT data transfer picture.  This interface specifies
+methods that must be implemented by any object that wants to
+make data available for transfer.  One of its methods
+returns an array of all the <tt CLASS=literal>DataFlavor</tt> types it can
+use to transfer its data.  Another method checks whether the
+<tt CLASS=literal>Transferable</tt> object supports a given method.
+The most important method,
+<tt CLASS=literal>getTransferData()</tt>, actually returns the data in a
+format appropriate for the requested <tt CLASS=literal>DataFlavor</tt>.
+
+<P CLASS=para>
+While <tt CLASS=literal>DataFlavor</tt> and <tt CLASS=literal>Transferable</tt> provide
+the underlying infrastructure for data transfer, it is the
+<tt CLASS=literal>Clipboard</tt> class and <tt CLASS=literal>ClipboardOwner</tt> interface
+that support the cut-and-paste style of data transfer.  A
+typical cut-and-paste scenario works like this:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>When the user issues a command to "copy" or "cut" something,
+the initiating application first obtains the system
+<tt CLASS=literal>Clipboard</tt> object by calling the
+<tt CLASS=literal>getSystemClipboard()</tt> method of the <tt CLASS=literal>Toolkit</tt>
+object.  Next, it creates a <tt CLASS=literal>Transferable</tt> object that
+represents the data to be transferred.  Finally, it passes
+this transferable object to the clipboard by calling the
+<tt CLASS=literal>setContents()</tt> method of the clipboard.  The
+initiating application must also pass an object that
+implements the <tt CLASS=literal>ClipboardOwner</tt> interface to
+<tt CLASS=literal>setContents()</tt>.  By doing so, it becomes the
+"clipboard owner" and must maintain its
+<tt CLASS=literal>Transferable</tt> object until it ceases to be the
+clipboard owner.
+
+<P>
+<li CLASS=listitem>When the user issues a command to "paste," the receiving
+application first obtains the system <tt CLASS=literal>Clipboard</tt>
+object in the same way that the initiating application did.
+Then, it calls the <tt CLASS=literal>getContents()</tt> method of the system
+clipboard to receive the <tt CLASS=literal>Transferable</tt> object stored
+there.  Now it can use the methods defined by the
+<tt CLASS=literal>Transferable</tt> interface to choose a <tt CLASS=literal>DataFlavor</tt>
+for the data transfer and actually transfer the data.
+
+<P>
+<li CLASS=listitem>When the user copies or cuts some other piece of data, a new
+data transfer is initiated, and the new initiating
+application (it may be the same one) becomes the new
+clipboard owner.  The previous owner is notified that it is
+no longer the clipboard owner when the system invokes the
+<tt CLASS=literal>lostOwnership()</tt> method of the <tt CLASS=literal>ClipboardOwner</tt>
+object specified in the initiating call to
+<tt CLASS=literal>setContents()</tt>.
+
+<P>
+</UL>
+<P CLASS=para>
+Note that untrusted applets are not allowed to work with the
+system clipboard because there might be sensitive data on it
+from other applications.  This means that applets cannot
+participate in inter-application cut-and-paste.  Instead,
+an applet must create a private clipboard object that it can
+use for intra-applet data transfer.
+
+<P CLASS=para>
+The <tt CLASS=literal>cut()</tt>, <tt CLASS=literal>copy()</tt>, and <tt CLASS=literal>paste()</tt>
+methods of <A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A>
+implement cut-and-paste functionality for scribbled lines.  They rely on
+the nested <tt CLASS=literal>SimpleSelection</tt> class that implements
+the <tt CLASS=literal>Transferable</tt> and <tt CLASS=literal>ClipboardOwner</tt>
+interfaces.  Note the definition of a <tt CLASS=literal>DataFlavor</tt> object that
+serves to specify the type of data transfer.
+[1]
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+Although the example application uses the system clipboard,
+scribbles can only be pasted between windows of the same
+application, not between separate instances of the
+application running in separate Java interpreters.  In Java
+1.1.1, inter-application cut-and-paste only works with
+the pre-defined <tt CLASS=literal>DataFlavor.stringFlavor</tt> and
+<tt CLASS=literal>DataFlavor.textFlavor</tt> data flavors.  Custom types
+like the one used in the example do not correctly interface
+with the system clipboard.
+</blockquote>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Printing</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>New Feature Demo</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

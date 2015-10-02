@@ -1,0 +1,866 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 18] ZipEntry</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:49:43 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 18<br>The java.util.zip Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_14.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ZipEntry</H1>
+
+<H2>Name</H2>
+
+ZipEntry
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.92">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.zip.ZipEntry</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.93">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>ZipEntry</tt> class represents 
+a single entry in a ZIP file, which is either a compressed file or an uncompressed 
+file. <tt CLASS=literal>ZipEntry</tt> provides methods 
+that set and retrieve various pieces of information about an entry. 
+
+<P CLASS=para>
+When you are reading a ZIP file, you use <tt CLASS=literal>ZipInputStream.getNextEntry()</tt> 
+to return the next entry in the file. Then you can retrieve information 
+about that particular entry. You can also read the entries in a ZIP file 
+in a nonsequential order using the <tt CLASS=literal>ZipFile</tt> 
+class. 
+
+<P CLASS=para>
+When you are writing a ZIP file, you use <tt CLASS=literal>ZipOutputStream.putNextEntry()</tt> 
+to write an entry, and you must create your own <tt CLASS=literal>ZipEntry</tt> 
+objects. If you are storing compressed (deflated) files, you need only 
+specify a name for the <tt CLASS=literal>ZipEntry</tt> ; 
+the other fields are filled in automatically. If, however, you are placing 
+uncompressed entries, you need to specify the size of each entry and provide 
+a CRC-32 checksum value. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.94">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.util.zip.ZipEntry extends java.lang.Object {
+  // Constants
+  public static final int DEFLATED;
+  public static final int STORED;
+  // Constructors
+  public ZipEntry(String name);
+  // Instance Methods
+  public String getComment();
+  public long getCompressedSize();
+  public long getCrc();
+  public byte[] getExtra();
+  public int getMethod();
+  public String getName();
+  public long getSize();
+  public long getTime();
+  public boolean isDirectory();
+  public void setComment(String comment);
+  public void setCrc(long crc);
+  public void setExtra(byte[] extra);
+  public void setMethod(int method);
+  public void setSize(long size);
+  public void setTime(long time);
+  public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.95">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.82">DEFLATED</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.107">public static final int DEFLATED</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that represents an entry that is stored using the deflate algorithm. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.83">STORED</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.108">public static final int STORED</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that represents an entry that is stored verbatim; in other 
+words, with no compression applied. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.96">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.84">ZipEntry</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.109">public ZipEntry(String name)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of the entry. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NullPointerException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>name</tt> is <tt CLASS=literal>null</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>name</tt> is longer than <tt CLASS=literal>0xFFFF</tt> 
+bytes. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>ZipEntry</tt> 
+with the given name. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.97">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.85">getComment</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.110">public String getComment()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The comment of this entry or <tt CLASS=literal>null</tt> 
+if one has not been specified. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the comment string for this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.86">getCompressedSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.111">public long getCompressedSize()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The compressed size of this entry or <tt CLASS=literal>-1</tt> is the compressed size is not known. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the compressed size of this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.87">getCrc</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.112">public long getCrc()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The checksum value for this entry. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the CRC-32 checksum value for this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.88">getExtra</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.113">public byte[] getExtra()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The extra field data for this entry or <tt CLASS=literal>null</tt> 
+if there is none. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the bytes in the extra field data for this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.89">getMethod</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.114">public int getMethod()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The compression method of this entry or <tt CLASS=literal>-1</tt> if it has not been specified. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the compression method of this <tt CLASS=literal>ZipEntry</tt>. 
+Valid values are <tt CLASS=literal>DEFLATED</tt> and 
+<tt CLASS=literal>STORED</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.90">getName</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.115">public String getName()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The name of this entry. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the string name of this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.91">getSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.116">public long getSize()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The uncompressed size of this entry or <tt CLASS=literal>-1</tt> if the uncompressed size is not 
+known. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the uncompressed size of this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.92">getTime</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.117">public long getTime()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The modification date of this entry. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the modification date of this <tt CLASS=literal>ZipEntry</tt> 
+as the number of milliseconds since midnight, January 1, 1970 GMT. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.93">isDirectory</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.118">public boolean isDirectory()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates 
+whether or not this entry is a directory. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+this <tt CLASS=literal>ZipEntry</tt> represents a 
+directory. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.94">setComment</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.119">public void setComment(String comment)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>comment</tt><br>
+<DD>
+
+<P CLASS=para>
+The new comment string. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>comment</tt> is longer than <tt CLASS=literal>0xFFFF</tt> 
+bytes. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the comment string of this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.95">setCrc</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.120">public void setCrc(long crc)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>crc</tt><br>
+<DD>
+
+<P CLASS=para>
+The new checksum value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the CRC-32 checksum value for this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.96">setExtra</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.121">public void setExtra(byte[] extra)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>extra</tt><br>
+<DD>
+
+<P CLASS=para>
+The extra field data. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>extra</tt> is longer than <tt CLASS=literal>0xFFFF</tt> 
+bytes. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the extra field data for this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.97">setMethod</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.122">public void setMethod(int method)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>method</tt><br>
+<DD>
+
+<P CLASS=para>
+The new compression method. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>method</tt> is not <tt CLASS=literal>DEFLATED</tt> 
+or <tt CLASS=literal>STORED</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the compression method of this <tt CLASS=literal>ZipEntry</tt>. 
+This corresponds to the compression level of <tt CLASS=literal>Deflater</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.98">setSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.123">public void setSize(long size)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>size</tt><br>
+<DD>
+
+<P CLASS=para>
+The new uncompressed 
+entry size. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>size</tt> is less than 0 or greater 
+than <tt CLASS=literal>0xFFFFFFFF</tt> bytes. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the uncompressed size of this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.99">setTime</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.124">public void setTime(long time)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>time</tt><br>
+<DD>
+
+<P CLASS=para>
+The new modification 
+date, expressed as the number of seconds since midnight, January 1, 1970 
+GMT. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the modification date of this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.100">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.125">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of this object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the name of this <tt CLASS=literal>ZipEntry</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.98">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, 
+int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.99">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Deflater</tt>, 
+<tt CLASS=literal>IllegalArgumentException</tt>, 
+<tt CLASS=literal>Inflater</tt>, 
+<tt CLASS=literal>NullPointerException</tt>, 
+<tt CLASS=literal>ZipInputStream</tt>, 
+<tt CLASS=literal>ZipOutputStream</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_14.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>InflaterInputStream</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ZipException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

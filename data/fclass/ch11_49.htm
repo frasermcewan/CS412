@@ -1,0 +1,620 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] PipedOutputStream</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:40:05 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_48.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_50.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>PipedOutputStream</H1>
+
+<H2>Name</H2>
+
+PipedOutputStream
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.332">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.PipedOutputStream </tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.OutputStream</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.333">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>PipedOutputStream</tt> 
+class represents half of a communication pipe; a <tt CLASS=literal>PipedOutputStream</tt> 
+must be connected to a <tt CLASS=literal>PipedOutputStream</tt>. 
+When the two halves of a communication pipe are connected, data written 
+to the <tt CLASS=literal>PipedOutputStream</tt> can 
+be read from the <tt CLASS=literal>PipedInputStream</tt>. 
+The communication pipe formed by a <tt CLASS=literal>PipedOutputStream</tt>
+and a <tt CLASS=literal>PipedInputStream</tt> should be used to 
+communicate between threads. If both ends of a pipe are used by
+the same thread, the thread can hang.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.334">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.io.PipedOutputStream extends java.io.OutputStream {
+  // Constructors
+  public PipedOutputStream();
+  public PipedOutputStream(PipedInputStream snk);
+  // Instance Methods
+  public void close();
+  public void connect(PipedInputStream snk);
+  public synchronized void flush();               // New in 1.1
+  public void write(int b);
+  public void write(byte[] b, int off, int len);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.335">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.331">PipedOutputStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.412">public PipedOutputStream()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>PipedOutputStream</tt> 
+that is not connected to a <tt CLASS=literal>PipedInputStream</tt>. 
+The created object must be connected to a <tt CLASS=literal>PipedInputStream</tt> 
+before it can be used. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.413">public PipedOutputStream(PipedInputStream snk)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>snk</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>PipedInputStream</tt> 
+to connect. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt> <br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>PipedOutputStream</tt> 
+that sends data to the given <tt CLASS=literal>PipedInputStream</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.336">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.332">close</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.414">public void close() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt> <br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream.close()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method closes the stream and releases the system resources that are 
+associated with it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.333">connect</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.415">public void connect(PipedInputStream snk) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>snk</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>PipedInputStream</tt> 
+to connect. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt> <br>
+<DD>
+
+<P CLASS=para>
+If another 
+<tt CLASS=literal>PipedInputStream</tt> is already 
+connected to this <tt CLASS=literal>PipedOutputStream</tt> 
+or this <tt CLASS=literal>PipedOutputStream</tt> is 
+already connected. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method connects this <tt CLASS=literal>PipedOutputStream</tt> 
+object to the given <tt CLASS=literal>PipedInputStream</tt>. 
+If this <tt CLASS=literal>PipedOutputStream</tt> or 
+<tt CLASS=literal>snk</tt> is already connected, an 
+exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.334">flush</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.416">public synchronized void flush() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedIOException</tt><br>
+<DD>
+
+<P CLASS=para>
+While this method is waiting for buffer space to become available, if
+the <tt CLASS=literal>interrupted()</tt> method of the thread that invoked
+this method is called.</DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream.flush()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method flushes the stream, which tells the connected <tt CLASS=literal>PipedInputStream</tt> 
+to notify its readers to read any available data. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.335">write</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.417">public void write(int b) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to write. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedIOException</tt><br>
+<DD>
+
+<P CLASS=para>
+While this method is waiting for buffer space to become available, if
+the <tt CLASS=literal>interrupted()</tt> method of the thread that invoked
+this method is called.</DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream.write(int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a byte of output. The method passes the given value 
+directly to the connected <tt CLASS=literal>PipedInputStream</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.418">public void write(byte b[], int off, int len) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of bytes to write to the stream.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>off</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the byte array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes to write. </DL>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedIOException</tt><br>
+<DD>
+
+<P CLASS=para>
+While this method is waiting for buffer space to become available, if
+the <tt CLASS=literal>interrupted()</tt> method of the thread that invoked
+this method is called.</DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream.write(byte[], int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes <tt CLASS=literal>len</tt> bytes 
+of output from the given array, starting at offset <tt CLASS=literal>off</tt>. 
+The method passes the given data to the connected <tt CLASS=literal>PipedInputStream</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.337">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>write(byte[])</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.338">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>OutputStream</tt>, 
+<tt CLASS=literal>PipedInputStream</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_48.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_50.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>PipedInputStream</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>PipedReader</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

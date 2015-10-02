@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.5 Scribbling with Inner Classes</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:55:13 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Events</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-5">7.5 Scribbling with Inner Classes</A></h2>
+
+<P CLASS=para>
+<A NAME="CH7.INNER.CLASSE6"></A><A NAME="CH7.EVENTS-INNER1"></A>The Java 1.1 event model was designed to work well with
+another new Java 1.1 feature: inner classes.
+<A HREF="ch07_05.htm#JNUT2-CH-7-EX-3">Example 7.3</A>
+shows what the applet looks like when the event listeners
+are implemented as anonymous inner classes.  Note how
+succinct this representation is. This is perhaps
+the most common way to use the Java 1.1 event model, so
+you'll probably
+see a lot of code that looks like this.  In this case, our
+simple applet is nothing but event-handling code, so this
+version of it consists almost entirely of anonymous class
+definitions.
+
+<P CLASS=para>
+Note that we've added a feature to the applet.  It now
+includes a <b>Clear</b> button.  An
+<tt CLASS=literal>ActionListener</tt> object is registered with the button; it
+clears the
+scribble when the appropriate event occurs.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-7-EX-3">Example 7.3: Scribble: Using Inner Classes</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class Scribble3 extends Applet {
+  int last_x, last_y;
+  public void init() {
+    // Define, instantiate, and register a MouseListener object.
+    this.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        last_x = e.getX();
+        last_y = e.getY();
+      }
+    });
+    // Define, instantiate, and register a MouseMotionListener object.
+    this.addMouseMotionListener(new MouseMotionAdapter() {
+      public void mouseDragged(MouseEvent e) {
+        Graphics g = getGraphics();
+        int x = e.getX(), y = e.getY();
+        g.setColor(Color.black);
+        g.drawLine(last_x, last_y, x, y);
+        last_x = x; last_y = y;
+      }
+    });
+    // Create a clear button.
+    Button b = new Button("Clear");
+    // Define, instantiate, and register a listener to handle button presses.
+    b.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {  // clear the scribble
+        Graphics g = getGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getSize().width, getSize().height);
+      }
+    });
+    // And add the button to the applet.
+    this.add(b);
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Scribbling in Java 1.1</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Inside the Java 1.1 Event Model</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

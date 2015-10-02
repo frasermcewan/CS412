@@ -1,0 +1,1822 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] DateFormat</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:30:17 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>The java.text Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>DateFormat</H1>
+
+<H2>Name</H2>
+
+DateFormat
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.47">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.DateFormat</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.Format</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.SimpleDateFormat</tt>
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Cloneable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.48">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>DateFormat</tt> class formats 
+and parses dates and times in a locale-specific manner. <tt CLASS=literal>DateFormat</tt> 
+is an <tt CLASS=literal>abstract</tt> class, but it 
+provides factory methods that return useful instances of <tt CLASS=literal>DateFormat</tt> 
+subclasses. These factory methods come in three groups: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>getDateInstance()</tt> 
+methods return objects that format and parse only dates. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>getDateTimeInstance()</tt> 
+methods return objects that format and parse date and time combinations. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>getTimeInstance()</tt> 
+methods return objects that format only times. 
+
+<P>
+</UL>
+<P CLASS=para>
+Certain of these factory methods allow you to specify the style, or length, 
+of the resulting date and time strings. The interpretation of the style 
+parameter is locale-specific. For the locale <tt CLASS=literal>Locale.US</tt>, 
+the styles and their results are as follows: 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>FULL</tt><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Tuesday, March 04, 1997 12:00:00 o'clock AM EST</tt>
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>LONG</tt><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>March 04, 1997 12:00:00 AM EST</tt>
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>MEDIUM</tt><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>04-Mar-97 12:00:00 AM</tt>
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SHORT</tt><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>3/4/97 12:00 AM</tt></DL>
+<P CLASS=para>
+There is also a <tt CLASS=literal>DEFAULT</tt> style, 
+which is equivalent to <tt CLASS=literal>MEDIUM</tt>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>DateFormat</tt> class defines 
+a number of field constants that represent the various fields in formatted 
+date and time strings. These field constants can create <tt CLASS=literal>FieldPosition</tt> 
+objects. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.49">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.text.DateFormat extends java.text.Format
+                      implements java.lang.Cloneable {
+  // Constants
+  public static final int AM_PM_FIELD;
+  public static final int DATE_FIELD;
+  public static final int DAY_OF_WEEK_FIELD;
+  public static final int DAY_OF_WEEK_IN_MONTH_FIELD;
+  public static final int DAY_OF_YEAR_FIELD;
+  public static final int DEFAULT;
+  public static final int ERA_FIELD;
+  public static final int FULL;
+  public static final int HOUR0_FIELD;
+  public static final int HOUR1_FIELD;
+  public static final int HOUR_OF_DAY0_FIELD;
+  public static final int HOUR_OF_DAY1_FIELD;
+  public static final int LONG;
+  public static final int MEDIUM;
+  public static final int MILLISECOND_FIELD;
+  public static final int MINUTE_FIELD;
+  public static final int MONTH_FIELD;
+  public static final int SECOND_FIELD;
+  public static final int SHORT;
+  public static final int TIMEZONE_FIELD;
+  public static final int WEEK_OF_MONTH_FIELD;
+  public static final int WEEK_OF_YEAR_FIELD;
+  public static final int YEAR_FIELD;
+  // Variables
+  protected Calendar calendar;
+  protected NumberFormat numberFormat;
+  // Constructors
+  protected DateFormat();
+  // Class Methods
+  public static Locale[] getAvailableLocales();
+  public static final DateFormat getDateInstance();
+  public static final DateFormat getDateInstance(int style);
+  public static final DateFormat getDateInstance(int style, Locale aLocale);
+  public static final DateFormat getDateTimeInstance();
+  public static final DateFormat getDateTimeInstance(int dateStyle, 
+                                 int timeStyle);
+  public static final DateFormat getDateTimeInstance(int dateStyle, 
+                                 int timeStyle, Locale aLocale);
+  public static final DateFormat getInstance();
+  public static final DateFormat getTimeInstance();
+  public static final DateFormat getTimeInstance(int style);
+  public static final DateFormat getTimeInstance(int style, Locale aLocale);
+  // Instance Methods
+  public Object clone();
+  public boolean equals(Object obj); 
+  public final String format(Date date);
+  public final StringBuffer format(Object obj, StringBuffer toAppendTo, 
+                            FieldPosition fieldPosition); 
+  public abstract StringBuffer format(Date date, StringBuffer toAppendTo, 
+                               FieldPosition fieldPosition);
+  public Calendar getCalendar();
+  public NumberFormat getNumberFormat();
+  public TimeZone getTimeZone();
+  public int hashCode();
+  public boolean isLenient();
+  public Date parse(String text);
+  public abstract Date parse(String text, ParsePosition pos);
+  public Object parseObject(String source, ParsePosition pos); 
+  public void setCalendar(Calendar newCalendar);
+  public void setLenient(boolean lenient);
+  public void setNumberFormat(NumberFormat newNumberFormat);
+  public void setTimeZone(TimeZone zone);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.50">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.71">AM_PM_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.82">public final static int AM_PM_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the A.M./P.M. 
+field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.72">DATE_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.83">public final static int DATE_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the date (day of month) field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.73">DAY_OF_WEEK_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.84">public final static int DAY_OF_WEEK_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the day-of-the-week field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.74">DAY_OF_WEEK_IN_MONTH_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.85">public final static int DAY_OF_WEEK_IN_MONTH_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the day of the week in the current month 
+field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.75">DAY_OF_YEAR_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.86">public final static int DAY_OF_YEAR_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the day-of-the-year field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.76">DEFAULT</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.87">public final static int DEFAULT</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that specifies the default style. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.77">ERA_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.88">public final static int ERA_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the era field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.78">FULL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.89">public final static int FULL</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that specifies the most complete style. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.79">HOUR0_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.90">public final static int HOUR0_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the zero-based 
+hour field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.80">HOUR1_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.91">public final static int HOUR1_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the one-based 
+hour field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.81">HOUR_OF_DAY0_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.92">public final static int HOUR_OF_DAY0_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the zero-based 
+hour of the day field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.82">HOUR_OF_DAY1_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.93">public final static int HOUR_OF_DAY1_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the one-based 
+hour of the day field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.83">LONG</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.94">public final static int LONG</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that specifies the long style. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.84">MEDIUM</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.95">public final static int MEDIUM</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that specifies the medium style. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.85">MILLISECOND_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.96">public final static int MILLISECOND_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the millisecond 
+field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.86">MINUTE_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.97">public final static int MINUTE_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the minute field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.87">MONTH_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.98">public final static int MONTH_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the month field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.88">SECOND_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.99">public final static int SECOND_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the second field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.89">SHORT</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.100">public final static int SHORT</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that specifies the short style. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.90">TIMEZONE_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.101">public final static int TIMEZONE_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the time-zone 
+field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.91">WEEK_OF_MONTH_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.102">public final static int WEEK_OF_MONTH_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the week-of-the-month field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.92">WEEK_OF_YEAR_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.103">public final static int WEEK_OF_YEAR_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the week-of-the-year field. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.93">YEAR_FIELD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.104">public final static int YEAR_FIELD</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A field constant that represents the year field. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.51">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.94">calendar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.105">protected Calendar calendar</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Calendar</tt> object that 
+internally generates the field values for formatting dates and times. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.95">numberFormat</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.106">protected NumberFormat numberFormat</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>NumberFormat</tt> object that 
+internally formats the numbers in dates and times. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.52">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.96">DateFormat</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.107">protected DateFormat()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>DateFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.53">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.97">getAvailableLocales</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.108">public static Locale[] getAvailableLocales()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Locale</tt> objects. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an array of the <tt CLASS=literal>Locale</tt> 
+objects for which this class can create <tt CLASS=literal>DateFormat</tt> 
+objects. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.98">getDateInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.109">public static final DateFormat getDateInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the default <tt CLASS=literal>Locale</tt> that uses 
+the default style. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses dates in the default locale 
+with the default style. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.110">public static final DateFormat getDateInstance(int style)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>style</tt><br>
+<DD>
+
+<P CLASS=para>
+A style constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the default <tt CLASS=literal>Locale</tt> that uses 
+the given style. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses dates in the default locale 
+with the given style. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.111"><DIV CLASS=screen> <P> <PRE> public static final DateFormat getDateInstance(int style, Locale aLocale) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>style</tt><br>
+<DD>
+
+<P CLASS=para>
+A style constant.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>aLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the given <tt CLASS=literal>Locale</tt> that uses 
+the given style. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses dates in the given locale with 
+the given style. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.99">getDateTimeInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.112">public static final DateFormat getDateTimeInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the default <tt CLASS=literal>Locale</tt> that uses 
+the default date and time styles. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses dates and times in the default 
+locale with the default date and time styles. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.113"><DIV CLASS=screen> <P> <PRE> public static final DateFormat getDateTimeInstance(int dateStyle, int timeStyle) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>dateStyle</tt><br>
+<DD>
+
+<P CLASS=para>
+A style constant.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>timeStyle</tt><br>
+<DD>
+
+<P CLASS=para>
+A style constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the default <tt CLASS=literal>Locale</tt> that uses 
+the given data and time styles. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses dates and times in the default 
+locale with the given date and time styles. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.114"><DIV CLASS=screen> <P> <PRE> public static final DateFormat getDateTimeInstance(int dateStyle, int timeStyle, Locale aLocale) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>dateStyle</tt><br>
+<DD>
+
+<P CLASS=para>
+A style constant.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>timeStyle</tt><br>
+<DD>
+
+<P CLASS=para>
+A style constant.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>aLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the given <tt CLASS=literal>Locale</tt> that uses 
+the given date and time styles. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses dates and times in the given 
+locale with the given date and time styles. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.100">getInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.115">public static final DateFormat getInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the default <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a general purpose <tt CLASS=literal>DateFormat</tt> 
+by calling <tt CLASS=literal>getDateTimeInstance(DateFormat.SHORT,</tt> 
+<tt CLASS=literal>DateFormat.SHORT)</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.101">getTimeInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.116">public static final DateFormat getTimeInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the default <tt CLASS=literal>Locale</tt> that uses 
+the default style. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses times in the default locale 
+with the default style. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.117">public static final DateFormat getTimeInstance(int style)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>style</tt><br>
+<DD>
+
+<P CLASS=para>
+A style constant. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the default <tt CLASS=literal>Locale</tt> that uses 
+the given style. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses times in the default locale 
+with the given style. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.118"><DIV CLASS=screen> <P> <PRE> public static final DateFormat getTimeInstance(int style, Locale aLocale) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>style</tt><br>
+<DD>
+
+<P CLASS=para>
+A style constant.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>aLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>DateFormat</tt> appropriate for 
+the given <tt CLASS=literal>Locale</tt> that uses 
+the given style. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>DateFormat</tt> 
+that formats and parses times in the given locale with 
+the given style. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.54">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.102">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.119">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this <tt CLASS=literal>DateFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Format.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>DateFormat</tt> 
+and returns it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.103">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.120">public boolean equals(Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be compared 
+with this object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; 
+<tt CLASS=literal>false</tt> if they are not. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.equals()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>obj</tt> is an instance of <tt CLASS=literal>DateFormat</tt> 
+and is equivalent to this <tt CLASS=literal>DateFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.104">format</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.121">public final String format(Date date)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>date</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Date</tt> 
+object to be formatted. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string that contains a formatted representation of the date. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method formats the given date and returns the result as a string. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.122"><DIV CLASS=screen> <P> <PRE> public final StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition fieldPosition) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be formatted.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>toAppendTo</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>StringBuffer</tt> 
+on which to append the formatted information.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>fieldPosition</tt><br>
+<DD>
+
+<P CLASS=para>
+A date or time field. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The given buffer <tt CLASS=literal>toAppendTo</tt> 
+with the formatted representation of the object appended to it. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Format.format(Object, 
+StringBuffer, FieldPosition)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method formats the given object and appends the result to the given 
+<tt CLASS=literal>StringBuffer</tt>. If <tt CLASS=literal>fieldPosition</tt> 
+refers to one of the time or date fields, its beginning and ending indices 
+are filled with the beginning and ending positions of the given field in 
+the resulting formatted string. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.123"><DIV CLASS=screen> <P> <PRE> public abstract StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>date</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Date</tt> 
+object to be formatted.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>toAppendTo</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>StringBuffer</tt> 
+on which to append the formatted information.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>fieldPosition</tt><br>
+<DD>
+
+<P CLASS=para>
+A date or time field. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The given buffer <tt CLASS=literal>toAppendTo</tt> 
+with the formatted representation of the date appended to it. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method formats the given date and appends the result to the given 
+<tt CLASS=literal>StringBuffer</tt>. If <tt CLASS=literal>fieldPosition</tt> 
+refers to one of the time or date fields, its beginning and ending indices 
+are filled with the beginning and ending positions of the given field in 
+the resulting formatted string. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.105">getCalendar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.124">public Calendar getCalendar()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The internal <tt CLASS=literal>Calendar</tt> 
+object of this <tt CLASS=literal>DateFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the <tt CLASS=literal>Calendar</tt> 
+object that this <tt CLASS=literal>DateFormat</tt> 
+uses internally. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.106">getNumberFormat</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.125">public NumberFormat getNumberFormat()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The internal <tt CLASS=literal>NumberFormat</tt> 
+object of this <tt CLASS=literal>DateFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the <tt CLASS=literal>NumberFormat</tt> 
+object that this <tt CLASS=literal>DateFormat</tt> 
+uses internally. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.107">getTimeZone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.126">public TimeZone getTimeZone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The internal <tt CLASS=literal>TimeZone</tt> 
+object of this <tt CLASS=literal>DateFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the <tt CLASS=literal>TimeZone</tt> 
+object that this <tt CLASS=literal>DateFormat</tt> 
+uses internally. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.108">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.127">public int hashCode()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode for this object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.hashCode()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a hashcode for this <tt CLASS=literal>DateFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.109">isLenient</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.128">public boolean isLenient()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates 
+the leniency of this <tt CLASS=literal>DateFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current leniency of this <tt CLASS=literal>DateFormat</tt>. 
+A value of <tt CLASS=literal>false</tt> indicates 
+that the <tt CLASS=literal>DateFormat</tt> throws 
+exceptions when it tries to parse questionable data, while a value of <tt CLASS=literal>true</tt> 
+indicates that the <tt CLASS=literal>DateFormat</tt> 
+makes its best guess to interpret questionable data. For example, if the 
+<tt CLASS=literal>DateFormat</tt> is being lenient, 
+a date such as March 135, 1997 is interpreted as the 135th 
+day after March 1, 1997. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.110">parse</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.129">public Date parse(String text) throws ParseException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>text</tt><br>
+<DD>
+
+<P CLASS=para>
+The string to be parsed. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Date</tt> object represented 
+by the given string. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ParseException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the text cannot be parsed as a date. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method parses a date from the given string, starting from the beginning 
+of the string. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.130">public abstract Date parse(String text, ParsePosition pos)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>text</tt><br>
+<DD>
+
+<P CLASS=para>
+The string to be parsed.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>pos</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>ParsePosition</tt> 
+object that can specify a position in the string. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Date</tt> object represented 
+by the text starting at the given position. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method parses a date from the given string, starting from the given 
+position. After the string has been parsed, the given <tt CLASS=literal>ParsePosition</tt> 
+object is updated so that its index is after the parsed text. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.111">parseObject</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.131">public Object parseObject(String source, ParsePosition pos)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>source</tt><br>
+<DD>
+
+<P CLASS=para>
+The string to be parsed.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>pos</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>ParsePosition</tt> 
+object that can specify a position in the string. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The object represented by the text starting at the given position. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Format.parseObject(String, 
+ParsePosition)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method parses a date from the given string, starting from the given 
+position. After the string has been parsed, the given <tt CLASS=literal>ParsePosition</tt> 
+object is updated so that its index is after the parsed text. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.112">setCalendar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.132">public void setCalendar(Calendar newCalendar)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newCalendar</tt><br>
+<DD>
+
+<P CLASS=para>
+The new <tt CLASS=literal>Calendar</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the <tt CLASS=literal>Calendar</tt> 
+that this <tt CLASS=literal>DateFormat</tt> uses internally. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.113">setLenient</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.133">public void setLenient(boolean lenient)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>lenient</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies the leniency of this <tt CLASS=literal>DateFormat</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the leniency of this <tt CLASS=literal>DateFormat</tt>. 
+A value of <tt CLASS=literal>false</tt> specifies 
+that the <tt CLASS=literal>DateFormat</tt> throws 
+exceptions when it tries to parse questionable data, while a value of <tt CLASS=literal>true</tt> 
+indicates that the <tt CLASS=literal>DateFormat</tt> 
+makes its best guess to interpret questionable data. For example, if the 
+<tt CLASS=literal>Calendar</tt> is being lenient, 
+a date such as March 135, 1997 is interpreted as the 135th 
+day after March 1, 1997. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.114">setNumberFormat</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.134">public void setNumberFormat(NumberFormat newNumberFormat)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newNumberFormat</tt><br>
+<DD>
+
+<P CLASS=para>
+The new <tt CLASS=literal>NumberFormat</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the <tt CLASS=literal>NumberFormat</tt> 
+that this <tt CLASS=literal>DateFormat</tt> uses internally. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.115">setTimeZone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.135">public void setTimeZone(TimeZone zone)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>zone</tt><br>
+<DD>
+
+<P CLASS=para>
+The new <tt CLASS=literal>TimeZone</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the <tt CLASS=literal>TimeZone</tt> 
+that this <tt CLASS=literal>DateFormat</tt> uses internally. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.55">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>format(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Format</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>parseObject(String)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Format</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.56">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Calendar</tt>, 
+<tt CLASS=literal>Cloneable</tt>, 
+<tt CLASS=literal>Date</tt>, 
+<tt CLASS=literal>FieldPosition</tt>, 
+<tt CLASS=literal>Format</tt>, 
+<tt CLASS=literal>Locale</tt>, 
+<tt CLASS=literal>NumberFormat</tt>, 
+<tt CLASS=literal>ParsePosition</tt>, 
+<tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>StringBuffer</tt>, 
+<tt CLASS=literal>TimeZone</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Collator</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>DateFormatSymbols</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

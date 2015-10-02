@@ -1,0 +1,525 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.7 FileDialog</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:37:10 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Containers</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-7">6.7 FileDialog</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.FILE1"></A><tt CLASS=literal>FileDialog</tt> is a subclass of 
+<tt CLASS=literal>Dialog</tt> that lets the user select 
+files for opening or saving. You must load or save any files yourself. 
+If used in an application or <I CLASS=emphasis>appletviewer</I>, the <tt CLASS=literal>FileDialog</tt> 
+always looks like the local system's file dialog. The <tt CLASS=literal>FileDialog</tt> 
+is always a modal <tt CLASS=literal>Dialog</tt>, meaning 
+that the calling program is blocked from continuing (and cannot accept 
+input) until the user responds to the <tt CLASS=literal>FileDialog</tt>. <A HREF="ch06_07.htm#JAWT-CH-6-FIG-9">Figure 6.9</A> shows the <tt CLASS=literal>FileDialog</tt> component in Motif, Windows NT/95, and the Macintosh.
+
+<P CLASS=para>
+Unlike the other <tt CLASS=literal>Window</tt> subclasses, 
+there is no <tt CLASS=literal>LayoutManager</tt> for 
+<tt CLASS=literal>FileDialog</tt>, since you are creating 
+the environment's actual file dialog. This means you cannot subclass 
+<tt CLASS=literal>FileDialog</tt> to alter its behavior 
+or appearance. However, the class is not "final." 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Netscape Navigator throws an <tt CLASS=literal>AWTError</tt> 
+when you try to create a <tt CLASS=literal>FileDialog</tt> 
+because Navigator does not permit local file system access. 
+</blockquote><P>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-7.1">FileDialog Methods</A></h3>Constants
+
+<P CLASS=para>
+A <tt CLASS=literal>FileDialog</tt> has two modes: 
+one for loading a file (input) and one for saving (output). The following 
+variables provide the mode to the constructor. The <tt CLASS=literal>FileDialog</tt> 
+functions the same way in both modes. The only visible difference is whether 
+a button on the screen is labeled Load or Save. 
+You must load or save the requested file yourself. On certain platforms 
+there may be functional differences: in <tt CLASS=literal>SAVE</tt> 
+mode, the <tt CLASS=literal>FileDialog</tt> may ask 
+if you want to replace a file if it already exists; in <tt CLASS=literal>LOAD</tt> 
+mode, the <tt CLASS=literal>FileDialog</tt> may not 
+accept a filename that does not exist. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static int LOAD </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LOAD</tt> is the constant for load 
+mode. It is the default mode. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static int SAVE </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>SAVE</tt> is the constant for save 
+mode. </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public FileDialog (Frame parent) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The first constructor creates a <tt CLASS=literal>FileDialog</tt> 
+for loading with a parent <tt CLASS=literal>Frame</tt> 
+of <tt CLASS=literal>parent</tt>. The window title 
+is initially empty. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public FileDialog (Frame parent, String title) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>FileDialog</tt> 
+for loading with a parent <tt CLASS=literal>Frame</tt> 
+of <tt CLASS=literal>parent</tt>. The window title 
+is <tt CLASS=literal>title</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public FileDialog (Frame parent, String title, int mode) </I><br>
+<DD>
+
+<P CLASS=para>
+The final constructor creates a <tt CLASS=literal>FileDialog</tt> 
+with an initial mode of <tt CLASS=literal>mode</tt>. 
+If <tt CLASS=literal>mode</tt> is neither <tt CLASS=literal>LOAD</tt> 
+nor <tt CLASS=literal>SAVE</tt>, the <tt CLASS=literal>FileDialog</tt> 
+is in <tt CLASS=literal>SAVE</tt> mode. </DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-9">Figure 6.9: FileDialogs for Motif, Windows NT/95, and the Macintosh</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0610.gif" alt="[Graphic: Figure 6-9]" width=249 height=246 border=0>
+
+</DIV>
+
+Appearance methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getDirectory () </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>getDirectory()</tt> returns 
+the current directory for the <tt CLASS=literal>FileDialog</tt>. 
+Normally, you check this when <tt CLASS=literal>FileDialog</tt> 
+returns after a <tt CLASS=literal>show()</tt> and 
+a call to <tt CLASS=literal>getFile()</tt> returns 
+something other than <tt CLASS=literal>null</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setDirectory (String directory) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setDirectory()</tt> method changes 
+the initial directory displayed in the <tt CLASS=literal>FileDialog</tt> 
+to <tt CLASS=literal>directory</tt>. You must call 
+<tt CLASS=literal>setDirectory()</tt> prior to displaying 
+the <tt CLASS=literal>FileDialog</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getFile () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFile()</tt> method returns 
+the current file selection from the <tt CLASS=literal>FileDialog</tt>. 
+If the user pressed the Cancel button on the <tt CLASS=literal>FileDialog</tt>, 
+<tt CLASS=literal>getFile()</tt> returns <tt CLASS=literal>null</tt>. 
+This is the only way to determine if the user pressed Cancel. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+On some platforms in Java 1.0 <tt CLASS=literal>getFile()</tt> 
+returns a string that ends in <tt CLASS=literal>.*.*</tt> 
+(two periods and two asterisks) if the file does not exist. You need to 
+remove the extra characters before you can create the file. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setFile (String file) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setFile()</tt> method changes 
+the default file for the <tt CLASS=literal>FileDialog</tt> 
+to <tt CLASS=literal>file</tt>. Because the <tt CLASS=literal>FileDialog</tt> 
+is modal, this must be done before you call <tt CLASS=literal>show()</tt>. 
+The string may contain a filename filter like <I CLASS=emphasis>*.java</I> 
+to show a preliminary list of files to select. This has nothing to do with 
+the use of the <tt CLASS=literal>FilenameFilter</tt> 
+class. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public FilenameFilter getFilenameFilter () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFilenameFilter()</tt> method 
+returns the current <tt CLASS=literal>FilenameFilter</tt>. 
+The <tt CLASS=literal>FilenameFilter</tt> class is 
+part of the <tt CLASS=literal>java.io</tt> package. 
+<tt CLASS=literal>FilenameFilter</tt> is an interface 
+that allows you to restrict choices to certain directory and filename combinations. 
+For example, it can be used to limit the user to selecting <I CLASS=emphasis>.jpg</I>, 
+<I CLASS=emphasis>.gif</I>, and <I CLASS=emphasis>.xbm</I> 
+files. The class implementing <tt CLASS=literal>FilenameFilter</tt> 
+would not return other possibilities as choices. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setFilenameFilter (FilenameFilter filter) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setFilenameFilter()</tt> method 
+changes the current filename filter to <tt CLASS=literal>filter</tt>. 
+This needs to be done before you <tt CLASS=literal>show()</tt> 
+the <tt CLASS=literal>FileDialog</tt>. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+The JDK does not support the <tt CLASS=literal>FilenameFilter</tt> 
+with <tt CLASS=literal>FileDialog</tt> boxes. <tt CLASS=literal>FilenameFilter</tt> 
+works but can't be used with <tt CLASS=literal>FileDialog</tt>. 
+</blockquote><P>
+</DIV>
+
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getMode () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMode()</tt> method returns 
+the current mode of the <tt CLASS=literal>FileDialog</tt>. 
+If an invalid mode was used in the constructor, this method returns an 
+invalid mode here. No error checking is performed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setMode (int mode) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setMode()</tt> method changes 
+the current mode of the <tt CLASS=literal>FileDialog</tt> 
+to <tt CLASS=literal>mode</tt>. If <tt CLASS=literal>mode</tt> 
+is not one of the class constants <tt CLASS=literal>LOAD</tt> or <tt CLASS=literal>SAVE</tt>, <tt CLASS=literal>setMode()</tt> 
+throws the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>FileDialog</tt> peer. 
+This is automatically done when you call the <tt CLASS=literal>show()</tt> 
+method of the <tt CLASS=literal>FileDialog</tt>. If 
+you override this method, first call <tt CLASS=literal>super.addNotify()</tt>, 
+then add your customizations for the new class. Then you can do everything 
+you need with the information about the newly created peer. 
+
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString () </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> method of
+<tt CLASS=literal>FileDialog</tt>, the default
+<tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Component</tt>
+is called. This in turn calls <tt CLASS=literal>paramString()</tt>, which
+builds up the string to display. At the <tt CLASS=literal>FileDialog</tt>
+level, <tt CLASS=literal>paramString()</tt> appends the directory (if not
+<tt CLASS=literal>null</tt>) and current mode to the return value. Using
+the constructor <tt CLASS=literal>FileDialog(top, `Load
+Me`)</tt>, the results would be as follows:</DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.FileDialog[0,0,0x0,invalid,hidden,modal,title=Load Me,load]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-7.2">A FileDialog Example</A></h3>
+
+<P CLASS=para>
+To get a better grasp of how the <tt CLASS=literal>FileDialog</tt> 
+works, the following application uses a <tt CLASS=literal>FileDialog</tt> 
+to select a file for display in a <tt CLASS=literal>TextArea</tt>. 
+You can also use <tt CLASS=literal>FileDialog</tt> 
+to save the file back to disk. <A HREF="ch06_07.htm#JAWT-CH-6-FIG-10">Figure 6.10</A> shows 
+the application, with a file displayed in the text area; the <tt CLASS=literal>FileDialog</tt> 
+itself looks like any other file dialog on the run-time system. <A HREF="ch06_07.htm#JAWT-CH-6-EX-3">Example 6.3</A> 
+shows the code. 
+
+<DIV CLASS=caution>
+<P CLASS=caution><BLOCKQUOTE><P><B>CAUTION:</B>
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+This example can overwrite an existing file. 
+</blockquote><P>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-10">Figure 6.10: FileDialog test program</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0611.gif" alt="[Graphic: Figure 6-10]" width=249 height=246 border=0>
+
+</DIV>
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-6-EX-3">Example 6.3: Complete FileDialog</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.io.*;
+public class FdTest extends Frame {
+    TextArea myTextArea;
+    Label myLabel;
+    Button loadButton;
+    Button saveButton;
+    FdTest () {
+        super ("File Dialog Tester");
+        Panel p = new Panel ();
+        p.add (loadButton = new Button ("Load"));
+        p.add (saveButton = new Button ("Save"));
+        add ("North", myLabel = new Label ());
+        add ("South", p);
+        add ("Center", myTextArea = new TextArea (10, 40));
+        Menu m = new Menu ("File");
+        m.add (new MenuItem ("Quit"));
+        MenuBar mb = new MenuBar();
+        mb.add (m);
+        setMenuBar (mb);
+        pack();
+    }
+    public static void main (String args[]) {
+        FdTest f = new FdTest();
+            f.show();
+    }
+    public boolean handleEvent (Event e) {
+        if (e.id == Event.WINDOW_DESTROY) {
+            hide();
+            dispose ();
+            System.exit(0);
+            return true;  // never gets here
+        }
+        return super.handleEvent (e);
+    }
+    public boolean action (Event e, Object o) {
+        if (e.target instanceof MenuItem) {
+            hide();
+            dispose ();
+            System.exit(0);
+            return true;  // never gets here
+        } else if (e.target instanceof Button) {
+            int state;
+            String msg;
+            if (e.target == loadButton) {
+                state = FileDialog.LOAD;
+                msg = "Load File";
+            } else {// if (e.target == saveButton)
+                state = FileDialog.SAVE;
+                msg = "Save File";
+            }
+            FileDialog file = new FileDialog (this, msg, state);
+            file.setFile ("*.java");  // set initial filename filter
+            file.show(); // Blocks
+            String curFile;
+            if ((curFile = file.getFile()) != null) {
+                String filename = file.getDirectory() + curFile;
+                // curFile ends in .*.* if file does not exist
+                byte[] data;
+                setCursor (Frame.WAIT_CURSOR);
+                if (state == FileDialog.LOAD) {
+                    File f = new File (filename);
+                    try {
+                        FileInputStream fin = new FileInputStream (f);
+                        int filesize = (int)f.length();
+                        data = new byte[filesize];
+                        fin.read (data, 0, filesize);
+                    } catch (FileNotFoundException exc) {
+                        String errorString = "File Not Found: " + filename;
+                        data = new byte[errorString.length()];
+                        errorString.getBytes (0, errorString.length(), data, 0);
+                    } catch (IOException exc) {
+                        String errorString = "IOException: " + filename;
+                        data = new byte[errorString.length()];
+                        errorString.getBytes (0, errorString.length(), data, 0);
+                    }
+                    myLabel.setText ("Load: " + filename);
+                } else {
+// Remove trailing ".*.*" if present - signifies file does not exist
+                    if (filename.indexOf (".*.*") != -1) {
+                        filename = filename.substring (0, filename.length()-4);
+                    }
+                    File f = new File (filename);
+                    try {
+                        FileOutputStream fon = new FileOutputStream (f);
+                        String text = myTextArea.getText();
+                        int textsize = text.length();
+                        data = new byte[textsize];
+                        text.getBytes (0, textsize, data, 0);
+                        fon.write (data);
+                        fon.close ();
+                    } catch (IOException exc) {
+                        String errorString = "IOException: " + filename;
+                        data = new byte[errorString.length()];
+                        errorString.getBytes (0, errorString.length(), data, 0);
+                    }
+                    myLabel.setText ("Save: " + filename);
+                }
+                // Note - on successful save, text is redisplayed
+                myTextArea.setText (new String (data, 0));
+                setCursor (Frame.DEFAULT_CURSOR);
+            }
+            return true;
+        }
+        return false;
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Most of this application is one long <tt CLASS=literal>action()</tt> 
+method that handles all the action events that take place within the <tt CLASS=literal>Frame</tt>. 
+The constructor doesn't do much besides arrange the display; it includes 
+code to create a File menu with one item, Quit. 
+This menu is visible in the upper left corner of the <tt CLASS=literal>Frame</tt>; we'll 
+see more about working with menus in <A HREF="ch10_01.htm">Chapter 10, <i>Would You Like to Choose from the Menu?</i></A> We provide 
+a <tt CLASS=literal>main()</tt> method to display 
+the <tt CLASS=literal>Frame</tt> and a <tt CLASS=literal>handleEvent()</tt> 
+method to shut the application down if the event <tt CLASS=literal>WINDOW_DESTROY</tt> 
+occurs. 
+
+<P CLASS=para>
+But the heart of this program is clearly its <tt CLASS=literal>action()</tt> 
+method. <tt CLASS=literal>action()</tt> starts by 
+checking whether the user selected a menu item; if so, it shuts down the application because the only item on our menu is Quit. It then 
+checks whether the user clicked on one of the buttons and sets the <tt CLASS=literal>FileDialog</tt> mode to <tt CLASS=literal>LOAD</tt> or <tt CLASS=literal>SAVE</tt> 
+accordingly. It then sets a default filename, <I CLASS=emphasis>*.java</I>, which 
+limits the display to filenames ending in <I CLASS=emphasis>.java</I>. 
+Next, <tt CLASS=literal>action()</tt> shows the dialog. 
+Because file dialogs are modal, <tt CLASS=literal>show()</tt> 
+blocks until the user selects a file or clicks Cancel. 
+
+<P CLASS=para>
+The next line detects whether or not <tt CLASS=literal>getFile()</tt> 
+returns <tt CLASS=literal>null</tt>. A <tt CLASS=literal>null</tt> 
+return indicates that the user selected Cancel; in this case, 
+the dialog disappears, but nothing else happens. We then build a complete 
+filename from the directory name and the name the user selected. If the 
+dialog's state is <tt CLASS=literal>LOAD</tt>, 
+we read the file and display it in the text area. Otherwise, the dialog's 
+state must be <tt CLASS=literal>SAVE</tt>, so we save 
+the contents of the text area under the given filename. Note that we first 
+check for the string <tt CLASS=literal>*.*</tt> and remove it if it is present. 
+In Java 1.1, these two lines are unnecessary, but they don't hurt, 
+either. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Dialogs</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Layouts</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

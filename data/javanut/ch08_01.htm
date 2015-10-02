@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] New AWT Features</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:55:55 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-8">8. New AWT Features</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+The ScrollPane Container<br>
+<A HREF="ch08_02.htm">Popup Menus and Menu Shortcuts</A><BR>
+<A HREF="ch08_03.htm">Printing</A><BR>
+<A HREF="ch08_04.htm">Data Transfer with Cut-and-Paste</A><BR>
+<A HREF="ch08_05.htm">New Feature Demo</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+In addition to the new AWT event model that we saw in 
+<A HREF="ch07_01.htm">Chapter 7, <i>Events</i></A>, there are a number of important new AWT features
+in Java 1.1.  These new features were outlined in 
+<A HREF="ch04_01.htm">Chapter 4, <i>What's New in Java 1.1</i></A>.  This chapter details many of those new features and
+demonstrates them in a single extended example application at the end
+of the chapter.  The major features of the example are:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The new <tt CLASS=literal>ScrollPane</tt> component
+
+<P>
+<li CLASS=listitem>Popup menus and menu shortcuts
+
+<P>
+<li CLASS=listitem>Printing
+
+<P>
+<li CLASS=listitem>Data transfer through cut-and-paste
+
+<P>
+</UL>
+<P CLASS=para>
+In addition, the example also demonstrates the use of object
+serialization to save and load application state.  This
+functionality is described in <A HREF="ch09_01.htm">Chapter 9, <i>Object Serialization</i></A>.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-8-SECT-1">8.1 The ScrollPane Container</A></h2>
+
+<P CLASS=para>
+The new <tt CLASS=literal>ScrollPane</tt> container holds a single child
+component that is usually larger than the <tt CLASS=literal>ScrollPane</tt>
+itself.  The <tt CLASS=literal>ScrollPane</tt> displays a fixed-size area
+of the child and provides horizontal and vertical
+scrollbars so the user can scroll the child component within
+the "viewport" of the <tt CLASS=literal>ScrollPane</tt>.
+<A HREF="ch08_01.htm#JNUT2-CH-8-FIG-1">Figure 8.1</A>
+shows a top-level window created by the application listed
+in <A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A> at the end of this chapter.
+As you can see, the application creates a <tt CLASS=literal>ScrollPane</tt>
+container to hold the larger <tt CLASS=literal>Scribble</tt> component that
+supports free-hand drawing.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-8-FIG-1">Figure 8.1: New AWT features demo application</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_0801.gif" alt="[Graphic: Figure 8-1]" width=464 height=303 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>ScrollPane</tt> is quite easy to use.  Simply
+create it and add a child component as you would with any
+other container.  Note, however, that <tt CLASS=literal>ScrollPane</tt> only
+supports a single child and it cannot have a
+<tt CLASS=literal>LayoutManager</tt> specified.  The <tt CLASS=literal>ScrollPane</tt> is
+created in the <tt CLASS=literal>ScribbleFrame()</tt> constructor of the
+example.  The important thing to note is that the
+<tt CLASS=literal>ScrollPane</tt> does not have any preferred or natural
+size of its own, so you should use <tt CLASS=literal>setSize()</tt> to
+specify the size you want it to be.  The <tt CLASS=literal>ScrollPane</tt> class
+defines three constants that are legal values of its
+"scrollbar display policy."  Because the example does not
+specify one of these constants, the policy defaults to
+<tt CLASS=literal>SCROLLBARS_AS_NEEDED</tt>, which indicates that
+scrollbars are displayed for any dimension in which the
+contained child is larger than the available "viewport"
+space of the <tt CLASS=literal>ScrollPane</tt> container.
+
+<P CLASS=para>
+Here is an
+excerpt of the <tt CLASS=literal>ScribbleFrame()</tt> constructor that
+shows the creation of the <tt CLASS=literal>ScrollPane</tt>:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+ScrollPane pane = new ScrollPane();      // Create a ScrollPane.
+pane.setSize(300, 300);                  // Specify its size.
+this.add(pane, "Center");                // Add it to the frame.
+Scribble scribble;
+scribble = new Scribble(this, 500, 500); // Create a bigger scribble area.
+pane.add(scribble);                      // Add it to the ScrollPane.
+</PRE>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Inside the Java 1.1 Event Model</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Popup Menus and Menu Shortcuts</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

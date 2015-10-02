@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 15] Java-Related HTML Tags</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:02:35 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 15</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-15">15. Java-Related HTML Tags</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+The &lt;APPLET&gt; Tag<br>
+<A HREF="ch15_02.htm">The &lt;PARAM&gt; Tag</A><BR>
+<A HREF="ch15_03.htm">An Example HTML File</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH15.HTML.HYPERT1"></A>This chapter explains what you need to know about HTML
+to work with Java applets.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-15-SECT-1">15.1 The &lt;APPLET&gt; Tag</A></h2>
+
+<P CLASS=para>
+<A NAME="CH15.APPLET"></A>A Java applet is included in a Web page with the
+<tt CLASS=literal>&lt;APPLET&gt;</tt> tag, which has the following syntax.  Items
+in brackets (<tt CLASS=literal>[]</tt>) are optional.
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;APPLET
+    CODE = <I CLASS=emphasis>applet-filename</I>
+    WIDTH = <I CLASS=emphasis>pixel-width</I>
+    HEIGHT = <I CLASS=emphasis>pixel-height</I>
+    [OBJECT = <I CLASS=emphasis>serialized-applet-filename</I>]
+    [ARCHIVE = <I CLASS=emphasis>jar-file-list</I>]
+    [CODEBASE = <I CLASS=emphasis>applet-url</I>]
+    [ALT = <I CLASS=emphasis>alternate-text</I>]
+    [NAME = <I CLASS=emphasis>applet-name</I>]
+    [ALIGN = <I CLASS=emphasis>alignment</I>]
+    [VSPACE = <I CLASS=emphasis>vertical-pixel-space</I>]
+    [HSPACE = <I CLASS=emphasis>horizontal-pixel-space</I>]
+&gt;
+[&lt;PARAM NAME = <I CLASS=emphasis>parameter</I> VALUE = <I CLASS=emphasis>value</I>&gt;]
+[&lt;PARAM NAME = <I CLASS=emphasis>parameter</I> VALUE = <I CLASS=emphasis>value</I>&gt;]
+    ...
+[<I CLASS=emphasis>alternate-text</I>]
+&lt;/APPLET&gt;
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>APPLET</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>&lt;APPLET&gt;</tt> tag specifies an applet to be run
+within a Web document. A Web browser that does not support Java
+and does not understand the <tt CLASS=literal>&lt;APPLET&gt;</tt> tag ignores
+this tag and any related <tt CLASS=literal>&lt;PARAM&gt;</tt> tags, and simply
+displays any <I CLASS=emphasis><tt CLASS=literal>alternate-text</tt></I> that appears between
+<tt CLASS=literal>&lt;APPLET&gt;</tt> and <tt CLASS=literal>&lt;/APPLET&gt;</tt>. A browser that does
+support Java runs the specified applet, and does
+<I CLASS=emphasis>not</I> display the <I CLASS=emphasis><tt CLASS=literal>alternate-text</tt></I>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>CODE</tt><br>
+<DD>
+
+<P CLASS=para>
+This required attribute specifies the file that contains the
+compiled Java code for the applet.  It must be relative to
+the <tt CLASS=literal>CODEBASE</tt> if that attribute is specified, or
+relative to the current document's URL.  It must not be an
+absolute URL.  In Java 1.1, this attribute can be replaced
+with an <tt CLASS=literal>OBJECT</tt> attribute.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>WIDTH</tt><br>
+<DD>
+
+<P CLASS=para>
+This attribute specifies the initial width, in pixels, that
+the applet needs in the browser's window.  It is required.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>HEIGHT</tt><br>
+<DD>
+
+<P CLASS=para>
+This attribute specifies the initial height, in pixels, that
+the applet needs in the browser's window.  It is required.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>OBJECT</tt><br>
+<DD>
+
+<P CLASS=para>
+As of Java 1.1, this attribute specifies the name of
+a file that contains a serialized applet that is to be
+created by deserialization.  An applet specified in this way
+does not have its <tt CLASS=literal>init()</tt> method invoked, but does have
+its <tt CLASS=literal>start()</tt> method invoked.  Thus, before an
+applet is saved through serialization, it should be
+initialized, but should not be started, or, if started, it
+should be stopped.  An applet must have either the
+<tt CLASS=literal>CODE</tt> or <tt CLASS=literal>OBJECT</tt> attribute specified, but not
+both.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ARCHIVE</tt><br>
+<DD>
+
+<P CLASS=para>
+As of Java 1.1, this attribute specifies a
+comma-separate list of JAR (Java Archive) files that are
+"preloaded" by the Web browser or applet viewer.  These
+archive files may contain Java class files, images, sounds,
+properties, or any other resources required by the applet.
+The Web browser or applet viewer searches for required
+files in the archives before attempting to load them over
+the network.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>CODEBASE</tt><br>
+<DD>
+
+<P CLASS=para>
+This optional attribute specifies the base URL (absolute or
+relative) of the applet to be displayed.  This should be a
+directory, not the applet file itself.  If this attribute is
+unspecified, then the URL of the current document is used.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ALT</tt><br>
+<DD>
+
+<P CLASS=para>
+This optional attribute specifies text that should be
+displayed by browsers that understand the <tt CLASS=literal>&lt;APPLET&gt;</tt>
+tag but do not support Java.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NAME</tt><br>
+<DD>
+
+<P CLASS=para>
+This optional attribute gives a name to the applet instance.
+Applets that are running at the same time can look each
+other up by name and communicate with each other.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ALIGN</tt><br>
+<DD>
+
+<P CLASS=para>
+This optional attribute specifies the applet's alignment on
+the page.  It behaves just like the <tt CLASS=literal>ALIGN</tt> attribute
+of the <tt CLASS=literal>&lt;IMG&gt;</tt> tag.  Its allowed values are:
+<tt CLASS=literal>left</tt>, <tt CLASS=literal>right</tt>, <tt CLASS=literal>top</tt>, <tt CLASS=literal>texttop</tt>,
+<tt CLASS=literal>middle</tt>, <tt CLASS=literal>absmiddle</tt>, <tt CLASS=literal>baseline</tt>,
+<tt CLASS=literal>bottom</tt>, and <tt CLASS=literal>absbottom</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>VSPACE</tt><br>
+<DD>
+
+<P CLASS=para>
+This optional attribute specifies the margin, in pixels,
+that the browser should put above and below the applet.  It
+behaves just like the <tt CLASS=literal>VSPACE</tt> attribute of the
+<tt CLASS=literal>&lt;IMG&gt;</tt> tag.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>HSPACE</tt><br>
+<DD>
+
+<P CLASS=para>
+This optional attribute specifies the margin, in pixels,
+that the browser should put on either side of the applet.
+It behaves just like the <tt CLASS=literal>HSPACE</tt> attribute of the
+<tt CLASS=literal>&lt;IMG&gt;</tt> tag.</DL>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Working with System Properties</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The &lt;PARAM&gt; Tag</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

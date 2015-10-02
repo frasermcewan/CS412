@@ -1,0 +1,473 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 15] The java.net Package</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:21:26 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch15_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 15</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-15">15. The java.net Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch15_02.htm'>ConnectException</a><br>
+<a href='ch15_03.htm'>ContentHandler</a><br>
+<a href='ch15_04.htm'>ContentHandlerFactory</a><br>
+<a href='ch15_05.htm'>DatagramPacket</a><br>
+<a href='ch15_06.htm'>DatagramSocket</a><br>
+<a href='ch15_07.htm'>DatagramSocketImpl</a><br>
+<a href='ch15_08.htm'>FileNameMap</a><br>
+<a href='ch15_09.htm'>HttpURLConnection</a><br>
+<a href='ch15_10.htm'>InetAddress</a><br>
+<a href='ch15_11.htm'>MalformedURLException</a><br>
+<a href='ch15_12.htm'>MulticastSocket</a><br>
+<a href='ch15_13.htm'>NoRouteToHostException</a><br>
+<a href='ch15_14.htm'>ProtocolException</a><br>
+<a href='ch15_15.htm'>ServerSocket</a><br>
+<a href='ch15_16.htm'>Socket</a><br>
+<a href='ch15_17.htm'>SocketException</a><br>
+<a href='ch15_18.htm'>SocketImpl</a><br>
+<a href='ch15_19.htm'>SocketImplFactory</a><br>
+<a href='ch15_20.htm'>URL</a><br>
+<a href='ch15_21.htm'>URLConnection</a><br>
+<a href='ch15_22.htm'>URLEncoder</a><br>
+<a href='ch15_23.htm'>URLStreamHandler</a><br>
+<a href='ch15_24.htm'>URLStreamHandlerFactory</a><br>
+<a href='ch15_25.htm'>UnknownHostException</a><br>
+<a href='ch15_26.htm'>UnknownServiceException</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+The package <tt CLASS=literal>java.net</tt> contains 
+classes and interfaces that provide a powerful
+infrastructure for networking in Java.  These include:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>URL</tt> class for basic access
+to Uniform Resource Locators (URLs).
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>URLConnection</tt> class, which supports
+more complex operations on URLs.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>Socket</tt> class for connecting to particular
+ports on specific Internet hosts 
+and reading and writing data using streams.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>ServerSocket</tt> class for implementing servers
+that accept connections from clients.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>DatagramSocket</tt>, 
+<tt CLASS=literal>MulticastSocket</tt>, 
+and <tt CLASS=literal>DatagramPacket</tt>
+classes for implementing low-level networking.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>InetAddress</tt> class, which represents 
+Internet addresses.
+
+<P>
+</UL>
+<P CLASS=para>
+<A HREF="ch15_01.htm#JFC-CH-15-FIG-1">Figure 15.1</A> shows the class hierarchy for
+the <tt CLASS=literal>java.net</tt> package.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JFC-CH-15-FIG-1">Figure 15.1: The java.net package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jfc_1501.gif" alt="[Graphic: Figure 15-1]" width=502 height=607 border=0>
+
+</DIV>
+
+<DIV CLASS=refnamediv>
+<H1>BindException</H1>
+
+<H2>Name</H2>
+
+BindException
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.1">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.net.BindException</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.net.SocketException</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.2">Description</A></h2>
+
+<P CLASS=para>
+A <tt CLASS=literal>BindException</tt> is thrown when 
+a socket cannot be bound to a local address and port, which can occur if 
+the port is already in use or the address is unavailable. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.3">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.net.BindException extends java.net.SocketException {
+  // Constructors
+  public BindException();
+  public BindException(String msg);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.4">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.1">BindException</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.1">public BindException()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor <tt CLASS=literal>create</tt>s a <tt CLASS=literal>BindException</tt> 
+with no associated detail message. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.2">public BindException(String msg)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>msg</tt><br>
+<DD>
+
+<P CLASS=para>
+The detail message. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BindException</tt> 
+with the specified detail message. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.5">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>fillInStackTrace()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Throwable</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getLocalizedMessage()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Throwable</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMessage()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Throwable</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>printStackTrace()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Throwable</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>printStackTrace(PrintStream)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Throwable</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>printStackTrace(PrintWriter)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Throwable</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Throwable</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.6">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Exception</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>RuntimeException</tt>, 
+<tt CLASS=literal>SocketException</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>UnknownServiceException</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ConnectException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

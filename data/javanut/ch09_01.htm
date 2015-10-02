@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] Object Serialization</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:56:42 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-9">9. Object Serialization</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Simple Serialization<br>
+<A HREF="ch09_02.htm">Custom Serialization</A><BR>
+<A HREF="ch09_03.htm">Serialization and Class Versioning</A><BR>
+<A HREF="ch09_04.htm">Serialized Applets</A><BR>
+<A HREF="ch09_05.htm">Advanced Serialization</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+Object serialization is one of the important new features of
+Java 1.1.  Despite its importance, however, serialization is
+done with a very simple API.  This chapter demonstrates
+several uses of serialization.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-9-SECT-1">9.1 Simple Serialization</A></h2>
+
+<P CLASS=para>
+<A NAME="CH9.OBJECT.SERIA1"></A>Objects are serialized with the <tt CLASS=literal>ObjectOutputStream</tt>
+and they are deserialized with the
+<tt CLASS=literal>ObjectInputStream</tt>.  Both of these classes are part
+of the <tt CLASS=literal>java.io</tt> package, and they function, in many
+ways, like <tt CLASS=literal>DataOutputStream</tt> and
+<tt CLASS=literal>DataInputStream</tt> because they define the same methods for
+writing and reading binary representations of Java primitive types to
+and from streams.  What <tt CLASS=literal>ObjectOutputStream</tt> and
+<tt CLASS=literal>ObjectInputStream</tt> add, however, is the ability to
+write and read non-primitive object and array values to and
+from a stream.
+
+<P CLASS=para>
+An object is serialized by passing it to the
+<tt CLASS=literal>writeObject()</tt> method of an
+<tt CLASS=literal>ObjectOutputStream</tt>.  This writes out the values of
+all of its fields, including private fields and fields
+inherited from superclasses.  The values of primitive fields
+are simply written to the stream as they would be with a
+<tt CLASS=literal>DataOutputStream</tt>.  When a field in an object
+refers to another object, an array, or a string, however,
+the <tt CLASS=literal>writeObject()</tt> method is invoked recursively to
+serialize that object as well.  If that object (or an array element)
+refers to another object, <tt CLASS=literal>writeObject()</tt> is again
+invoked recursively.  Thus, a single call to
+<tt CLASS=literal>writeObject()</tt> may result in an entire
+"object graph" being serialized.  When two or more
+objects each refer to the other, the serialization algorithm
+is careful to only output each object
+once--<tt CLASS=literal>writeObject()</tt> cannot enter infinite
+recursion.
+
+<P CLASS=para>
+Deserializing an object simply follows the reverse of this
+process.  An object is read from a stream of data by calling
+the <tt CLASS=literal>readObject()</tt> method of an
+<tt CLASS=literal>ObjectInputStream</tt>.  This re-creates the object in
+the state it was in when serialized.  If the object refers
+to other objects, they are recursively deserialized as well.
+
+<P CLASS=para>
+This ability to serialize an entire graph of objects and read those
+objects back in later is a very powerful feature that hides itself in
+two simple looking methods.  We used object serialization in 
+<A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A>, but unless you were paying attention, you
+might have missed those crucial <tt CLASS=literal>writeObject()</tt> and
+<tt CLASS=literal>readObject()</tt> calls.  Serialization is used in that
+<tt CLASS=literal>Scribble</tt> example to give the program an automatic
+file format for saving the user's scribbles.
+
+<P CLASS=para>
+To refresh your memory,
+<A HREF="ch09_01.htm#JNUT2-CH-9-EX-1">Example 9.1</A>
+shows the <tt CLASS=literal>save()</tt> method of that application.  Note
+the creation of the <tt CLASS=literal>ObjectOutputStream</tt> and the use
+of the <tt CLASS=literal>writeObject()</tt> method.  The corresponding
+<tt CLASS=literal>load()</tt> method simply reverses the streams to read
+the scribble back in.  You may want to refer to the complete
+example in <A HREF="ch08_01.htm">Chapter 8, <i>New AWT Features</i></A> to examine the <tt CLASS=literal>save()</tt> and
+<tt CLASS=literal>load()</tt> methods in context.  Also note the use of a
+<tt CLASS=literal>GZIPOutputStream</tt> (from <tt CLASS=literal>java.util.zip</tt>) to
+compress the serialized object data before writing it to
+disk.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-9-EX-1">Example 9.1: Using Serialized Objects as an Application File Format</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+/**
+ * Prompt the user for a filename, and save the scribble in that file.
+ * Serialize the vector of lines with an ObjectOutputStream.
+ * Compress the serialized objects with a GZIPOutputStream.
+ * Write the compressed, serialized data to a file with a FileOutputStream.
+ * Don't forget to flush and close the stream.
+ */
+public void save() {
+  // Create a file dialog to query the user for a filename.
+  FileDialog f = new FileDialog(frame, "Save Scribble", FileDialog.SAVE);
+  f.show();                        // Display the dialog and block.
+  String filename = f.getFile();   // Get the user's response
+  if (filename != null) {          // If user didn't click "Cancel."
+    try {
+      // Create the necessary output streams to save the scribble.
+      FileOutputStream fos = new FileOutputStream(filename);  // Save to file.
+      GZIPOutputStream gzos = new GZIPOutputStream(fos);      // Compress.
+      ObjectOutputStream out = new ObjectOutputStream(gzos);  // Save objects
+      out.writeObject(lines);      // Write the entire Vector of scribbles.
+      out.flush();                 // Always flush the output.
+      out.close();                 // And close the stream.
+    }
+    // Print out exceptions.  We should really display them in a dialog...
+    catch (IOException e) { System.out.println(e); }
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>New Feature Demo</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Custom Serialization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

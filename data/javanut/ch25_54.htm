@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 25] 25.54 java.lang.SecurityManager (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:27:35 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_53.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 25<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch25_55.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-54">25.54 java.lang.SecurityManager (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-54.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This abstract class defines the methods necessary to
+implement a security policy for the execution of
+untrusted code. Before performing 
+potentially sensitive operations, Java calls methods of the
+<tt CLASS=literal>SecurityManager</tt> object currently in effect to
+determine whether the operations are permitted. These methods
+throw a <tt CLASS=literal>SecurityException</tt> if the operation is not
+permitted.  
+
+<P CLASS=para>
+Normal applications do not need to use or subclass the
+<tt CLASS=literal>SecurityManager</tt> class. It is typically only used
+by Web browsers, applet viewers, and other programs that
+need to run untrusted code in a controlled environment.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class <tt CLASS=literal>SecurityManager</tt> extends Object {
+    // <tt CLASS=literal>Protected Constructor</tt>
+            protected <tt CLASS=literal>SecurityManager</tt>();
+    // <tt CLASS=literal>Protected Instance Variables</tt>
+            protected boolean <tt CLASS=literal>inCheck</tt>;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public void <tt CLASS=literal>checkAccept</tt>(String <tt CLASS=literal>host</tt>, int <tt CLASS=literal>port</tt>);
+            public void <tt CLASS=literal>checkAccess</tt>(Thread <tt CLASS=literal>g</tt>);
+            public void <tt CLASS=literal>checkAccess</tt>(ThreadGroup <tt CLASS=literal>g</tt>);
+        <b>1.1</b>public void <tt CLASS=literal>checkAwtEventQueueAccess</tt>();
+            public void <tt CLASS=literal>checkConnect</tt>(String <tt CLASS=literal>host</tt>, int <tt CLASS=literal>port</tt>);
+            public void <tt CLASS=literal>checkConnect</tt>(String <tt CLASS=literal>host</tt>, int <tt CLASS=literal>port</tt>, Object <tt CLASS=literal>context</tt>);
+            public void <tt CLASS=literal>checkCreateClassLoader</tt>();
+            public void <tt CLASS=literal>checkDelete</tt>(String <tt CLASS=literal>file</tt>);
+            public void <tt CLASS=literal>checkExec</tt>(String <tt CLASS=literal>cmd</tt>);
+            public void <tt CLASS=literal>checkExit</tt>(int <tt CLASS=literal>status</tt>);
+            public void <tt CLASS=literal>checkLink</tt>(String <tt CLASS=literal>lib</tt>);
+            public void <tt CLASS=literal>checkListen</tt>(int <tt CLASS=literal>port</tt>);
+        <b>1.1</b>public void <tt CLASS=literal>checkMemberAccess</tt>(Class <tt CLASS=literal>clazz</tt>, int <tt CLASS=literal>which</tt>);
+        <b>1.1</b>public void <tt CLASS=literal>checkMulticast</tt>(InetAddress <tt CLASS=literal>maddr</tt>);
+        <b>1.1</b>public void <tt CLASS=literal>checkMulticast</tt>(InetAddress <tt CLASS=literal>maddr</tt>, byte <tt CLASS=literal>ttl</tt>);
+            public void <tt CLASS=literal>checkPackageAccess</tt>(String <tt CLASS=literal>pkg</tt>);
+            public void <tt CLASS=literal>checkPackageDefinition</tt>(String <tt CLASS=literal>pkg</tt>);
+        <b>1.1</b>public void <tt CLASS=literal>checkPrintJobAccess</tt>();
+            public void <tt CLASS=literal>checkPropertiesAccess</tt>();
+            public void <tt CLASS=literal>checkPropertyAccess</tt>(String <tt CLASS=literal>key</tt>);
+            public void <tt CLASS=literal>checkRead</tt>(FileDescriptor <tt CLASS=literal>fd</tt>);
+            public void <tt CLASS=literal>checkRead</tt>(String <tt CLASS=literal>file</tt>);
+            public void <tt CLASS=literal>checkRead</tt>(String <tt CLASS=literal>file</tt>, Object <tt CLASS=literal>context</tt>);
+        <b>1.1</b>public void <tt CLASS=literal>checkSecurityAccess</tt>(String <tt CLASS=literal>action</tt>);
+            public void <tt CLASS=literal>checkSetFactory</tt>();
+        <b>1.1</b>public void <tt CLASS=literal>checkSystemClipboardAccess</tt>();
+            public boolean <tt CLASS=literal>checkTopLevelWindow</tt>(Object <tt CLASS=literal>window</tt>);
+            public void <tt CLASS=literal>checkWrite</tt>(FileDescriptor <tt CLASS=literal>fd</tt>);
+            public void <tt CLASS=literal>checkWrite</tt>(String <tt CLASS=literal>file</tt>);
+            public boolean <tt CLASS=literal>getInCheck</tt>();
+            public Object <tt CLASS=literal>getSecurityContext</tt>();
+        <b>1.1</b>public ThreadGroup <tt CLASS=literal>getThreadGroup</tt>();
+    // <tt CLASS=literal>Protected Instance Methods</tt>
+            protected native int <tt CLASS=literal>classDepth</tt>(String <tt CLASS=literal>name</tt>);
+            protected native int <tt CLASS=literal>classLoaderDepth</tt>();
+            protected native ClassLoader <tt CLASS=literal>currentClassLoader</tt>();
+        <b>1.1</b>protected Class <tt CLASS=literal>currentLoadedClass</tt>();
+            protected native Class[] <tt CLASS=literal>getClassContext</tt>();
+            protected boolean <tt CLASS=literal>inClass</tt>(String <tt CLASS=literal>name</tt>);
+            protected boolean <tt CLASS=literal>inClassLoader</tt>();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-54.2">Passed To:</A></h3>
+
+<P CLASS=para>
+System.setSecurityManager()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-54.3">Returned By:</A></h3>
+
+<P CLASS=para>
+System.getSecurityManager()
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_53.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch25_55.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.lang.SecurityException (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.lang.Short (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,629 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.10 Designing Your Own LayoutManager</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:39:56 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Layouts</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_11.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-10">7.10 Designing Your Own LayoutManager</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.DESIGN"></A>What if you can't find a <tt CLASS=literal>LayoutManager</tt> 
+that fits your requirements, or you find yourself repeatedly building the same multipanel 
+display? In cases like these, you can build your own layout 
+manager. It's really not that difficult; you only need to implement 
+the five methods of the <tt CLASS=literal>LayoutManager</tt> 
+interface, plus a constructor and any additional methods your design requires. 
+In this section, we'll review the <tt CLASS=literal>LayoutManager</tt> 
+interface and then construct a custom <tt CLASS=literal>LayoutManager</tt> 
+called <tt CLASS=literal>CornerLayout</tt>. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-10.1">LayoutManager Methods</A></h3>
+
+<P CLASS=para>
+A custom <tt CLASS=literal>LayoutManager</tt> must 
+implement the following five methods (ten methods if you implement <tt CLASS=literal>LayoutManager2</tt>). 
+For many layout managers, several of these methods can be stubs that don't 
+do anything. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addLayoutComponent (String name, Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addLayoutComponent()</tt> method 
+is called by the <tt CLASS=literal>add(name, component)</tt> 
+method of <tt CLASS=literal>Container</tt>. If your 
+new <tt CLASS=literal>LayoutManager</tt> does not 
+have named component areas or does not pass generic positioning information 
+via <tt CLASS=literal>name</tt>, this method will 
+be a stub with no code; you can let the container keep track of the components 
+for you. Otherwise, this method must keep track of the component added, 
+along with the information in name. 
+
+<P CLASS=para>
+How would you implement this method? For layouts that have named component 
+areas (like <tt CLASS=literal>BorderLayout</tt>), 
+you could use a private instance variable to hold the component for each 
+area. For layouts like <tt CLASS=literal>CardLayout</tt>, 
+which lets you refer to individual components by name, you might want to 
+store the components and their names in an internal <tt CLASS=literal>Hashtable</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeLayoutComponent (Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+This method is called by the <tt CLASS=literal>remove()</tt> 
+and <tt CLASS=literal>removeAll()</tt> methods of 
+<tt CLASS=literal>Container</tt>. If you are storing 
+information in internal instance variables or tables, you can remove the 
+information about the given <tt CLASS=literal>Component</tt> 
+from the tables at this point. If you're not keeping track of the 
+components yourself, this method can be a stub that does nothing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension preferredLayoutSize (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+This method is called by <tt CLASS=literal>preferredSize()</tt> 
+to calculate the desired size of <tt CLASS=literal>target</tt>.[1] 
+Obviously, the preferred size of the container depends on the layout strategy 
+that you implement. To compute the preferred size, you usually need to 
+call the <tt CLASS=literal>preferredSize()</tt> method 
+of every component in the container. 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ 
+This is still true in Java 1.1; the new method, <tt CLASS=literal>getPreferredSize()</tt>, 
+just calls the deprecated method, <tt CLASS=literal>preferredSize()</tt>.
+</blockquote>
+<P CLASS=para>
+Computing the preferred size can be messy. However, some layout strategies 
+let you take a shortcut. If your layout policy is "I'm going 
+to cram all the components into the space given to me, whether they fit 
+or not," you can compute the preferred size of your layout simply 
+by calling <tt CLASS=literal>target.size()</tt> or 
+(in Java 1.1) <tt CLASS=literal>target.getSize()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension minimumLayoutSize (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+This method is called by <tt CLASS=literal>minimumSize()</tt> 
+to calculate the minimum size of <tt CLASS=literal>target</tt>. 
+The minimum size of the container depends on the layout strategy that you 
+implement. To compute the minimum size, you usually need to call the <tt CLASS=literal>minimumSize()</tt> 
+method of every component in the container. 
+
+<P CLASS=para>
+As with <tt CLASS=literal>preferredLayoutSize()</tt>, 
+you can sometimes save a lot of work by returning <tt CLASS=literal>target.size()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void layoutContainer (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+This method is called when target is first displayed and whenever it is 
+resized. It is responsible for arranging the components within the container. 
+Depending upon the type of <tt CLASS=literal>LayoutManager</tt> 
+you are creating, you will either loop through all the components in the 
+container with the <tt CLASS=literal>getComponent()</tt> 
+method or use the named components that you saved in the <tt CLASS=literal>addLayoutComponent()</tt> 
+method. To position and size the components, call their <tt CLASS=literal>reshape()</tt> 
+or <tt CLASS=literal>setBounds()</tt> methods. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-10.2">A New LayoutManager: CornerLayout</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.CORNER1"></A><A NAME="CH07.CORNER2"></A><tt CLASS=literal>CornerLayout</tt> is a simple but 
+useful layout manager that is similar in many respects to <tt CLASS=literal>BorderLayout</tt>. 
+Like <tt CLASS=literal>BorderLayout</tt>, it positions 
+components in five named regions: "Northeast", "Northwest", 
+"Southeast", "Southwest", and "Center". 
+These regions correspond to the four corners of the container, plus the 
+center. The "Center" region has three modes. <tt CLASS=literal>NORMAL</tt>, 
+the default mode, places the "Center" component in the center 
+of the container, with its corners at the inner corner of the other four 
+regions. <tt CLASS=literal>FULL_WIDTH</tt> lets the 
+center region occupy the full width of the container. <tt CLASS=literal>FULL_HEIGHT</tt> 
+lets the center region occupy the full height of the container. You cannot 
+specify both <tt CLASS=literal>FULL_HEIGHT</tt> and 
+<tt CLASS=literal>FULL_WIDTH</tt>; if you did, the 
+"Center" component would overlap the corner components and 
+take over the container. <A HREF="ch07_10.htm#JAWT-CH-7-FIG-14">Figure 7.14</A> shows a <tt CLASS=literal>CornerLayout</tt> 
+in each of these modes. 
+
+<P CLASS=para>
+Not all regions are required. If a complete side is missing, the required 
+space for the container decreases. Ordinarily, the other components would 
+grow to fill this vacated space. However, if the container is sized to 
+its preferred size, so are the components. <A HREF="ch07_10.htm#JAWT-CH-7-FIG-15">Figure 7.15</A> 
+shows this behavior. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-14">Figure 7.14: CornerLayout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0714.gif" alt="[Graphic: Figure 7-14]" width=193 height=250 border=0>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-15">Figure 7.15: CornerLayout with missing regions</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0715.gif" alt="[Graphic: Figure 7-15]" width=381 height=113 border=0>
+
+</DIV>
+
+<P CLASS=para>
+<A HREF="ch07_10.htm#JAWT-CH-7-EX-3">Example 7.3</A> is the code for the <tt CLASS=literal>CornerLayout</tt>. 
+It shows the Java 1.0 version of the layout 
+manager. At the end of this section, I show the simple change needed to adapt this manager 
+to Java 1.1. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-7-EX-3">Example 7.3: The CornerLayout LayoutManager</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+/**
+ * An 'educational' layout. CornerLayout will layout a container
+ * using members named "Northeast", "Northwest", "Southeast",
+ * "Southwest", and "Center".
+ *
+ * The "Northeast", "Northwest", "Southeast" and "Southwest" components
+ * get sized relative to the adjacent corner's components and
+ * the constraints of the container's size. The "Center" component will
+ * get any space left over. 
+ */
+public class CornerLayout implements LayoutManager {
+    int hgap;
+    int vgap;
+    int mode;
+    public final static int NORMAL = 0;
+    public final static int FULL_WIDTH = 1;
+    public final static int FULL_HEIGHT = 2;
+    Component northwest;
+    Component southwest;
+    Component northeast;
+    Component southeast;
+    Component center;
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>CornerLayout</tt> class starts 
+by defining instance variables to hold the gaps and mode and the components 
+for each corner of the screen. It also defines three constants that control 
+the behavior of the center region: <tt CLASS=literal>NORMAL</tt>, 
+<tt CLASS=literal>FULL_WIDTH</tt>, and <tt CLASS=literal>FULL_HEIGHT</tt>. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    /**
+     * Constructs a new CornerLayout.
+     */
+    public CornerLayout() {
+        this (0, 0, CornerLayout.NORMAL);
+    }
+    public CornerLayout(int mode) {
+        this (0, 0, mode);
+    }
+    public CornerLayout(int hgap, int vgap) {
+        this (hgap, vgap, CornerLayout.NORMAL);
+    }
+    public CornerLayout(int hgap, int vgap, int mode) {
+        this.hgap = hgap;
+        this.vgap = vgap;
+        this.mode = mode;
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The constructors for <tt CLASS=literal>CornerLayout</tt> 
+are simple. The default (no arguments) constructor creates a <tt CLASS=literal>CornerLayout</tt> 
+with no gaps; the "Center" region is <tt CLASS=literal>NORMAL</tt> 
+mode. The last constructor, which is called by the other three, stores 
+the gaps and the mode in instance variables. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    public void addLayoutComponent (String name, Component comp) {
+        if ("Center".equals(name)) {
+            center = comp;
+        } else if ("Northwest".equals(name)) {
+            northwest = comp;
+        } else if ("Southeast".equals(name)) {
+            southeast = comp;
+        } else if ("Northeast".equals(name)) {
+            northeast = comp;
+        } else if ("Southwest".equals(name)) {
+            southwest = comp;
+        }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>addLayoutComponent()</tt> figures 
+out which region a component has been assigned to, and saves the component 
+in the corresponding instance variable. If the name of the component isn't 
+"Northeast", "Northwest", Southeast", "Southwest", 
+or "Center", the component is ignored. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    public void removeLayoutComponent (Component comp) {
+        if (comp == center) {
+            center = null;
+        } else if (comp == northwest) {
+            northwest = null;
+        } else if (comp == southeast) {
+            southeast = null;
+        } else if (comp == northeast) {
+            northeast = null;
+        } else if (comp == southwest) {
+            southwest = null;
+        }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>removeLayoutComponent()</tt> searches 
+for a given component in each region; if it finds the component, <tt CLASS=literal>removeLayoutComponent()</tt> 
+discards it by setting the instance variable to null. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    public Dimension minimumLayoutSize (Container target) {
+        Dimension dim = new Dimension(0, 0);
+        Dimension northeastDim = new Dimension (0,0);
+        Dimension northwestDim = new Dimension (0,0);
+        Dimension southeastDim = new Dimension (0,0);
+        Dimension southwestDim = new Dimension (0,0);
+        Dimension centerDim    = new Dimension (0,0);
+        if ((northeast != null) &amp;&amp; northeast.isVisible ()) {
+            northeastDim = northeast.minimumSize ();
+        }
+        if ((southwest != null) &amp;&amp; southwest.isVisible ()) {
+            southwestDim = southwest.minimumSize ();
+        }
+        if ((center != null) &amp;&amp; center.isVisible ()) {
+            centerDim = center.minimumSize ();
+        }
+        if ((northwest != null) &amp;&amp; northwest.isVisible ()) {
+            northwestDim = northwest.minimumSize ();
+        }
+        if ((southeast != null) &amp;&amp; southeast.isVisible ()) {
+            southeastDim = southeast.minimumSize ();
+        }
+        dim.width = Math.max (northwestDim.width, southwestDim.width) +
+                        hgap + centerDim.width + hgap +
+                        Math.max (northeastDim.width, southeastDim.width);
+        dim.height = Math.max (northwestDim.height, northeastDim.height) +
+                        + vgap + centerDim.height + vgap +
+                        Math.max (southeastDim.height, southwestDim.height);
+        Insets insets = target.insets();
+        dim.width += insets.left + insets.right;
+        dim.height += insets.top + insets.bottom;
+        return dim;
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>minimumLayoutSize()</tt> computes 
+the minimum size of the layout by finding the minimum sizes of all components. 
+To compute the minimum width, <tt CLASS=literal>minimumLayoutSize()</tt> 
+adds the width of the center, plus the greater of the widths of the western 
+regions (northwest and southwest), plus the greater of the widths of the 
+eastern regions (northeast and southeast), then adds the appropriate gaps 
+and insets. The minimum height is computed similarly; the method takes 
+the greater of the minimum heights of the northern regions, the greater 
+of the minimum heights of the southern regions, and adds them to the minimum 
+height of the center region, together with the appropriate gaps and insets. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    public Dimension preferredLayoutSize (Container target) {
+        Dimension dim = new Dimension(0, 0);
+        Dimension northeastDim = new Dimension (0,0);
+        Dimension northwestDim = new Dimension (0,0);
+        Dimension southeastDim = new Dimension (0,0);
+        Dimension southwestDim = new Dimension (0,0);
+        Dimension centerDim    = new Dimension (0,0);
+        if ((northeast != null) &amp;&amp; northeast.isVisible ()) {
+            northeastDim = northeast.preferredSize ();
+        }
+        if ((southwest != null) &amp;&amp; southwest.isVisible ()) {
+            southwestDim = southwest.preferredSize ();
+        }
+        if ((center != null) &amp;&amp; center.isVisible ()) {
+            centerDim = center.preferredSize ();
+        }
+        if ((northwest != null) &amp;&amp; northwest.isVisible ()) {
+            northwestDim = northwest.preferredSize ();
+        }
+        if ((southeast != null) &amp;&amp; southeast.isVisible ()) {
+            southeastDim = southeast.preferredSize ();
+        }
+        dim.width = Math.max (northwestDim.width, southwestDim.width) +
+                        hgap + centerDim.width + hgap +
+                        Math.max (northeastDim.width, southeastDim.width);
+        dim.height = Math.max (northwestDim.height, northeastDim.height) +
+                        + vgap + centerDim.height + vgap +
+                        Math.max (southeastDim.height, southwestDim.height);
+        Insets insets = target.insets();
+        dim.width += insets.left + insets.right;
+        dim.height += insets.top + insets.bottom;
+        return dim;
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>preferredLayoutSize()</tt> computes 
+the preferred size of the layout. The method is almost identical to <tt CLASS=literal>minimumLayoutSize()</tt>, 
+except that it uses the preferred dimensions of each component. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    public void layoutContainer (Container target) {
+        Insets insets = target.insets();
+        int top = insets.top;
+        int bottom = target.size ().height - insets.bottom;
+        int left = insets.left;
+        int right = target.size ().width - insets.right;
+        Dimension northeastDim = new Dimension (0,0);
+        Dimension northwestDim = new Dimension (0,0);
+        Dimension southeastDim = new Dimension (0,0);
+        Dimension southwestDim = new Dimension (0,0);
+        Dimension centerDim    = new Dimension (0,0);
+        Point topLeftCorner, topRightCorner, bottomLeftCorner,
+                        bottomRightCorner;
+        if ((northeast != null) &amp;&amp; northeast.isVisible ()) {
+            northeastDim = northeast.preferredSize ();
+        }
+        if ((southwest != null) &amp;&amp; southwest.isVisible ()) {
+            southwestDim = southwest.preferredSize ();
+        }
+        if ((center != null) &amp;&amp; center.isVisible ()) {
+            centerDim = center.preferredSize ();
+        }
+        if ((northwest != null) &amp;&amp; northwest.isVisible ()) {
+            northwestDim = northwest.preferredSize ();
+        }
+        if ((southeast != null) &amp;&amp; southeast.isVisible ()) {
+            southeastDim = southeast.preferredSize ();
+        }
+        topLeftCorner = new Point (left +
+                          Math.max (northwestDim.width, southwestDim.width),
+                          top + 
+                          Math.max (northwestDim.height, northeastDim.height));
+        topRightCorner = new Point (right -
+                          Math.max (northeastDim.width, southeastDim.width), 
+                          top +
+                          Math.max (northwestDim.height, northeastDim.height));
+        bottomLeftCorner = new Point (left + 
+                          Math.max (northwestDim.width, southwestDim.width),
+                          bottom - 
+                          Math.max (southwestDim.height, southeastDim.height));
+        bottomRightCorner = new Point (right  -
+                          Math.max (northeastDim.width, southeastDim.width),
+                          bottom - 
+                          Math.max (southwestDim.height, southeastDim.height));
+        if ((northwest != null) &amp;&amp; northwest.isVisible ()) {
+            northwest.reshape (left, top,
+                                left + topLeftCorner.x,
+                                top + topLeftCorner.y);
+        }
+        if ((southwest != null) &amp;&amp; southwest.isVisible ()) {
+            southwest.reshape (left, bottomLeftCorner.y,
+                                bottomLeftCorner.x - left,
+                                bottom - bottomLeftCorner.y);
+       }
+        if ((southeast != null) &amp;&amp; southeast.isVisible ()) {
+            southeast.reshape (bottomRightCorner.x,
+                        bottomRightCorner.y,
+                        right - bottomRightCorner.x,
+                        bottom - bottomRightCorner.y);
+        }
+        if ((northeast != null) &amp;&amp; northeast.isVisible ()) {
+            northeast.reshape (topRightCorner.x, top,
+                                right - topRightCorner.x,
+                                topRightCorner.y);
+        }
+        if ((center != null) &amp;&amp; center.isVisible ()) {
+            int x = topLeftCorner.x + hgap;
+            int y = topLeftCorner.y + vgap;
+            int width = bottomRightCorner.x - topLeftCorner.x - hgap * 2;
+            int height = bottomRightCorner.y - topLeftCorner.y - vgap * 2;
+            if (mode == CornerLayout.FULL_WIDTH) {
+                x = left;
+                width = right - left;
+            } else if (mode == CornerLayout.FULL_HEIGHT) {
+                y = top;
+                height = bottom - top;
+            }
+            center.reshape (x, y, width, height);
+        }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>layoutContainer()</tt> does the 
+real work: it positions and sizes the components in our layout. It starts 
+by computing the region of the target container that we have to work with, 
+which is essentially the size of the container minus the insets. The boundaries 
+of the working area are stored in the variables <tt CLASS=literal>top</tt>, <tt CLASS=literal>bottom</tt>, <tt CLASS=literal>left</tt>, and 
+<tt CLASS=literal>right</tt>. Next, we get the preferred sizes of all visible components and use 
+them to compute the corners of the "Center" region; these are 
+stored in the variables <tt CLASS=literal>topLeftCorner</tt>, 
+<tt CLASS=literal>topRightCorner</tt>, <tt CLASS=literal>bottomLeftCorner</tt>, 
+and <tt CLASS=literal>bottomRightCorner</tt>. 
+
+<P CLASS=para>
+Once we've computed the location of the "Center" region, 
+we can start placing the components in their respective corners. To do 
+so, we simply check whether the component is visible; if it is, we call 
+its <tt CLASS=literal>reshape()</tt> method. After 
+dealing with the corner components, we place the "Center" component, 
+taking into account any gaps (<tt CLASS=literal>hgap</tt> 
+and <tt CLASS=literal>vgap</tt>) and the layout's 
+mode. If the mode is <tt CLASS=literal>NORMAL</tt>, 
+the center component occupies the region between the inner corners of the 
+other components. If the mode is <tt CLASS=literal>FULL_HEIGHT</tt>, 
+it occupies the full height of the screen. If it is <tt CLASS=literal>FULL_WIDTH</tt>, 
+it occupies the full width of the screen. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    public String toString() {
+        Sting str;
+        switch (mode) {
+            case FULL_HEIGHT: str = "tall"; break;
+            case FULL_WIDTH: str = "wide"; break;
+            default: str = "normal"; break;
+        }
+        return getClass().getName () + "[hgap=" + hgap + ",vgap=" + vgap + 
+            ",mode="+str+"]";
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt> simply returns a 
+string describing the layout. 
+
+<P CLASS=para>
+Strictly speaking, there's no reason to update the <tt CLASS=literal>CornerLayout</tt> 
+for Java 1.1. Nothing about Java 1.1 says that new layout managers have 
+to implement the <tt CLASS=literal>LayoutManager2</tt> 
+interface. However, implementing <tt CLASS=literal>LayoutManager2</tt> 
+isn't a bad idea, particularly since <tt CLASS=literal>CornerLayout</tt> 
+works with constraints; like <tt CLASS=literal>BorderLayout</tt>, 
+it has named regions. To extend <tt CLASS=literal>CornerLayout</tt> 
+so that it implements <tt CLASS=literal>LayoutManager2</tt>, 
+add the following code; we'll create a new <tt CLASS=literal>CornerLayout2</tt>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.awt.*;
+public class CornerLayout2 extends CornerLayout implements LayoutManager2 {
+    public void addLayoutComponent(Component comp, Object constraints) {
+        if ((constraints == null) || (constraints instanceof String)) {
+            addLayoutComponent((String)constraints, comp);
+        } else {
+            throw new IllegalArgumentException(
+                  "cannot add to layout: constraint must be a string (or null)");
+        }
+    }
+    public Dimension maximumLayoutSize(Container target) {
+        return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
+    public float getLayoutAlignmentX(Container parent) {
+        return Component.CENTER_ALIGNMENT;
+    }
+    public float getLayoutAlignmentY(Container parent) {
+        return Component.CENTER_ALIGNMENT;
+    }
+    public void invalidateLayout(Container target) {
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_11.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Disabling the LayoutManager</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The sun.awt Layout Collection</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

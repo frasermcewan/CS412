@@ -1,0 +1,769 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 15] DatagramSocketImpl</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:21:50 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 15<br>The java.net Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>DatagramSocketImpl</H1>
+
+<H2>Name</H2>
+
+DatagramSocketImpl
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.38">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.net.DatagramSocketImpl</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.39">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>DatagramSocketImpl</tt> class 
+is an <tt CLASS=literal>abstract</tt> class that defines 
+the bulk of the methods that make the <tt CLASS=literal>DatagramSocket</tt> 
+and <tt CLASS=literal>MulticastSocket</tt> classes 
+work. Non-<tt CLASS=literal>public</tt> subclasses 
+of <tt CLASS=literal>DatagramSocketImpl</tt> provide 
+platform-specific implementations of datagram socket communication. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.40">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.net.DatagramSocketImpl
+                      extends java.lang.Object {
+  // Variables
+  protected FileDescriptor fd;
+  protected int localPort;
+  // Protected Instance Methods
+  protected abstract void bind(int lport, InetAddress laddr);
+  protected abstract void close();
+  protected abstract void create();
+  protected FileDescriptor getFileDescriptor();
+  protected int getLocalPort();
+  protected abstract byte getTTL();
+  protected abstract void join(InetAddress inetaddr);
+  protected abstract void leave(InetAddress inetaddr);
+  protected abstract int peek(InetAddress i);
+  protected abstract void receive(DatagramPacket p);
+  protected abstract void send(DatagramPacket p);
+  protected abstract void setTTL(byte ttl);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.41">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.22">fd</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.27">protected FileDescriptor fd</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The file descriptor that represents this socket. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.23">localPort</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.28">protected int localPort</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The local port number of this socket. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.42">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.24">bind</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.29"><DIV CLASS=screen> <P> <PRE> protected abstract void bind(int lport, InetAddress laddr) throws SocketException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>lport</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>laddr</tt><br>
+<DD>
+
+<P CLASS=para>
+A local address. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method binds the socket to the given address and port. If the address 
+or the port is unavailable, an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.25">close</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.30">protected void close()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method closes the socket, releasing any 
+system resources it holds. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.26">create</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.31">protected abstract void create() throws SocketException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If a socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a socket that is not bound to an address and port. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.27">getFileDescriptor</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.32">protected FileDescriptor getFileDescriptor()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The file descriptor for this socket. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the file descriptor associated with this <tt CLASS=literal>DatagramSocketImpl</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.28">getLocalPort</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.33">protected int getLocalPort()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The port number for this socket. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the local port to which this <tt CLASS=literal>DatagramSocketImpl</tt> 
+is bound. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.29">getTTL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.34">protected abstract byte getTTL() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The time-to-live (TTL) value for this socket. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the TTL value for this socket. This value is the number 
+of hops that an outgoing packet can traverse before it is discarded. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.30">join</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.35"><DIV CLASS=screen> <P> <PRE> protected abstract void join(InetAddress inetaddr) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>inetaddr</tt><br>
+<DD>
+
+<P CLASS=para>
+The IP address of the group to join. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is used by <tt CLASS=literal>MulticastSocket</tt> 
+to join a multicast group. An exception is thrown if the given address 
+is not a multicast address. While the socket is part of a group, it receives 
+all packets that are sent to the group. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.31">leave</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.36"><DIV CLASS=screen> <P> <PRE> protected abstract void leave(InetAddress inetaddr) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>inetaddr</tt><br>
+<DD>
+
+<P CLASS=para>
+The IP address of the group to leave. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is used by <tt CLASS=literal>MulticastSocket</tt> 
+to leave a multicast group. An exception is thrown if the given address 
+is not a multicast address. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.32">peek</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.37">protected abstract int peek(InetAddress i) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>i</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an <tt CLASS=literal>InetAddress</tt> object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The port number of the next incoming packet. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method places the address of the next incoming packet in the given 
+<tt CLASS=literal>InetAddress</tt> 
+object. The method also returns the port number of the next incoming packet. 
+The method looks at the address of an incoming packet to 
+determine if it should be accepted. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.33">receive</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.38"><DIV CLASS=screen> <P> <PRE> protected abstract void receive(DatagramPacket p) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>p</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>DatagramPacket</tt> that receives incoming data. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method receives a datagram packet on this socket. After this method 
+returns, the given <tt CLASS=literal>DatagramPacket</tt> 
+contains the packet's data and length, and the sender's address 
+and port number. If the data that was sent is longer that the given packet's 
+data buffer, the data is truncated. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.34">send</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.39">protected abstract void send(DatagramPacket p) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>p</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>DatagramPacket</tt> to be sent. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sends a packet from this socket. The packet data, packet length, 
+destination address, and destination port number are specified by the given 
+<tt CLASS=literal>DatagramPacket</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.35">setTTL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.40">protected abstract void setTTL(byte ttl) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ttl</tt><br>
+<DD>
+
+<P CLASS=para>
+The new TTL value for this socket. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is used to set the TTL value of the socket. The TTL value is 
+the number of hops that an outgoing packet can traverse before it is discarded. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.43">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.44">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>DatagramPacket</tt>, 
+<tt CLASS=literal>DatagramSocket</tt>, 
+<tt CLASS=literal>FileDescriptor</tt>, 
+<tt CLASS=literal>InetAddress</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>MulticastSocket</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>DatagramSocket</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>FileNameMap</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

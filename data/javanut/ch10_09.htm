@@ -1,0 +1,589 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] 10.9 Naming Patterns and Conventions</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:57:56 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>Java Beans</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-10-SECT-9">10.9 Naming Patterns and Conventions</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.NAMING-JAVAB1"></A><A NAME="CH10.JAVABEANS.AP5"></A><A NAME="CH10.DESIGN.PATTE1"></A>As we've seen, beanbox programs may rely on introspection of
+a bean to determine the list of properties, events, and
+methods it supports.  In order for this to work, bean
+developers must follow a set of standard naming conventions,
+sometimes referred to as JavaBeans "design patterns." These
+patterns specify, for example, that the getter and setter
+accessor methods for a property should begin with
+<tt CLASS=literal>get</tt> and <tt CLASS=literal>set</tt>.  Not all of the patterns are
+absolute requirements.  If a bean has accessor methods with
+different names, it is possible to use a
+<tt CLASS=literal>PropertyDescriptor</tt> object, specified in a
+<tt CLASS=literal>BeanInfo</tt> class, to specify the accessor methods for the
+property.  Note, however, that although an accessor method name
+is not required to follow the pattern, the method is
+required to have the exact type signature specified by
+the pattern.
+
+<P CLASS=para>
+This section lists the design patterns for bean properties, events,
+and methods.  It also lists other conventions and requirements that
+you should keep in mind when developing beans.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-10-TAB-1">Java Bean Patterns</A></h3>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.1">Beans</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>class name:</I><br>
+<DD>
+
+<P CLASS=para>
+Any
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>superclass:</I><br>
+<DD>
+
+<P CLASS=para>
+Any
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>constructor:</I><br>
+<DD>
+
+<P CLASS=para>
+Must have a no-argument constructor, or a
+serialized template file
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>packaging:</I><br>
+<DD>
+
+<P CLASS=para>
+JAR file manifest entry specifies 
+<tt CLASS=literal>Java-Bean: True</tt></DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.2">Properties (property <I CLASS=emphasis>p</I> of type <I CLASS=emphasis>T</I>)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>getter:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public <I CLASS=emphasis>T</I> get<I CLASS=emphasis>P</I>()
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>setter:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void set<I CLASS=emphasis>P</I>(<I CLASS=emphasis>T</I> value)
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.3">Boolean Properties (property <I CLASS=emphasis>p</I> of type boolean)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>getter:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean get<I CLASS=emphasis>P</I>()
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>(boolean value)</I><br>
+<DD>
+
+<P CLASS=para>
+<I CLASS=emphasis>or</I> <tt CLASS=literal>public boolean is P()</tt> setter:
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void set<I CLASS=emphasis>P</I>
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.4">Indexed Properties (property <I CLASS=emphasis>p</I> of type <I CLASS=emphasis>T</I>[])</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>array getter:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public <I CLASS=emphasis>T</I>[] get<I CLASS=emphasis>P</I>()
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>array setter:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void set<I CLASS=emphasis>P</I>(<I CLASS=emphasis>T</I>[] value)
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>element getter:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public <I CLASS=emphasis>T</I> get<I CLASS=emphasis>P</I>(int index)
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>element setter:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void set<I CLASS=emphasis>P</I>(int index, <I CLASS=emphasis>T</I> value)
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.5">Bound Properties (property <I CLASS=emphasis>p</I> of type <I CLASS=emphasis>T</I>)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>getter:</I><br>
+<DD>
+
+<P CLASS=para>
+Same as regular property
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>setter:</I><br>
+<DD>
+
+<P CLASS=para>
+Same as regular property
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listeners:</I><br>
+<DD>
+
+<P CLASS=para>
+One event listener list for all bound properties of a bean
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener registration:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void addPropertyChangeListener (PropertyChangeListener l)
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener removal:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void removePropertyChangeListener (PropertyChangeListener l)
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.6">Constrained Properties (property <I CLASS=emphasis>p</I> of type <I CLASS=emphasis>T</I>)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>getter:</I><br>
+<DD>
+
+<P CLASS=para>
+Same as regular property
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>setter:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void set<I CLASS=emphasis>P</I>(<I CLASS=emphasis>T</I> value) 
+                                      throws PropertyVetoException
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listeners:</I><br>
+<DD>
+
+<P CLASS=para>
+One event listener list for all constrained properties of a bean
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener registration:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void addVetoableChangeListener (VetoableChangeListener l)
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener removal:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void removeVetoableChangeListener
+            (VetoableChangeListener l)
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.7">Events (event named <I CLASS=emphasis>E</I>)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>event class name:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>E</I>Event
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener name:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>E</I>Listener
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener methods:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void <I CLASS=emphasis>methodname</I>(<I CLASS=emphasis>E</I>Event e)
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener registration:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void add<I CLASS=emphasis>E</I>Listener(<I CLASS=emphasis>E</I>Listener l)
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener removal:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void remove<I CLASS=emphasis>E</I>Listener(<I CLASS=emphasis>E</I>Listener l)
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.8">Unicast Events (event named <I CLASS=emphasis>E</I> only one listener allowed)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener registration:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void add<I CLASS=emphasis>E</I>Listener(<I CLASS=emphasis>E</I>Listener l)
+       throws TooManyListenersException
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>listener removal:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void remove<I CLASS=emphasis>E</I>Listener(<I CLASS=emphasis>E</I>Listener l)
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.9">Methods</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>method name:</I><br>
+<DD>
+
+<P CLASS=para>
+Any
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>method args:</I><br>
+<DD>
+
+<P CLASS=para>
+Any; some tools only recognize no-argument methods</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.10">BeanInfo Classes (for bean <I CLASS=emphasis>B</I>)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>class name:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>B</I>BeanInfo
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.11">Property Editors (for properties of type <I CLASS=emphasis>T</I>)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>class name:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>T</I>Editor
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>constructor:</I><br>
+<DD>
+
+<P CLASS=para>
+Must have a no-argument constructor</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.12">Property Editors (for individual properties)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>class name:</I><br>
+<DD>
+
+<P CLASS=para>
+Any; register via <I CLASS=emphasis>PropertyDescriptor</I>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>constructor:</I><br>
+<DD>
+
+<P CLASS=para>
+Must have a no-argument constructor</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.13">Customizers (for bean <I CLASS=emphasis>B</I>)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>class name:</I><br>
+<DD>
+
+<P CLASS=para>
+Any; register via <I CLASS=emphasis>BeanDescriptor</I>
+(<I CLASS=emphasis>B</I><I CLASS=emphasis>Customizer</I> by convention)
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>superclass:</I><br>
+<DD>
+
+<P CLASS=para>
+Must be a component; typically extends <I CLASS=emphasis>Panel</I>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>constructor:</I><br>
+<DD>
+
+<P CLASS=para>
+Must have a no-argument constructor</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.14">Documentation File (for bean <I CLASS=emphasis>B</I>)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>default docs:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>B</I>.html
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>localized docs:</I><br>
+<DD>
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>locale</I>/<I CLASS=emphasis>B</I>.html
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Defining a Bean Customizer</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Internationalization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

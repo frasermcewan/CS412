@@ -1,0 +1,689 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] BufferedWriter</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:33:44 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>BufferedWriter</H1>
+
+<H2>Name</H2>
+
+BufferedWriter
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.24">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.BufferedWriter</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.Writer</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.25">Description</A></h2>
+
+<P CLASS=para>
+A <tt CLASS=literal>BufferedWriter</tt> object provides a more
+efficient way to write just a few characters at a time to a
+<tt CLASS=literal>Writer</tt>.
+<tt CLASS=literal>BufferedWriter</tt> objects
+use a buffer to store output for an associated <tt CLASS=literal>Writer</tt>. 
+In other words, a large number of characters are stored in an internal 
+buffer and only written when the buffer fills up or is explicitly flushed. 
+A <tt CLASS=literal>BufferedWriter</tt> is more efficient 
+than a regular <tt CLASS=literal>Writer</tt> because 
+the data is written to memory, rather than a disk or a network. 
+Minimizing the number of write operations to a disk or the network 
+minimizes the cumulative overhead for these operations.
+
+<P CLASS=para>
+You should wrap a <tt CLASS=literal>BufferedWriter</tt> 
+around any <tt CLASS=literal>Writer</tt> whose <tt CLASS=literal>write()</tt> 
+operations may be time consuming or costly, such as a <tt CLASS=literal>FileWriter</tt> 
+or a <tt CLASS=literal>OutputStreamWriter</tt>. 
+
+<P CLASS=para>
+This class is very similar to <tt CLASS=literal>BufferedOutputStream</tt>, 
+but it operates on a stream of Java characters instead of a byte stream; 
+this makes it easier to support internationalization. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.26">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.io.BufferedWriter extends java.io.Writer {
+  // Constructors
+  public BufferedWriter(Writer out);
+  public BufferedWriter(Writer out, int size);
+  // Instance Methods
+  public void close();
+  public void flush();
+  public void newLine();
+  public void write(int c);
+  public void write(char[] cbuf, int off, int len);
+  public void write(String s, int off, int len);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.27">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.27">BufferedWriter</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.33">public BufferedWriter (Writer out)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>out</tt><br>
+<DD>
+
+<P CLASS=para>
+The output stream to 
+buffer. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BufferedWriter</tt> 
+that acts on the specified <tt CLASS=literal>Writer</tt>, 
+using a buffer with the default size of 8192 characters. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.34">public BufferedWriter (Writer out, int size)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>out</tt><br>
+<DD>
+
+<P CLASS=para>
+The output stream to buffer.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>size</tt><br>
+<DD>
+
+<P CLASS=para>
+The size of buffer 
+to use. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified size is less than 0. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BufferedWriter</tt> 
+that acts on the specified <tt CLASS=literal>Writer</tt>, 
+using a buffer that is <tt CLASS=literal>size</tt> 
+bytes long. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.28">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.28">close</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.35">public void close() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt> <br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Writer.close()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method closes this <tt CLASS=literal>BufferedWriter</tt> and its
+underlying <tt CLASS=literal>Writer</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.29">flush</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.36">public void flush() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If 
+any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Writer.flush()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the contents of the buffer to the underlying <tt CLASS=literal>Writer</tt> 
+and calls <tt CLASS=literal>flush()</tt> on the underlying <tt CLASS=literal>Writer</tt>. 
+It is called automatically when the buffer fills up. You can also call 
+it before the buffer is full. This is known as "flushing" the 
+buffer. This method blocks until the underlying <tt CLASS=literal>write()</tt> 
+is complete. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.30">newLine</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.37">public void newLine() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the newline character or characters to the stream. It 
+uses <tt CLASS=literal>System.getProperty('line.separator')</tt> 
+to choose the newline appropriate for the run-time system. Calling this
+method is preferable to explicitly writing a newline character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.31">write</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.38">public void write(int c) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>c</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to write. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If 
+any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Writer.write(int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method places the low-order 16 bits of the 
+specified value into the buffer. If the buffer is 
+full, it is flushed, and the value <tt CLASS=literal>c</tt> 
+is placed in the newly empty buffer. If the buffer is flushed, this method 
+blocks while the data is written; otherwise this method returns immediately. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.39"><DIV CLASS=screen> <P> <PRE> public void write(char[] cbuf, int off, int len) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>cbuf</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of characters to write.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>off</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the character array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of characters to write. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Writer.write(char[], int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method copies <tt CLASS=literal>len</tt> characters
+from <tt CLASS=literal>cbuf</tt>, starting at <tt CLASS=literal>off</tt>, 
+into the buffer. If there is enough space left in the buffer for the new 
+data, it is copied into the buffer, and the method returns immediately. 
+Otherwise, the buffer is filled and flushed repeatedly until all the new 
+data has been copied into the buffer. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.40">public void write(String s, int off, int len) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>s</tt><br>
+<DD>
+
+<P CLASS=para>
+The string to be written.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>off</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the 
+string.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of characters 
+to write. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If 
+an I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Writer.write(String, int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method copies <tt CLASS=literal>len</tt> characters
+from <tt CLASS=literal>s</tt>, starting at <tt CLASS=literal>off</tt>, 
+into the buffer. If there is enough space left in the buffer for the new 
+data, it is copied into the buffer and the method returns immediately. 
+Otherwise, the buffer is filled and flushed repeatedly until all the new 
+data has been copied into the buffer. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.29">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>write(char[])</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Writer</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>write(String)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Writer</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.30">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>IllegalArgumentException</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>Writer</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>BufferedReader</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ByteArrayInputStream</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

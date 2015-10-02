@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.7 JAR Files</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:53:30 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Applets</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-7">6.7 JAR Files</A></h2>
+
+<P CLASS=para>
+<A NAME="CH6.JAR.FILES-1"></A>The <tt CLASS=literal>Soundmap</tt> applet defined in the previous section
+requires five files to operate: the class file for the
+applet itself, the class files for the two nested classes it
+contains, the image file, and the sound clip file.  It can be
+loaded using an <tt CLASS=literal>&lt;APPLET&gt;</tt> tag like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;APPLET code="Soundmap.class" width=288 height=288&gt;
+   ...
+&lt;/APPLET&gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When the applet is loaded in this manner, however, each of the
+five files is transferred in uncompressed form using a
+separate HTML request.  As you might imagine, this is quite
+inefficient.
+
+<P CLASS=para>
+In Java 1.1, you can instead combine the five files into a
+single JAR (Java ARchive) file.  This single, compressed file
+(it is a ZIP file) can be transferred from Web server to browser much
+more efficiently.  To create a JAR file, use the <I CLASS=emphasis>jar</I>
+tool, which has a syntax reminiscent of the UNIX <I CLASS=emphasis>tar</I> command:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+% jar cf soundmap.jar *.class image.gif sound.au
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This command creates a new file, <I CLASS=emphasis>soundmap.jar</I>, that
+contains all the <I CLASS=emphasis>.class</I> files in the current
+directory, and also contains the files <I CLASS=emphasis>image.gif</I> and
+<I CLASS=emphasis>sound.au</I>.  <I CLASS=emphasis>jar</I> can also be used to list and
+extract the contents of a JAR file.  See <A HREF="ch16_01.htm">Chapter 16, <i>JDK Tools</i></A> for complete documentation.
+
+<P CLASS=para>
+To use a JAR file, you specify it as the value of the
+<tt CLASS=literal>archive</tt> attribute of the <tt CLASS=literal>&lt;APPLET&gt;</tt> tag:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;APPLET archive="soundmap.jar" code="Soundmap.class" width=288 height=288&gt;
+   ...
+&lt;/APPLET&gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that the <tt CLASS=literal>archive</tt> attribute does not replace the
+<tt CLASS=literal>code</tt> attribute.  <tt CLASS=literal>archive</tt> specifies where to
+look for files, but <tt CLASS=literal>code</tt> is still required to tell
+the browser which of the files in the archive is the applet
+class file to be executed.  The <tt CLASS=literal>archive</tt> attribute
+may actually specify a comma-separated list of JAR files.
+The Web browser or applet viewer searches these archives for
+any files the applet requires.  If a file is not found in an
+archive, however, the browser falls back upon its old
+behavior and attempts to load the file from the Web server
+using a new HTTP request.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Images and Sounds</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Applet Security Restrictions</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

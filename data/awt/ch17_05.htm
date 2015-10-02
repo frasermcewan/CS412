@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 17] 17.5 Printing Arbitrary Content</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:58:10 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 17<br>Printing</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-17-SECT-5">17.5 Printing Arbitrary Content</A></h2>
+
+<P CLASS=para>
+Of course, in many situations, you want to do more than print the appearance of a component. You often want to print the contents of some component, rather than the component itself. For example, you may want to print the text the user has typed into a text area, rather than the text area itself. Or you may want to print the contents of a spreadsheet, rather than the collection of components that compose the spreadsheet. 
+
+<P CLASS=para>
+Java 1.1 lets you print arbitrary content, which may include multipage documents. You aren't restricted to printing your components' appearance. In many ways, the steps required to print arbitrary content are similar to those we outlined previously. However, a few tricks are involved:
+
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>Get the <tt CLASS=literal>PrintJob</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PrintJob pjob = getToolkit().getPrintJob(this, "Job Title", (Properties)null);
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>Get the graphics context from the <tt CLASS=literal>PrintJob</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Graphics pg = pjob.getGraphics();
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>Don't call <tt CLASS=literal>printAll()</tt> or <tt CLASS=literal>print()</tt>. These methods will try to draw your component on the page, which you don't want. Instead, get the dimensions of the page by calling <tt CLASS=literal>getPageDimension()</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+pjob.getPageDimension();
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>Set the font for your graphics context; then get the font metrics from your graphics context.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Font times = new Font ("SansSerif", Font.PLAIN, 12);
+pg.setFont(times); 
+FontMetrics tm = pg.getFontMetrics(times);
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>Draw whatever you want into the graphics context, using the methods of the <tt CLASS=literal>Graphics</tt> class. If you are drawing text, it's your responsibility to do all the positioning, making sure that your text falls within the page boundaries. By the time you're through with this, you'll have the <tt CLASS=literal>FontMetrics</tt> class memorized.
+
+<P>
+<li CLASS=listitem>When you've finished drawing the current page, call <tt CLASS=literal>dispose()</tt>; this sends the page to the printer and releases the resources tied up by the <tt CLASS=literal>PrintGraphics</tt> object.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+pg.dispose(); // This is like sending a form feed
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>If you want to print more pages, return to step 2.
+
+<P>
+<li CLASS=listitem>Clean up after yourself:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+pjob.end();
+</PRE>
+</DIV>
+
+<P>
+</OL>
+<P CLASS=para>
+Remember to set a font for the <tt CLASS=literal>PrintGraphics</tt> object explicitly! It doesn't have a default font.
+
+<P CLASS=para>
+An example that loads and prints a text file is available from this book's Web page.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Printing Example</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.applet Reference</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

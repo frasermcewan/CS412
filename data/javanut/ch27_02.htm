@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 27] 27.2 java.math.BigInteger (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:29:38 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch27_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 27<br>The java.math Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch28_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-27-SECT-2">27.2 java.math.BigInteger (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-27-SECT-2.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This subclass of <tt CLASS=literal>java.lang.Number</tt> represents
+integers that can be arbitrarily large--i.e., integers that
+are not limited to the 64 bits available with the
+<tt CLASS=literal>long</tt> data type.  <tt CLASS=literal>BigInteger</tt> defines methods
+that duplicate the functionality of the standard Java
+arithmetic and bit-manipulation operators.  The
+<tt CLASS=literal>compareTo()</tt> method compares two <tt CLASS=literal>BigInteger</tt>
+objects, and returns -1, 0, or 1 to indicate the result of
+the comparison.
+
+<P CLASS=para>
+The <tt CLASS=literal>gcd()</tt>, <tt CLASS=literal>modPow()</tt>, <tt CLASS=literal>modInverse()</tt>,
+and <tt CLASS=literal>isProbablePrime()</tt> methods perform advanced
+operations and are used primarily in cryptography and
+related algorithms.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>BigInteger</tt> extends Number {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>BigInteger</tt>(byte[] <tt CLASS=literal>val</tt>) throws NumberFormatException;
+            public <tt CLASS=literal>BigInteger</tt>(int <tt CLASS=literal>signum</tt>, byte[] <tt CLASS=literal>magnitude</tt>) throws NumberFormatException;
+            public <tt CLASS=literal>BigInteger</tt>(String <tt CLASS=literal>val</tt>, int <tt CLASS=literal>radix</tt>) throws NumberFormatException;
+            public <tt CLASS=literal>BigInteger</tt>(String <tt CLASS=literal>val</tt>) throws NumberFormatException;
+            public <tt CLASS=literal>BigInteger</tt>(int <tt CLASS=literal>numBits</tt>, Random <tt CLASS=literal>rndSrc</tt>) throws IllegalArgumentException;
+            public <tt CLASS=literal>BigInteger</tt>(int <tt CLASS=literal>bitLength</tt>, int <tt CLASS=literal>certainty</tt>, Random <tt CLASS=literal>rnd</tt>);
+    // <tt CLASS=literal>Class Methods</tt>
+            public static BigInteger <tt CLASS=literal>valueOf</tt>(long <tt CLASS=literal>val</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public BigInteger <tt CLASS=literal>abs</tt>();
+            public BigInteger <tt CLASS=literal>add</tt>(BigInteger <tt CLASS=literal>val</tt>) throws ArithmeticException;
+            public BigInteger <tt CLASS=literal>and</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public BigInteger <tt CLASS=literal>andNot</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public int <tt CLASS=literal>bitCount</tt>();
+            public int <tt CLASS=literal>bitLength</tt>();
+            public BigInteger <tt CLASS=literal>clearBit</tt>(int <tt CLASS=literal>n</tt>) throws ArithmeticException;
+            public int <tt CLASS=literal>compareTo</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public BigInteger <tt CLASS=literal>divide</tt>(BigInteger <tt CLASS=literal>val</tt>) throws ArithmeticException;
+            public BigInteger[] <tt CLASS=literal>divideAndRemainder</tt>(BigInteger <tt CLASS=literal>val</tt>) throws ArithmeticException;
+            public double <tt CLASS=literal>doubleValue</tt>();  //<tt CLASS=literal> Defines Number</tt>
+            public boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>x</tt>);  //<tt CLASS=literal> Overrides Object</tt>
+            public BigInteger <tt CLASS=literal>flipBit</tt>(int <tt CLASS=literal>n</tt>) throws ArithmeticException;
+            public float <tt CLASS=literal>floatValue</tt>();  //<tt CLASS=literal> Defines Number</tt>
+            public BigInteger <tt CLASS=literal>gcd</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public int <tt CLASS=literal>getLowestSetBit</tt>();
+            public int <tt CLASS=literal>hashCode</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public int <tt CLASS=literal>intValue</tt>();  //<tt CLASS=literal> Defines Number</tt>
+            public boolean <tt CLASS=literal>isProbablePrime</tt>(int <tt CLASS=literal>certainty</tt>);
+            public long <tt CLASS=literal>longValue</tt>();  //<tt CLASS=literal> Defines Number</tt>
+            public BigInteger <tt CLASS=literal>max</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public BigInteger <tt CLASS=literal>min</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public BigInteger <tt CLASS=literal>mod</tt>(BigInteger <tt CLASS=literal>m</tt>);
+            public BigInteger <tt CLASS=literal>modInverse</tt>(BigInteger <tt CLASS=literal>m</tt>) throws ArithmeticException;
+            public BigInteger <tt CLASS=literal>modPow</tt>(BigInteger <tt CLASS=literal>exponent</tt>, BigInteger <tt CLASS=literal>m</tt>);
+            public BigInteger <tt CLASS=literal>multiply</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public BigInteger <tt CLASS=literal>negate</tt>();
+            public BigInteger <tt CLASS=literal>not</tt>();
+            public BigInteger <tt CLASS=literal>or</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public BigInteger <tt CLASS=literal>pow</tt>(int <tt CLASS=literal>exponent</tt>) throws ArithmeticException;
+            public BigInteger <tt CLASS=literal>remainder</tt>(BigInteger <tt CLASS=literal>val</tt>) throws ArithmeticException;
+            public BigInteger <tt CLASS=literal>setBit</tt>(int <tt CLASS=literal>n</tt>) throws ArithmeticException;
+            public BigInteger <tt CLASS=literal>shiftLeft</tt>(int <tt CLASS=literal>n</tt>);
+            public BigInteger <tt CLASS=literal>shiftRight</tt>(int <tt CLASS=literal>n</tt>);
+            public int <tt CLASS=literal>signum</tt>();
+            public BigInteger <tt CLASS=literal>subtract</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public boolean <tt CLASS=literal>testBit</tt>(int <tt CLASS=literal>n</tt>) throws ArithmeticException;
+            public byte[] <tt CLASS=literal>toByteArray</tt>();
+            public String <tt CLASS=literal>toString</tt>(int <tt CLASS=literal>radix</tt>);
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public BigInteger <tt CLASS=literal>xor</tt>(BigInteger <tt CLASS=literal>val</tt>);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-27-SECT-2.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+Object->Number(Serializable)->BigInteger
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-27-SECT-2.3">Passed To:</A></h3>
+
+<P CLASS=para>
+BigDecimal()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-27-SECT-2.4">Returned By:</A></h3>
+
+<P CLASS=para>
+BigDecimal.toBigInteger()
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch27_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch28_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.math.BigDecimal (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The java.net Package</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

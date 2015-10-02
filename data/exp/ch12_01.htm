@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] Layout Managers</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:01:57 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="EXJ-CH-12">12. Layout Managers</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+FlowLayout<br>
+<A HREF="ch12_02.htm">GridLayout</A><BR>
+<A HREF="ch12_03.htm">BorderLayout</A><BR>
+<A HREF="ch12_04.htm">CardLayout</A><BR>
+<A HREF="ch12_05.htm">GridBagLayout</A><BR>
+<A HREF="ch12_06.htm">Nonstandard Layout Managers</A><BR>
+<A HREF="ch12_07.htm">Absolute Positioning?</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH10.LAY3"></A><A NAME="CH10.LAY4"></A>A layout manager arranges the child components of a container, as
+shown in <A HREF="ch12_01.htm#EXJ-CH-12-FIG-1">Figure 12.1</A>. It positions and sets the
+size of components within the container's display area according to a
+particular layout scheme.  The layout manager's job is to fit the
+components into the available area, while maintaining the proper
+spatial relationships between the components. AWT
+comes with a few standard layout managers that will collectively
+handle most situations; you can make your own layout managers if you
+have special requirements.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-1">Figure 12.1: LayoutManager at work</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1201.gif" alt="[Graphic: Figure 12-1]" width=503 height=203 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Every container has a default layout manager; therefore, when
+you make a new container, it comes with a
+<tt CLASS=literal>LayoutManager</tt> object of the appropriate type. You
+can install a new layout manager at any time with the
+<tt CLASS=literal>setLayout()</tt> method. Below, we set the layout
+manager of a container to a <tt CLASS=literal>BorderLayout</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+setLayout ( new BorderLayout() ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Notice that we call the <tt CLASS=literal>BorderLayout</tt> constructor,
+but we don't even save a reference to the layout manager. This
+is typical; once you have installed a layout manager, it does its work
+behind the scenes, interacting with the container. You rarely call the
+layout manager's methods directly, so you don't usually need a
+reference (a notable exception for <tt CLASS=literal>CardLayout</tt>).
+However, you do need to know what the layout manager is going to do with 
+your components as you work with them.
+
+<P CLASS=para>
+As I explained earlier, the <tt CLASS=literal>LayoutManager</tt> is
+consulted whenever a container's <tt CLASS=literal>doLayout()</tt> method is called (usually when
+it is validated), to reorganize the contents. It does its job by calling the 
+<tt CLASS=literal>setLocation()</tt> and 
+<tt CLASS=literal>setBounds()</tt> methods of the individual child
+components to arrange them in the container's display area. 
+A container is layed out the first time it is displayed, and
+thereafter whenever 
+the container's <tt CLASS=literal>validate()</tt> method is called.
+Containers that are a subclass of the <tt CLASS=literal>Window</tt> class
+(which include <tt CLASS=literal>Frame</tt>) are automatically
+validated whenever they are packed or resized. Calling
+<tt CLASS=literal>pack()</tt> sets the window's size so it is as
+small as possible while holding all its components at their preferred
+sizes.
+
+<P CLASS=para>
+Every component determines three important pieces of information used by
+the layout manager in placing and sizing it: 
+a minimum size, a maximum size, and a preferred size. 
+These are reported by the
+<tt CLASS=literal>getMinimumSize()</tt>,
+<tt CLASS=literal>getMaximumSize()</tt>, and
+<tt CLASS=literal>getPreferredSize()</tt>, methods of 
+<tt CLASS=literal>Component</tt>, respectively. For example, a plain
+<tt CLASS=literal>Button</tt> object can normally be sized to any
+proportions. However, the button's designer can provide a preferred size 
+for a good-looking button. The layout manager might use
+this size when there are no other constraints, or it might ignore it,
+depending on its scheme. Now, if we give the button a label, the
+button may need a minimum size in order to display itself
+properly. The layout manager might show more respect for the
+button's minimum size and guarantee that it has at least that
+much space.  Similarly, a particular component might not be able to display
+itself properly if it is too large (perhaps it has to scale up an image);
+it can use <tt CLASS=literal>getMaximumSize()</tt> to report the
+largest size it considers acceptable.[1]
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+Unfortunately, the current set of layout managers doesn't do
+anything with the maximum size. This may change in a future release. 
+</blockquote>
+<P CLASS=para>
+The preferred size of a <tt CLASS=literal>Container</tt> object has
+the same meaning as for any other type of component. However, since a
+<tt CLASS=literal>Container</tt> may hold its own components and want to
+arrange them in its own layout, its preferred size is a function of
+its layout manager. The layout manager is therefore involved in
+both sides of the issue. It asks the components in its container for
+their preferred (or minimum) sizes in order to arrange them. Based on
+those values it also calculates the preferred size that is reported by
+its own container to that container's parent.
+
+<P CLASS=para>
+When a layout manager is called to arrange its components, 
+it is working within a fixed area. It usually begins by looking at its
+container's dimensions, and the preferred or minimum sizes of
+the child components. It then doles out screen area and sets the sizes
+of components according to its scheme. You can override the
+<tt CLASS=literal>getMinimumSize()</tt>,
+<tt CLASS=literal>getMaximumSize()</tt>, and 
+<tt CLASS=literal>getPreferredSize()</tt> methods of a component, but you
+should do this only if you are actually specializing the component, and
+it has new needs. If you find yourself fighting with a layout manager
+because it's changing the size of one of your components, you are
+probably using the wrong kind of layout manager or not composing your
+user interface properly. Remember that it's possible to use a number of
+<tt CLASS=literal>Panel</tt> objects in a given display, where each one
+has its own <tt CLASS=literal>LayoutManager</tt>. Try breaking down the
+problem: place related components in their own
+<tt CLASS=literal>Panel</tt> and then arrange the panels in the
+container.  When that becomes too complicated, you can choose to use a constraint
+based layout manager like <tt CLASS=literal>GridBagLayout</tt>,
+which we'll discuss later in this chapter. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-12-SECT-1">12.1 FlowLayout</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.FL"></A><A NAME="CH10.FL2"></A><tt CLASS=literal>FlowLayout</tt> is a simple layout manager that tries to
+arrange components with their preferred sizes, from left to right and
+top to bottom in the display. A <tt CLASS=literal>FlowLayout</tt> can have
+a specified justification of <tt CLASS=literal>LEFT</tt>,
+<tt CLASS=literal>CENTER</tt>, or <tt CLASS=literal>RIGHT</tt>, and a fixed
+horizontal and vertical padding. By default, a flow layout uses
+<tt CLASS=literal>CENTER</tt> justification, meaning that all components
+are centered within the area allotted to
+them. <tt CLASS=literal>FlowLayout</tt> is the default for
+<tt CLASS=literal>Panel</tt> components like <tt CLASS=literal>Applet</tt>.
+
+<P CLASS=para>
+The following applet adds five buttons to the default
+<tt CLASS=literal>FlowLayout</tt>; the result is shown in <A HREF="ch12_01.htm#EXJ-CH-12-FIG-2">Figure 12.2</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-2">Figure 12.2: A flow layout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1202.gif" alt="[Graphic: Figure 12-2]" width=503 height=82 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*; 
+ 
+public class Flow extends java.applet.Applet {  
+    public void init() { 
+        // Default for Applet is FlowLayout 
+        add( new Button("One") ); 
+        add( new Button("Two") ); 
+        add( new Button("Three") ); 
+        add( new Button("Four") ); 
+        add( new Button("Five") ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If the applet is small enough, some of the buttons spill over to a
+second or third row.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Creating custom components</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>GridLayout</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

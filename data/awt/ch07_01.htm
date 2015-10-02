@@ -1,0 +1,376 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] Layouts</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:39:11 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch07_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-7">7. Layouts</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch07_02.htm'>FlowLayout</a><br>
+<a href='ch07_03.htm'>BorderLayout</a><br>
+<a href='ch07_04.htm'>GridLayout</a><br>
+<a href='ch07_05.htm'>CardLayout</a><br>
+<a href='ch07_06.htm'>GridBagLayout</a><br>
+<a href='ch07_07.htm'>GridBagConstraints</a><br>
+<a href='ch07_08.htm'>Combining Layouts</a><br>
+<a href='ch07_09.htm'>Disabling the LayoutManager</a><br>
+<a href='ch07_10.htm'>Designing Your Own LayoutManager</a><br>
+<a href='ch07_11.htm'>The sun.awt Layout Collection</a><br>
+<a href='ch07_12.htm'>Other Layouts Available on the Net</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+This chapter expands upon the idea of a layout manager, which was mentioned 
+briefly in the previous chapter. Every container has a <tt CLASS=literal>LayoutManager</tt> 
+that is responsible for positioning the component objects within it, regardless 
+of the platform or the screen size. Layout managers eliminate the need 
+to compute component placement on your own, which would be a losing 
+proposition since the size required for any component depends on the platform 
+on which it is displayed. Even for a simple layout, the code required to 
+discover component sizes and compute absolute positions could be hundreds 
+of lines, particularly if you concern yourself with what happens when the 
+user resizes a window. A layout manager takes care of this for you. It 
+asks each component in the layout how much space it requires, then arranges 
+the components on the screen as best it can, based on the component sizes 
+on the platform in use and the space available, resizing the components 
+as needed.<A NAME="CH07.LAYOUT1"></A>
+
+<P CLASS=para>
+To find out how much space a component needs, a layout manager 
+calls the component's <tt CLASS=literal>getMinimumSize()</tt> 
+and <tt CLASS=literal>getPreferredSize()</tt> methods. 
+(&nbsp;&nbsp;Java 1.1 also has a <tt CLASS=literal>getMaximumSize()</tt> method; the existing layout managers don't take advantage of it.) These methods report the minimum space that a component requires to be displayed 
+correctly and the optimal size at which it looks best. Thus, 
+each component must know its space requirements; the layout manager uses 
+these to arrange the screen; and your Java program never has to worry 
+about platform-dependent positioning. 
+
+<P CLASS=para>
+The <tt CLASS=literal>java.awt</tt> package provides 
+five layout managers: <tt CLASS=literal>FlowLayout</tt>, 
+<tt CLASS=literal>BorderLayout</tt>, <tt CLASS=literal>GridLayout</tt>, 
+<tt CLASS=literal>CardLayout</tt>, and <tt CLASS=literal>GridBagLayout</tt>. 
+Four additional layouts are provided in the <tt CLASS=literal>sun.awt</tt> 
+package: <tt CLASS=literal>HorizBagLayout</tt>, <tt CLASS=literal>VerticalBagLayout</tt>, 
+<tt CLASS=literal>OrientableFlowLayout</tt>, and <tt CLASS=literal>VariableGridLayout</tt>. 
+<tt CLASS=literal>OrientableFlowLayout</tt> is new 
+to Java 1.1. Of the 1.0 layouts, all are available in the JDK and Internet 
+Explorer. The <tt CLASS=literal>VariableGridLayout</tt> 
+is also available with Netscape Navigator. This chapter discusses all of 
+them, along with the <tt CLASS=literal>LayoutManager</tt> 
+and <tt CLASS=literal>LayoutManager2</tt> interfaces; 
+we'll pay particular attention to how each layout manager computes 
+positions for its components. We will also discuss how to combine layouts 
+to generate more complex screens and how to create your own <tt CLASS=literal>LayoutManager</tt> 
+for special situations. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-1">7.1 The LayoutManager Interface</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.LAYOUT2"></A>The <tt CLASS=literal>LayoutManager</tt> interface 
+defines the responsibilities of something that wants to lay out <tt CLASS=literal>Component</tt>s 
+within a <tt CLASS=literal>Container</tt>. It is the 
+<tt CLASS=literal>LayoutManager</tt>'s duty 
+to determine the position and size of each component within the <tt CLASS=literal>Container</tt>. 
+You will never directly call the methods of the <tt CLASS=literal>LayoutManager</tt> 
+interface; for the most part, layout managers do their work behind 
+the scenes. Once you have created a <tt CLASS=literal>LayoutManager</tt> 
+object and told the container to use it (by calling <tt CLASS=literal>setLayout()</tt>), 
+you're finished with it. The system calls the appropriate methods 
+in the layout manager when necessary. 
+
+<P CLASS=para>
+Therefore, the <tt CLASS=literal>LayoutManager</tt> 
+interface is most important when you are writing a new layout manager; 
+we'll discuss it here because it's the scaffolding on which 
+all layout managers are based. Like any interface, <tt CLASS=literal>LayoutManager</tt> 
+specifies the methods a layout manager must implement but says nothing 
+about how the <tt CLASS=literal>LayoutManager</tt> 
+does its job. Therefore, we'll make a few observations before proceeding. 
+First, a layout manager is free to ignore some of its components; there 
+is no requirement that a layout manager display everything. For example, 
+a <tt CLASS=literal>Container</tt> using a <tt CLASS=literal>BorderLayout</tt> 
+might include thirty or forty components. However, the <tt CLASS=literal>BorderLayout</tt> 
+will display at most five of them (the last component placed in each of 
+its five named areas). Likewise, a <tt CLASS=literal>CardLayout</tt> 
+may manage many components but displays only one at a time. 
+
+<P CLASS=para>
+Second, a layout manager can do anything it wants with the components' 
+minimum and preferred sizes. It is free to ignore either. It makes sense 
+that a layout manager can ignore a preferred size; after all, "preferred" 
+means "give me this if it's available." However, a layout 
+manager can also ignore a minimum size. At times, there is no reasonable 
+alternative: the container may not have enough room to display a 
+component at its minimum size. How to handle this situation is left to 
+the layout manager's discretion. All layout managers currently ignore a component's maximum size, though this may change in the future. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-1.1">Methods of the LayoutManager Interface</A></h3>
+
+<P CLASS=para>
+Five methods make up the <tt CLASS=literal>LayoutManager</tt> 
+interface. If you create your own class that implements <tt CLASS=literal>LayoutManager</tt>, 
+you must define all five. As you will see, many of the methods do not have 
+to do anything, but there must still be a stub with the appropriate method 
+signature. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void addLayoutComponent (String name, Component component) 
+  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addLayoutComponent()</tt> method 
+is called only when the program assigns a <tt CLASS=literal>name</tt> 
+to the <tt CLASS=literal>component</tt> when adding 
+it to the layout (i.e., the program calls <tt CLASS=literal>add(String, 
+Component)</tt> rather than simply calling <tt CLASS=literal>add(Component)</tt> 
+or the Java 1.1 <tt CLASS=literal>add(Component, Object)</tt>). 
+It is up to the layout manager to decide what, if anything, to do with 
+the name. For example, <tt CLASS=literal>BorderLayout</tt> 
+uses <tt CLASS=literal>name</tt> to specify an area 
+on the screen in which to display the component. Most layout managers don't 
+require a name and will only implement a stub. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void removeLayoutComponent (Component component)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeLayoutComponent()</tt> 
+method's responsibility is to remove <tt CLASS=literal>component</tt> 
+from any internal storage used by the layout manager. This method will 
+probably be stubbed out for your own layouts and do nothing. However, it may need to do something if your layout manager associates components 
+with names. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Dimension preferredLayoutSize (Container parent)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>preferredLayoutSize()</tt> method 
+is called to determine the preferred size of the components within the 
+<tt CLASS=literal>Container</tt>. It returns a <tt CLASS=literal>Dimension</tt> 
+object that contains the required height and width. <tt CLASS=literal>parent</tt> 
+is the object whose components need to be laid out. Usually, the <tt CLASS=literal>LayoutManager</tt> 
+determines how to size <tt CLASS=literal>parent</tt> 
+by calculating the sizes of the components within it and calculating the 
+dimensions required to display them. On other occasions, it may just return 
+<tt CLASS=literal>parent.setSize()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Dimension minimumLayoutSize (Container parent)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>minimumLayoutSize()</tt> method 
+is called to determine the minimum size of the components within the <tt CLASS=literal>Container</tt>. 
+It returns a <tt CLASS=literal>Dimension</tt> object 
+that contains the required height and width. <tt CLASS=literal>parent</tt> 
+is the object whose components need to be laid out. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void layoutContainer (Container parent)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>layoutContainer()</tt> method 
+is where a <tt CLASS=literal>LayoutManager</tt> does 
+most of its work. The <tt CLASS=literal>layoutContainer()</tt> 
+method is responsible for the positioning of all the <tt CLASS=literal>Components</tt> 
+of <tt CLASS=literal>parent</tt>. Each specific layout 
+positions the enclosed components based upon its own rules. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-1.2">The LayoutManager2 Interface</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.LAYOUT3"></A>Numerous changes were introduced in Java 1.1 to make it conform to various 
+design patterns. These patterns provide consistency in usage and make Java 
+programming easier. The <tt CLASS=literal>LayoutManager2</tt> 
+interface was introduced for this reason. This new interface solves a problem 
+that occurs when working with the <tt CLASS=literal>GridBagLayout</tt>. 
+While the <tt CLASS=literal>addLayoutComponent(String, Component)</tt> 
+method of <tt CLASS=literal>LayoutManager</tt> works 
+great for <tt CLASS=literal>BorderLayout</tt> and 
+<tt CLASS=literal>CardLayout</tt>, you can't 
+use it for a <tt CLASS=literal>GridBagLayout</tt>. 
+The position of a component in a <tt CLASS=literal>GridBagLayout</tt> 
+is controlled by a number of constraints, which are encapsulated in a <tt CLASS=literal>GridBagConstraints</tt> 
+object. To associate constraints with a component, you needed to call a 
+<tt CLASS=literal>setConstraints()</tt> method. Although 
+this works, it is not consistent with the way you add components to other 
+layouts. Furthermore, as more and more people create their own layout managers, 
+the number of ways to associate positioning information with a component 
+could grow endlessly. <tt CLASS=literal>LayoutManager2</tt> 
+defines a version of <tt CLASS=literal>addLayoutComponent()</tt> 
+that can be used by all constraint-based layout managers, including older 
+managers like <tt CLASS=literal>BorderLayout</tt> 
+and <tt CLASS=literal>CardLayout</tt>. This method 
+lets you pass an arbitrary object to the layout manager to provide positioning 
+information. Layout managers that need additional information (like the 
+<tt CLASS=literal>GridBagConstraints</tt> object) 
+now implement <tt CLASS=literal>LayoutManager2</tt> 
+instead of <tt CLASS=literal>LayoutManager</tt>. 
+
+<P CLASS=para>
+In addition to swapping the parameters to the <tt CLASS=literal>addLayoutComponent(Component, 
+Object)</tt>, the new <tt CLASS=literal>LayoutManager2</tt> 
+interface also defines several methods that aren't really needed 
+now but will facilitate the introduction of "peerless components" 
+in a later release. Methods of the LayoutManager2 interface
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void addLayoutComponent(Component comp, Object constraints) 
+ <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addLayoutComponent()</tt> method 
+is called when a program assigns <tt CLASS=literal>constraints</tt> 
+to the component <tt CLASS=literal>comp</tt> when 
+adding it to the layout. In practice, this means that the program added 
+the component by calling the new method <tt CLASS=literal>add(Component 
+component, Object constraints)</tt> rather than the 
+older methods <tt CLASS=literal>add(Component component)</tt> 
+or <tt CLASS=literal>add(String name, Component component)</tt>). 
+It is up to the layout manager to decide what, if anything, to do with 
+the <tt CLASS=literal>constraints</tt>. For example, 
+<tt CLASS=literal>GridBagLayout</tt> uses <tt CLASS=literal>constraints</tt> 
+to associate a <tt CLASS=literal>GridBagConstraints</tt> 
+object to the component <tt CLASS=literal>comp</tt>. 
+<tt CLASS=literal>BorderLayout</tt> uses <tt CLASS=literal>constraints</tt> 
+to associate a location string (like "Center") with the component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Dimension maximumLayoutSize(Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>maximumLayoutSize()</tt> method 
+must return the maximum size of the <tt CLASS=literal>target</tt> 
+container under this layout manager. Previously, only minimum and preferred 
+sizes were available. Now a container can have a maximum size. Once layout 
+managers support the concept of maximum sizes, containers will not grow 
+without bounds when additional space is available. If there is no actual 
+maximum, the <tt CLASS=literal>Dimension</tt> should 
+have a width and height of the constant <tt CLASS=literal>Integer.MAX_VALUE</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract float getLayoutAlignmentX(Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLayoutAlignmentX()</tt> method 
+must return the alignment of <tt CLASS=literal>target</tt> 
+along the x axis. The return value should be between 0.0 and 1.0. Values 
+nearer 0 mean that the container will be positioned closer to the left 
+edge of the area available. Values nearer 1 mean that the container will 
+be positioned closer to the right. The value 0.5 means the container should be centered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract float getLayoutAlignmentY(Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLayoutAlignmentY()</tt> method 
+must return the alignment of <tt CLASS=literal>target</tt> 
+along the y axis. The return value should be between 0.0 and 1.0. Values 
+nearer 0 mean that the container will be positioned closer to the top of 
+the area available. Values nearer 1 mean that the container will be positioned 
+closer to the bottom. The value 0.5 means the container should be centered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void invalidateLayout(Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>invalidateLayout()</tt> method 
+tells the layout manager that any layout information it has for <tt CLASS=literal>target</tt> 
+is invalid. This method will usually be implemented as a stub (i.e., <tt CLASS=literal>{}</tt>). 
+However, if the layout manager caches any information about <tt CLASS=literal>target</tt> 
+when this method is called, the manager should consider that information 
+invalid and discard it. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>FileDialog</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>FlowLayout</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

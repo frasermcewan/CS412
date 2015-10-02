@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.4 No Preprocessor</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:47:43 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>How Java Differs from C</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-4">2.4 No Preprocessor</A></h2>
+
+<P CLASS=para>
+Java does not include any kind of preprocessor like the C
+<I CLASS=emphasis>cpp</I> preprocessor.  It may seem hard to imagine
+programming without <tt CLASS=literal>#define</tt>, <tt CLASS=literal>#include</tt>, and
+<tt CLASS=literal>#ifdef</tt>, but in fact, Java really does not require
+these constructs.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-4.1">Defining Constants</A></h3>
+
+<P CLASS=para>
+Any variable declared <tt CLASS=literal>final</tt> in Java is a
+constant--its value must be specified with an initializer
+when it is declared, and that value may never be changed.
+The Java equivalent of a C <tt CLASS=literal>#define</tt>'ed constant is a
+<tt CLASS=literal>static final</tt> variable declared within a class
+definition.  If the compiler can compute the value of such a
+<tt CLASS=literal>static final</tt> variable at compile-time, it
+uses the computed value to pre-compute other compile-time
+constants that refer to the value.  The variable
+<tt CLASS=literal>java.lang.Math.PI</tt> is an example of such a constant.
+It is declared like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final class Math {
+    ...
+    public static final double PI = 3.14159.....;
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note two things about this example.  First, the C convention
+of using CAPITAL letters for constants is also a Java
+convention.  Second, note the advantage Java constants have
+over C preprocessor constants: Java constants have globally
+unique hierarchic names, while constants defined with the C
+preprocessor always run the risk of a name collision.  Also,
+Java constants are strongly typed and allow better
+type-checking by the compiler than C preprocessor constants.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-4.2">Defining Macros</A></h3>
+
+<P CLASS=para>
+The C preprocessor allows you to define macros--a construct
+that looks like a function invocation but that is actually
+replaced directly with C code, saving the overhead of a
+function call.  Java has no equivalent to this sort of
+macro, but compiler technology has advanced to a point where
+macros are rarely necessary any more. A good Java compiler
+should automatically be able to "inline" short Java methods
+where appropriate.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-4.3">Including Files</A></h3>
+
+<P CLASS=para>
+Java does not have a <tt CLASS=literal>#include</tt> directive, but it does
+not need one.  Java defines a mapping of fully qualified
+class names (like <tt CLASS=literal>java.lang.Math</tt>) to a directory and
+file structure (like <I CLASS=emphasis>java/lang/Math.class</I>).  This
+means that when the Java compiler needs to read in a
+specified class file, it knows exactly where to find it and
+does not need a special directive to tell it where to look.
+
+<P CLASS=para>
+Furthermore, Java does not make the distinction between
+<I CLASS=emphasis>declaring</I> a variable or procedure and <I CLASS=emphasis>defining</I>
+it that C does.  This means that there is no need for
+C-style header files or function prototypes--a single Java
+object file serves as the interface definition and
+implementation for a class.
+
+<P CLASS=para>
+Java does have an <tt CLASS=literal>import</tt> statement, which is
+superficially similar to the C preprocessor <tt CLASS=literal>#include</tt>
+directive.  What this statement does, however, is 
+tell the compiler that the current file is using the
+specified classes, or classes from the specified package,
+and allows us to refer to those classes with abbreviated
+names.  For example, since the compiler implicitly
+<tt CLASS=literal>import</tt>s all the classes of the <tt CLASS=literal>java.lang</tt>
+package, we can refer to the constant
+<tt CLASS=literal>java.lang.Math.PI</tt> by the shorter name
+<tt CLASS=literal>Math.PI</tt>.  
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-4.4">Conditional Compilation</A></h3>
+
+<P CLASS=para>
+Java does not have any form of the C <tt CLASS=literal>#ifdef</tt> or
+<tt CLASS=literal>#if</tt> directives to perform conditional compilation.
+In theory, conditional compilation is not necessary in Java
+since it is a platform-independent language, and thus there
+are no platform dependencies that require the technique.  In
+practice, however, conditional compilation is still often
+useful in Java--to provide slightly different user
+interfaces on different platforms, for example, or to
+support optional inclusion of debugging code in programs.
+
+<P CLASS=para>
+While Java does not define explicit constructs for
+conditional compilation, a good Java compiler (such as Sun's
+<I CLASS=emphasis>javac</I>) performs conditional compilation
+implicitly--that is, it does not compile code if it can prove that
+the code will never be executed.  Generally, this means
+that code within an <tt CLASS=literal>if</tt> statement testing an
+expression that is always <tt CLASS=literal>false</tt> is not included. 
+Thus, placing code within an <tt CLASS=literal>if (false)</tt>
+block is equivalent to surrounding it with <tt CLASS=literal>#if 0</tt> and
+<tt CLASS=literal>#endif</tt> in C.
+
+<P CLASS=para>
+Conditional compilation also works with constants, which, as
+we saw above, are <tt CLASS=literal>static final</tt> variables.  A
+class might define the constant like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+private static final boolean DEBUG = false;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+With such a constant defined, any code within an <tt CLASS=literal>if (DEBUG)</tt>
+block is not actually  compiled into the
+class file.  To activate debugging for the class, it is
+only necessary to change the value of the constant to
+<tt CLASS=literal>true</tt> and recompile the class.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Comments</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Unicode and Character Escapes</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

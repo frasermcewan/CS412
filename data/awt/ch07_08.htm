@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.8 Combining Layouts</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:39:54 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Layouts</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-8">7.8 Combining Layouts</A></h2>
+
+<P CLASS=para>
+If you can't create the display you want with any of the standard 
+layout managers, or you are unable to figure out <tt CLASS=literal>GridBagLayout</tt>, 
+you may want to try combining several different layouts. This technique 
+can often help you build the display you want. <A HREF="ch07_08.htm#JAWT-CH-7-FIG-12">Figure 7.12</A> 
+shows a display that uses three panels and three different layouts. 
+
+<P CLASS=para>
+Here's the source code to generate the display in <A HREF="ch07_08.htm#JAWT-CH-7-FIG-12">Figure 7.12</A>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class multi extends java.applet.Applet {
+    public void init() {
+        Panel s = new Panel();
+        Panel e = new Panel();
+        setLayout (new BorderLayout ());
+        add ("North", new Label ("Enter text", Label.CENTER));
+        add ("Center", new TextArea ());
+        e.setLayout (new GridLayout (0,1));
+        e.add (new Button ("Reformat"));
+        e.add (new Button ("Spell Check"));
+        e.add (new Button ("Options"));
+        add ("East", e);
+        s.setLayout (new FlowLayout ());
+        s.add (new Button ("Save"));
+        s.add (new Button ("Cancel"));
+        s.add (new Button ("Help"));
+        add ("South", s);
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-12">Figure 7.12: Multipanel screen using several layouts</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0712.gif" alt="[Graphic: Figure 7-12]" width=285 height=250 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The display in <A HREF="ch07_08.htm#JAWT-CH-7-FIG-12">Figure 7.12</A> is created by adding four sections to a single <tt CLASS=literal>BorderLayout</tt>. 
+The north region contains a panel with a single <tt CLASS=literal>Label</tt> 
+in it. The panel uses its default <tt CLASS=literal>LayoutManager</tt>, 
+which is a <tt CLASS=literal>FlowLayout</tt>. Why 
+bother with this panel? Why not just add a label at the north
+position in the <tt CLASS=literal>BorderLayout</tt>? 
+Our strategy gives the label the position and size we want: the label is 
+centered and displayed at its preferred size. If we had added the label 
+directly to the <tt CLASS=literal>BorderLayout</tt>, 
+it would have been left justified and resized to fill the region. 
+
+<P CLASS=para>
+The <tt CLASS=literal>TextArea</tt> has no special 
+requirements, so we added it directly to the center of the 
+<tt CLASS=literal>BorderLayout</tt>. 
+
+<P CLASS=para>
+The three buttons on the right of the screen were arranged in a panel with 
+a <tt CLASS=literal>GridLayout</tt>; then this panel 
+was placed in the east region of the <tt CLASS=literal>BorderLayout</tt>. 
+
+<P CLASS=para>
+To create the buttons at the bottom of the screen, we used another <tt CLASS=literal>Panel</tt> 
+with a <tt CLASS=literal>FlowLayout</tt>. It centers 
+the three buttons and displays them at their preferred size, with a gap 
+between them. 
+
+<P CLASS=para>
+With a little work, we could have created this display using a single <tt CLASS=literal>Panel</tt> 
+with a <tt CLASS=literal>GridBagLayout</tt>. The result 
+would have been more efficient; placing panels within panels has performance 
+implications. Each container in the display has its own peer object, which 
+uses up system resources. Furthermore, in the 1.0 version of AWT, nesting 
+containers complicates event handling. However, using a <tt CLASS=literal>GridBagLayout</tt> 
+would have required much more work: figuring out the right <tt CLASS=literal>GridBagConstraints</tt> 
+for each component would be time consuming and result in code that is 
+harder to understand. Sometimes, it's best to settle for the easy 
+solution: a hybrid layout composed of several simple panels, rather than 
+a single very complex panel. 
+
+<P CLASS=para>
+In Java 1.1, you can make this program even more efficient in its resource 
+usage by using a lightweight component instead of panels. This is particularly 
+easy because the panels in the multipanel screen exist strictly to help 
+with layout and not for partitioning event handling. Therefore, you can 
+define a <tt CLASS=literal>LightweightPanel</tt> that 
+extends <tt CLASS=literal>Container</tt>, with no 
+methods. Use this class instead of <tt CLASS=literal>Panel</tt>. 
+The <tt CLASS=literal>LightweightPanel</tt> allows 
+you to lay out areas without creating unnecessary peers. Here's all 
+the code for the <tt CLASS=literal>LightweightPanel</tt>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.awt.*;
+public class LightweightPanel extends Container {
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>GridBagConstraints</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Disabling the LayoutManager</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

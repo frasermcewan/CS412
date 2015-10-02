@@ -1,0 +1,2771 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] Character</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:59:03 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Character</H1>
+
+<H2>Name</H2>
+
+Character
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.43">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Character</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.Serializable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.44">Description</A></h2>
+
+<P CLASS=para>
+<A NAME="MAN.CHARACTER.1"></A>The <tt CLASS=literal>Character</tt> class provides an object
+wrapper for a <tt CLASS=literal>char</tt> value. This is useful when
+you need to treat a <tt CLASS=literal>char</tt> value as an object.
+For example, there are a number of utility methods that take a reference
+to an <tt CLASS=literal>Object</tt> as one of their arguments. You cannot
+specify a <tt CLASS=literal>char</tt> value for one of these arguments,
+but you can provide a reference to a <tt CLASS=literal>Character</tt> object
+that encapsulates the <tt CLASS=literal>char</tt> value. Furthermore,
+as of JDK 1.1, the <tt CLASS=literal>Character</tt> class is necessary to 
+support the Reflection API and class literals.
+
+<P CLASS=para>
+In Java, <tt CLASS=literal>Character</tt> objects represent values defined
+by the Unicode standard. Unicode is defined
+ 
+by an organization called the Unicode Consortium. The defining document for
+Unicode is <I CLASS=emphasis>The Unicode Standard, Version 2.0</I>
+(ISBN 0-201-48345-9). More recent information about Unicode is
+available at <I CLASS=emphasis>http://unicode.org</I>. <A HREF="appa_01.htm">Appendix A, <i>The Unicode 2.0 Character Set</i></A>, contains a table that lists the characters
+defined by the Unicode 2.0 standard.
+
+<P CLASS=para>
+The <tt CLASS=literal>Character</tt> class provides some utility
+methods, such as methods for determining the type (e.g., uppercase
+or lowercase, digit or letter) of a character and for converting
+from uppercase to lowercase. The logic for these utility methods
+is based on a Unicode attribute 
+
+table that is part of the Unicode
+standard. That table is available at
+<I CLASS=emphasis>ftp://unicode.org/pub/2.0-Update/UnicodeData-2.0.14.txt</I>.
+
+<P CLASS=para>
+Some of the methods in the <tt CLASS=literal>Character</tt> class
+are concerned with characters that are digits; these characters are used by
+a number of other classes to convert strings that contain numbers
+into actual numeric values. The digit-related methods all use a
+radix value to interpret characters.
+The <I CLASS=emphasis>radix</I> is the numeric base used to represent numbers
+as characters or strings. Octal is a radix 8 representation, while
+hexadecimal is a radix 16 representation. The methods that require
+a <tt CLASS=literal>radix</tt> parameter use it to determine which characters
+should be treated as valid digits. In radix 2, only the characters
+`0' and `1' are valid digits. In radix 16, the characters `0' through
+`9', `a' through `z', and `A' through `Z' are considerd valid digits.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.45">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final class java.lang.Character extends java.lang.Object 
+                                       implements java.io.Serializable {
+    // Constants
+    public final static byte COMBINING_SPACING_MARK;        // New in 1.1
+    public final static byte CONNECTOR_PUNCTUATION;         // New in 1.1
+    public final static byte CONTROL;                       // New in 1.1
+    public final static byte CURRENCY_SYMBOL;               // New in 1.1
+    public final static byte DASH_PUNCTUATION;              // New in 1.1
+    public final static byte DECIMAL_DIGIT_NUMBER;          // New in 1.1 
+    public final static byte ENCLOSING_MARK;                // New in 1.1
+    public final static byte END_PUNCTUATION;               // New in 1.1
+    public final static byte FORMAT;                        // New in 1.1 
+    public final static byte LETTER_NUMBER;                 // New in 1.1
+    public final static byte LINE_SEPARATOR;                // New in 1.1
+    public final static byte LOWERCASE_LETTER;              // New in 1.1
+    public final static byte MATH_SYMBOL;                   // New in 1.1
+    public final static int MAX_RADIX;
+    public final static char MAX_VALUE;
+    public final static int MIN_RADIX;
+    public final static char MIN_VALUE;
+    public final static byte MODIFIER_LETTER;               // New in 1.1
+    public final static byte MODIFIER_SYMBOL;               // New in 1.1
+    public final static byte NON_SPACING_MARK;              // New in 1.1
+    public final static byte OTHER_LETTER;                  // New in 1.1
+    public final static byte OTHER_NUMBER;                  // New in 1.1
+    public final static byte OTHER_PUNCTUATION;             // New in 1.1
+    public final static byte OTHER_SYMBOL;                  // New in 1.1
+    public final static byte PARAGRAPH_SEPARATOR;           // New in 1.1
+    public final static byte PRIVATE_USE;                   // New in 1.1
+    public final static byte SPACE_SEPARATOR;               // New in 1.1
+    public final static byte START_PUNCTUATION;             // New in 1.1
+    public final static byte SURROGATE;                     // New in 1.1
+    public final static byte TITLECASE_LETTER;              // New in 1.1
+    public final static Class TYPE;                         // New in 1.1
+    public final static byte UNASSIGNED;                    // New in 1.1
+    public final static byte UPPERCASE_LETTER;              // New in 1.1
+    // Constructors
+    public Character(char value);
+    // Class Methods
+    public static int digit(char ch, int radix);
+    public static char forDigit(int digit, int radix);
+    public static int getNumericValue(char ch);             // New in 1.1
+    public static int getType(char ch);                     // New in 1.1
+    public static boolean isDefined(char ch);
+    public static boolean isDigit(char ch);
+    public static boolean isIdentifierIgnorable(char ch);   // New in 1.1
+    public static boolean isISOControl(char ch);            // New in 1.1
+    public static boolean isJavaIdentifierPart(char ch);    // New in 1.1
+    public static boolean isJavaIdentifierStart(char ch);   // New in 1.1
+    public static boolean isJavaLetter(char ch);        // Deprecated in 1.1
+    public static boolean isJavaLetterOrDigit(char ch); // Deprecated in 1.1
+    public static boolean isLetter(char ch);
+    public static boolean isLetterOrDigit(char ch);
+    public static boolean isLowerCase(char ch);
+    public static boolean isSpace(char ch);             // Deprecated in 1.1
+    public static boolean isSpaceChar(char ch);             // New in 1.1
+    public static boolean isTitleCase(char ch);
+    public static boolean isUnicodeIdentifierPart(char ch); // New in 1.1
+    public static boolean isUnicodeIdentifierStart(char ch);// New in 1.1
+    public static boolean isUpperCase(char ch);
+    public static boolean isWhitespace(char ch);            // New in 1.1
+    public static char toLowerCase(char ch);
+    public static char toTitleCase(char ch);
+    public static char toUpperCase(char ch);
+    // Instance Methods
+    public char charValue();
+    public boolean equals(Object obj);
+    public int hashCode();
+    public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.46">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.32">COMBINING_SPACING_MARK</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.41"><tt CLASS=literal>public final static byte COMBINING_SPACING_MARK</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.33">CONNECTOR_PUNCTUATION</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.42"><tt CLASS=literal>public final static byte CONNECTOR_PUNCTUATION</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.34">CONTROL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.43"><tt CLASS=literal>public final static byte CONTROL</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.35">CURRENCY_SYMBOL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.44"><tt CLASS=literal>public final static byte CURRENCY_SYMBOL</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.36">DASH_PUNCTUATION</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.45"><tt CLASS=literal>public final static byte DASH_PUNCTUATION</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.37">DECIMAL_DIGIT_NUMBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.46"><tt CLASS=literal>public final static byte DECIMAL_DIGIT_NUMBER</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.38">ENCLOSING_MARK</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.47"><tt CLASS=literal>public final static byte ENCLOSING_MARK</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.39">END_PUNCTUATION</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.48"><tt CLASS=literal>public final static byte END_PUNCTUATION</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.40">FORMAT</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.49"><tt CLASS=literal>public final static byte FORMAT</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.41">LETTER_NUMBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.50"><tt CLASS=literal>public final static byte LETTER_NUMBER</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.42">LINE_SEPARATOR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.51"><tt CLASS=literal>public final static byte LINE_SEPARATOR</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.43">LOWERCASE_LETTER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.52"><tt CLASS=literal>public final static byte LOWERCASE_LETTER</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.44">MATH_SYMBOL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.53"><tt CLASS=literal>public final static byte MATH_SYMBOL</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.45">MAX_RADIX</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.54"><tt CLASS=literal>public static final int MAX_RADIX = 36</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The maximum value that can be specified for a radix.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.46">MAX_VALUE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.55"><tt CLASS=literal>public final static char MAX_VALUE = '\ufff'f</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The largest value that can be represented by a <tt CLASS=literal>char</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.47">MIN_RADIX</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.56"><tt CLASS=literal>public static final int MIN_RADIX = 2</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The minimum value that can be specified for a radix.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.48">MIN_VALUE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.57"><tt CLASS=literal>public final static char MIN_VALUE = '\u0000'</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The smallest value that can be represented by a <tt CLASS=literal>char</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.49">MODIFIER_LETTER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.58"><tt CLASS=literal>public final static byte MODIFIER_LETTER</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.50">MODIFIER_SYMBOL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.59"><tt CLASS=literal>public final static byte MODIFIER_SYMBOL</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.51">NON_SPACING_MARK</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.60"><tt CLASS=literal>public final static byte NON_SPACING_MARK</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.52">OTHER_LETTER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.61"><tt CLASS=literal>public final static byte OTHER_LETTER</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.53">OTHER_NUMBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.62"><tt CLASS=literal>public final static byte OTHER_NUMBER</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.54">OTHER_PUNCTUATION</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.63"><tt CLASS=literal>public final static byte OTHER_PUNCTUATION</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.55">OTHER_SYMBOL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.64"><tt CLASS=literal>public final static byte OTHER_SYMBOL</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.56">PARAGRAPH_SEPARATOR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.65"><tt CLASS=literal>public final static byte PARAGRAPH_SEPARATOR</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.57">PRIVATE_USE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.66"><tt CLASS=literal>public final static byte PRIVATE_USE</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.58">SPACE_SEPARATOR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.67"><tt CLASS=literal>public final static byte SPACE_SEPARATOR</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.59">START_PUNCTUATION</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.68"><tt CLASS=literal>public final static byte START_PUNCTUATION</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.60">SURROGATE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.69"><tt CLASS=literal>public final static byte SURROGATE</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.61">TITLECASE_LETTER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.70"><tt CLASS=literal>public final static byte TITLECASE_LETTER</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.62">TYPE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.71"><tt CLASS=literal>public static final Class TYPE </tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> object that represents the type
+<tt CLASS=literal>char</tt>.
+It is always true that <tt CLASS=literal>Character.TYPE</tt> 
+<tt CLASS=literal>==</tt> <tt CLASS=literal>char.class</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.63">UNASSIGNED</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.72"><tt CLASS=literal>public final static byte UNASSIGNED</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.64">UPPERCASE_LETTER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.73"><tt CLASS=literal>public final static byte UPPERCASE_LETTER</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constant can be returned by the <tt CLASS=literal>getType()</tt>
+method as the general category of a Unicode character.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.47">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.65">Character</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.74"><tt CLASS=literal>public Character(char value)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>char</tt> value to be encapsulated
+by this object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>Character</tt> object with the given
+<tt CLASS=literal>char</tt> value.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.48">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.66">digit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.75"><tt CLASS=literal>public static int digit(char ch, int radix)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value that is a legal
+digit in the given radix.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>radix</tt><br>
+<DD>
+
+<P CLASS=para>
+The radix used in interpreting the specified character
+as a digit. If <tt CLASS=literal>radix</tt> is in the range 2 through
+10, only characters for which the <tt CLASS=literal>isDigit()</tt> method
+returns <tt CLASS=literal>true</tt> are considered to be valid digits.
+If <tt CLASS=literal>radix</tt> is in the range 11 through 36, characters
+in the ranges `A' through `Z' and `a' through `z' may be considered
+valid digits.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The numeric value of the digit. This method returns <tt CLASS=literal>-1</tt> if
+the value of <tt CLASS=literal>ch</tt> is not considered a valid digit,
+if <tt CLASS=literal>radix</tt> is less than <tt CLASS=literal>MIN_RADIX</tt>,
+or if <tt CLASS=literal>radix</tt> is greater than <tt CLASS=literal>MAX_RADIX</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Returns the numeric value represented by a digit character.
+For example, <tt CLASS=literal>digit('7',10)</tt> returns 7. If the
+value of <tt CLASS=literal>ch</tt> is not a valid digit, the method
+returns <tt CLASS=literal>-1</tt>. For example,
+<tt CLASS=literal>digit('7',2)</tt> returns
+<tt CLASS=literal>-1</tt> because <tt CLASS=literal>'7'</tt> is not a valid digit in radix 2. A number of methods
+in other classes use this method to convert strings that contain
+numbers to actual numeric values. The <tt CLASS=literal>forDigit()</tt> method
+is an approximate inverse of this method.
+
+<P CLASS=para>
+If <tt CLASS=literal>radix</tt> is greater than 10, characters
+in the range `A' to `A'+<tt CLASS=literal>radix</tt>-11 are treated
+as valid digits. Such a character has the numeric value <tt CLASS=literal>ch</tt>-`A'+10.
+By the same token, if <tt CLASS=literal>radix</tt> is greater than 10,
+characters in the range `a' to `a'+<tt CLASS=literal>radix</tt>-11 are
+treated as valid digits. Such a character has the numeric value
+<tt CLASS=literal>ch</tt>-`a'+10.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.67">forDigit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.76"><tt CLASS=literal>public static char forDigit(int digit, int radix)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>digit</tt><br>
+<DD>
+
+<P CLASS=para>
+The numeric value represented as a digit character.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>radix</tt><br>
+<DD>
+
+<P CLASS=para>
+The radix used to represent the specified value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+
+The character that represents the digit corresponding to the specified
+numeric value. The method returns `\ 0' if <tt CLASS=literal>digit</tt> is
+less than 0, if <tt CLASS=literal>digit</tt> is equal to or greater than
+<tt CLASS=literal>radix</tt>, if <tt CLASS=literal>radix</tt> is less than
+<tt CLASS=literal>MIN_RADIX</tt>, or if <tt CLASS=literal>radix</tt> is
+greater than <tt CLASS=literal>MAX_RADIX</tt>.
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the character that represents the digit
+corresponding to the specified numeric value. If <tt CLASS=literal>digit</tt>
+is in the range 0 through 9, the method returns `0'+<tt CLASS=literal>digit</tt>.
+If <tt CLASS=literal>digit</tt> is in the range 10
+through <tt CLASS=literal>MAX_RADIX</tt>-1,
+the method returns `a'+<tt CLASS=literal>digit</tt>-10. The method
+returns `\ 0' if <tt CLASS=literal>digit</tt> is less than 0, if
+<tt CLASS=literal>digit</tt>
+is equal to or greater than <tt CLASS=literal>radix</tt>,
+if <tt CLASS=literal>radix</tt> is less than <tt CLASS=literal>MIN_RADIX</tt>,
+or if <tt CLASS=literal>radix</tt> is greater than <tt CLASS=literal>MAX_RADIX</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.68">getNumericValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.77"><tt CLASS=literal>public static int getNumericValue(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The Unicode numeric value of the character as a nonnegative
+integer. This method returns <tt CLASS=literal>-1</tt> if the character has no numeric
+value; it returns <tt CLASS=literal>-2</tt> if the character has a numeric value that is
+not a nonnegative integer, such as <tt CLASS=literal>1/2</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the Unicode numeric value of the specified
+character as a nonnegative integer. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.69">getType</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.78"><tt CLASS=literal>public static int getType(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>int</tt> value that represents the Unicode general 
+category type of the character.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the Unicode general category type of the specified
+character. The value corresponds to one of the general category
+constants defined by <tt CLASS=literal>Character</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.70">isDefined</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.79"><tt CLASS=literal>public static boolean isDefined(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character has an
+assigned meaning in the Unicode character set; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if the specified
+character value has an assigned meaning in the Unicode character
+set. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.71">isDigit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.80"><tt CLASS=literal>public static boolean isDigit(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is defined
+as a digit in the Unicode character set; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character
+is a digit, based on the definition of the character in Unicode.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.72">isIdentifierIgnorable</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.81"><tt CLASS=literal>public static boolean isIdentifierIgnorable(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is ignorable
+in a Java or Unicode identifier; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character is 
+ignorable in a Java or Unicode identifier. The following characters
+are ignorable in a Java or Unicode identifier:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0000
+- \u0008 \u000E - \u001B \u007F - \u009F </tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+ISO control characters that aren't whitespace</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u200C
+- \u200F</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Join controls</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u200A
+- \u200E</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Bidirectional controls</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u206A
+- \u206F</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Format controls</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\uFEFF</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Zero-width no-break space</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.73">isISOControl</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.82"><tt CLASS=literal>public static boolean isISOControl(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is an ISO
+control character; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character is an
+ISO control character. A character is an ISO control character if
+it falls in the range <tt CLASS=literal>\u0000</tt>
+through <tt CLASS=literal>\u001F</tt> or <tt CLASS=literal>\u007F</tt>
+through <tt CLASS=literal>\u009F</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.74">isJavaIdentifierPart</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.83"><tt CLASS=literal>public static boolean isJavaIdentifierPart(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character can appear after the
+first character in a Java identifier; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This method returns <tt CLASS=literal>true</tt> if the specified character
+can appear in a Java identifier after the first character. A character
+is considered part of a Java identifier if and only if it is a letter,
+a digit, a currency symbol (e.g., $), a connecting punctuation
+character (e.g., <tt CLASS=literal>_</tt>), a numeric letter (e.g., a
+Roman numeral), a combining mark, a nonspacing mark, or an ignorable
+control character.
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.75">isJavaIdentifierStart</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.84"><tt CLASS=literal>public static boolean isJavaIdentifierStart(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character can appear as the
+first character in a Java identifier; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if the specified character
+can appear in a Java identifier as the first character. A character
+is considered a start of a Java identifier if and only if it is a letter,
+a currency symbol (e.g., $), or a connecting punctuation character 
+(e.g., <tt CLASS=literal>_</tt>).</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.76">isJavaLetter</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.85"><tt CLASS=literal>public static boolean isJavaLetter(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character can appear
+as the first character in a Java identifier;
+otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if the specified
+character can appear as the first character in a Java identifier.
+A character is considered a Java letter if and only if it is a letter,
+the character $, or the character <tt CLASS=literal>_</tt> .
+This method returns <tt CLASS=literal>false</tt> for digits because digits are not
+allowed as the first character of an identifier.
+
+<P CLASS=para>
+This method is deprecated as of JDK 1.1. You should use 
+<tt CLASS=literal>isJavaIdentifierStart()</tt> instead.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.77">isJavaLetterOrDigit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.86"><tt CLASS=literal>public static boolean isJavaLetterOrDigit(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character can appear
+after the first character in a Java identifier;
+otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if the specified
+character can appear in a Java identifier after the
+first character. A character is considered a Java letter or digit
+if and only if it is a letter, a digit, the character $,
+or the character <tt CLASS=literal>_</tt>.
+
+<P CLASS=para>
+This method is deprecated as of JDK 1.1. You should use 
+<tt CLASS=literal>isJavaIdentifierPart()</tt> instead.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.78">isLetter</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.87"><tt CLASS=literal>public static boolean isLetter(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is defined
+as a letter in the Unicode character set; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character
+is a letter, based on the definition of the character in Unicode.
+This method does not consider character values in ranges that
+have not been assigned meanings by Unicode to be letters.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.79">isLetterOrDigit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.88"><tt CLASS=literal>public static boolean isLetterOrDigit(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is defined
+as a letter in the Unicode character set; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character
+is a letter or a digit, based on the definition of the character
+in Unicode. 
+There are some ranges that have not been assigned meanings by
+Unicode. If a character value is in one of these ranges, this method
+does not consider the character to be a letter.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.80">isLowerCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.89"><tt CLASS=literal>public static boolean isLowerCase (char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is defined
+as lowercase in the Unicode character set; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character
+is lowercase. Unicode defines a number of characters that do not
+have case mappings; if the specified character is one of these characters,
+the method returns <tt CLASS=literal>false</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.81">isSpace</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.90"><tt CLASS=literal>public static boolean isSpace(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is defined
+as whitespace in the ISO-Latin-1 character set; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character
+is whitespace. This method recognizes the whitespace
+characters shown in the following table.
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0009</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Horizontal tab</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000A</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Newline</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000C</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Formfeed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000D</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Carriage return</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0020 ` `</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Space</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+This method is deprecated as of JDK 1.1. You should use 
+<tt CLASS=literal>isWhitespace()</tt> instead.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.82">isSpaceChar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.91"><tt CLASS=literal>public static boolean isSpaceChar(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is a Unicode 2.0 space
+characters; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines if the specified character
+is a space character according to the Unicode 2.0 specification.
+A character is considered to be a Unicode space character if and only
+if it has the general category "Zs", "Zl", or "Zp" in the 
+Unicode specification.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.83">isTitleCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.92"><tt CLASS=literal>public static boolean isTitleCase(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is defined
+as titlecase in the Unicode character set; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character
+is a titlecase character. Unicode defines a number of characters that do not
+have case mappings; if the specified character is one of these characters,
+the method returns <tt CLASS=literal>false</tt>.
+
+<P CLASS=para>
+Many characters are defined by the Unicode standard as having
+upper- and lowercase forms. There are some characters defined
+by the Unicode standard that also have a titlecase form. The glyphs
+for these characters look like a combination of two Latin letters.
+The titlecase form of these characters has a glyph that looks like
+a combination of an uppercase Latin character and a lowercase
+Latin character; this case should be used when the character appears
+as the first character of a word in a title. For example, one of
+the Unicode characters that has a titlecase form looks like the
+letter `D' followed by the 
+
+letter `Z'. Here is what the three forms
+of this letter look like:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Uppercase</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+`DZ'</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Titlecase</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+`Dz'</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lowercase</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+`dz'</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.84">isUnicodeIdentifierPart</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.93"><tt CLASS=literal>public static boolean isUnicodeIdentifierPart(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character can appear after the
+first character in a Unicode identifier; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if the specified character
+can appear in a Unicode identifier after the first character. A character
+is considered part of a Unicode identifier if and only if it is a letter,
+a digit, a connecting punctuation character 
+(e.g., <tt CLASS=literal>_</tt>), a numeric letter (e.g., a Roman numeral), a combining mark,
+a nonspacing mark, or an ignorable control character.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.85">isUnicodeIdentifierStart</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.94"><tt CLASS=literal>public static boolean isUnicodeIdentifierStart(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character can appear as the
+first character in a Unicode identifier; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if the specified character
+can appear in a Unicode identifier as the first character. A character
+is considered a start of a Unicode identifier if and only if it is a letter.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.86">isUpperCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.95"><tt CLASS=literal>public static boolean isUpperCase(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is defined
+as uppercase in the Unicode character set; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character
+is uppercase. Unicode defines a number of characters that do not
+have case mappings; if the specified character is one of these characters,
+the method returns <tt CLASS=literal>false</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.87">isWhitespace</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.96"><tt CLASS=literal>public static boolean isWhitespace(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified character is defined as
+whitespace according to Java; otherwise <tt CLASS=literal>false</tt>.
+
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified character is
+whitespace. This method recognizes the following as whitespace:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Unicode category "Zs" except
+<tt CLASS=literal>\u00A0</tt> and <tt CLASS=literal>\uFEFF</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Unicode space separators except no-break spaces</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Unicode category "Zl"</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Unicode line separators</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Unicode category "Zp"</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Unicode paragraph separators</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0009</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Horizontal tab</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000A</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Linefeed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000B</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Vertical tab</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000C</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Formfeed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000D</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Carriage return</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u001C</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+File separator</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u001D</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Group separator</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u001E</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Record separator</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u001F</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Unit separator</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.88">toLowerCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.97"><tt CLASS=literal>public static char toLowerCase(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be converted
+to lowercase.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The lowercase equivalent of the specified character, or the
+character itself if it cannot be converted to lowercase.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the lowercase equivalent of the specified
+character value. If the specified character is not uppercase or
+if it has no lowercase equivalent, the character is returned unmodified.
+The Unicode attribute table determines if a character has a mapping
+to a lowercase equivalent.
+
+<P CLASS=para>
+Some Unicode characters in the range <tt CLASS=literal>\u2000</tt>
+through <tt CLASS=literal>\u2FFF</tt> have lowercase mappings. For
+example, <tt CLASS=literal>\u2160</tt> (Roman numeral one) has a lowercase
+mapping to <tt CLASS=literal>\u2170</tt> (small Roman numeral one).
+The <tt CLASS=literal>toLowerCase()</tt> method maps such characters
+to their lowercase equivalents even though the method <tt CLASS=literal>isUpperCase()</tt>
+does not return <tt CLASS=literal>true</tt> for such characters.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.89">toTitleCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.98"><tt CLASS=literal>public static char toTitleCase(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be converted
+to titlecase.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The titlecase equivalent of the specified character, or the
+character itself if it cannot be converted to titlecase.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the titlecase equivalent of the specified
+character value. If the specified character has no titlecase equivalent,
+the character is returned unmodified. The Unicode attribute table
+is used to determine the character's titlecase equivalent.
+
+<P CLASS=para>
+Many characters are defined by the Unicode standard as having
+upper- and lowercase forms. There are some characters defined
+by the Unicode standard that also have a titlecase form. The glyphs
+for these characters look like a combination of two Latin letters.
+The titlecase form of these characters has a glyph that looks like
+a combination of an uppercase Latin character and a lowercase
+Latin character; this case should be used when the character appears
+as the first character of a word in a title. For example, one of
+the Unicode characters that has a titlecase form looks like the
+letter `D' followed 
+by the letter `Z'. Here is what the three forms
+of this letter look like:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Uppercase</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+`DZ'</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Titlecase</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+`Dz'</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lowercase</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+`dz'</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.90">toUpperCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.99"><tt CLASS=literal>public static char toUpperCase(char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value to be converted
+to lowercase.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The uppercase equivalent of the specified character, or the
+character itself if it cannot be converted to uppercase.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the uppercase equivalent of the specified
+character value. If the specified character is not lowercase or
+if it has no uppercase equivalent, the character is returned unmodified.
+The Unicode attribute table determines if a character has a mapping
+to an uppercase equivalent.
+
+<P CLASS=para>
+Some Unicode characters in the range <tt CLASS=literal>\u2000</tt>
+through <tt CLASS=literal>\u2FFF</tt> have uppercase mappings. For
+example, <tt CLASS=literal>\u2170</tt> (small Roman numeral one) has
+a lowercase mapping to <tt CLASS=literal>\u2160</tt> (Roman numeral
+one). The <tt CLASS=literal>toUpperCase()</tt> method maps such characters
+to their uppercase equivalents even though the method <tt CLASS=literal>isLowerCase()</tt>
+does not return <tt CLASS=literal>true</tt> for such characters.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.49">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.91">charValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.100"><tt CLASS=literal>public char charValue()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>char</tt> value contained by the object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.92">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.101"><tt CLASS=literal>public boolean equals(Object obj)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P CLASS=para>
+The object to be compared with this object.
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; <tt CLASS=literal>false</tt>
+if they are not.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.equals()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if <tt CLASS=literal>obj</tt>
+is an instance of <tt CLASS=literal>Character</tt>, and it contains the
+same value as the object this method is associated with.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.93">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.102"><tt CLASS=literal>public int hashCode()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode based on the <tt CLASS=literal>char</tt> value of
+the object.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.hashCode()</tt></DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.94">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.103"><tt CLASS=literal>public String toString()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> of length one that contains the
+character value of the object.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of the <tt CLASS=literal>Character</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.50">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.51">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Class</tt>, 
+<tt CLASS=literal>Object</tt>, 
+<tt CLASS=literal>Serializable</tt>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Byte</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Class</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

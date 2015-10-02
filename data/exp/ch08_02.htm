@@ -1,0 +1,817 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] 8.2 Files</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:57:11 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8<br>Input/Output Facilities</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-8-SECT-2">8.2 Files</A></h2>
+
+<P CLASS=para>
+<A NAME="CH08.FILES1"></A>Unless otherwise restricted, a Java application can read and
+write to the host filesystem with the same level of access as the user
+who runs the Java interpreter. Java applets and other kinds of
+networked applications can, of course, be restricted by the
+<tt CLASS=literal>SecurityManager</tt> and cut off from these
+services. We'll discuss applet access at the end of this
+section. First, let's take a look at the tools for basic file
+access.
+
+<P CLASS=para>
+Working with files in Java is still somewhat problematic. The
+host filesystem lies outside of Java's virtual environment, in
+the real world, and can therefore still suffer from architecture and
+implementation differences. Java tries to mask some of these
+differences by providing information to help an application tailor
+itself to the local environment; I'll mention these areas as
+they occur.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-8-SECT-2.1">java.io.File</A></h3>
+
+<P CLASS=para>
+<A NAME="CH08.IOFILE"></A>The <tt CLASS=literal>java.io.File</tt> class encapsulates access to
+information about a file or directory entry in the filesystem. It gets
+attribute information about a file, lists the entries in a directory,
+and performs basic filesystem operations like removing a file or
+making a directory. While the <tt CLASS=literal>File</tt> object handles
+these tasks, it doesn't provide direct access for reading and writing
+file data; there are specialized streams for that purpose.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-8-SECT-2.1.1">File constructors</A></h4>
+
+<P CLASS=para>
+You can create an instance of <tt CLASS=literal>File</tt> from a
+<tt CLASS=literal>String</tt> pathname as follows:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+File fooFile = new File( "/tmp/foo.txt" ); 
+File barDir = new File( "/tmp/bar" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can also create a file with a relative path like: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+File f = new File( "foo" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+ In this
+case, Java works relative to the current directory of the Java
+interpreter. You can determine the current directory by checking the
+<tt CLASS=literal>user.dir</tt> property in the <tt CLASS=literal>System
+Properties</tt> list
+(<tt CLASS=literal>System.getProperty('user.dir')</tt>).
+
+<P CLASS=para>
+An overloaded version of the <tt CLASS=literal>File</tt>
+constructor lets you specify the directory path and filename as
+separate <tt CLASS=literal>String</tt> objects:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+File fooFile = new File( "/tmp", "foo.txt" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+With yet another variation, you can specify the directory with a
+<tt CLASS=literal>File</tt> object and the filename with a
+<tt CLASS=literal>String</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+File tmpDir = new File( "/tmp" ); 
+File fooFile = new File ( tmpDir, "foo.txt" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+None of the <tt CLASS=literal>File</tt> constructors throw any exceptions.
+This means the object is created whether or not the file or
+directory actually exists; it isn't an error to create a
+<tt CLASS=literal>File</tt> object for an nonexistent file. You can use
+the <tt CLASS=literal>exists()</tt> method to find out whether the file or
+directory exists.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-8-SECT-2.1.2">Path localization</A></h4>
+
+<P CLASS=para>
+One of the reasons that working with files in Java is problematic is
+that pathnames are expected to follow the conventions of the local
+filesystem. Java's designers intend to provide
+an abstraction that deals with most system-dependent filename
+features, such as the file separator, path separator, device
+specifier, and root directory. Unfortunately, not all of these
+features are implemented in the current version.
+
+<P CLASS=para>
+On some systems, Java can compensate for differences such as the direction 
+of the file separator slashes in the above string. For example, in the 
+current implementation on Windows platforms, Java accepts paths 
+with either forward slashes or backslashes. However, under Solaris, Java 
+accepts only paths with forward slashes. 
+
+<P CLASS=para>
+Your best bet is to make sure you follow the filename
+conventions of the host filesystem. If your application is just
+opening and saving files at the user's request, you should be
+able to handle that functionality with the
+<tt CLASS=literal>java.awt.FileDialog</tt> class. This class encapsulates
+a graphical file-selection dialog box. The methods of the
+<tt CLASS=literal>FileDialog</tt> take care of system-dependent filename
+features for you.
+
+<P CLASS=para>
+If your application needs to deal with files on its own behalf,
+however, things get a little more complicated. The
+<tt CLASS=literal>File</tt> class contains a few <tt CLASS=literal>static</tt>
+variables to make this task easier. <tt CLASS=literal>File.separator</tt>
+defines a <tt CLASS=literal>String</tt> that specifies the file separator
+on the local host (e.g., "/" on UNIX and Macintosh systems and
+"\" on Windows systems), while <tt CLASS=literal>File.separatorChar</tt>
+provides the same information in character
+form. <tt CLASS=literal>File.pathSeparator</tt> defines a
+<tt CLASS=literal>String</tt> that separates items in a path (e.g., ":" on
+UNIX systems; ";" on Macintosh and Windows systems);
+<tt CLASS=literal>File.pathSeparatorChar</tt> provides the information in
+character form.
+
+<P CLASS=para>
+You can use this system-dependent information in several
+ways. Probably the simplest way to localize pathnames is to pick a
+convention you use internally, say "/", and do a
+<tt CLASS=literal>String</tt> replace to substitute for the localized
+separator character:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// We'll use forward slash as our standard 
+String path = "mail/1995/june/merle"; 
+path = path.replace('/', File.separatorChar); 
+File mailbox = new File( path ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Alternately, you could work with the components of a pathname and
+built the local pathname when you need it:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String [] path = { "mail", "1995", "june", "merle" }; 
+  
+StringBuffer sb = new StringBuffer(path[0]); 
+for (int i=1; i&lt; path.length; i++) 
+    sb.append( File.separator + path[i] ); 
+  File mailbox = new File( sb.toString() ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+One thing to remember is that Java interprets the backslash character
+(\) as an escape character when used in a
+<tt CLASS=literal>String</tt>. To get a backslash in a
+<tt CLASS=literal>String</tt>, you have to use "&nbsp;\\".
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-8-SECT-2.1.3">File methods</A></h4>
+
+<P CLASS=para>
+<A NAME="CH08.GET"></A>Once we have a valid <tt CLASS=literal>File</tt> object, we can use it to
+ask for information about the file itself and to perform standard
+operations on it. A number of methods lets us ask certain questions
+about the <tt CLASS=literal>File</tt>. For example,
+<tt CLASS=literal>isFile()</tt> returns <tt CLASS=literal>true</tt> if the
+<tt CLASS=literal>File</tt> represents a file, while
+<tt CLASS=literal>isDirectory()</tt> returns <tt CLASS=literal>true</tt> if
+it's a directory. <tt CLASS=literal>isAbsolute()</tt> indicates whether the
+<tt CLASS=literal>File</tt> has an absolute or relative path
+specification.
+
+<P CLASS=para>
+The components of the <tt CLASS=literal>File</tt> pathname are
+available through the following methods: <tt CLASS=literal>getName()</tt>,
+<tt CLASS=literal>getPath()</tt>, <tt CLASS=literal>getAbsolutePath()</tt>,
+and <tt CLASS=literal>getParent()</tt>. <tt CLASS=literal>getName()</tt>
+returns a <tt CLASS=literal>String</tt> for the filename without any
+directory information; <tt CLASS=literal>getPath()</tt> returns the
+directory information without the filename. If the
+<tt CLASS=literal>File</tt> has an absolute path specification,
+<tt CLASS=literal>getAbsolutePath()</tt> returns that path. Otherwise it
+returns the relative path appended to the current working
+directory. <tt CLASS=literal>getParent()</tt> returns the parent directory
+of the <tt CLASS=literal>File</tt>.
+
+<P CLASS=para>
+Interestingly, the string returned by <tt CLASS=literal>getPath()</tt>
+or <tt CLASS=literal>getAbsolutePath()</tt> may not be the same, case-wise,
+as the actual name of the file.  You can retrieve the case-correct version
+of the file's path using <tt CLASS=literal>getCanonicalPath()</tt>.
+In Windows 95, for example, you can create a 
+<tt CLASS=literal>File</tt> object whose
+<tt CLASS=literal>getAbsolutePath()</tt> is
+<tt CLASS=literal>C:\Autoexec.bat</tt> but whose
+<tt CLASS=literal>getCanonicalPath()</tt> is
+<tt CLASS=literal>C:\AUTOEXEC.BAT</tt>.
+
+<P CLASS=para>
+We can get the modification time of a file or directory with
+<tt CLASS=literal>lastModified()</tt>. This time value is not useful as
+an absolute time; you should use it only to compare two modification
+times. We can also get the size of the file in bytes with
+<tt CLASS=literal>length()</tt>. Here's a fragment of code that
+prints some information about a file:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+File fooFile = new File( "/tmp/boofa" ); 
+ 
+String type = fooFile.isFile() ? "File " : "Directory "; 
+String name = fooFile.getName(); 
+long len = fooFile.length(); 
+System.out.println(type + name + ", " + len + " bytes " ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If the <tt CLASS=literal>File</tt> object corresponds to a directory, 
+we can list the files in the directory with the <tt CLASS=literal>list()</tt> 
+method: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String [] files = fooFile.list(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>list()</tt> returns an array of
+<tt CLASS=literal>String</tt> objects that contains filenames. (You might
+expect that <tt CLASS=literal>list()</tt> would return an
+<tt CLASS=literal>Enumeration</tt> instead of an array, but it doesn't.)
+
+<P CLASS=para>
+If the <tt CLASS=literal>File</tt> refers to a nonexistent
+directory, we can create the directory with <tt CLASS=literal>mkdir()</tt>
+or <tt CLASS=literal>mkdirs()</tt>. <tt CLASS=literal>mkdir()</tt> creates a
+single directory; <tt CLASS=literal>mkdirs()</tt> creates all of the
+directories in a <tt CLASS=literal>File</tt> specification. Use
+<tt CLASS=literal>renameTo()</tt> to rename a file or directory and
+<tt CLASS=literal>delete()</tt> to delete a file or directory. Note that
+<tt CLASS=literal>File</tt> doesn't provide a method to create a file;
+creation is handled with a <tt CLASS=literal>FileOutputStream</tt> as
+we'll discuss in a moment.
+
+<P CLASS=para>
+<A HREF="ch08_02.htm#EXJ-CH-8-TAB-1">Table 8.1</A> summarizes the methods provided
+by the <tt CLASS=literal>File</tt> class.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-8-TAB-1">Table 8.1: File Methods</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Return type</TH>
+<TH ALIGN="left">Description</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>canRead()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Is the file (or directory) readable?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>canWrite()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Is the file (or directory) writable?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>delete()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Deletes the file (or directory)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>exists()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Does the file (or directory) exist?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getAbsolutePath()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>String</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Returns the absolute path of the file (or directory)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getCanonicalPath()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>String</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Returns the absolute, case-correct path of the file (or directory)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getName()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>String</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Returns the name of the file (or directory)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getParent()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>String</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Returns the name of the parent directory of the file (or directory)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getPath()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>String</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Returns the path of the file (or directory)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>isAbsolute()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Is the filename (or directory name) absolute?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>isDirectory()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Is the item a directory?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>isFile()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Is the item a file?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>lastModified()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>long</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Returns the last modification time of the file (or directory)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>length()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>long</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Returns the length of the file</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>list()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>String []</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Returns a list of files in the directory</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>mkdir()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Creates the directory</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>mkdirs()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Creates all directories in the path</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>renameTo(File dest)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Renames the file (or directory)</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-8-SECT-2.2">File Streams</A></h3>
+
+<P CLASS=para>
+<A NAME="CH08.FS1"></A><A NAME="CH08.FS2"></A><A NAME="CH08.FS3"></A><A NAME="CH08.FS4"></A>Java provides two specialized streams for reading and writing files in
+the filesystem: <tt CLASS=literal>FileInputStream</tt> and
+<tt CLASS=literal>FileOutputStream</tt>. These streams provide the basic
+<tt CLASS=literal>InputStream</tt> and <tt CLASS=literal>OutputStream</tt>
+functionality applied to reading and writing the contents of files.
+They can be combined with the filtered streams described earlier to
+work with files in the same way we do other stream
+communications.
+
+<P CLASS=para>
+Because <tt CLASS=literal>FileInputStream</tt> is a subclass of
+<tt CLASS=literal>InputStream</tt>, it inherits all standard
+<tt CLASS=literal>InputStream</tt> functionality for reading the contents
+of a file. <tt CLASS=literal>FileInputStream</tt> provides only a
+low-level interface to reading data, however, so you'll
+typically wrap another stream like a
+<tt CLASS=literal>DataInputStream</tt> around the
+<tt CLASS=literal>FileInputStream</tt>.
+
+<P CLASS=para>
+You can create a <tt CLASS=literal>FileInputStream</tt> from a
+<tt CLASS=literal>String</tt> pathname or a <tt CLASS=literal>File</tt> object:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+FileInputStream foois = new FileInputStream( fooFile ); 
+FileInputStream passwdis = new FileInputStream( "/etc/passwd" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When you create a <tt CLASS=literal>FileInputStream</tt>, Java attempts to
+open the specified file. Thus, the <tt CLASS=literal>FileInputStream</tt>
+constructors can throw a <tt CLASS=literal>FileNotFoundException</tt> if
+the specified file doesn't exist, or an <tt CLASS=literal>IOException</tt>
+if some other I/O error occurs. You should be sure to catch and handle
+these exceptions in your code. When the stream is first created, its
+<tt CLASS=literal>available()</tt> method and the <tt CLASS=literal>File</tt>
+object's <tt CLASS=literal>length()</tt> method should return the
+same value. Be sure to call the <tt CLASS=literal>close()</tt> method when
+you are done with the file.
+
+<P CLASS=para>
+To read characters from a file, you can wrap an <tt CLASS=literal>InputStreamReader</tt>
+around a <tt CLASS=literal>FileInputStream</tt>.  If you want to use the default
+character encoding scheme, you can use the <tt CLASS=literal>FileReader</tt>
+class instead, which is provided as a convenience.  <tt CLASS=literal>FileReader</tt>
+works just like <tt CLASS=literal>FileInputStream</tt>, except that it
+reads characters instead of bytes and wraps a <tt CLASS=literal>Reader</tt>
+instead of an <tt CLASS=literal>InputStream</tt>.
+
+<P CLASS=para>
+The following class, <tt CLASS=literal>ListIt</tt>, is a small
+utility that displays the contents of a file or directory to standard
+output:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.io.*; 
+ 
+class ListIt { 
+    public static void main ( String args[] ) throws Exception { 
+        File file =  new File( args[0] ); 
+ 
+        if ( !file.exists() || !file.canRead() ) { 
+            System.out.println( "Can't read " + file ); 
+            return; 
+        } 
+ 
+        if ( file.isDirectory() ) { 
+            String [] files = file.list(); 
+            for (int i=0; i&lt; files.length; i++) 
+                System.out.println( files[i] ); 
+        } 
+        else 
+            try { 
+                FileReader fr = new FileReader ( file );
+                BufferedReader in = new BufferedReader( fr );
+                String line;
+                while ((line = in.readLine()) != null)
+                    System.out.println(line);
+            } 
+            catch ( FileNotFoundException e ) {
+                System.out.println( "File Disappeared" ); 
+            }
+    } } 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>ListIt</tt> constructs a <tt CLASS=literal>File</tt>
+object from its first command-line argument and tests the
+<tt CLASS=literal>File</tt> to see if it exists and is readable. If the
+<tt CLASS=literal>File</tt> is a directory, <tt CLASS=literal>ListIt</tt>
+prints the names of the files in the directory. Otherwise, <tt CLASS=literal>ListIt</tt>
+reads and prints the file.
+
+<P CLASS=para>
+<tt CLASS=literal>FileOutputStream</tt> is a subclass of
+<tt CLASS=literal>OutputStream</tt>, so it inherits all the standard
+<tt CLASS=literal>OutputStream</tt> functionality for writing to a
+file. Just like <tt CLASS=literal>FileInputStream</tt> though,
+<tt CLASS=literal>FileOutputStream</tt> provides only a low-level
+interface to writing data. You'll typically wrap another stream
+like a <tt CLASS=literal>DataOutputStream</tt> or a
+<tt CLASS=literal>PrintStream</tt> around the
+<tt CLASS=literal>FileOutputStream</tt> to provide higher-level
+functionality. You can create a <tt CLASS=literal>FileOutputStream</tt>
+from a <tt CLASS=literal>String</tt> pathname or a <tt CLASS=literal>File</tt>
+object. Unlike <tt CLASS=literal>FileInputStream</tt> however, the
+<tt CLASS=literal>FileOutputStream</tt> constructors don't throw a
+<tt CLASS=literal>FileNotFoundException</tt>. If the specified file
+doesn't exist, the <tt CLASS=literal>FileOutputStream</tt> creates the
+file. The <tt CLASS=literal>FileOutputStream</tt> constructors can throw
+an <tt CLASS=literal>IOException</tt> if some other I/O error occurs, so
+you still need to handle this exception.
+
+<P CLASS=para>
+If the specified file does exist, the
+<tt CLASS=literal>FileOutputStream</tt> opens it for writing. When you
+actually call a <tt CLASS=literal>write()</tt> method, the new data
+overwrites the current contents of the file. If you need to append
+data to an existing file, you should use a different constructor that accepts
+an append flag, as shown here:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+FileInputStream foois = new FileInputStream( fooFile ); 
+FileInputStream passwdis = new FileInputStream( "/etc/passwd" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Antoher alternative for appending files is to use a 
+<tt CLASS=literal>RandomAccessFile</tt>, as I'll discuss shortly.
+
+<P CLASS=para>
+To write characters (instead of bytes) to a file, you can wrap an 
+<tt CLASS=literal>OutputStreamWriter</tt> 
+around a <tt CLASS=literal>FileOutputStream</tt>.  If you want to use the default
+character encoding scheme, you can use the <tt CLASS=literal>FileWriter</tt>
+class instead, which is provided as a convenience.  <tt CLASS=literal>FileWriter</tt>
+works just like <tt CLASS=literal>FileOutputStream</tt>, except that it
+writes characters instead of bytes and wraps a <tt CLASS=literal>Writer</tt>
+instead of an <tt CLASS=literal>OutputStream</tt>.
+
+<P CLASS=para>
+The following example reads a line of data from standard input
+and writes it to the file <i CLASS=filename>/tmp/foo.txt</i>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String s = new BufferedReader( new InputStreamReader( System.in ) ).readLine(); 
+ 
+File out = new File( "/tmp/foo.txt" ); 
+FileWriter fw = new FileWriter ( out ); 
+PrintWriter pw = new PrintWriter( fw, true ) 
+pw.println( s ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Notice how we have wrapped a <tt CLASS=literal>PrintWriter</tt> around the
+<tt CLASS=literal>FileWriter</tt> to facilitate writing the data. To
+be a good filesystem citizen, you need to call the
+<tt CLASS=literal>close()</tt> method when you are done with the
+<tt CLASS=literal>FileWriter</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-8-SECT-2.3">java.io.RandomAccessFile</A></h3>
+
+<P CLASS=para>
+<A NAME="CH08.RAND"></A>The <tt CLASS=literal>java.io.RandomAccessFile</tt> class provides the
+ability to read and write data from or to any specified location in a
+file. <tt CLASS=literal>RandomAccessFile</tt> implements both the
+<tt CLASS=literal>DataInput</tt> and <tt CLASS=literal>DataOutput</tt>
+interfaces, so you can use it to read and write strings and Java
+primitive types. In other words, <tt CLASS=literal>RandomAccessFile</tt>
+defines the same methods for reading and writing data as
+<tt CLASS=literal>DataInputStream</tt> and
+<tt CLASS=literal>DataOutputStream</tt>. However, because the class
+provides random, rather than sequential, access to file data, it's
+not a subclass of either <tt CLASS=literal>InputStream</tt> or
+<tt CLASS=literal>OutputStream</tt>.
+
+<P CLASS=para>
+You can create a <tt CLASS=literal>RandomAccessFile</tt> from a
+<tt CLASS=literal>String</tt> pathname or a <tt CLASS=literal>File</tt>
+object. The constructor also takes a second <tt CLASS=literal>String</tt>
+argument that specifies the mode of the file. Use "r" for
+a read-only file or "rw" for a read-write file. Here's how to
+create a simple database to keep track of user information:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    RandomAccessFile users = new RandomAccessFile( "Users", "rw" ); 
+    ... 
+} 
+catch (IOException e) {  
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When you create a <tt CLASS=literal>RandomAccessFile</tt> in read-only
+mode, Java tries to open the specified file. If the file doesn't
+exist, <tt CLASS=literal>RandomAccessFile</tt> throws an
+<tt CLASS=literal>IOException</tt>. If, however, you are creating a
+<tt CLASS=literal>RandomAccessFile</tt> in read-write mode, the object
+creates the file if it doesn't exist. The constructor can still throw
+an <tt CLASS=literal>IOException</tt> if some other I/O error occurs, so
+you still need to handle this exception.
+
+<P CLASS=para>
+After you have created a <tt CLASS=literal>RandomAccessFile</tt>,
+call any of the normal reading and writing methods, just as you would
+with a <tt CLASS=literal>DataInputStream</tt> or
+<tt CLASS=literal>DataOutputStream</tt>. If you try to write to a
+read-only file, the write method throws an
+<tt CLASS=literal>IOException</tt>.
+
+<P CLASS=para>
+What makes a <tt CLASS=literal>RandomAccessFile</tt> special is the
+<tt CLASS=literal>seek()</tt> method. This method takes a
+<tt CLASS=literal>long</tt> value and uses it to set the location for
+reading and writing in the file. You can use the
+<tt CLASS=literal>getFilePointer()</tt> method to get the current
+location. If you need to append data on the end of the file, use
+<tt CLASS=literal>length()</tt> to determine that location. You can write
+or seek beyond the end of a file, but you can't read beyond the end
+of a file. The read methods throws a <tt CLASS=literal>EOFException</tt>
+if you try to do this.
+
+<P CLASS=para>
+Here's an example of writing some data to our user database: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+users.seek( userNum * RECORDSIZE ); 
+users.writeUTF( userName ); 
+users.writeInt( userID ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+One caveat to notice with this example is that we need to be sure that
+the <tt CLASS=literal>String</tt> length for <tt CLASS=literal>userName</tt>,
+along with any data that comes after it, fits within the
+boundaries of the record size.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-8-SECT-2.4">Applets and Files</A></h3>
+
+<P CLASS=para>
+<A NAME="CH08.APPLET1"></A><A NAME="CH08.APPLET2"></A><A NAME="CH08.APPLET3"></A>For security reasons, applets are not permitted to read and write to
+arbitrary places in the filesystem. The ability of an applet to read
+and write files, as with any kind of system resource, is under the control
+of a <tt CLASS=literal>SecurityManager</tt> object.  A <tt CLASS=literal>SecurityManager</tt> is installed by the
+application that is running the applet, such as an applet viewer or
+Java-enabled Web browser. All filesystem access must first pass the
+scrutiny of the <tt CLASS=literal>SecurityManager</tt>. With that in
+mind, applet-viewer applications are free to implement their own
+schemes for what, if any, access an applet may have.
+
+<P CLASS=para>
+For example, Sun's HotJava Web browser allows applets to
+have access to specific files designated by the user in
+an access-control list. Netscape Navigator, on the other hand,
+currently doesn't allow applets any access to the filesystem.
+
+<P CLASS=para>
+It isn't unusual to want an applet to maintain some kind
+of state information on the system where it's running. But for a
+Java applet that is restricted from access to the local filesystem,
+the only option is to store data over the network on its server.
+Although, at the moment, the Web is a relatively static, read-only
+environment, applets have at their disposal powerful, general means
+for communicating data over networks, as you'll see in <A HREF="ch09_01.htm">Chapter 9, <i>Network Programming</i></A>. The only limitation is that, by convention, an
+applet's network communication is restricted to the server that
+launched it. This limits the options for where the data will reside.
+
+<P CLASS=para>
+The only means of writing data to a server in Java
+is through a network socket. In <A HREF="ch09_01.htm">Chapter 9, <i>Network Programming</i></A> we'll
+look at building networked applications with sockets in detail. With
+the tools of that chapter it's possible to build powerful
+client/server applications.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Streams</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Serialization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

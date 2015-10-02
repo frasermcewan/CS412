@@ -1,0 +1,1313 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] 12.5 ImageFilter</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:51:16 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>Image Processing</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch13_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-5">12.5 ImageFilter</A></h2>
+
+<P CLASS=para>
+<A NAME="CH12.FILT1"></A><A NAME="CH12.FILT2"></A>Image filters provide another way to modify images. An <tt CLASS=literal>ImageFilter</tt> 
+is used in conjunction with a <tt CLASS=literal>FilteredImageSource</tt> 
+object. The <tt CLASS=literal>ImageFilter</tt>, which 
+implements <tt CLASS=literal>ImageConsumer</tt> (and 
+<tt CLASS=literal>Cloneable</tt>), receives data from 
+an <tt CLASS=literal>ImageProducer</tt> and modifies 
+it; the <tt CLASS=literal>FilteredImageSource</tt>, 
+which implements <tt CLASS=literal>ImageProducer</tt>, 
+sends the modified data to the new consumer. As <A HREF="ch12_03.htm#JAWT-CH-12-FIG-1">Figure 12.1</A> 
+shows, an image filter sits between the original <tt CLASS=literal>ImageProducer</tt> 
+and the ultimate <tt CLASS=literal>ImageConsumer</tt>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageFilter</tt> class implements 
+a "null" filter that does nothing to the image. To modify an 
+image, you must use a subclass of <tt CLASS=literal>ImageFilter</tt>, 
+by either writing one yourself or using a subclass provided with AWT, like 
+the <tt CLASS=literal>CropImageFilter</tt>. Another 
+<tt CLASS=literal>ImageFilter</tt> subclass provided 
+with AWT is the <tt CLASS=literal>RGBImageFilter</tt>; 
+it is useful for filtering an image on the basis of a pixel's color. 
+Unlike the <tt CLASS=literal>CropImageFilter</tt>, 
+<tt CLASS=literal>RGBImageFilter</tt> is an abstract 
+class, so you need to create your own subclass to use it. Java 1.1 introduces 
+two more image filters, <tt CLASS=literal>AreaAveragingScaleFilter</tt> 
+and <tt CLASS=literal>ReplicateScaleFilter</tt>. Other 
+filters must be created by subclassing <tt CLASS=literal>ImageFilter</tt> 
+and providing the necessary methods to modify the image as necessary. 
+
+<P CLASS=para>
+<tt CLASS=literal>ImageFilter</tt>s tend to work on 
+a pixel-by-pixel basis, so large <tt CLASS=literal>Image</tt> 
+objects can take a considerable amount of time to filter, depending on 
+the complexity of the filtering algorithm. In the simplest case, filters 
+generate new pixels based upon the color value and location of the original 
+pixel. Such filters can start delivering data before they have loaded the 
+entire image. More complex filters may use internal buffers to store an 
+intermediate copy of the image so the filter can use adjacent pixel values 
+to smooth or blend pixels together. These filters may need to load the 
+entire image before they can deliver any data to the ultimate consumer. 
+
+<P CLASS=para>
+To use an <tt CLASS=literal>ImageFilter</tt>, you 
+pass it to the <tt CLASS=literal>FilteredImageSource</tt> 
+constructor, which serves as an <tt CLASS=literal>ImageProducer</tt> 
+to pass the new pixels to their consumer. The following code runs the image 
+<I CLASS=emphasis>logo.jpg</I> through 
+an image filter, <tt CLASS=literal>SomeImageFilter</tt>, 
+to produce a new image. The constructor for <tt CLASS=literal>SomeImageFilter</tt> 
+is called within the constructor for <tt CLASS=literal>FilteredImageSource</tt>, 
+which in turn is the only argument to <tt CLASS=literal>createImage()</tt>. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Image image = getImage (new URL (
+     "http://www.ora.com/images/logo.jpg"));
+Image newOne = createImage (new FilteredImageSource (image.getSource(),
+                               new SomeImageFilter()));
+</PRE>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-5.1">ImageFilter Methods</A></h3>Variables
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected ImageConsumer consumer; </I><br>
+<DD>
+
+<P CLASS=para>
+The actual <tt CLASS=literal>ImageConsumer</tt> for 
+the image. It is initialized automatically for you by the <tt CLASS=literal>getFilterInstance()</tt> 
+method. </DL>
+Constructor
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public ImageFilter () </I><br>
+<DD>
+
+<P CLASS=para>
+The only constructor for <tt CLASS=literal>ImageFilter</tt> 
+is the default one, which takes no arguments. Subclasses can provide their 
+own constructors if they need additional information. </DL>
+ImageConsumer interface methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setDimensions (int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setDimensions()</tt> method 
+of <tt CLASS=literal>ImageFilter</tt> is called when 
+the <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+of the original image are known. It calls <tt CLASS=literal>consumer.setDimensions()</tt> 
+to tell the next consumer the dimensions of the filtered image. If you 
+subclass <tt CLASS=literal>ImageFilter</tt> and your filter changes the image's dimensions, 
+you should override this method to compute and report the new dimensions. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setProperties (Hashtable properties)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setProperties()</tt> method 
+is called to provide the image filter with the property list for the original 
+image. The image filter adds the property <tt CLASS=literal>filters</tt> 
+to the list and passes it along to the next consumer. The value given for 
+the <tt CLASS=literal>filters</tt> property is the 
+result of the image filter's <tt CLASS=literal>toString()</tt> 
+method; that is, the <tt CLASS=literal>String</tt> representation 
+of the current filter. If <tt CLASS=literal>filters</tt> 
+is already set, information about this <tt CLASS=literal>ImageFilter</tt> 
+is appended to the end. Subclasses of <tt CLASS=literal>ImageFilter</tt> 
+may add other properties. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setColorModel (ColorModel model)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setColorModel()</tt> method 
+is called to give the <tt CLASS=literal>ImageFilter</tt> 
+the color model used for most of the pixels in the original image. It passes 
+this color model on to the next consumer. Subclasses may override this 
+method if they change the color model. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setHints (int hints)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setHints()</tt> method is called 
+to give the <tt CLASS=literal>ImageFilter</tt> hints 
+about how the producer will deliver pixels. This method passes the same 
+set of hints to the next consumer. Subclasses must override this method 
+if they need to provide different hints; for example, if they are delivering 
+pixels in a different order. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setPixels (int x, int y, int width, int height, ColorModel 
+model, byte pixels[],</I>  <I CLASS=emphasis>int offset, int scansize)</I><br><I CLASS=emphasis>public void setPixels (int x, int y, int width, int height, ColorModel 
+model, int pixels[],</I>  <I CLASS=emphasis>int offset, int scansize)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setPixels()</tt> method receives 
+pixel data from the <tt CLASS=literal>ImageProducer</tt> 
+and passes all the information on to the <tt CLASS=literal>ImageConsumer</tt>. 
+(<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+is the top left corner of the bounding rectangle for the pixels. The bounding 
+rectangle has size <tt CLASS=literal>width</tt> x 
+<tt CLASS=literal>height</tt>. The <tt CLASS=literal>ColorModel</tt> 
+for the new image is <tt CLASS=literal>model</tt>. 
+<tt CLASS=literal>pixels</tt> is the byte or integer 
+array of the pixel information, starting at <tt CLASS=literal>offset</tt> 
+(usually 0), with scan lines of size <tt CLASS=literal>scansize</tt> 
+(usually <tt CLASS=literal>width</tt>). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void imageComplete (int status)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>imageComplete()</tt> method 
+receives the completion <tt CLASS=literal>status</tt> 
+from the <tt CLASS=literal>ImageProducer</tt> and 
+passes it along to the <tt CLASS=literal>ImageConsumer</tt>. 
+
+<P CLASS=para>
+If you subclass <tt CLASS=literal>ImageFilter</tt>, 
+you will probably override the <tt CLASS=literal>setPixels()</tt> 
+methods. For simple filters, you may be able to modify the pixel array 
+and deliver the result to <tt CLASS=literal>consumer.setPixels()</tt> 
+immediately. For more complex filters, you will have to build a buffer 
+containing the entire image; in this case, the call to <tt CLASS=literal>imageComplete()</tt> 
+will probably trigger filtering and pixel delivery. </DL>
+Cloneable interface methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Object clone ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>clone()</tt> method creates 
+a clone of the <tt CLASS=literal>ImageFilter</tt>. 
+The <tt CLASS=literal>getFilterInstance()</tt> function 
+uses this method to create a copy of the <tt CLASS=literal>ImageFilter</tt>. 
+Cloning allows the same filter instance to be used with multiple <tt CLASS=literal>Image</tt> 
+objects. </DL>
+Other methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public ImageFilter getFilterInstance (ImageConsumer ic)  </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>FilteredImageSource</tt> calls <tt CLASS=literal>getFilterInstance()</tt> 
+to register <tt CLASS=literal>ic</tt> as the <tt CLASS=literal>ImageConsumer</tt> 
+for an instance of this filter; to do so, it sets the instance variable 
+<tt CLASS=literal>consumer</tt>. In effect, this method 
+inserts the <tt CLASS=literal>ImageFilter</tt> between 
+the image's producer and the consumer. You have to override 
+this method only if there are special requirements for the insertion process. 
+This default implementation just calls <tt CLASS=literal>clone()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void resendTopDownLeftRight (ImageProducer ip)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>resendTopDownLeftRight()</tt> 
+method tells the <tt CLASS=literal>ImageProducer</tt> 
+<tt CLASS=literal>ip</tt> to try to resend the image 
+data in the top-down, left-to-right order. If you override this method 
+and your <tt CLASS=literal>ImageFilter</tt> has saved 
+the image data internally, you may want your <tt CLASS=literal>ImageFilter</tt> 
+to resend the data itself, rather than asking the <tt CLASS=literal>ImageProducer</tt>. 
+Otherwise, your subclass may ignore the request or pass it along to the 
+<tt CLASS=literal>ImageProducer</tt> <tt CLASS=literal>ip</tt>. </DL>
+Subclassing ImageFilter: A blurring filter
+
+<P CLASS=para>
+<A NAME="CH12.BLUR"></A>When you subclass <tt CLASS=literal>ImageFilter</tt>, 
+there are very few restrictions on what you can do. We will create a few 
+subclasses that show some of the possibilities. This <tt CLASS=literal>ImageFilter</tt> 
+generates a new pixel by averaging the pixels around it. The result is 
+a blurred version of the original. To implement this filter, we have to 
+save all the pixel data into a buffer; we can't start delivering 
+pixels until the entire image is in hand. Therefore, we override <tt CLASS=literal>setPixels()</tt> 
+to build the buffer; we override <tt CLASS=literal>imageComplete()</tt> 
+to produce the new pixels and deliver them. 
+
+<P CLASS=para>
+Before looking at the code, here are a few hints about how the filter works; 
+it uses a few tricks that may be helpful in other situations. We need to 
+provide two versions of <tt CLASS=literal>setPixels()</tt>: 
+one for integer arrays, and the other for byte arrays. To avoid duplicating 
+code, both versions call a single method, <tt CLASS=literal>setThePixels()</tt>, 
+which takes an <tt CLASS=literal>Object</tt> as an 
+argument, instead of a pixel array; thus it can be called with either kind 
+of pixel array. Within the method, we check whether the pixels argument 
+is an instance of <tt CLASS=literal>byte[]</tt> or 
+<tt CLASS=literal>int[]</tt>. The body of this method 
+uses another trick: when it reads the <tt CLASS=literal>byte[]</tt> 
+version of the pixel array, it ANDs the value with 0xff. This prevents the byte value, which is signed, from 
+being converted to a negative <tt CLASS=literal>int</tt> when used as an argument to <tt CLASS=literal>cm.getRGB()</tt>. 
+
+<P CLASS=para>
+The logic inside of <tt CLASS=literal>imageComplete()</tt> 
+gets a bit hairy. This method does the actual filtering, after all the 
+data has arrived. Its job is basically simple: compute an average value 
+of the pixel and the eight pixels surrounding it (i.e., a 3x3 
+rectangle with the current pixel in the center). The problem lies in taking 
+care of the edge conditions. We don't always want to average nine 
+pixels; in fact, we may want to average as few as four. The <tt CLASS=literal>if</tt> statements 
+figure out which surrounding pixels should be included in the average. 
+The pixels we care about are placed in <tt CLASS=literal>sumArray[]</tt>, 
+which has nine elements. We keep track of the number of elements that have 
+been saved in the variable <tt CLASS=literal>sumIndex</tt> 
+and use a helper method, <tt CLASS=literal>avgPixels()</tt>, 
+to compute the average. The code might be a little cleaner if we used a 
+<tt CLASS=literal>Vector</tt>, which automatically 
+counts the number of elements it contains, but it would probably be much 
+slower. 
+
+<P CLASS=para>
+<A HREF="ch12_05.htm#JAWT-CH-12-EX-7">Example 12.7</A> shows the code for the blurring filter. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-7">Example 12.7: Blur Filter Source</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.image.*;
+public class BlurFilter extends ImageFilter {
+    private int savedWidth, savedHeight, savedPixels[];
+    private static ColorModel defaultCM = ColorModel.getRGBdefault();
+    public void setDimensions (int width, int height) {
+        savedWidth=width;
+        savedHeight=height;
+        savedPixels=new int [width*height];
+        consumer.setDimensions (width, height);
+    }
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+We override <tt CLASS=literal>setDimensions()</tt> 
+to save the original image's height and width, which we use later. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    public void setColorModel (ColorModel model) {
+    // Change color model to model you are generating
+        consumer.setColorModel (defaultCM);
+    }
+    public void setHints (int hintflags) {
+    // Set new hints, but preserve SINGLEFRAME setting
+        consumer.setHints (TOPDOWNLEFTRIGHT | COMPLETESCANLINES |
+                           SINGLEPASS | (hintflags &amp; SINGLEFRAME));
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This filter always generates pixels in the same order, so it sends the 
+hint flags <tt CLASS=literal>TOPDOWNLEFTRIGHT</tt>, 
+<tt CLASS=literal>COMPLETESCANLINES</tt>, and <tt CLASS=literal>SINGLEPASS</tt> 
+to the consumer, regardless of what the image producer says. It sends the 
+<tt CLASS=literal>SINGLEFRAME</tt> hint only if the 
+producer has sent it. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    private void setThePixels (int x, int y, int width, int height,
+            ColorModel cm, Object pixels, int offset, int scansize) {
+        int sourceOffset = offset;
+        int destinationOffset = y * savedWidth + x;
+        boolean bytearray = (pixels instanceof byte[]);
+        for (int yy=0;yy&lt;height;yy++) {
+            for (int xx=0;xx&lt;width;xx++)
+                if (bytearray)
+                    savedPixels[destinationOffset++]=
+                        cm.getRGB(((byte[])pixels)[sourceOffset++]&amp;0xff);
+                else
+                    savedPixels[destinationOffset++]=
+                        cm.getRGB(((int[])pixels)[sourceOffset++]);
+            sourceOffset += (scansize - width);
+            destinationOffset += (savedWidth - width);
+        }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>setThePixels()</tt> saves the pixel 
+data for the image in the array <tt CLASS=literal>savedPixels[]</tt>. 
+Both versions of <tt CLASS=literal>setPixels()</tt> 
+call this method. It doesn't pass the pixels along to the image consumer, 
+since this filter can't process the pixels until the entire image 
+is available. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void setPixels (int x, int y, int width, int height,
+       ColorModel cm, byte pixels[], int offset, int scansize) {
+    setThePixels (x, y, width, height, cm, pixels, offset, scansize);
+}
+public void setPixels (int x, int y, int width, int height,
+       ColorModel cm, int pixels[], int offset, int scansize) {
+    setThePixels (x, y, width, height, cm, pixels, offset, scansize);
+}
+public void imageComplete (int status) {
+    if ((status == IMAGEABORTED) || (status == IMAGEERROR)) {
+        consumer.imageComplete (status);
+        return;
+    } else {
+        int pixels[] = new int [savedWidth];
+        int position, sumArray[], sumIndex;
+        sumArray = new int [9]; // maxsize - vs. Vector for performance
+        for (int yy=0;yy&lt;savedHeight;yy++) {
+            position=0;
+            int start = yy * savedWidth;
+            for (int xx=0;xx&lt;savedWidth;xx++) {
+                sumIndex=0;
+                                                               //  xx     yy
+                sumArray[sumIndex++] = savedPixels[start+xx];  // center center
+                if (yy != (savedHeight-1))                     // center bottom
+                    sumArray[sumIndex++] = savedPixels[start+xx+savedWidth];
+                if (yy != 0)                                   // center top
+                    sumArray[sumIndex++] = savedPixels[start+xx-savedWidth];
+                if (xx != (savedWidth-1))                      // right  center
+                    sumArray[sumIndex++] = savedPixels[start+xx+1];
+                if (xx != 0)                                   // left   center
+                    sumArray[sumIndex++] = savedPixels[start+xx-1];
+                if ((yy != 0) &amp;&amp; (xx != 0))                    // left   top
+                    sumArray[sumIndex++] = savedPixels[start+xx-savedWidth-1];
+                if ((yy != (savedHeight-1)) &amp;&amp; (xx != (savedWidth-1)))
+                    //                                           right  bottom
+                    sumArray[sumIndex++] = savedPixels[start+xx+savedWidth+1];
+                if ((yy != 0) &amp;&amp; (xx != (savedWidth-1)))       //right  top
+                    sumArray[sumIndex++] = savedPixels[start+xx-savedWidth+1];
+                if ((yy != (savedHeight-1)) &amp;&amp; (xx != 0))      //left   bottom
+                    sumArray[sumIndex++] = savedPixels[start+xx+savedWidth-1];
+                pixels[position++] = avgPixels(sumArray, sumIndex);
+            }
+            consumer.setPixels (0, yy, savedWidth, 1, defaultCM,
+                                pixels, 0, savedWidth);
+        }
+        consumer.imageComplete (status);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>imageComplete()</tt> does the actual 
+filtering after the pixels have been delivered and saved. If the producer 
+reports that an error occurred, this method passes the error flags to 
+the consumer and returns. If not, it builds a new array, <tt CLASS=literal>pixels[]</tt>, 
+which contains the filtered pixels, and delivers these to the consumer. 
+
+<P CLASS=para>
+Previously, we gave an overview of how the filtering process works. Here are 
+some details. (<tt CLASS=literal>xx</tt>, <tt CLASS=literal>yy</tt>) 
+represents the current point's <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> coordinates. The point (<tt CLASS=literal>xx</tt>, 
+<tt CLASS=literal>yy</tt>) must always fall within 
+the image; otherwise, our loops are constructed incorrectly. Therefore, 
+we can copy (<tt CLASS=literal>xx</tt>, <tt CLASS=literal>yy</tt>) 
+into the <tt CLASS=literal>sumArray[]</tt> for averaging 
+without any tests. For the point's eight neighbors, we check whether 
+the neighbor falls in the image; if so, we add it to <tt CLASS=literal>sumArray[]</tt>. 
+For example, the point just below (<tt CLASS=literal>xx</tt>, 
+<tt CLASS=literal>yy</tt>) is at the bottom center 
+of the 3x3 rectangle of points we are averaging. We know that <tt CLASS=literal>xx</tt> 
+falls within the image; <tt CLASS=literal>yy</tt> 
+falls within the image if it doesn't equal <tt CLASS=literal>savedHeight-1</tt>. 
+We do similar tests for the other points. 
+
+<P CLASS=para>
+Even though we're working with a rectangular image, our arrays are 
+all one-dimensional so we have to convert a coordinate pair (<tt CLASS=literal>xx</tt>, 
+<tt CLASS=literal>yy</tt>) into a single array index. 
+To help us do the bookkeeping, we use the local variable <tt CLASS=literal>start</tt> 
+to keep track of the start of the current scan line. Then <tt CLASS=literal>start</tt> 
++ <tt CLASS=literal>xx</tt> is the current point; 
+<tt CLASS=literal>start</tt> + <tt CLASS=literal>xx</tt> 
++ <tt CLASS=literal>savedWidth</tt> is the point immediately 
+below; <tt CLASS=literal>start</tt> + <tt CLASS=literal>xx</tt> 
++ <tt CLASS=literal>savedWidth-1</tt> is the point 
+below and to the left; and so on. 
+
+<P CLASS=para>
+<tt CLASS=literal>avgPixels()</tt> is our helper method 
+for computing the average value that we assign to the new pixel. For each 
+pixel in the <tt CLASS=literal>pixels[]</tt> array, 
+it extracts the red, blue, green, and alpha components; averages them separately, 
+and returns a new ARGB value. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    private int avgPixels (int pixels[], int size) {
+        float redSum=0, greenSum=0, blueSum=0, alphaSum=0;
+        for (int i=0;i&lt;size;i++)
+            try {
+                int pixel = pixels[i];
+                redSum   += defaultCM.getRed   (pixel);
+                greenSum += defaultCM.getGreen (pixel);
+                blueSum  += defaultCM.getBlue  (pixel);
+                alphaSum += defaultCM.getAlpha (pixel);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println ("Ooops");
+            }
+        int redAvg   = (int)(redSum   / size);
+        int greenAvg = (int)(greenSum / size);
+        int blueAvg  = (int)(blueSum  / size);
+        int alphaAvg = (int)(alphaSum / size);
+        return ((0xff &lt;&lt; 24) | (redAvg &lt;&lt; 16) |
+                (greenAvg &lt;&lt; 8)  | (blueAvg &lt;&lt; 0));
+    }
+}
+</PRE>
+</DIV>
+
+Producing many images from one: dynamic ImageFilter
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageFilter</tt> framework is 
+flexible enough to allow you to return a sequence of images based on an 
+original. You can send back one frame at a time, calling the following when you are finished with each frame:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+consumer.imageComplete(ImageConsumer.SINGLEFRAMEDONE);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+After you have generated all the 
+frames, you can tell the consumer that the sequence is finished with the 
+<tt CLASS=literal>STATICIMAGEDONE</tt> constant. In 
+fact, this is exactly what the new animation capabilities of <tt CLASS=literal>MemoryImageSource</tt> 
+use. 
+
+<P CLASS=para>
+In <A HREF="ch12_05.htm#JAWT-CH-12-EX-8">Example 12.8</A>, the <tt CLASS=literal>DynamicFilter</tt> 
+lets the consumer display an image. After the image has been displayed, 
+the filter gradually overwrites the image with a specified color by sending 
+additional image frames. The end result is a solid colored rectangle. Not 
+too exciting, but it's easy to imagine interesting extensions: you 
+could use this technique to implement a fade from one image into another. 
+The key points to understand are: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>This filter does not override <tt CLASS=literal>setPixels()</tt>, 
+so it is extremely fast. In this case, we want the original image to reach 
+the consumer, and there is no reason to save the image in a buffer. 
+
+<P>
+<li CLASS=listitem>Filtering takes place in the image-fetching thread, so it is safe to put 
+the filter-processing thread to sleep 
+if the image is coming from disk. If the image is in memory, filtering 
+should not sleep because there will be a noticeable performance lag in your 
+program if it does. The <tt CLASS=literal>DynamicFilter</tt> 
+class has a delay parameter to its constructor that lets you control this 
+behavior. 
+
+<P>
+<li CLASS=listitem>This subclass overrides <tt CLASS=literal>setDimensions()</tt> 
+to save the image's dimensions for its own use. It needs to override 
+<tt CLASS=literal>setHints()</tt> because it sends 
+pixels to the consumer in a nonstandard order: it sends the original image, 
+then goes back and starts sending overlays. Likewise, this subclass overrides 
+<tt CLASS=literal>resendTopDownLeftRight()</tt> to 
+do nothing because there is no way the original <tt CLASS=literal>ImageProducer</tt> 
+can replace all the changes with the original <tt CLASS=literal>Image</tt>. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>imageComplete()</tt> is where all 
+the fun happens. Take a special look at the status flags that are returned. 
+
+<P>
+</UL>
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-8">Example 12.8: DynamicFilter Source</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.image.*;
+public class DynamicFilter extends ImageFilter {
+    Color overlapColor;
+    int   delay;
+    int   imageWidth;
+    int   imageHeight;
+    int   iterations;
+    DynamicFilter (int delay, int iterations, Color color) {
+        this.delay      = delay;
+        this.iterations = iterations;
+        overlapColor    = color;
+    }
+    public void setDimensions (int width, int height) {
+        imageWidth  = width;
+        imageHeight = height;
+        consumer.setDimensions (width, height);
+    }
+    public void setHints (int hints) {
+        consumer.setHints (ImageConsumer.RANDOMPIXELORDER);
+    }
+    public void resendTopDownLeftRight (ImageProducer ip) {
+    }
+    public void imageComplete (int status) {
+        if ((status == IMAGEERROR) || (status == IMAGEABORTED)) {
+            consumer.imageComplete (status);
+            return;
+        } else {
+            int xWidth = imageWidth / iterations;
+            if (xWidth &lt;= 0)
+                xWidth = 1;
+            int newPixels[] = new int [xWidth*imageHeight];
+            int iColor = overlapColor.getRGB();
+            for (int x=0;x&lt;(xWidth*imageHeight);x++)
+                newPixels[x] = iColor;
+            int t=0;
+            for (;t&lt;(imageWidth-xWidth);t+=xWidth) {
+                consumer.setPixels(t, 0, xWidth, imageHeight,
+                        ColorModel.getRGBdefault(), newPixels, 0, xWidth);
+                consumer.imageComplete (ImageConsumer.SINGLEFRAMEDONE);
+                try {
+                    Thread.sleep (delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            int left = imageWidth-t;
+            if (left &gt; 0) {
+                consumer.setPixels(imageWidth-left, 0, left, imageHeight,
+                        ColorModel.getRGBdefault(), newPixels, 0, xWidth);
+                consumer.imageComplete (ImageConsumer.SINGLEFRAMEDONE);
+            }
+            consumer.imageComplete (STATICIMAGEDONE);
+        }
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>DynamicFilter</tt> relies on 
+the default <tt CLASS=literal>setPixels()</tt> method 
+to send the original image to the consumer. When the original image has 
+been transferred, the image producer calls this filter's <tt CLASS=literal>imageComplete()</tt> 
+method, which does the real work. Instead of relaying the completion status 
+to the consumer, <tt CLASS=literal>imageComplete()</tt> 
+starts generating its own data: solid rectangles that are all in the <tt CLASS=literal>overlapColor</tt> 
+specified in the constructor. It sends these rectangles to the consumer 
+by calling <tt CLASS=literal>consumer.setPixels()</tt>. 
+After each rectangle, it calls <tt CLASS=literal>consumer.imageComplete()</tt> 
+with the <tt CLASS=literal>SINGLEFRAMEDONE</tt> flag, 
+meaning that it has just finished one frame of a multi-frame sequence. 
+When the rectangles have completely covered the image, the method <tt CLASS=literal>imageComplete()</tt> 
+finally notifies the consumer that the entire image sequence has been transferred 
+by sending the <tt CLASS=literal>STATICIMAGEDONE</tt> 
+flag. 
+
+<P CLASS=para>
+The following code is a simple applet that uses this image filter to produce 
+a new image: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.image.*;
+public class DynamicImages extends Applet {
+    Image i, j;
+    public void init () {
+        i = getImage (getDocumentBase(), "rosey.jpg");
+        j = createImage (new FilteredImageSource (i.getSource(),
+                        new DynamicFilter(250, 10, Color.red)));
+    }
+    public void paint (Graphics g) {
+        g.drawImage (j, 10, 10, this);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+One final curiosity: the <tt CLASS=literal>DynamicFilter</tt> 
+doesn't make any assumptions about the color model used for the original 
+image. It sends its overlays with the default RGB color model. Therefore, 
+this is one case in which an <tt CLASS=literal>ImageConsumer</tt> 
+may see calls to <tt CLASS=literal>setPixels()</tt> 
+that use different color models. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-5.2">RGBImageFilter</A></h3>
+
+<P CLASS=para>
+<A NAME="CH12.RGB1"></A><A NAME="CH12.RGB2"></A><tt CLASS=literal>RGBImageFilter</tt> is an abstract 
+subclass of <tt CLASS=literal>ImageFilter</tt> that 
+provides a shortcut for building the most common kind of image filters: 
+filters that independently modify the pixels of an existing image, based 
+only on the pixel's position and color. Because <tt CLASS=literal>RGBImageFilter</tt> 
+is an abstract class, you must subclass it before you can do anything. 
+The only method your subclass must provide is <tt CLASS=literal>filterRGB()</tt>, 
+which produces a new pixel value based on the original pixel and its location. 
+A handful of additional methods are in this class; most of them provide 
+the behind-the-scenes framework for funneling each pixel through the <tt CLASS=literal>filterRGB()</tt> 
+method. 
+
+<P CLASS=para>
+If the filtering algorithm you are using does not rely on pixel position 
+(i.e., the new pixel is based only on the old pixel's color), AWT 
+can apply an optimization for images that use an <tt CLASS=literal>IndexColorModel</tt>: 
+rather than filtering individual pixels, it can filter the image's 
+color map. In order to tell AWT that this optimization is okay, add a constructor 
+to the class definition that sets the <tt CLASS=literal>canFilterIndexColorModel</tt> 
+variable to <tt CLASS=literal>true</tt>. If <tt CLASS=literal>canFilterIndexColorMode</tt>l 
+is <tt CLASS=literal>false</tt> (the default) and 
+an <tt CLASS=literal>IndexColorModel</tt> image is 
+sent through the filter, nothing happens to the image. Variables
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected boolean canFilterIndexColorModel </I><br>
+<DD>
+
+<P CLASS=para>
+Setting the <tt CLASS=literal>canFilterIndexColorModel</tt> 
+variable permits the <tt CLASS=literal>ImageFilter</tt> 
+to filter <tt CLASS=literal>IndexColorModel</tt> images. 
+The default value is <tt CLASS=literal>false</tt>. 
+When this variable is <tt CLASS=literal>false</tt>, <tt CLASS=literal>IndexColorModel</tt> 
+images are not filtered. When this variable is <tt CLASS=literal>true</tt>, 
+the <tt CLASS=literal>ImageFilter</tt> filters the 
+colormap instead of the individual pixel values. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected ColorModel newmodel </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>newmodel</tt> variable is used 
+to store the new <tt CLASS=literal>ColorModel</tt> 
+when <tt CLASS=literal>canFilterIndexColorModel</tt> 
+is <tt CLASS=literal>true</tt> and the <tt CLASS=literal>ColorModel</tt> 
+actually is of type <tt CLASS=literal>IndexColorModel</tt>. 
+Normally, you do not need to access this variable, even in subclasses. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected ColorModel origmodel </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>origmodel</tt> variable stores 
+the original color model when filtering an <tt CLASS=literal>IndexColorModel</tt>. 
+Normally, you do not need to access this variable, even in subclasses. </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public RGBImageFilter ()--called by subclass </I><br>
+<DD>
+
+<P CLASS=para>
+The only constructor for <tt CLASS=literal>RGBImageFilter</tt> 
+is the implied constructor with no parameters. In most subclasses of <tt CLASS=literal>RGBImageFilter</tt>, 
+the constructor has to initialize only the <tt CLASS=literal>canFilterIndexColorModel</tt> 
+variable. </DL>
+ImageConsumer interface methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setColorModel (ColorModel model)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setColorModel()</tt> method 
+changes the <tt CLASS=literal>ColorModel</tt> of the 
+filter to <tt CLASS=literal>model</tt>. If <tt CLASS=literal>canFilterIndexColorModel</tt> 
+is <tt CLASS=literal>true</tt> and <tt CLASS=literal>model</tt> is of type 
+<tt CLASS=literal>IndexColorModel</tt>, a filtered 
+version of <tt CLASS=literal>model</tt> is used instead. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, byte 
+pixels[],</I>  <I CLASS=emphasis>int off, int scansize)  </I><br><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, int 
+pixels[],</I>  <I CLASS=emphasis>int off, int scansize)  </I><br>
+<DD>
+
+<P CLASS=para>
+If necessary, the <tt CLASS=literal>setPixels()</tt> 
+method converts the <tt CLASS=literal>pixels</tt> 
+buffer to the default RGB <tt CLASS=literal>ColorModel</tt> 
+and then filters them with <tt CLASS=literal>filterRGBPixels()</tt>. 
+If <tt CLASS=literal>model</tt> has already been converted, 
+this method just passes the pixels along to the consumer's <tt CLASS=literal>setPixels()</tt>. </DL>
+Other methods
+
+<P CLASS=para>
+The only method you care about here is <tt CLASS=literal>filterRGB()</tt>. 
+All subclasses of RGBImageFilter <I CLASS=emphasis>must</I> override this method. It is very 
+difficult to imagine situations in which you would override (or even call) 
+the other methods in this group. They are helper methods that funnel pixels 
+through <tt CLASS=literal>filterRGB()</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void substituteColorModel (ColorModel oldModel, ColorModel newModel)  </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>substituteColorModel()</tt> is a 
+helper method for <tt CLASS=literal>setColorModel()</tt>. 
+It initializes the protected variables of <tt CLASS=literal>RGBImageFilter</tt>. 
+The <tt CLASS=literal>origmodel</tt> variable is set 
+to <tt CLASS=literal>oldModel</tt> and the <tt CLASS=literal>newmodel</tt> 
+variable is set to <tt CLASS=literal>newModel</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public IndexColorModel filterIndexColorModel (IndexColorModel icm)  </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>filterIndexColorModel()</tt> is 
+another helper method for <tt CLASS=literal>setColorModel()</tt>. 
+It runs the entire color table of <tt CLASS=literal>icm</tt> 
+through <tt CLASS=literal>filterRGB()</tt> and returns 
+the filtered <tt CLASS=literal>ColorModel</tt> for 
+use by <tt CLASS=literal>setColorModel()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void filterRGBPixels (int x, int y, int width, int height, int pixels[], int off,</I>  <I CLASS=emphasis>int scansize)  </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>filterRGBPixels()</tt> is a helper 
+method for <tt CLASS=literal>setPixels()</tt>. It 
+filters each element of the <tt CLASS=literal>pixels</tt> 
+buffer through <tt CLASS=literal>filterRGB()</tt>, 
+converting pixels to the default RGB <tt CLASS=literal>ColorModel</tt> 
+first. This method changes the values in the <tt CLASS=literal>pixels</tt> 
+array. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int filterRGB (int x, int y, int rgb)  </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>filterRGB()</tt> is the one method 
+that <tt CLASS=literal>RGBImageFilter</tt> subclasses 
+must implement. The method takes the <tt CLASS=literal>rgb</tt> 
+pixel value at position (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) and returns the converted 
+pixel value in the default RGB <tt CLASS=literal>ColorModel</tt>. 
+Coordinates of (-1, -1) signify that a color table entry is being filtered 
+instead of a pixel. </DL>
+A transparent image filter that extends RGBImageFilter
+
+<P CLASS=para>
+Creating your own <tt CLASS=literal>RGBImageFilter</tt> 
+is fairly easy. One of the more common applications for an <tt CLASS=literal>RGBImageFilter</tt> 
+is to make images transparent by setting the alpha component of each pixel. 
+To do so, we extend the abstract <tt CLASS=literal>RGBImageFilter</tt> 
+class. The filter in <A HREF="ch12_05.htm#JAWT-CH-12-EX-9">Example 12.9</A> makes the entire image translucent, based on a 
+percentage passed to the class constructor. Filtering is independent of 
+position, so the constructor can set the <tt CLASS=literal>canFilterIndexColorModel</tt> 
+variable. A constructor with no arguments uses a default alpha value of 
+0.75.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-9">Example 12.9: TransparentImageFilter Source</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.image.*;
+class TransparentImageFilter extends RGBImageFilter {
+    float alphaPercent;
+    public TransparentImageFilter () {
+        this (0.75f);
+    }
+    public TransparentImageFilter (float aPercent)
+            throws IllegalArgumentException {
+        if ((aPercent &lt; 0.0) || (aPercent &gt; 1.0))
+            throw new IllegalArgumentException();
+        alphaPercent = aPercent;
+        canFilterIndexColorModel = true;
+    }
+    public int filterRGB (int x, int y, int rgb) {
+        int a = (rgb &gt;&gt; 24) &amp; 0xff;
+        a *= alphaPercent;
+        return ((rgb &amp; 0x00ffffff) | (a &lt;&lt; 24));
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-5.3">CropImageFilter</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>CropImageFilter</tt> is an <tt CLASS=literal>ImageFilter</tt> 
+that crops an image to a rectangular region. When used with <tt CLASS=literal>FilteredImageSource</tt>, 
+it produces a new image that consists of a portion of the original image. 
+The cropped region must be completely within the original image. It is 
+never necessary to subclass this class. Also, using the 10 or 11 argument 
+version of <tt CLASS=literal>Graphics.drawImage()</tt> 
+introduced in Java 1.1 precludes the need to use this filter, unless you 
+need to save the resulting cropped image. 
+
+<P CLASS=para>
+If you crop an image and then send the result through a second <tt CLASS=literal>ImageFilter</tt>, 
+the pixel array received by the filter will be the size of the original 
+<tt CLASS=literal>Image</tt>, with the <tt CLASS=literal>offset</tt> 
+and <tt CLASS=literal>scansize</tt> set accordingly. 
+The <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+are set to the cropped values; the result is a smaller <tt CLASS=literal>Image</tt> 
+with the same amount of data. <tt CLASS=literal>CropImageFilter</tt> 
+keeps the full pixel array around, partially empty. Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public CropImageFilter (int x, int y, int width, int height) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>CropImageFilter</tt> 
+specifies the rectangular area of the old image that makes up the new image. 
+The (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+coordinates specify the top left corner for the cropped image; <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> must be positive 
+or the resulting image will be empty. If the (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) coordinates are outside 
+the original image area, the resulting image is empty. If (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) starts within the image 
+but the rectangular area of size <tt CLASS=literal>width </tt>x 
+<tt CLASS=literal>height</tt> goes beyond the original 
+image, the part that extends outside will be black. (Remember the color 
+black has pixel values of 0 for red, green, and blue.) </DL>
+ImageConsumer interface methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setProperties (Hashtable properties) <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setProperties()</tt> method 
+adds the <tt CLASS=literal>croprect</tt> image property 
+to the properties list. The bounding <tt CLASS=literal>Rectangle</tt>, 
+specified by the (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+coordinates and <tt CLASS=literal>width</tt> x <tt CLASS=literal>height</tt> 
+size, is associated with this property. After updating <tt CLASS=literal>properties</tt>, 
+this method sets the properties list of the consumer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setDimensions (int width, int height) <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setDimensions()</tt> method 
+of <tt CLASS=literal>CropImageFilter</tt> ignores 
+the <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+parameters to the function call. Instead, it relies on the size parameters 
+in the constructor. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, byte 
+pixels[], int offset,</I>  <I CLASS=emphasis>int scansize) <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, int 
+pixels[], int offset,</I>  <I CLASS=emphasis>int scansize) <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br>
+<DD>
+
+<P CLASS=para>
+These <tt CLASS=literal>setPixels()</tt> methods check to see what portion of the <tt CLASS=literal>pixels</tt> 
+array falls within the cropped area and pass those pixels along. </DL>
+Cropping an image with CropImageFilter
+
+<P CLASS=para>
+<A HREF="ch12_05.htm#JAWT-CH-12-EX-10">Example 12.10</A> uses a <tt CLASS=literal>CropImageFilter</tt> 
+to extract the center third of a larger image. No subclassing is needed; 
+the <tt CLASS=literal>CropImageFilter</tt> is complete 
+in itself. The output is displayed in <A HREF="ch12_05.htm#JAWT-CH-12-FIG-8">Figure 12.7</A>. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-10">Example 12.10: Crop Applet Source</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.image.*;
+public class Crop extends Applet {
+    Image i, j;
+    public void init () {
+        MediaTracker mt = new MediaTracker (this);
+        i = getImage (getDocumentBase(), "rosey.jpg");
+        mt.addImage (i, 0);
+        try {
+            mt.waitForAll();
+            int width        = i.getWidth(this);
+            int height       = i. getHeight(this);
+            j = createImage (new FilteredImageSource (i.getSource(),
+                                new CropImageFilter (width/3, height/3,
+                                                     width/3, height/3)));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    public void paint (Graphics g) {
+        g.drawImage (i, 10, 10, this);                  // regular
+        if (j != null) {
+            g.drawImage (j, 10, 90, this);             // cropped
+        }
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-12-FIG-8">Figure 12.7: Image cropping example output.</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1208.gif" alt="[Graphic: Figure 12-7]" width=285 height=202 border=0>
+
+</DIV>
+
+<DIV CLASS=tip>
+<P CLASS=tip><BLOCKQUOTE><P><I>TIP:</I>
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+You can use 
+<tt CLASS=literal>CropImageFilter</tt>
+ to help improve your animation performance or just the general download time of images. Without 
+<tt CLASS=literal>CropImageFilter</tt>, you can use 
+<tt CLASS=literal>Graphics.clipRect()</tt>
+ to clip each image of an image strip when drawing. Instead of clipping each 
+<tt CLASS=literal>Image</tt>
+ (each time), you can use 
+<tt CLASS=literal>CropImageFilter</tt>
+ to create a new 
+<tt CLASS=literal>Image</tt>
+ for each cell of the strip. Or for times when an image strip is inappropriate, you can put all your images within one image file (in any order whatsoever), and use 
+<tt CLASS=literal>CropImageFilter</tt>
+ to get each out as an 
+<tt CLASS=literal>Image</tt>
+.
+</blockquote><P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-5.4">ReplicateScaleFilter</A></h3>
+
+<P CLASS=para>
+Back in <A HREF="ch02_01.htm">Chapter 2, <i>Simple Graphics</i></A> we introduced you to the <tt CLASS=literal>getScaledInstance()</tt> 
+method. This method uses a new image filter that is provided with Java 
+1.1. The <tt CLASS=literal>ReplicateScaleFilter</tt> 
+and its subclass, <tt CLASS=literal>AreaAveragingScaleFilter</tt>, 
+allow you to scale images before calling <tt CLASS=literal>drawImage()</tt>. 
+This can greatly speed your programs because you don't have to 
+wait for the call to <tt CLASS=literal>drawImage()</tt> 
+before performing scaling. 
+
+<P CLASS=para>
+The <tt CLASS=literal>ReplicateScaleFilter</tt> is 
+an <tt CLASS=literal>ImageFilter</tt> that scales 
+by duplicating or removing rows and columns. When used with <tt CLASS=literal>FilteredImageSource</tt>, 
+it produces a new image that is a scaled version of the original. As you 
+can guess, <tt CLASS=literal>ReplicateScaleFilter</tt> 
+is very fast, but the results aren't particularly pleasing aesthetically. 
+It is great if you want to magnify a checkerboard but not that useful 
+if you want to scale an image of your Aunt Polly. Its subclass, <tt CLASS=literal>AreaAveragingScaleFilter</tt>, 
+implements a more time-consuming algorithm that is more suitable when 
+image quality is a concern. Constructor
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public ReplicateScaleFilter (int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>ReplicateScaleFilter</tt> 
+specifies the size of the resulting image. If either parameter is -1, the 
+resulting image maintains the same aspect ratio as the original image. </DL>
+ImageConsumer interface methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setProperties (Hashtable properties)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setProperties()</tt> method 
+adds the <tt CLASS=literal>rescale</tt> image property 
+to the properties list. The value of the rescale property is a quoted string 
+showing the image's new width and height, in the form <tt CLASS=literal>`&lt;width&gt;x&lt;height&gt;`</tt>, 
+where the width and height are taken from the constructor. After updating 
+<tt CLASS=literal>properties</tt>, this method sets 
+the properties list of the consumer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setDimensions (int width, int height)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setDimensions()</tt> method 
+of <tt CLASS=literal>ReplicateScaleFilter</tt> passes 
+the new width and height from the constructor along to the consumer. If 
+either of the constructor's parameters are negative, the size is 
+recalculated proportionally. If both are negative, the size becomes <tt CLASS=literal>width</tt> 
+x <tt CLASS=literal>height</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, int 
+pixels[], int offset,</I>  <I CLASS=emphasis>int scansize)  </I><br><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, byte 
+pixels[], int offset,</I>  <I CLASS=emphasis>int scansize)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setPixels()</tt> method of <tt CLASS=literal>ReplicateScaleFilter</tt> 
+checks to see which rows and columns of <tt CLASS=literal>pixels</tt> 
+to pass along. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-5.5">AreaAveragingScaleFilter</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>AreaAveragingScaleFilter</tt> subclasses 
+<tt CLASS=literal>ReplicateScaleFilter</tt> to provide 
+a better scaling algorithm. Instead of just dropping or adding rows and 
+columns, <tt CLASS=literal>AreaAveragingScaleFilter</tt> 
+tries to blend pixel values when creating new rows and columns. The filter 
+works by replicating rows and columns to generate an image that is a multiple 
+of the original size. Then the image is resized back down by an algorithm 
+that blends the pixels around each destination pixel. AreaAveragingScaleFilter methods
+
+<P CLASS=para>
+Because this filter subclasses <tt CLASS=literal>ReplicateScaleFilter</tt>, 
+the only methods it includes are those that override methods of <tt CLASS=literal>ReplicateScaleFilter</tt>. Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public AreaAveragingScaleFilter (int width, int height) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>AreaAveragingScaleFilter</tt> 
+specifies the size of the resulting image. If either parameter is -1, the 
+resulting image maintains the same aspect ratio as the original image. </DL>
+ImageConsumer interface methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setHints (int hints) <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setHints()</tt> method of <tt CLASS=literal>AreaAveragingScaleFilter</tt> 
+checks to see if some optimizations can be performed based upon the value 
+of the <tt CLASS=literal>hints</tt> parameter. If 
+they can't, the image filter has to cache the pixel data until it receives the 
+entire image. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, byte 
+pixels[], int offset,</I>  <I CLASS=emphasis>int scansize) <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, int 
+pixels[], int offset,</I>  <I CLASS=emphasis>int scansize) <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setPixels()</tt> method of <tt CLASS=literal>AreaAveragingScaleFilter</tt> 
+accumulates the pixels or passes them along based upon the available hints. 
+If <tt CLASS=literal>setPixels()</tt> accumulates 
+the pixels, this filter passes them along to the consumer when appropriate. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-5.6">Cascading Filters</A></h3>
+
+<P CLASS=para>
+It is often a good idea to perform complex filtering operations by using 
+several filters in a chain. This technique requires the system to perform 
+several passes through the image array, so it may be slower than using 
+a single complex filter; however, cascading filters yield code that is 
+easier to understand and quicker to write--particularly if you already 
+have a collection of image filters from other projects. 
+
+<P CLASS=para>
+For example, assume you want to make a color image transparent and then 
+render the image in black and white. The easy way to do this task is to 
+apply a filter that converts color to a gray value and then apply the 
+<tt CLASS=literal>TransparentImageFilter</tt> we developed 
+in <A HREF="ch12_05.htm#JAWT-CH-12-EX-9">Example 12.9</A>. Using this strategy, we have 
+to develop only one very simple filter. <A HREF="ch12_05.htm#JAWT-CH-12-EX-11">Example 12.11</A> shows 
+the source for the <tt CLASS=literal>GrayImageFilter</tt>; 
+<A HREF="ch12_05.htm#JAWT-CH-12-EX-12">Example 12.12</A> shows the applet that applies the two 
+filters in a daisy chain. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-11">Example 12.11: GrayImageFilter Source</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.image.*;
+public class GrayImageFilter extends RGBImageFilter {
+    public GrayImageFilter () {
+        canFilterIndexColorModel = true;
+    }
+    public int filterRGB (int x, int y, int rgb) {
+        int gray  = (((rgb &amp; 0xff0000) &gt;&gt; 16) +
+                        ((rgb &amp; 0x00ff00) &gt;&gt; 8) +
+                        (rgb &amp; 0x0000ff)) / 3;
+        return (0xff000000 | (gray &lt;&lt; 16) | (gray &lt;&lt;  8) |  gray);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-12">Example 12.12: DrawingImages Source</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.image.*;
+public class DrawingImages extends Applet {
+    Image i, j, k, l;
+    public void init () {
+        i = getImage (getDocumentBase(), "rosey.jpg");
+        GrayImageFilter gif = new GrayImageFilter ();
+        j = createImage (new FilteredImageSource (i.getSource(), gif));
+        TransparentImageFilter tf = new TransparentImageFilter (.5f);
+        k = createImage (new FilteredImageSource (j.getSource(), tf));
+        l = createImage (new FilteredImageSource (i.getSource(), tf));
+    }
+    public void paint (Graphics g) {
+        g.drawImage (i, 10, 10, this);                  // regular
+        g.drawImage (j, 270, 10, this);                 // gray
+        g.drawImage (k, 10, 110, Color.red, this);      // gray - transparent
+        g.drawImage (l, 270, 110, Color.red, this);     // transparent
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Granted, neither the <tt CLASS=literal>GrayImageFilter</tt> or the <tt CLASS=literal>TransparentImageFilter</tt> are very complex, but consider 
+the savings you would get if you wanted to blur an image, crop it, and 
+then render the result in grayscale. Writing a filter that does all three 
+is not a task for the faint of heart; remember, you can't subclass 
+<tt CLASS=literal>RGBImageFilter</tt> or <tt CLASS=literal>CropImageFilter</tt> 
+because the result does not depend purely on each pixel's color and 
+position. However, you can solve the problem easily by cascading the filters 
+developed in this chapter. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch13_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ImageConsumer</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>AWT Exceptions and Errors</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

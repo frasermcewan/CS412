@@ -56,24 +56,24 @@ public class IndexFiles {
                  + "This indexes the documents in DOCS_PATH, creating a Lucene index"
                  + "in INDEX_PATH that can be searched with SearchFiles";
     String indexPath = "index";
-    String docsPath = "C:/Users/Fraser/workspace/Year 4 Strathclyde/CS412/indexing/index";
+   String docPath = " /Users/mcewans_lager/Documents/workspace1/CS412/index";
     boolean create = true;
     for(int i=0;i<args.length;i++) {
       if ("-index".equals(args[i])) {
         indexPath = args[i+1];
         i++;
       } else if ("-docs".equals(args[i])) {
-        docsPath = args[i+1];
+        docPath = args[i+1];
         i++;
       } else if ("-update".equals(args[i])) {
         create = false;
       }
     }
-    if (docsPath == null) {
+    if (docPath == null) {
       System.err.println("Usage: " + usage);
       System.exit(1);
     }
-    final Path docDir = Paths.get(docsPath);
+    final Path docDir = Paths.get(docPath);
     if (!Files.isReadable(docDir)) {
       System.out.println("Document directory '" +docDir.toAbsolutePath()+ "' does not exist or is not readable, please check the path");
       System.exit(1);

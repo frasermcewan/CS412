@@ -1,0 +1,689 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 15] Toolkit and Peers</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:55:33 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 15</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-15">15. Toolkit and Peers</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Toolkit<br>
+<A HREF="ch15_02.htm">The Peer Interfaces</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+This chapter describes the <tt CLASS=literal>Toolkit</tt> 
+class and the purposes it serves. It also describes the <tt CLASS=literal>java.awt.peer</tt> 
+package of interfaces, along with how they fit in with the general scheme 
+of things. The most important advice I can give you about the peer interfaces 
+is not to worry about them. Unless you are porting Java to another platform, 
+creating your own <tt CLASS=literal>Toolkit</tt>, 
+or adding any native component, you can ignore the peer interfaces. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-15-SECT-1">15.1 Toolkit</A></h2>
+
+<P CLASS=para>
+<A NAME="CH15.TOOL"></A><A NAME="CH15.TOOL2"></A>The <tt CLASS=literal>Toolkit</tt> object is an abstract 
+class that provides an interface to platform-specific details like window 
+size, available fonts, and printing. Every platform that supports Java 
+must provide a concrete class that extends the <tt CLASS=literal>Toolkit</tt> 
+class. The Sun JDK provides a <tt CLASS=literal>Toolkit</tt> for Windows NT/95 (<tt CLASS=literal>sun.awt.win32.MToolkit</tt> 
+[Java1.0] or <tt CLASS=literal>sun.awt.windows.MToolkit</tt> 
+[Java1.1]), Solaris/Motif (<tt CLASS=literal>sun.awt.motif.MToolkit</tt>), 
+and Macintosh (<tt CLASS=literal>sun.awt.macos.MToolkit</tt>). 
+Although the <tt CLASS=literal>Toolkit</tt> is used 
+frequently, both directly and behind the scenes, you would never create 
+any of these objects directly. When you need a <tt CLASS=literal>Toolkit</tt>, 
+you ask for it with the static method <tt CLASS=literal>getDefaultToolkit()</tt> 
+or the <tt CLASS=literal>Component.getToolkit()</tt> 
+method. 
+
+<P CLASS=para>
+You might use the <tt CLASS=literal>Toolkit</tt> object 
+if you need to fetch an image in an application (<tt CLASS=literal>getImage()</tt>), 
+get the font information provided with the <tt CLASS=literal>Toolkit</tt> 
+(<tt CLASS=literal>getFontList()</tt> or <tt CLASS=literal>getFontMetrics()</tt>), 
+get the color model (<tt CLASS=literal>getColorModel()</tt>), 
+get the screen metrics (<tt CLASS=literal>getScreenResolution()</tt> 
+or <tt CLASS=literal>getScreenSize()</tt>), get the 
+system clipboard (<tt CLASS=literal>getSystemClipboard()</tt>), 
+get a print job (<tt CLASS=literal>getPrintJob()</tt>), 
+or ring the bell (<tt CLASS=literal>beep()</tt>). 
+The other methods of <tt CLASS=literal>Toolkit</tt> 
+are called for you by the system. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-15-SECT-1.1">Toolkit Methods</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Toolkit()--cannot be called by user </I><br>
+<DD>
+
+<P CLASS=para>
+Because <tt CLASS=literal>Toolkit</tt> is an abstract 
+class, it has no usable constructor. To get a <tt CLASS=literal>Toolkit</tt> 
+object, ask for your environment's default toolkit by calling the 
+static method <tt CLASS=literal>getDefaultToolkit()</tt> 
+or call <tt CLASS=literal>Component.getToolkit()</tt> 
+to get the toolkit of a component. When the actual <tt CLASS=literal>Toolkit</tt> 
+is created for the native environment, the <tt CLASS=literal>awt</tt> 
+package is loaded, the <tt CLASS=literal>AWT-Win32</tt> and <tt CLASS=literal>AWT--Callback-Win32</tt> or <tt CLASS=literal>AWT-Motif</tt> 
+and <tt CLASS=literal>AWT-Input</tt> threads (or the appropriate threads for your 
+environment) are created, and the threads go into infinite loops for screen maintenance 
+and event handling. </DL>
+Pseudo-Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static synchronized Toolkit getDefaultToolkit () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getDefaultToolkit()</tt> method 
+returns the system's default <tt CLASS=literal>Toolkit</tt> 
+object. The default <tt CLASS=literal>Toolkit</tt> 
+is identified by the <tt CLASS=literal>System</tt> 
+property <tt CLASS=literal>awt.toolkit</tt>, which 
+defaults to an instance of the <tt CLASS=literal>sun.awt.motif.MToolkit</tt> 
+class. On the Windows NT/95 platforms, this is overridden by the Java environment 
+to be <tt CLASS=literal>sun.awt.win32.MToolkit</tt> 
+(Java1.0) or <tt CLASS=literal>sun.awt.windows.MToolkit</tt> 
+(Java1.1). On the Macintosh platform, this is overridden by the environment to be <tt CLASS=literal>sun.awt.macos.MToolkit</tt>. 
+Most browsers don't let you change the system property <tt CLASS=literal>awt.toolkit</tt>. 
+Since this is a static method, you don't need to have a <tt CLASS=literal>Toolkit</tt> 
+object to call it; just call <tt CLASS=literal>Toolkit.getDefaultToolkit()</tt>. 
+
+<P CLASS=para>
+Currently, only one <tt CLASS=literal>Toolkit</tt> 
+can be associated with an environment. You are more than welcome to try to replace 
+the one provided with the JDK. This permits you to create a whole new widget 
+set, outside of Java, while maintaining the standard AWT API. </DL>
+System information
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract ColorModel getColorModel () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getColorModel()</tt> method 
+returns the current <tt CLASS=literal>ColorModel</tt> 
+used by the system. The default <tt CLASS=literal>ColorModel</tt> 
+is the standard RGB model, with 8 bits for each of red, green, and blue. 
+There are an additional 8 bits for the alpha component, for pixel-level 
+transparency. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract String[] getFontList () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFontList()</tt> method returns 
+a <tt CLASS=literal>String</tt> array of the set Java 
+fonts available with this <tt CLASS=literal>Toolkit</tt>. 
+Normally, these fonts will be understood on all the Java platforms. The 
+set provided with Sun's JDK 1.0 (with Netscape Navigator and Internet 
+Explorer, on platforms other than the Macintosh) contains TimesRoman, 
+Dialog, Helvetica, Courier (the 
+only fixed-width font), DialogInput, and ZapfDingbat.  
+
+<P CLASS=para>
+In Java 1.1, <tt CLASS=literal>getFont()</tt> reports all the 1.0 font names. It also reports Serif, which is equivalent to TimesRoman; San Serif, which is equivalent to Helvetica; and Monospaced, which is equivalent to Courier. The names TimesRoman, Helvetica, and Courier are still supported but should be avoided. They have been deprecated and may disappear in a future release. Although the JDK 1.1 reports the existence of the ZapfDingbat font, you can't use it. The characters in this font have been remapped to Unicode characters in the range <tt CLASS=literal>\u2700</tt> to <tt CLASS=literal>\u27ff</tt>.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract FontMetrics getFontMetrics (Font font) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFontMetrics()</tt> method 
+returns the <tt CLASS=literal>FontMetrics</tt> for 
+the given <tt CLASS=literal>Font</tt> object. You 
+can use this value to compute how much space would be required to display 
+some text using this <tt CLASS=literal>font</tt>. 
+You can use this version of <tt CLASS=literal>getFontMetrics()</tt> 
+(unlike the similar method in the <tt CLASS=literal>Graphics</tt> 
+class) prior to drawing anything on the screen. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getMenuShortcutKeyMask() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMenuShortcutKeyMask()</tt> 
+method identifies the accelerator key for menu shortcuts for the user's 
+platform. The return value is one of the modifier masks in the <tt CLASS=literal>Event</tt> 
+class, like <tt CLASS=literal>Event.CTRL_MASK</tt>. 
+This method is used internally by the <tt CLASS=literal>MenuBar</tt> 
+class to help in handling menu selection events. See <A HREF="ch10_01.htm">Chapter 10, <i>Would You Like to Choose from the Menu?</i></A> for more information about dealing with menu accelerators. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract PrintJob getPrintJob (Frame frame, String jobtitle, Properties 
+props) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPrintJob()</tt> method initiates 
+a print operation, <tt CLASS=literal>PrintJob</tt>, 
+on the user's platform. After getting a <tt CLASS=literal>PrintJob</tt> 
+object, you can use it to print the current graphics context as follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+PrintJob p = getToolkit().getPrintJob (aFrame, "hi", aProps);
+Graphics pg = p.getGraphics();
+printAll (pg);
+pg.dispose();
+p.end();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+With somewhat more work, you can print arbitrary content. See <A HREF="ch17_01.htm">Chapter 17, <i>Printing</i></A>, for more information about printing. The <tt CLASS=literal>frame</tt> 
+parameter serves as the parent to any print dialog window, <tt CLASS=literal>jobtitle</tt> 
+serves as the identification string in the print queue, and <tt CLASS=literal>props</tt> 
+serves as a means to provide platform-specific properties (default printer, 
+page order, orientation, etc.). If <tt CLASS=literal>props</tt> 
+is <tt CLASS=literal>(Properties)null</tt>, no 
+properties will be used. <tt CLASS=literal>props</tt> 
+is particularly interesting in that it is used both for input and for output. 
+When the environment creates a print dialog, it can read default values 
+for printing options from the properties sheet and use that to initialize 
+the dialog. After <tt CLASS=literal>getPrintJob()</tt> 
+returns, the properties sheet is filled in with the actual printing options 
+that the user requested. You can then use these option settings as the 
+defaults for subsequent print jobs. 
+
+<P CLASS=para>
+The actual property names are <tt CLASS=literal>Toolkit</tt> 
+specific and may be defined by the environment outside of Java. Furthermore, 
+the environment is free to ignore the <tt CLASS=literal>props</tt> 
+parameter altogether; this appears to be the case with Windows NT/95 platforms. 
+(It is difficult to see how Windows NT/95 would use the properties 
+sheet, since these platforms don't even raise the print dialog until you call 
+the method <tt CLASS=literal>getGraphics()</tt>.) <A HREF="ch15_01.htm#JAWT-CH-15-TAB-1">Table 15.1</A> 
+shows some of the properties recognized on UNIX platforms; valid property 
+values are shown in a fixed-width font. </DL>
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-15-TAB-1">Table 15.1: UNIX Printing Properties</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Property Name</TH>
+<TH ALIGN="LEFT">Meaning and Possible Values</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>awt.print.printer</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The name of the printer on your system to send the job to.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>awt.print.fileName</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The name of the file to save the print job to.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>awt.print.numCopies</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The number of copies to be printed.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>awt.print.options</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+Other options to be used for the run-time system's print command.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>awt.print.destination</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+Whether the print job should be sent to a <tt CLASS=literal>printer</tt> 
+or saved in a <tt CLASS=literal>file</tt>.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>awt.print.paperSize</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The size of the paper on which you want to print--usually, <tt CLASS=literal>letter</tt>.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>awt.print.orientation</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+Whether the job should be printed in <tt CLASS=literal>portrait</tt> 
+or <tt CLASS=literal>landscape</tt> orientation.</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static String getProperty (String key, String defaultValue) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getProperty()</tt> method retrieves 
+the <tt CLASS=literal>key</tt> property from the system's 
+<I CLASS=emphasis>awt.properties</I> 
+file (located in the <I CLASS=emphasis>lib</I> directory under the <I CLASS=emphasis>java.home</I> 
+directory). If <tt CLASS=literal>key</tt> is not a valid property, <tt CLASS=literal>defaultValue</tt> 
+is returned. This file is used to provide localized names for various system 
+resources. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int getScreenResolution () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getScreenResolution()</tt> method 
+retrieves the resolution of the screen in dots per inch. The sharper the 
+resolution of the screen, the greater number of dots per inch. Values vary 
+depending on the system and graphics mode. The <tt CLASS=literal>PrintJob.getPageResolution()</tt> 
+method returns similar information for a printed page. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Dimension getScreenSize () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getScreenSize()</tt> method 
+retrieves the dimensions of the user's screen in pixels for the current 
+mode. For instance, a VGA system in standard mode will return 640 for the 
+width and 480 for the height. This information is extremely helpful if 
+you wish to manually size or position objects based upon the physical size 
+of the user's screen. The <tt CLASS=literal>PrintJob.getPageDimension()</tt> 
+method returns similar information for a printed page. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Clipboard getSystemClipboard() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSystemClipboard()</tt> method 
+returns a reference to the system's clipboard. The clipboard allows 
+your Java programs to use cut and paste operations, either internally or 
+as an interface between your program and objects outside of Java. For instance, 
+the following code copies a <tt CLASS=literal>String</tt> 
+from a Java program to the system's clipboard: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+Clipboard clipboard = getToolkit().getSystemClipboard();
+StringSelection ss = new StringSelection("Hello");
+clipboard.setContents(ss, this);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Once you have placed the string <tt CLASS=literal>"Hello"</tt> on the clipboard, you 
+can paste it anywhere. The details of <tt CLASS=literal>Clipboard</tt>, 
+<tt CLASS=literal>StringSelection</tt>, and the rest 
+of the <tt CLASS=literal>java.awt.datatransfer</tt> 
+package are described in <A HREF="ch16_01.htm">Chapter 16, <i>Data Transfer</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final EventQueue getSystemEventQueue()</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<DD>
+
+<P CLASS=para>
+After checking whether the security manager allows access, this method returns a reference to the system's event queue.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected abstract EventQueue getSystemEventQueueImpl()</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>getSystemEventQueueImpl()</tt> does the actual work of fetching the event queue. The toolkit provider implements this method; only subclasses of <tt CLASS=literal>Toolkit</tt> can call it.</DL>
+Images
+
+<P CLASS=para>
+<A NAME="CH15.IMAGES"></A>The <tt CLASS=literal>Toolkit</tt> provides a set 
+of basic methods for working with images. These methods are similar to 
+methods in the <tt CLASS=literal>Applet</tt> class; 
+<tt CLASS=literal>Toolkit</tt> provides its own implementation 
+for use by programs that don't have access to an <tt CLASS=literal>AppletContext</tt> 
+(i.e., applications or applets that are run as applications). Remember 
+that you need an instance of <tt CLASS=literal>Toolkit</tt> 
+before you can call these methods; for example, to get an image, you might 
+call <tt CLASS=literal>Toolkit.getDefaultToolkit().getImage(`myImage.gif`)</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Image getImage (String filename) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getImage()</tt> method with 
+a <tt CLASS=literal>String</tt> parameter allows applications 
+to get an image from the local filesystem. Its argument is either a relative 
+or absolute <tt CLASS=literal>filename</tt> for an 
+image in a recognized image file format. The method returns immediately; 
+the <tt CLASS=literal>Image</tt> object that it returns 
+is initially empty. When the image is needed, the system attempts to get 
+<tt CLASS=literal>filename</tt> and convert it to 
+an image. To force the file to load immediately or to check for errors 
+while loading, use the <tt CLASS=literal>MediaTracker</tt> 
+class. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>getImage()</tt> is not usable within browsers since it will throw a security 
+exception because the applet is trying to access the local filesystem. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Image getImage (URL url) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getImage()</tt> method with 
+the <tt CLASS=literal>URL</tt> parameter can be used 
+in either applets or applications. It allows you to provide a URL for an 
+image in a recognized image file format. Like the other <tt CLASS=literal>getImage()</tt> 
+methods, this method returns immediately; the <tt CLASS=literal>Image</tt> 
+object that it returns is initially empty. When the image is needed, the 
+system attempts to load the file specified by <tt CLASS=literal>url</tt> 
+and convert it to an image. You can use the <tt CLASS=literal>MediaTracker</tt> 
+class to monitor loading and check whether any errors occurred. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract boolean prepareImage (Image image, int width, int height, ImageObserver observer)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>prepareImage()</tt> method is 
+called by the system or a program to force <tt CLASS=literal>image</tt> 
+to start loading. This method can be used to force an image to begin loading 
+before it is actually needed. The <tt CLASS=literal>Image</tt> 
+<tt CLASS=literal>image</tt> will be scaled to be 
+<tt CLASS=literal>width</tt> x <tt CLASS=literal>height</tt>. 
+A <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+of -1 means <tt CLASS=literal>image</tt> will be rendered 
+unscaled (i.e., at the size specified by the image itself). The <tt CLASS=literal>observer</tt> 
+is the <tt CLASS=literal>Component</tt> on which <tt CLASS=literal>image</tt> 
+will be rendered. As the <tt CLASS=literal>image</tt> 
+is loaded across the network, the <tt CLASS=literal>observer</tt>'s 
+<tt CLASS=literal>imageUpdate()</tt> method is called 
+to inform the observer of the image's status. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int checkImage (Image image, int width, int height, ImageObserver 
+observer) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>checkImage()</tt> method returns 
+the status of the <tt CLASS=literal>image</tt> that 
+is being rendered on <tt CLASS=literal>observer</tt>. 
+Calling <tt CLASS=literal>checkImage()</tt> only provides 
+information about the image; it does not force the image to start loading. 
+The <tt CLASS=literal>image</tt> is being scaled to 
+be <tt CLASS=literal>width</tt> x <tt CLASS=literal>height</tt>. 
+Passing a <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+of -1 means the image will be displayed without scaling. The return 
+value of <tt CLASS=literal>checkImage()</tt> is some 
+combination of <tt CLASS=literal>ImageObserver</tt> 
+flags describing the data that is now available. The <tt CLASS=literal>ImageObserver</tt> 
+flags are: <tt CLASS=literal>WIDTH</tt>, <tt CLASS=literal>HEIGHT</tt>, 
+<tt CLASS=literal>PROPERTIES</tt>, <tt CLASS=literal>SOMEBITS</tt>, 
+<tt CLASS=literal>FRAMEBITS</tt>, <tt CLASS=literal>ALLBITS</tt>, 
+<tt CLASS=literal>ERROR</tt>, and <tt CLASS=literal>ABORT</tt>. 
+Once <tt CLASS=literal>ALLBITS</tt> is set, the image 
+is completely loaded, and the return value of <tt CLASS=literal>checkImage()</tt> 
+will not change. For more information about these flags, see <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<P CLASS=para>
+The following program loads an image; whenever <tt CLASS=literal>paint()</tt> 
+is called, it displays what information about that image is available. 
+When the <tt CLASS=literal>ALLBITS</tt> flag is set, 
+<tt CLASS=literal>checkingImages</tt> knows that the 
+image is fully loaded, and that a call to <tt CLASS=literal>drawImage()</tt> 
+will display the entire image. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.image.*;
+import java.applet.*;
+public class checkingImages extends Applet {
+    Image i;
+    public void init () {
+        i = getImage (getDocumentBase(), "ora-icon.gif");
+    }
+    public void displayChecks (int i) {
+        if ((i &amp; ImageObserver.WIDTH) != 0)
+            System.out.print ("Width ");
+        if ((i &amp; ImageObserver.HEIGHT) != 0)
+            System.out.print ("Height ");
+        if ((i &amp; ImageObserver.PROPERTIES) != 0)
+            System.out.print ("Properties ");
+        if ((i &amp; ImageObserver.SOMEBITS) != 0)
+            System.out.print ("Some-bits ");
+        if ((i &amp; ImageObserver.FRAMEBITS) != 0)
+            System.out.print ("Frame-bits ");
+        if ((i &amp; ImageObserver.ALLBITS) != 0)
+            System.out.print ("All-bits ");
+        if ((i &amp; ImageObserver.ERROR) != 0)
+            System.out.print ("Error-loading ");
+        if ((i &amp; ImageObserver.ABORT) != 0)
+            System.out.print ("Loading-Aborted ");
+        System.out.println ();
+    }
+    public void paint (Graphics g) {
+        displayChecks (Toolkit.getDefaultToolkit().checkImage(i, -1, -1, this));
+        g.drawImage (i, 0, 0, this);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here's the output from running <tt CLASS=literal>checkingImages</tt> under Java 1.0; 
+it shows that the width and height of the image are loaded first, followed 
+by the image properties and the image itself. Java 1.1 also displays <tt CLASS=literal>Frame-bits</tt> 
+once the image is loaded. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Width Height
+Width Height Properties Some-bits
+Width Height Properties Some-bits All-bits
+Width Height Properties Some-bits All-bits
+Width Height Properties Some-bits All-bits
+... (Repeated Forever More)
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Image createImage (ImageProducer producer) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>createImage()</tt> method creates 
+an <tt CLASS=literal>Image</tt> object from an <tt CLASS=literal>ImageProducer</tt>. 
+The <tt CLASS=literal>producer</tt> parameter must 
+be some class that implements the <tt CLASS=literal>ImageProducer</tt> 
+interface. Image producers in the <tt CLASS=literal>java.awt.graphics</tt> 
+package are <tt CLASS=literal>FilteredImageSource</tt> 
+(which, together with an <tt CLASS=literal>ImageFilter</tt>, 
+lets you modify an existing image) and <tt CLASS=literal>MemoryImageSource</tt> 
+(which lets you turn an array of pixel information into an image). The 
+image filters provided with <tt CLASS=literal>java.awt.image</tt> 
+are <tt CLASS=literal>CropImageFilter</tt>, <tt CLASS=literal>RGBImageFilter</tt>, 
+<tt CLASS=literal>AreaAveragingScaleFilter</tt>, and <tt CLASS=literal>ReplicateScaleFilter</tt>. 
+You can also implement your own image producers and image filters. These 
+classes are all covered in detail in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<P CLASS=para>
+The following code uses this version of <tt CLASS=literal>createImage()</tt> 
+to create a modified version of an original image:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Image i = Toolkit.getDefaultToolkit().getImage (u);
+      TransparentImageFilter tf = new TransparentImageFilter (.5f);
+Image j = Toolkit.getDefaultToolkit().createImage (
+              new FilteredImageSource (i.getSource(), tf));
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Image createImage (byte[] imageData) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>createImage()</tt> method converts 
+the entire byte array in <tt CLASS=literal>imageData</tt> 
+into an <tt CLASS=literal>Image</tt>. This data must 
+be in one of the formats understood by this AWT <tt CLASS=literal>Toolkit</tt> 
+(GIF, JPEG, or XBM) and relies on the "magic number" of the 
+data to determine the image type. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Image createImage (byte[] imageData, int offset, int length)  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>createImage()</tt> method converts 
+a subset of the byte data in <tt CLASS=literal>imageData</tt> 
+into an <tt CLASS=literal>Image</tt>. Instead of starting 
+at the beginning, this method starts at <tt CLASS=literal>offset</tt> 
+and goes to <tt CLASS=literal>offset+length-1</tt>, 
+for a total of <tt CLASS=literal>length</tt> bytes. 
+If <tt CLASS=literal>offset</tt> is 0 and <tt CLASS=literal>length</tt> 
+is <tt CLASS=literal>imageData.length</tt>, this method 
+is equivalent to the previous method and converts the entire array. 
+
+<P CLASS=para>
+The data in <tt CLASS=literal>imageData</tt> must 
+be in one of the formats understood by this AWT <tt CLASS=literal>Toolkit</tt> 
+(GIF, JPEG, or XBM) and relies on the "magic number" of the 
+data to determine the image type. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+For those unfamiliar with magic numbers, most data files are uniquely 
+identified by the first handful or so of bytes. For instance, the first 
+three bytes of a GIF file are "<tt CLASS=literal>GIF</tt>". This is what <tt CLASS=literal>createImage()</tt> 
+relies upon to do its magic. 
+</blockquote><P>
+</DIV>
+
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void beep () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>beep()</tt> method attempts 
+to play an audio beep. You have no control over pitch, duration, or volume; 
+it is like putting <tt CLASS=literal>echo ^G</tt> 
+in a UNIX shell script. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void sync () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>sync()</tt> method flushes the 
+display of the underlying graphics context. Normally, this is done automatically, 
+but there are times (particularly when doing animation) when you need to 
+<tt CLASS=literal>sync()</tt> the display yourself. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Audio in Applications</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Peer Interfaces</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

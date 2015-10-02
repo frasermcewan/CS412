@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.3 Generating Exceptions</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:17:37 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Exception Handling</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-3">9.3 Generating Exceptions</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.DEC2"></A>A Java program can use the exception-handling mechanism to
+deal with program-specific errors in a clean manner. A program simply
+uses the <tt CLASS=literal>throw</tt> statement to signal an exception.
+The <tt CLASS=literal>throw</tt> statement must be followed by an object
+that is of type <tt CLASS=literal>Throwable</tt> or one of its subclasses.
+For program-defined exceptions, you typically want an exception object
+to be an instance of a subclass of the <tt CLASS=literal>Exception</tt>
+class. In most cases, it makes sense to define a new subclass of
+<tt CLASS=literal>Exception</tt> that is specific to your program.
+
+<P CLASS=para>
+Consider the following example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class WrongDayException extends Exception {
+    public WrongDayException () {}
+    public WrongDayException(String msg) {
+        super(msg);
+    }
+}
+public class ThrowExample {
+    void doIt() throws WrongDayException{
+        int dayOfWeek =(new java.util.Date()).getDay();
+        if (dayOfWeek != 2  &amp;&amp; dayOfWeek != 4)
+            throw new WrongDayException("Tue. or Thur.");
+        // The rest of doIt's logic goes here
+        System.out.println("Did it");
+    }
+    public static void main (String [] argv) {
+        try {
+            (new ThrowExample()).doIt();
+        } catch (WrongDayException e) {
+            System.out.println("Sorry, can do it only on "
+                                + e.getMessage());
+        }
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The code in this example defines a class called
+<tt CLASS=literal>WrongDayException</tt>
+to represent the specific type of exception thrown by the example.
+The <tt CLASS=literal>Throwable</tt> class, and most subclasses of
+<tt CLASS=literal>Throwable</tt>,
+have at least two constructors. One constructor takes a string argument
+that is used as a textual message that explains the exception,
+while the other constructor takes no arguments. Thus, the
+<tt CLASS=literal>WrongDayException</tt> class defines two constructors.
+
+<P CLASS=para>
+In the class <tt CLASS=literal>ThrowExample</tt>, if the current
+day of the week is neither Tuesday nor Thursday,
+the <tt CLASS=literal>doIt()</tt>
+method throws a <tt CLASS=literal>WrongDayException</tt>. Note that
+the <tt CLASS=literal>WrongDayException</tt> object is created at the
+same time it is thrown. It is common practice to provide some
+information about an exception when it is thrown, so a string argument
+is used in the allocation statement for the
+<tt CLASS=literal>WrongDayException</tt>.
+The method declaration for the <tt CLASS=literal>doIt()</tt> method
+contains a <tt CLASS=literal>throws</tt> clause, to indicate the fact
+that it can throw a <tt CLASS=literal>WrongDayException</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>main()</tt> method in <tt CLASS=literal>ThrowExample</tt>
+encloses its call to the <tt CLASS=literal>doIt()</tt> method in a
+<tt CLASS=literal>try</tt>
+statement, so that it can catch any <tt CLASS=literal>WrongDayException</tt>
+thrown by <tt CLASS=literal>doIt()</tt>. The <tt CLASS=literal>catch</tt>
+block prints an error message, using the <tt CLASS=literal>getMessage()</tt>
+method of the exception object. This method retrieves the string
+that was passed to the constructor when the exception object was
+created.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch09_04.htm#JLR2-CH-9-SECT-4.1">Exceptions</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch06_11.htm#JLR2-CH-6-SECT-11">The throw Statement</A>;
+<A HREF="ch06_12.htm#JLR2-CH-6-SECT-12">The try Statement</A>;
+<A HREF="ch10_25.htm">Throwable</A>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-2.1">Printing Stack Traces</A></h3>
+
+<P CLASS=para>
+When an exception is caught, it can be useful to print a stack
+trace to figure out where the exception came from. A stack trace
+looks like the following:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.lang.ArithmeticException: / by zero
+        at t.cap(t.java:16)
+        at t.doit(t.java:8)
+        at t.main(t.java:3)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can print a stack trace by calling the
+<tt CLASS=literal>printStackTrace()</tt>
+method that all <tt CLASS=literal>Throwable</tt> objects inherit from
+the <tt CLASS=literal>Throwable</tt> class. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int cap (x) {return 100/x}
+try {
+    cap(0);
+} catch(ArithmeticException e) {
+    e.printStackTrace();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can also print a stack trace anywhere in an application,
+without actually throwing an exception. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new Throwable().printStackTrace();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch10_25.htm">Throwable</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-2.2">Rethrowing Exceptions</A></h3>
+
+<P CLASS=para>
+After an exception is caught, it can be rethrown if
+is appropriate. The one choice that you have to make when rethrowing
+an exception concerns the location from where the stack trace says the
+object was thrown. You can make the rethrown exception appear
+to have been thrown from the location of the original exception
+throw, or from the location of the current rethrow.
+
+<P CLASS=para>
+To rethrow an exception and have the stack trace indicate
+the original location, all you have to do is rethrow the exception:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    cap(0);
+} catch(ArithmeticException e) {
+    throw e;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To arrange for the stack trace to show the actual location
+from which the exception is being rethrown, you have to call the
+exception's <tt CLASS=literal>fillInStackTrace()</tt> method. This method
+sets the stack trace information in the exception based on the current
+execution context. Here's an example using the
+<tt CLASS=literal>fillIn-StackTrace()</tt> method:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    cap(0);
+} catch(ArithmeticException e) {
+    throw (ArithmeticException)e.fillInStackTrace();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It is important to call <tt CLASS=literal>fillInStackTrace()</tt> on
+the same line as the <tt CLASS=literal>throw</tt> statement, so that
+the line number specified in the stack trace matches the line on
+which the <tt CLASS=literal>throw</tt> statement appears. The
+<tt CLASS=literal>fillInStackTrace()</tt>
+method returns a reference to the <tt CLASS=literal>Throwable</tt> class,
+so you need to cast the reference to the actual type of the exception.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch10_25.htm">Throwable</A>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Declaring Exceptions</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Exception Hierarchy</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

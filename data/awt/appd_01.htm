@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<TITLE>[Appendix D] Image Loading</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:19:00 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="appc_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Appendix D</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="appd_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=appendix><A CLASS="TITLE" NAME="JAWT-APP-D">D. Image Loading</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+How Images are Loaded<br>
+<A HREF="appd_02.htm">A Brief Tour of sun.awt.image</A><BR>
+
+<p>
+</DIV>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-APP-D-SECT-1">D.1 How Images are Loaded</A></h2>
+
+<P CLASS=para>
+You have seen how easy it is to display an image on screen and have
+probably guessed that there's more going on behind the
+scenes. The
+<tt CLASS=literal>getImage()</tt> and <tt CLASS=literal>drawImage()</tt>
+methods trigger a series of events that result in the
+image being available for display on the
+<tt CLASS=literal>ImageObserver</tt>. The image is fetched asynchronously in another
+thread. The entire process[1]
+goes as follows:<A NAME="D.LOAD1"></A>
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ 
+This summary covers Sun's implementation (&nbsp;&nbsp;JDK). Implementations
+that don't derive from the JDK may behave completely differently.  
+</blockquote>
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>The call to <tt CLASS=literal>getImage()</tt> triggers
+<tt CLASS=literal>Toolkit</tt> to call <tt CLASS=literal>createImage()</tt>
+for the image's <tt CLASS=literal>InputStreamImageSource</tt> (which
+is a <tt CLASS=literal>URLImageSource</tt> in this case; it would be a
+<tt CLASS=literal>FileImageSource</tt> if we were loading the image from a
+local file).
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>Toolkit</tt> registers the 
+image as being "desired." Desired just means that something 
+will eventually want the image loaded. The system then waits until an <tt CLASS=literal>ImageObserver</tt> 
+registers its interest in the image. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>drawImage()</tt> method (use 
+of <tt CLASS=literal>MediaTracker</tt> or <tt CLASS=literal>prepareImage()</tt>) 
+registers an <tt CLASS=literal>ImageObserver</tt> 
+as interested. 
+
+<P>
+<li CLASS=listitem>Registering an <tt CLASS=literal>ImageObserver</tt> 
+kicks the image's <tt CLASS=literal>ImageRepresentation</tt> 
+into action; this is the start of the loading process, although image data 
+isn't actually transferred until step 9. <tt CLASS=literal>ImageRepresentation</tt> 
+implements the <tt CLASS=literal>ImageConsumer</tt> 
+interface. 
+
+<P>
+<li CLASS=listitem>The start of production registers the image source (<tt CLASS=literal>ImageProducer</tt> 
+<tt CLASS=literal>URLImageSource</tt>) with the <tt CLASS=literal>ImageFetcher</tt> 
+and also registers the <tt CLASS=literal>ImageRepresentation</tt> 
+as an <tt CLASS=literal>ImageConsumer</tt> for the 
+image. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>ImageFetcher</tt> creates 
+a thread to get the image from its source. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>ImageFetcher</tt> reads data 
+and passes it along to the <tt CLASS=literal>InputStreamImageSource</tt>, 
+which is a <tt CLASS=literal>URLImageSource</tt>. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>URLImageSource</tt> determines 
+that <tt CLASS=literal>JPEGImageDecoder</tt> is the 
+proper <tt CLASS=literal>ImageDecoder</tt> for converting 
+the input stream into an <tt CLASS=literal>Image</tt>. 
+(Other <tt CLASS=literal>ImageDecoders</tt> are used 
+for other image types, like GIF.) 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>ImageProducer</tt> starts 
+reading the image data from the source; it calls the <tt CLASS=literal>ImageConsumer</tt> 
+(i.e., the <tt CLASS=literal>ImageRepresentation</tt>) 
+as it processes the image. The most important method in the <tt CLASS=literal>ImageConsumer</tt> 
+interface is <tt CLASS=literal>setPixels()</tt>, which 
+delivers pixel data to the consumer for rendering onscreen. 
+
+<P>
+<li CLASS=listitem>As the <tt CLASS=literal>ImageConsumer</tt> (i.e., 
+the <tt CLASS=literal>ImageRepresentation</tt>) gets 
+additional information, it notifies the <tt CLASS=literal>ImageObserver</tt> 
+via <tt CLASS=literal>imageUpdate()</tt> calls. 
+
+<P>
+<li CLASS=listitem>When the image is fully acquired across the network, the thread started 
+by the <tt CLASS=literal>ImageFetcher</tt> stops. 
+
+<P>
+</OL>
+<P CLASS=para>
+As you see, there are a lot of unfamiliar moving pieces. Many of them are 
+from the <tt CLASS=literal>java.awt.image</tt> package and are discussed in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. Others are from the 
+<tt CLASS=literal>sun.awt.image</tt> package; they 
+are hidden in that you don't need to know anything about them to 
+do image processing in Java. However, if you're curious, we'll 
+briefly summarize these classes in the next section. 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="appc_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="appd_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Test Program</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>A Brief Tour of sun.awt.image</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

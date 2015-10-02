@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 23] The java.beans Package</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:18:20 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch23_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 23</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch23_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-23">23. The java.beans Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch23_02.htm'>java.beans.BeanInfo (JDK 1.1)</a><br>
+<a href='ch23_03.htm'>java.beans.Beans (JDK 1.1)</a><br>
+<a href='ch23_04.htm'>java.beans.Customizer (JDK 1.1)</a><br>
+<a href='ch23_05.htm'>java.beans.EventSetDescriptor (JDK 1.1)</a><br>
+<a href='ch23_06.htm'>java.beans.FeatureDescriptor (JDK 1.1)</a><br>
+<a href='ch23_07.htm'>java.beans.IndexedPropertyDescriptor (JDK 1.1)</a><br>
+<a href='ch23_08.htm'>java.beans.IntrospectionException (JDK 1.1)</a><br>
+<a href='ch23_09.htm'>java.beans.Introspector (JDK 1.1)</a><br>
+<a href='ch23_10.htm'>java.beans.MethodDescriptor (JDK 1.1)</a><br>
+<a href='ch23_11.htm'>java.beans.ParameterDescriptor (JDK 1.1)</a><br>
+<a href='ch23_12.htm'>java.beans.PropertyChangeEvent (JDK 1.1)</a><br>
+<a href='ch23_13.htm'>java.beans.PropertyChangeListener (JDK 1.1)</a><br>
+<a href='ch23_14.htm'>java.beans.PropertyChangeSupport (JDK 1.1)</a><br>
+<a href='ch23_15.htm'>java.beans.PropertyDescriptor (JDK 1.1)</a><br>
+<a href='ch23_16.htm'>java.beans.PropertyEditor (JDK 1.1)</a><br>
+<a href='ch23_17.htm'>java.beans.PropertyEditorManager (JDK 1.1)</a><br>
+<a href='ch23_18.htm'>java.beans.PropertyEditorSupport (JDK 1.1)</a><br>
+<a href='ch23_19.htm'>java.beans.PropertyVetoException (JDK 1.1)</a><br>
+<a href='ch23_20.htm'>java.beans.SimpleBeanInfo (JDK 1.1)</a><br>
+<a href='ch23_21.htm'>java.beans.VetoableChangeListener (JDK 1.1)</a><br>
+<a href='ch23_22.htm'>java.beans.VetoableChangeSupport (JDK 1.1)</a><br>
+<a href='ch23_23.htm'>java.beans.Visibility (JDK 1.1)</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.beans</tt> package contains the classes and
+interfaces that constitute the JavaBeans API.  It is new in
+Java 1.1.<A NAME="CH23.JAVA.BEANS.P1"></A>
+<A HREF="ch23_01.htm#JNUT2-CH-23-FIG-1">Figure 23.1</A>
+shows the class hierarchy for this package.
+
+<P CLASS=para>
+The classes and interfaces in this package are useful to
+programmers who are developing "beanbox" tools to manipulate beans,
+and to programmers who are writing their own beans.  Programmers who
+are building applications using beans do not have to be
+familiar with <tt CLASS=literal>java.beans</tt>.  See <A HREF="ch10_01.htm">Chapter 10, <i>Java Beans</i></A>
+for more details on writing custom beans.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-23-FIG-1">Figure 23.1: The java.beans package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_2301.gif" alt="[Graphic: Figure 23-1]" width=464 height=503 border=0>
+
+</DIV>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-23-SECT-1">23.1 java.beans.BeanDescriptor (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-23-SECT-1.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>BeanDescriptor</tt> object is a type of
+<tt CLASS=literal>FeatureDescriptor</tt> that describes a Java bean.  The
+<tt CLASS=literal>BeanInfo</tt> class for a Java bean optionally creates
+and initializes a <tt CLASS=literal>BeanDescriptor</tt> object to describe
+the bean.  Typically, only application builders and similar
+tools use the <tt CLASS=literal>BeanDescriptor</tt>.
+
+<P CLASS=para>
+To create a <tt CLASS=literal>BeanDescriptor</tt>, you must specify the
+class of the bean, and optionally, the class of a
+<tt CLASS=literal>Customizer</tt> for the bean.  You can use the methods of
+<tt CLASS=literal>FeatureDescriptor</tt> to provide additional information
+about the bean.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>BeanDescriptor</tt> extends FeatureDescriptor {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>BeanDescriptor</tt>(Class <tt CLASS=literal>beanClass</tt>);
+            public <tt CLASS=literal>BeanDescriptor</tt>(Class <tt CLASS=literal>beanClass</tt>, Class <tt CLASS=literal>customizerClass</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public Class <tt CLASS=literal>getBeanClass</tt>();
+            public Class <tt CLASS=literal>getCustomizerClass</tt>();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-23-SECT-1.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+Object->FeatureDescriptor->BeanDescriptor
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-23-SECT-1.3">Returned By:</A></h3>
+
+<P CLASS=para>
+BeanInfo.getBeanDescriptor(), 
+SimpleBeanInfo.getBeanDescriptor()
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch23_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.awt.peer.WindowPeer (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.beans.BeanInfo (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,1328 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] 12.4 ImageConsumer</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:50:57 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>Image Processing</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-4">12.4 ImageConsumer</A></h2>
+
+<P CLASS=para>
+<A NAME="CH12.IMAGES5"></A>The <tt CLASS=literal>ImageConsumer</tt> interface 
+specifies the methods that must be implemented to receive data from an 
+<tt CLASS=literal>ImageProducer</tt>. For the most 
+part, that is the only context in which you need to know about the <tt CLASS=literal>ImageConsumer</tt> 
+interface. If you write an image producer, it will be handed a number of 
+obscure objects, about which you know nothing except that they implement 
+<tt CLASS=literal>ImageConsumer</tt>, and that you 
+can therefore call the methods discussed in this section to deliver your 
+data. The chances that you will ever implement an image consumer are rather 
+remote, unless you are porting Java to a new environment. It is more likely 
+that you will want to subclass <tt CLASS=literal>ImageFilter</tt>, 
+in which case you may need to implement some of these methods. But most 
+of the time, you will just need to know how to hand your data off to the next 
+element in the chain. 
+
+<P CLASS=para>
+The <tt CLASS=literal>java.awt.image</tt> package 
+includes two classes that implement <tt CLASS=literal>ImageConsumer:</tt> 
+<tt CLASS=literal>PixelGrabber</tt> and <tt CLASS=literal>ImageFilter</tt> 
+(and its subclasses). These classes are unique in that they don't 
+display anything on the screen. <tt CLASS=literal>PixelGrabber</tt> 
+takes the image data and stores it in a pixel array; you can use this array 
+to save the image in a file, generate a new image, etc. <tt CLASS=literal>ImageFilter</tt>, 
+which is used in conjunction with <tt CLASS=literal>FilteredImageSource</tt>, 
+modifies the image data; the <tt CLASS=literal>FilteredImageSource</tt> 
+sends the modified image to another consumer, which can further modify 
+or display the new image. When you draw an image on the screen, the JDK's 
+<tt CLASS=literal>ImageRepresentation</tt> class is 
+probably doing the real work. This class is part of the <tt CLASS=literal>sun.awt.image</tt> 
+package. You really don't need to know anything about it, although 
+you may see <tt CLASS=literal>ImageRepresentation</tt> 
+mentioned in a stack trace if you try to filter beyond the end of a pixel 
+array. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-4.0">ImageConsumer Interface</A></h3>Constants
+
+<P CLASS=para>
+There are two sets of constants for <tt CLASS=literal>ImageConsumer</tt>. 
+One set represents those that can be used for the <tt CLASS=literal>imageComplete()</tt> 
+method. The other is used with the <tt CLASS=literal>setHints()</tt> 
+method. See the descriptions of those methods on how to use them. 
+
+<P CLASS=para>
+The first set of flags is for the <tt CLASS=literal>imageComplete()</tt> 
+method: 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int IMAGEABORTED </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>IMAGEABORTED</tt> flag signifies 
+that the image creation process was aborted and the image is not complete. 
+In the image production process, an abort could mean multiple things. It 
+is possible that retrying the production would succeed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int IMAGEERROR </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>IMAGEERROR</tt> flag signifies 
+that an error was encountered during the image creation process and the 
+image is not complete. In the image production process, an error could 
+mean multiple things. More than likely, the image file or pixel data is 
+invalid, and retrying won't succeed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SINGLEFRAMEDONE </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SINGLEFRAMEDONE</tt> flag signifies 
+that a frame other than the last has completed loading. There are additional 
+frames to display, but a new frame is available and is complete. 
+For an example of this flag in use, see the dynamic <tt CLASS=literal>ImageFilter</tt> 
+example in <A HREF="ch12_05.htm#JAWT-CH-12-EX-8">Example 12.8</A>.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int STATICIMAGEDONE </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>STATICIMAGEDONE</tt> flag signifies 
+that the image has completed loading. If this is a multiframe image, all 
+frames have been generated. For an example of this flag in use, see the 
+dynamic <tt CLASS=literal>ImageFilter</tt> example 
+in <A HREF="ch12_05.htm#JAWT-CH-12-EX-8">Example 12.8</A>.</DL>
+<P CLASS=para>
+The following set of flags can be ORed together to form the single 
+parameter to the <tt CLASS=literal>setHints()</tt> 
+method. Certain flags do not make sense set together, but it is the responsibility 
+of the concrete <tt CLASS=literal>ImageConsumer</tt> 
+to enforce this. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int COMPLETESCANLINES </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>COMPLETESCANLINES</tt> flag 
+signifies that each call to <tt CLASS=literal>setPixels()</tt> 
+will deliver at least one complete scan line of pixels to this consumer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int RANDOMPIXELORDER </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>RANDOMPIXELORDER</tt> flag tells 
+the consumer that pixels are not provided in any particular order. Therefore, 
+the consumer cannot perform optimization that depends on pixel delivery 
+order. In the absence of both <tt CLASS=literal>COMPLETESCANLINES</tt> 
+and <tt CLASS=literal>RANDOMPIXELORDER</tt>, the <tt CLASS=literal>ImageConsumer</tt> 
+should assume pixels will arrive in <tt CLASS=literal>RANDOMPIXELORDER</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SINGLEFRAME </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SINGLEFRAME</tt> flag tells 
+the consumer that this image contains a single non-changing frame. This 
+is the case with most image formats. An example of an image that 
+does not contain a single frame is the multiframe GIF89a image.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SINGLEPASS </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SINGLEPASS</tt> flag tells the 
+consumer to expect each pixel once and only once. Certain image formats, 
+like progressive JPEG images, deliver a single image several times, with 
+each pass yielding a sharper image. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int TOPDOWNLEFTRIGHT </I><br>
+<DD>
+
+<P CLASS=para>
+The final <tt CLASS=literal>setHints()</tt> flag, 
+<tt CLASS=literal>TOPDOWNLEFTRIGHT</tt>, tells the 
+consumer to expect the pixels in a top-down, left-right order. This flag 
+will almost always be set. </DL>
+Methods
+
+<P CLASS=para>
+The interface methods are presented in the order in which they are normally 
+called by an <tt CLASS=literal>ImageProducer</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>void setDimensions (int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setDimensions()</tt> method 
+should be called once the <tt CLASS=literal>ImageProducer</tt> 
+knows the <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+of the image. This is the actual <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt>, not necessarily 
+the scaled size. It is the consumer's responsibility to do the scaling 
+and resizing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>void setProperties (Hashtable properties) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setProperties()</tt> method 
+should only be called by the <tt CLASS=literal>ImageProducer</tt> 
+if the image has any properties that should be stored for later retrieval 
+with the <tt CLASS=literal>getProperty()</tt> method 
+of <tt CLASS=literal>Image</tt>. Every image format 
+has its own property set. One property that tends to be common is the "comment" 
+property. <tt CLASS=literal>properties</tt> represents 
+the <tt CLASS=literal>Hashtable</tt> of properties 
+for the image; the name of each property is used as the <tt CLASS=literal>Hashtable</tt> 
+key. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>void setColorModel (ColorModel model) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setColorModel()</tt> method 
+gives the <tt CLASS=literal>ImageProducer</tt> the 
+opportunity to tell the <tt CLASS=literal>ImageConsumer</tt> 
+that the <tt CLASS=literal>ColorModel</tt> <tt CLASS=literal>model</tt> 
+will be used for the majority of pixels in the image. The <tt CLASS=literal>ImageConsumer</tt> 
+may use this information for optimization. However, each call to <tt CLASS=literal>setPixels()</tt> 
+contains its own <tt CLASS=literal>ColorModel</tt>, 
+which isn't necessarily the same as the color model given here. In 
+other words, <tt CLASS=literal>setColorModel()</tt> 
+is only advisory; it does not guarantee that all (or any) of the pixels 
+in the image will use this model. Using different color models for different 
+parts of an image is possible, but not recommended. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>void setHints (int hints) </I><br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>ImageProducer</tt> should call 
+the <tt CLASS=literal>setHints()</tt> method prior 
+to any <tt CLASS=literal>setPixels()</tt> calls. The 
+<tt CLASS=literal>hints</tt> are formed by ORing 
+the constants <tt CLASS=literal>COMPLETESCANLINES</tt>, 
+<tt CLASS=literal>RANDOMPIXELORDER</tt>, <tt CLASS=literal>SINGLEFRAME</tt>, 
+<tt CLASS=literal>SINGLEPASS</tt>, and <tt CLASS=literal>TOPDOWNLEFTRIGHT</tt>. 
+These hints give the image consumer information about the order in which 
+the producer will deliver pixels. When the <tt CLASS=literal>ImageConsumer</tt> 
+is receiving pixels, it can take advantage of these hints for optimization. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>void setPixels (int x, int y, int width, int height, ColorModel model, 
+byte pixels[],</I>  <I CLASS=emphasis>int offset, int scansize) </I><br>
+<DD>
+
+<P CLASS=para>
+An ImageProducer calls the <tt CLASS=literal>setPixels()</tt> method to
+deliver the image pixel data to the <tt CLASS=literal>ImageConsumer</tt>.
+The bytes are delivered a rectangle at a time. (<tt CLASS=literal>x</tt>,
+<tt CLASS=literal>y</tt>) represents the top left corner of the rectangle;
+its dimensions are <tt CLASS=literal>width</tt> x
+<tt CLASS=literal>height</tt>. <tt CLASS=literal>model</tt> is the
+<tt CLASS=literal>ColorModel</tt> used for this set of pixels; different
+calls to <tt CLASS=literal>setPixels()</tt> may use different color
+models. The pixels themselves are taken from the byte array
+<tt CLASS=literal>pixels</tt>. <tt CLASS=literal>offset</tt> is the first
+element of the pixel array that will be
+used. <tt CLASS=literal>scansize</tt> is the length of the scan lines in
+the array. In most cases, you want the consumer to render all the
+pixels on the scan line; in this case, <tt CLASS=literal>scansize</tt>
+will equal <tt CLASS=literal>width</tt>. However, there are cases in which
+you want the consumer to ignore part of the scan line; you may be
+clipping an image, and the ends of the scan line fall outside the
+clipping region. In this case, rather than copying the pixels you want
+into a new array, you can specify a <tt CLASS=literal>width</tt> that is
+smaller than <tt CLASS=literal>scansize</tt>.
+
+<P CLASS=para>
+That's a lot of information, but it's easy to summarize. A 
+pixel located at point (<tt CLASS=literal>x1</tt>, <tt CLASS=literal>y1</tt>) within the rectangle being delivered to 
+the consumer is located at position (<tt CLASS=literal>(y1 - y) * scansize 
++ (x1 - x) + offset</tt>) within the array <tt CLASS=literal>pixels[]</tt>. 
+<A HREF="ch12_04.htm#JAWT-CH-12-FIG-4">Figure 12.4</A> shows how the pixels delivered by <tt CLASS=literal>setPixels()</tt> fit into the complete image; <A HREF="ch12_04.htm#JAWT-CH-12-FIG-5">Figure 12.5</A> shows how pixels are stored within the array. </DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-12-FIG-4">Figure 12.4: Delivering pixels for an image</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1204.gif" alt="[Graphic: Figure 12-4]" width=455 height=236 border=0>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-12-FIG-5">Figure 12.5: Storing pixels in an array</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1205.gif" alt="[Graphic: Figure 12-5]" width=502 height=128 border=0>
+
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>void setPixels (int x, int y, int width, int height, ColorModel model, 
+int pixels[],</I>  <I CLASS=emphasis>int offset, int scansize) </I><br>
+<DD>
+
+<P CLASS=para>
+The second <tt CLASS=literal>setPixels()</tt> method is similar to the
+first. <tt CLASS=literal>pixels[]</tt> is an array of
+<tt CLASS=literal>int</tt>s; this is necessary when you have more than
+eight bits of data per pixel.  
+
+<DT CLASS=varlistentry><I CLASS=emphasis>void imageComplete (int status) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageProducer</tt> calls
+<tt CLASS=literal>imageComplete()</tt> to tell an
+<tt CLASS=literal>ImageConsumer</tt> that it has transferred a complete
+image. The status argument is a flag that describes exactly why the
+<tt CLASS=literal>ImageProducer</tt> has finished. It may have one of the
+following values: <tt CLASS=literal>IMAGEABORTED</tt> (if the image
+production was aborted); <tt CLASS=literal>IMAGEERROR</tt> (if an error in
+producing the image occurred); <tt CLASS=literal>SINGLEFRAMEDONE</tt> (if
+a single frame of a multiframe image has been completed); or
+<tt CLASS=literal>STATICIMAGEDONE</tt> (if all pixels have been
+delivered). When <tt CLASS=literal>imageComplete()</tt> gets called, the
+<tt CLASS=literal>ImageConsumer</tt> should call the image
+producer's <tt CLASS=literal>removeConsumer()</tt> method, unless it
+wants to receive additional frames (status of
+<tt CLASS=literal>SINGLEFRAMEDONE</tt>).  </DL>
+PPMImageDecoder
+
+<P CLASS=para>
+<A NAME="CH12.PPM1"></A><A NAME="CH12.PPM2"></A>Now that we have discussed the <tt CLASS=literal>ImageConsumer</tt> 
+interface, we're finally ready to give an example of a full-fledged 
+<tt CLASS=literal>ImageProducer</tt>. This producer 
+uses the methods of the <tt CLASS=literal>ImageConsumer</tt> 
+interface to communicate with image consumers; image consumers use the 
+<tt CLASS=literal>ImageProducer</tt> interface to 
+register themselves with this producer. 
+
+<P CLASS=para>
+Our image producer will interpret images in the PPM format.[1] 
+PPM is a simple image format developed by Jef Poskanzer as part of the 
+<I CLASS=emphasis>pbmplus</I> image conversion package. A PPM file starts with a header consisting 
+of the image type, the image's width and height in pixels, and the 
+maximum value of any RGB component. The header is entirely in ASCII. The 
+pixel data follows the header; it is either in binary (if the image type 
+is P6) or ASCII (if the image type is P3). The pixel data is simply a series 
+of bytes describing the color of each pixel, moving left to right and top 
+to bottom. In binary format, each pixel is represented by three bytes: 
+one for red, one for green, and one for blue. In ASCII format, each pixel 
+is represented by three numeric values, separated by white space (space, 
+tab, or newline). A comment may occur anywhere in the file, but it would be 
+surprising to see one outside of the header. Comments start with # and 
+continue to the end of the line. ASCII format files are obviously much 
+larger than binary files. There is no compression on either file type. 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ 
+For more information about PPM and the <I CLASS=emphasis>pbmplus</I> package, see <I CLASS=emphasis>Encyclopedia 
+of Graphics File Formats</I>, by James D. Murray 
+and William VanRyper (from O'Reilly &amp; Associates). See also 
+<A HREF="http://www.acme.com/">http://www.acme.com/</A>.
+</blockquote>
+<P CLASS=para>
+The <tt CLASS=literal>PPMImageDecoder</tt> source 
+is listed in Example 12--4. The applet that uses this class is shown 
+in <A HREF="ch12_04.htm#JAWT-CH-12-EX-5">Example 12.5</A>. You can reuse a lot of the code in 
+the <tt CLASS=literal>PPMImageDecoder</tt> when you 
+implement your own image producers. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-4">Example 12.4: PPMImageDecoder Source</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.image.*;
+import java.util.*;
+import java.io.*;
+public class PPMImageDecoder implements ImageProducer {
+/* Since done in-memory, only one consumer */
+    private ImageConsumer consumer;
+    boolean loadError = false;
+    int width;
+    int height;
+    int store[][];
+    Hashtable props = new Hashtable();
+/* Format of Ppm file is single pass/frame, w/ complete scan lines in order */
+    private static int PpmHints = (ImageConsumer.TOPDOWNLEFTRIGHT |
+                                   ImageConsumer.COMPLETESCANLINES |
+                                   ImageConsumer.SINGLEPASS |
+                                   ImageConsumer.SINGLEFRAME);
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The class starts by declaring class variables and constants. We will use 
+the variable <tt CLASS=literal>PpmHints</tt> when 
+we call <tt CLASS=literal>setHints()</tt>. Here, we 
+set this variable to a collection of "hint" constants that 
+indicate we will produce pixel data in top-down, left-right order; we will always 
+send complete scan lines; we will make only one pass over the pixel data 
+(we will send each pixel once); and there is one frame per image (i.e., 
+we aren't producing a multiframe sequence). 
+
+<P CLASS=para>
+The next chunk of code implements the <tt CLASS=literal>ImageProducer</tt> 
+interface; consumers use it to request image data: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+/* There is only a single consumer. When it registers, produce image. */
+/* On error, notify consumer. */
+    public synchronized void addConsumer (ImageConsumer ic) {
+        consumer = ic;
+        try {
+            produce();
+        }catch (Exception e) {
+            if (consumer != null)
+                consumer.imageComplete (ImageConsumer.IMAGEERROR);
+        }
+        consumer = null;
+    }
+/* If consumer passed to routine is single consumer, return true, else false. */
+    public synchronized boolean isConsumer (ImageConsumer ic) {
+        return (ic == consumer);
+    }
+/* Disables consumer if currently consuming. */
+    public synchronized void removeConsumer (ImageConsumer ic) {
+        if (consumer == ic)
+            consumer = null;
+    }
+/* Production is done by adding consumer. */
+    public void startProduction (ImageConsumer ic) {
+        addConsumer (ic);
+    }
+    public void requestTopDownLeftRightResend (ImageConsumer ic) {
+        // Not needed.  The data is always in this format.
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The previous group of methods implements the <tt CLASS=literal>ImageProducer</tt> 
+interface. They are quite simple, largely because of the way this <tt CLASS=literal>ImageProducer</tt> 
+generates images. It builds the image in memory before delivering it to 
+the consumer; you must call the <tt CLASS=literal>readImage()</tt> 
+method (discussed shortly) before you can create an image with this consumer. Because 
+the image is in memory before any consumers can register their interest, 
+we can write an <tt CLASS=literal>addConsumer()</tt> 
+method that registers a consumer and delivers all the data to that consumer 
+before returning. Therefore, we don't need to manage a list of consumers 
+in a <tt CLASS=literal>Hashtable</tt> or some other 
+collection object. We can store the current consumer in an instance variable 
+<tt CLASS=literal>ic</tt> and forget about any others: 
+only one consumer exists at a time. To make sure that only one 
+consumer exists at a time, we synchronize the <tt CLASS=literal>addConsumer()</tt>, 
+<tt CLASS=literal>isConsumer()</tt>, and <tt CLASS=literal>removeConsumer()</tt> 
+methods. Synchronization prevents another consumer from registering 
+itself before the current consumer has finished. If you write an <tt CLASS=literal>ImageProducer</tt> 
+that builds the image in memory before delivering it, you can probably 
+use this code verbatim. 
+
+<P CLASS=para>
+<tt CLASS=literal>addConsumer()</tt> is little more 
+than a call to the method <tt CLASS=literal>produce()</tt>, 
+which handles "consumer relations": it delivers the pixels 
+to the consumer using the methods in the <tt CLASS=literal>ImageConsumer</tt> 
+interface. If <tt CLASS=literal>produce()</tt> throws 
+an exception, <tt CLASS=literal>addConsumer()</tt> 
+calls <tt CLASS=literal>imageComplete()</tt> with 
+an <tt CLASS=literal>IMAGEERROR</tt> status code. 
+Here's the code for the <tt CLASS=literal>produce()</tt> method: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+/* Production Process:
+        Prerequisite: Image already read into store array. (readImage)
+                      props / width / height already set (readImage)
+        Assumes RGB Color Model - would need to filter to change.
+        Sends Ppm Image data to consumer.
+        Pixels sent one row at a time.
+*/
+    private void produce () {
+        ColorModel cm = ColorModel.getRGBdefault();
+        if (consumer != null) {
+            if (loadError) {
+                consumer.imageComplete (ImageConsumer.IMAGEERROR);
+            } else {
+                consumer.setDimensions (width, height);
+                consumer.setProperties (props);
+                consumer.setColorModel (cm);
+                consumer.setHints (PpmHints);
+                for (int j=0;j&lt;height;j++)
+                    consumer.setPixels (0, j, width, 1, cm, store[j], 0, width);
+                consumer.imageComplete (ImageConsumer.STATICIMAGEDONE);
+            }
+        }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>produce()</tt> just calls the <tt CLASS=literal>ImageConsumer</tt> 
+methods in order: it sets the image's dimensions, hands off an empty 
+<tt CLASS=literal>Hashtable</tt> of properties, sets 
+the color model (the default RGB model) and the hints, and then calls <tt CLASS=literal>setPixels()</tt> 
+once for each row of pixel data. The data is in the integer array <tt CLASS=literal>store[][]</tt>, 
+which has already been loaded by the <tt CLASS=literal>readImage()</tt> 
+method (defined in the following code). When the data is delivered, the method <tt CLASS=literal>setPixels()</tt> 
+calls <tt CLASS=literal>imageComplete()</tt> to indicate 
+that the image has been finished successfully. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+/* Allows reading to be from internal byte array, in addition to disk/socket */
+    public void readImage (byte b[]) {
+        readImage (new ByteArrayInputStream (b));
+    }
+/* readImage reads image data from Stream */
+/* parses data for PPM format             */
+/* closes inputstream when done           */
+    public void readImage (InputStream is) {
+        long tm = System.currentTimeMillis();
+        boolean raw=false;
+        DataInputStream dis = null;
+        BufferedInputStream bis = null;
+        try {
+            bis = new BufferedInputStream (is);
+            dis = new DataInputStream (bis);
+            String word;
+            word = readWord (dis);
+            if ("P6".equals (word)) {
+                raw = true;
+            } else if ("P3".equals (word)) {
+                raw = false;
+            } else {
+                throw (new AWTException ("Invalid Format " + word));
+            }
+            width = Integer.parseInt (readWord (dis));
+            height = Integer.parseInt (readWord (dis));
+            // Could put comments in props - makes readWord more complex
+            int maxColors = Integer.parseInt (readWord (dis));
+            if ((maxColors &lt; 0) || (maxColors &gt; 255)) {
+                throw (new AWTException ("Invalid Colors " + maxColors));
+            }
+            store = new int[height][width];
+            if (raw) {                   // binary format (raw) pixel data
+                byte row[] = new byte [width*3];
+                for (int i=0;i&lt;height;i++){
+                    dis.readFully (row);
+                    for (int j=0,k=0;j&lt;width;j++,k+=3) {
+                        int red = row[k];
+                        int green = row[k+1];
+                        int blue = row[k+2];
+                        if (red &lt; 0)
+                            red +=256;
+                        if (green &lt; 0)
+                            green +=256;
+                        if (blue &lt; 0)
+                            blue +=256;
+                        store[i][j] = (0xff&lt;&lt; 24) | (red &lt;&lt; 16) | 
+                                      (green &lt;&lt; 8) | blue;
+                    }
+                }
+            } else {                     // ASCII pixel data
+                for (int i=0;i&lt;height;i++) {
+                    for (int j=0;j&lt;width;j++) {
+                        int red = Integer.parseInt (readWord (dis));
+                        int green = Integer.parseInt (readWord (dis));
+                        int blue = Integer.parseInt (readWord (dis));
+                        store[i][j] = (0xff&lt;&lt; 24) | (red &lt;&lt; 16) | 
+                                      (green &lt;&lt; 8) | blue;
+                    }
+                }
+            }
+        } catch (IOException io) {
+            loadError = true;
+            System.out.println ("IO Exception " + io.getMessage());
+        } catch (AWTException awt) {
+            loadError = true;
+            System.out.println ("AWT Exception " + awt.getMessage());
+        } catch (NoSuchElementException nse) {
+            loadError = true;
+            System.out.println ("No Such Element Exception " + nse.getMessage());
+        } finally {
+            try {
+                if (dis != null)
+                    dis.close();
+                if (bis != null)
+                    bis.close();
+                if (is != null)
+                    is.close();
+            } catch (IOException io) {
+                System.out.println ("IO Exception " + io.getMessage());
+            }
+        }
+        System.out.println ("Done in " + (System.currentTimeMillis() - tm) 
+                            + " ms");
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>readImage()</tt> reads the image 
+data from an <tt CLASS=literal>InputStream</tt> and 
+converts it into the array of pixel data that <tt CLASS=literal>produce()</tt> 
+transfers to the consumer. Code using this class must call <tt CLASS=literal>readImage()</tt> 
+to process the data before calling <tt CLASS=literal>createImage()</tt>; 
+we'll see how this works shortly. Although there is a lot of code 
+in <tt CLASS=literal>readImage()</tt>, it's 
+fairly simple. (It would be much more complex if we were dealing with an 
+image format that compressed the data.) It makes heavy use of <tt CLASS=literal>readWord()</tt>, 
+a utility method that we'll discuss next; <tt CLASS=literal>readWord()</tt> 
+returns a word of ASCII text as a string. 
+
+<P CLASS=para>
+<tt CLASS=literal>readImage()</tt> starts by converting 
+the <tt CLASS=literal>InputStream</tt> into a <tt CLASS=literal>DataInputStream</tt>. 
+It uses <tt CLASS=literal>readWord()</tt> to get the 
+first word from the stream. This should be either "P6" or "P3", 
+depending on whether the data is in binary or ASCII. It then uses <tt CLASS=literal>readWord()</tt> 
+to save the image's width and height and the maximum value of any color 
+component. Next, it reads the color data into the <tt CLASS=literal>store[][]</tt> 
+array. The ASCII case is simple because we can use <tt CLASS=literal>readWord()</tt> 
+to read ASCII words conveniently; we read red, green, and blue words, convert 
+them into <tt CLASS=literal>ints</tt>, and pack the three into one element (one pixel) of <tt CLASS=literal>store[][]</tt>. 
+For binary data, we read an entire scan line into the byte array <tt CLASS=literal>row[]</tt>, 
+using <tt CLASS=literal>readFully()</tt>; then we 
+start a loop that packs this scan line into one row of <tt CLASS=literal>store[][]</tt>. 
+A little additional complexity is in the inner loop because 
+we must keep track of two arrays (<tt CLASS=literal>row[]</tt> 
+and <tt CLASS=literal>store[][]</tt>). We read red, 
+green, and blue components from <tt CLASS=literal>row[]</tt>, 
+converting Java's signed bytes to unsigned data by adding 256 to 
+any negative values; finally, we pack these components into one element 
+of <tt CLASS=literal>store[][]</tt>. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+/* readWord returns a word of text from stream          */
+/* Ignores PPM comment lines.                           */
+/* word defined to be something wrapped by whitespace   */
+    private String readWord (InputStream is) throws IOException {
+        StringBuffer buf = new StringBuffer();
+        int b;
+        do {// get rid of leading whitespace
+            if ((b=is.read()) == -1)
+                throw new EOFException();
+            if ((char)b == '#') { // read to end of line - ppm comment
+                DataInputStream dis = new DataInputStream (is);
+                dis.readLine();
+                b = ' ';  // ensure more reading
+            }
+        }while (Character.isSpace ((char)b));
+        do {
+            buf.append ((char)(b));
+            if ((b=is.read()) == -1)
+                throw new EOFException();
+        } while (!Character.isSpace ((char)b));  // reads first space
+        return buf.toString();
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>readWord()</tt> is a utility method 
+that reads one ASCII word from an <tt CLASS=literal>InputStream</tt>. 
+A word is a sequence of characters that aren't spaces; space characters 
+include newlines and tabs in addition to spaces. This method also throws 
+out any comments (anything between # and the end of the line). It collects 
+the characters into a <tt CLASS=literal>StringBuffer</tt>, 
+converting the <tt CLASS=literal>StringBuffer</tt> 
+into a <tt CLASS=literal>String</tt> when it returns. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-5">Example 12.5: PPMImageDecoder Test Program</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.image.ImageConsumer;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.io.IOException;
+import java.applet.Applet;
+public class ppmViewer extends Applet {
+    Image image = null;
+    public void init () {
+        try {
+            String file = getParameter ("file");
+            if (file != null) {
+                URL imageurl = new URL (getDocumentBase(), file);
+                InputStream is = imageurl.openStream();
+                PPMImageDecoder ppm = new PPMImageDecoder ();
+                ppm.readImage (is);
+                image = createImage (ppm);
+                repaint();
+            }
+        } catch (MalformedURLException me) {
+            System.out.println ("Bad URL");
+         } catch (IOException io) {
+            System.out.println ("Bad File");
+        }
+    }
+    public void paint (Graphics g) {
+        g.drawImage (image, 0, 0, this);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The applet we use to test our <tt CLASS=literal>ImageProducer</tt> 
+is very simple. It creates a URL that points to an appropriate PPM file 
+and gets an <tt CLASS=literal>InputStream</tt> from 
+that URL. It then creates an instance of our <tt CLASS=literal>PPMImageDecoder</tt>; 
+calls <tt CLASS=literal>readImage()</tt> to load the 
+image and generate pixel data; and finally, calls <tt CLASS=literal>createImage()</tt> 
+with our <tt CLASS=literal>ImageProducer</tt> as an 
+argument to create an <tt CLASS=literal>Image</tt> 
+object, which we draw in <tt CLASS=literal>paint()</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-4.1">PixelGrabber</A></h3>
+
+<P CLASS=para>
+<A NAME="CH12.GRAB1"></A><A NAME="CH12.GRAB2"></A><A NAME="CH12.GRAB3"></A><A NAME="CH12.GRAB4"></A>The <tt CLASS=literal>PixelGrabber</tt> class is a 
+utility for converting an image into an array of pixels. This is useful in many 
+situations. If you are writing a drawing utility 
+that lets users create their own graphics, you probably want some way to 
+save a drawing to a file. Likewise, if you're implementing a shared 
+whiteboard, you'll want some way to transmit images across the Net. 
+If you're doing some kind of image processing, you may want to read 
+and alter individual pixels in an image. The <tt CLASS=literal>PixelGrabber</tt> 
+class is an <tt CLASS=literal>ImageConsumer</tt> that 
+can capture a subset of the current pixels of an <tt CLASS=literal>Image</tt>. 
+Once you have the pixels, you can easily save the image in a file, send 
+it across the Net, or work with individual points in the array. To recreate 
+the <tt CLASS=literal>Image</tt> (or a modified version), 
+you can pass the pixel array to a <tt CLASS=literal>MemoryImageSource</tt>. 
+
+<P CLASS=para>
+Prior to Java 1.1, <tt CLASS=literal>PixelGrabber</tt> 
+saves an array of pixels but doesn't save the image's width 
+and height--that's your responsibility. You may want to put the width 
+and height in the first two elements of the pixel array and use an offset 
+of 2 when you store (or reproduce) the image. 
+
+<P CLASS=para>
+Starting with Java 1.1, the grabbing process changes in several ways. You can ask the 
+<tt CLASS=literal>PixelGrabber</tt> for the image's 
+size or color model. You can grab pixels asynchronously and abort the grabbing process before it 
+is completed. Finally, you don't have to preallocate the pixel data array. Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public PixelGrabber (ImageProducer ip, int x, int y, int width, int height, 
+int pixels[], int offset, int scansize) </I><br>
+<DD>
+
+<P CLASS=para>
+The first <tt CLASS=literal>PixelGrabber</tt> constructor 
+creates a new <tt CLASS=literal>PixelGrabber</tt> 
+instance. The <tt CLASS=literal>PixelGrabber</tt> 
+uses <tt CLASS=literal>ImageProducer</tt> <tt CLASS=literal>ip</tt> 
+to store the unscaled cropped rectangle at position (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) of size <tt CLASS=literal>width</tt> 
+x <tt CLASS=literal>height</tt> into the <tt CLASS=literal>pixels</tt> 
+array, starting at <tt CLASS=literal>offset</tt> within 
+<tt CLASS=literal>pixels</tt>, and each row starting 
+at increments of <tt CLASS=literal>scansize</tt> from 
+that. 
+
+<P CLASS=para>
+As shown in <A HREF="ch12_04.htm#JAWT-CH-12-FIG-5">Figure 12.5</A>, the position (<tt CLASS=literal>x1</tt>, 
+<tt CLASS=literal>y1</tt>) would be stored in <tt CLASS=literal>pixels[]</tt> 
+at position <tt CLASS=literal>(y1 - y) * scansize + (x1 - x) + offset.</tt> 
+Calling <tt CLASS=literal>grabPixels()</tt> starts 
+the process of writing pixels into the array. 
+
+<P CLASS=para>
+The <tt CLASS=literal>ColorModel</tt> for the pixels 
+copied into the array is always the default RGB model: that is, 32 bits per 
+pixel, with 8 bits for alpha, red, green, and blue components. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public PixelGrabber (Image image, int x, int y, int width, int height, 
+int pixels[], int offset, int scansize) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the <tt CLASS=literal>PixelGrabber</tt> 
+constructor gets the <tt CLASS=literal>ImageProducer</tt> 
+of the <tt CLASS=literal>Image</tt> <tt CLASS=literal>image</tt> 
+through <tt CLASS=literal>getSource()</tt>; it then 
+calls the previous constructor to create the <tt CLASS=literal>PixelGrabber</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public PixelGrabber (Image image, int x, int y, int width, int height, 
+boolean forceRGB) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the constructor does not require you to preallocate the 
+pixel array and lets you preserve the color model of the original image. 
+If <tt CLASS=literal>forceRGB</tt> is <tt CLASS=literal>true</tt>, 
+the pixels of <tt CLASS=literal>image</tt> are converted 
+to the default RGB model when grabbed. If <tt CLASS=literal>forceRGB</tt> is <tt CLASS=literal>false</tt> 
+and all the pixels of image use one <tt CLASS=literal>ColorModel</tt>, 
+the original color model of <tt CLASS=literal>image</tt> 
+is preserved. 
+
+<P CLASS=para>
+As with the other constructors, the <tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>, <tt CLASS=literal>width</tt>, 
+and <tt CLASS=literal>height</tt> values define the 
+bounding box to grab. However, there's one special case to consider. 
+Setting <tt CLASS=literal>width</tt> or <tt CLASS=literal>height</tt> 
+to -1 tells the <tt CLASS=literal>PixelGrabber</tt> 
+to take the <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+from the image itself. In this case, the grabber stores all the pixels 
+below and to the right of the point (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>). If (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) is outside of the image, 
+you get an empty array. 
+
+<P CLASS=para>
+Once the pixels have been grabbed, you get the pixel data via the <tt CLASS=literal>getPixels()</tt> 
+method described in "Other methods." To get the <tt CLASS=literal>ColorModel</tt>, 
+see the <tt CLASS=literal>getColorModel()</tt> method. </DL>
+ImageConsumer interface methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setDimensions (int width, int height)</I><br>
+<DD>
+
+<P CLASS=para>
+In Java 1.0, the <tt CLASS=literal>setDimensions()</tt> 
+method of <tt CLASS=literal>PixelGrabber</tt> ignores 
+the <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt>, 
+since this was set by the constructor. 
+
+<P CLASS=para>
+With Java 1.1, <tt CLASS=literal>setDimensions()</tt> 
+is called by the image producer to give it the dimensions of the original 
+image. This is how the <tt CLASS=literal>PixelGrabber</tt> 
+finds out the image's size if the constructor specified -1 for the 
+image's width or height. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setHints (int hints)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setHints()</tt> method ignores 
+the <tt CLASS=literal>hints</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setProperties (Hashtable properties)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setProperties()</tt> method 
+ignores the <tt CLASS=literal>properties</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setColorModel (ColorModel model)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setColorModel()</tt> method 
+ignores the <tt CLASS=literal>model</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, byte 
+pixels[],</I>  <I CLASS=emphasis>int offset, int scansize)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setPixels()</tt> method is called 
+by the <tt CLASS=literal>ImageProducer</tt> to deliver 
+pixel data for some image. If the pixels fall within the portion of the 
+image that the <tt CLASS=literal>PixelGrabber</tt> 
+is interested in, they are stored within the array passed to the <tt CLASS=literal>PixelGrabber</tt> 
+constructor. If necessary, the <tt CLASS=literal>ColorModel</tt> 
+is used to convert each pixel from its original representation to the default 
+RGB representation. This method is called when each pixel coming from the 
+image producer is represented by a byte. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setPixels (int x, int y, int w, int h, ColorModel model, int 
+pixels[],</I>  <I CLASS=emphasis>int offset, int scansize)</I><br>
+<DD>
+
+<P CLASS=para>
+The second <tt CLASS=literal>setPixels()</tt> method 
+is almost identical to the first; it is used when each pixel coming from 
+the image producer is represented by an <tt CLASS=literal>int</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void imageComplete (int status)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>imageComplete()</tt> method 
+uses <tt CLASS=literal>status</tt> to determine if 
+the pixels were successfully delivered. The <tt CLASS=literal>PixelGrabber</tt> 
+then notifies anyone waiting for the pixels from a <tt CLASS=literal>grabPixels()</tt> 
+call. </DL>
+Grabbing methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean grabPixels (long ms) throws InterruptedException </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>grabPixels()</tt> method starts 
+storing pixel data from the image. It doesn't return until all pixels 
+have been loaded into the pixels array or until <tt CLASS=literal>ms</tt> 
+milliseconds have passed. The return value is <tt CLASS=literal>true</tt> 
+if all pixels were successfully acquired. Otherwise, it returns <tt CLASS=literal>false</tt> 
+for the abort, error, or timeout condition encountered. The exception <tt CLASS=literal>InterruptedException</tt> 
+is thrown if another thread interrupts this one while waiting for pixel 
+data. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean grabPixels () throws InterruptedException </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>grabPixels()</tt> method starts 
+storing pixel data from the image. It doesn't return until all pixels 
+have been loaded into the pixels array. The return value is <tt CLASS=literal>true</tt> 
+if all pixels were successfully acquired. It returns <tt CLASS=literal>false</tt> 
+if it encountered an abort or error condition. The exception <tt CLASS=literal>InterruptedException</tt> 
+is thrown if another thread interrupts this one while waiting for pixel 
+data. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void startGrabbing() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>startGrabbing()</tt> method 
+provides an asynchronous means of grabbing the pixels. This method returns 
+immediately; it does not block like the <tt CLASS=literal>grabPixels()</tt> 
+methods described previously. To find out when the <tt CLASS=literal>PixelGrabber</tt> 
+has finished, call <tt CLASS=literal>getStatus()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void abortGrabbing() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>abortGrabbing()</tt> method 
+allows you to stop grabbing pixel data from the image. If a thread is waiting 
+for pixel data from a <tt CLASS=literal>grabPixels()</tt> 
+call, it is interrupted and <tt CLASS=literal>grabPixels()</tt> 
+throws an <tt CLASS=literal>InterruptedException</tt>. </DL>
+Other methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized int getStatus() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public synchronized int status () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+Call the <tt CLASS=literal>getStatus()</tt> method 
+to find out whether a <tt CLASS=literal>PixelGrabber</tt> 
+succeeded in grabbing the pixels you want. The return value is a set of 
+<tt CLASS=literal>ImageObserver</tt> flags ORed 
+together. <tt CLASS=literal>ALLBITS</tt> and <tt CLASS=literal>FRAMEBITS</tt> 
+indicate success; which of the two you get depends on how the image was 
+created. <tt CLASS=literal>ABORT</tt> and <tt CLASS=literal>ERROR</tt> 
+indicate that problems occurred while the image was being produced. 
+
+<P CLASS=para>
+<tt CLASS=literal>status()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized int getWidth() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getWidth()</tt> method reports 
+the width of the image data stored in the destination buffer. If you set 
+width to -1 when you called the <tt CLASS=literal>PixelGrabber</tt> 
+constructor, this information will be available only after the grabber 
+has received the information from the image producer (<tt CLASS=literal>setDimensions()</tt>). 
+If the width is not available yet, <tt CLASS=literal>getWidth()</tt> 
+returns -1. 
+
+<P CLASS=para>
+The width of the resulting image depends on several factors. If you specified 
+the width explicitly in the constructor, the resulting image has that width, 
+no questions asked--even if the position at which you start grabbing 
+is outside the image. If you specified -1 for the width, the resulting 
+width will be the difference between the <tt CLASS=literal>x</tt> 
+position at which you start grabbing (set in the constructor) and the actual 
+image width; for example, if you start grabbing at <tt CLASS=literal>x</tt>=50 
+and the original image width is 100, the width of the resulting image is 
+50. If <tt CLASS=literal>x</tt> falls outside the 
+image, the resulting width is 0. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized int getHeight() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getHeight()</tt> method reports 
+the height of the image data stored in the destination buffer. If you set 
+height to -1 when you called the <tt CLASS=literal>PixelGrabber</tt> 
+constructor, this information will be available only after the grabber 
+has received the information from the image producer (<tt CLASS=literal>setDimensions()</tt>). 
+If the height is not available yet, <tt CLASS=literal>getHeight()</tt> 
+returns -1. 
+
+<P CLASS=para>
+The height of the resulting image depends on several factors. If you specified 
+the height explicitly in the constructor, the resulting image has that 
+height, no questions asked--even if the position at which you start 
+grabbing is outside the image. If you specified -1 for the height, the 
+resulting height will be the difference between the <tt CLASS=literal>y</tt> 
+position at which you start grabbing (set in the constructor) and the actual 
+image height; for example, if you start grabbing at <tt CLASS=literal>y</tt>=50 
+and the original image height is 100, the height of the resulting image 
+is 50. If <tt CLASS=literal>y</tt> falls outside the 
+image, the resulting height is 0. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized Object getPixels() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPixels()</tt> method returns 
+an array of pixel data. If you passed a pixel array to the constructor, 
+you get back your original array object, with the data filled in. If, however, 
+the array was not previously allocated, you get back a new array. The size 
+of this array depends on the image you are grabbing and the portion of 
+that image you want. If size and image format are not known yet, this method 
+returns <tt CLASS=literal>null</tt>. If the <tt CLASS=literal>PixelGrabber</tt> 
+is still grabbing pixels, this method returns an array that may change 
+based upon the rest of the image. The type of the array you get is either 
+<tt CLASS=literal>int[]</tt> or <tt CLASS=literal>byte[]</tt>, 
+depending on the color model of the image. To find out if the <tt CLASS=literal>PixelGrabber</tt> 
+has finished, call <tt CLASS=literal>getStatus()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized ColorModel getColorModel() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getColorModel()</tt> method 
+returns the color model of the image. This could be the default RGB <tt CLASS=literal>ColorModel</tt> 
+if a pixel buffer was explicitly provided, <tt CLASS=literal>null</tt> 
+if the color model is not known yet, or a varying color model until all 
+the pixel data has been grabbed. After all the pixels have been grabbed, 
+<tt CLASS=literal>getColorModel()</tt> returns the 
+actual color model used for the <tt CLASS=literal>getPixels()</tt>array. 
+It is best to wait until grabbing has finished before you ask for the <tt CLASS=literal>ColorModel</tt>; 
+to find out, call <tt CLASS=literal>getStatus()</tt>. </DL>
+Using PixelGrabber to modify an image
+
+<P CLASS=para>
+You can modify images by combining a <tt CLASS=literal>PixelGrabber</tt> 
+with <tt CLASS=literal>MemoryImageSource</tt>. Use 
+<tt CLASS=literal>getImage()</tt> to load an image 
+from the Net; then use <tt CLASS=literal>PixelGrabber</tt> 
+to convert the image into an array. Modify the data in the array any way 
+you please; then use <tt CLASS=literal>MemoryImageSource</tt> 
+as an image producer to display the new image. 
+
+<P CLASS=para>
+<A HREF="ch12_04.htm#JAWT-CH-12-EX-6">Example 12.6</A> demonstrates the use of the <tt CLASS=literal>PixelGrabber</tt> 
+and <tt CLASS=literal>MemoryImageSource</tt> to rotate, 
+flip, and mirror an image. (We could also do the rotations with a subclass 
+of <tt CLASS=literal>ImageFilter</tt>, which we will 
+discuss next.) The output is shown in <A HREF="ch12_04.htm#JAWT-CH-12-FIG-6">Figure 12.6</A>. When working 
+with an image that is loaded from a local disk or the network, remember 
+to wait until the image is loaded before grabbing its pixels. In this example, 
+we use a <tt CLASS=literal>MediaTracker</tt> to wait 
+for the image to load. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-6">Example 12.6: Flip Source</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*; 
+import java.awt.image.*; 
+public class flip extends Applet { 
+    Image i, j, k, l; 
+    public void init () { 
+        MediaTracker mt = new MediaTracker (this); 
+        i = getImage (getDocumentBase(), "ora-icon.gif"); 
+        mt.addImage (i, 0); 
+    try { 
+        mt.waitForAll(); 
+        int width = i.getWidth(this); 
+        int height = i.getHeight(this); 
+        int pixels[] = new int [width * height]; 
+        PixelGrabber pg = new PixelGrabber 
+        (i, 0, 0, width, height, pixels, 0, width); 
+        if (pg.grabPixels() &amp;&amp; ((pg.status() &amp; 
+            ImageObserver.ALLBITS) !=0)) { 
+            j = createImage (new MemoryImageSource (width, height, 
+                     rowFlipPixels (pixels, width, height), 0, width)); 
+            k = createImage (new MemoryImageSource (width, height, 
+                 colFlipPixels (pixels, width, height), 0, width)); 
+            l = createImage (new MemoryImageSource (height, width, 
+                 rot90Pixels (pixels, width, height), 0, height)); 
+        } 
+    } catch (InterruptedException e) { 
+        e.printStackTrace(); 
+    } 
+} 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-12-FIG-6">Figure 12.6: Flip output</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1206.gif" alt="[Graphic: Figure 12-6]" width=285 height=248 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>try</tt> block in <A HREF="ch12_04.htm#JAWT-CH-12-EX-6">Example 12.6</A> does all the interesting work. It uses a <tt CLASS=literal>PixelGrabber</tt> 
+to grab the entire image into the array <tt CLASS=literal>pixels[]</tt>. 
+After calling <tt CLASS=literal>grabPixels()</tt>, 
+it checks the <tt CLASS=literal>PixelGrabber</tt> 
+status to make sure that the image was stored correctly. It then generates 
+three new images based on the first by calling <tt CLASS=literal>createImage()</tt> 
+with a <tt CLASS=literal>MemoryImageSource</tt> object 
+as an argument. Instead of using the original array, the <tt CLASS=literal>MemoryImageSource</tt> 
+objects call several utility methods to manipulate the array: <tt CLASS=literal>rowFlipPixels()</tt>, 
+<tt CLASS=literal>colFlipPixels()</tt>, and <tt CLASS=literal>rot90Pixels()</tt>. 
+These methods all return integer arrays. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void paint (Graphics g) {
+    g.drawImage (i, 10, 10, this); // regular 
+    if (j != null) 
+        g.drawImage (j, 150, 10, this); // rowFlip 
+    if (k != null) 
+        g.drawImage (k, 10, 60, this); // colFlip 
+    if (l != null) 
+        g.drawImage (l, 150, 60, this); // rot90 
+} 
+private int[] rowFlipPixels (int pixels[], int width, int height) { 
+    int newPixels[] = null; 
+    if ((width*height) == pixels.length) { 
+        newPixels = new int [width*height]; 
+        int newIndex=0; 
+        for (int y=height-1;y&gt;=0;y--) 
+            for (int x=width-1;x&gt;=0;x--) 
+                newPixels[newIndex++]=pixels[y*width+x]; 
+    } 
+    return newPixels; 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>rowFlipPixels()</tt> creates a mirror 
+image of the original, flipped horizontally. It is nothing more than a 
+nested loop that copies the original array into a new array. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    private int[] colFlipPixels (int pixels[], int width, int height) {
+        ...
+    }
+private int[] rot90Pixels (int pixels[], int width, int height) {
+        ...
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>colFlipPixels()</tt> and <tt CLASS=literal>rot90Pixels()</tt> 
+are fundamentally similar to <tt CLASS=literal>rowFlipPixels()</tt>; 
+they just copy the original pixel array into another array, and return 
+the result. <tt CLASS=literal>colFlipPixels()</tt> 
+generates a vertical mirror image; <tt CLASS=literal>rot90Pixels()</tt> 
+rotates the image by 90 degrees counterclockwise. Grabbing data asynchronously
+
+<P CLASS=para>
+To demonstrate the new methods introduced by Java 1.1 for <tt CLASS=literal>PixelGrabber</tt>, 
+the following program grabs the pixels and reports information about the 
+original image on mouse clicks. It takes its data from the image used in <A HREF="ch12_04.htm#JAWT-CH-12-FIG-6">Figure 12.6</A>. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.applet.*;
+import java.awt.*;
+import java.awt.image.*;
+import java.awt.event.*;
+public class grab extends Applet {
+    Image i;
+    PixelGrabber pg;
+    public void init () {
+        i = getImage (getDocumentBase(), "ora-icon.gif");
+        pg  = new PixelGrabber (i, 0, 0, -1, -1, false);
+        pg.startGrabbing();
+        enableEvents (AWTEvent.MOUSE_EVENT_MASK);
+    }
+    public void paint (Graphics g) {
+        g.drawImage (i, 10, 10, this);
+    }
+    protected void processMouseEvent(MouseEvent e) {
+        if (e.getID() == MouseEvent.MOUSE_CLICKED) {
+            System.out.println ("Status: " + pg.getStatus());
+            System.out.println ("Width:  " + pg.getWidth());
+            System.out.println ("Height: " + pg.getHeight());
+            System.out.println ("Pixels: " +
+               (pg.getPixels() instanceof byte[] ? "bytes" : "ints"));
+            System.out.println ("Model:  " + pg.getColorModel());
+        }
+        super.processMouseEvent (e);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This applet creates a <tt CLASS=literal>PixelGrabber</tt> without specifying an array, then starts grabbing pixels. The grabber allocates its own array, but we never bother to ask for it since we don't do anything with the data itself: we only report the grabber's status. (If we wanted the data, we'd call <tt CLASS=literal>getPixels()</tt>.) Sample output from a single mouse click, after the image loaded, would 
+appear something like the following: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Status: 27
+Width:  120
+Height: 38
+Pixels: bytes
+Model:  java.awt.image.IndexColorModel@1ed34
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You need to convert the status value manually to the corresponding meaning 
+by looking up the status codes in <tt CLASS=literal>ImageObserver</tt>. 
+The value 27 indicates that the 1, 2, 8, and 16 flags are set, which translates to the <tt CLASS=literal>WIDTH</tt>, 
+<tt CLASS=literal>HEIGHT</tt>, <tt CLASS=literal>SOMEBITS</tt>, 
+and <tt CLASS=literal>FRAMEBITS</tt> flags, respectively. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ImageProducer</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ImageFilter</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

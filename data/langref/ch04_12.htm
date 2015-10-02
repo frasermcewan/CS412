@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.12 Conditional Operator</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:10:38 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>Expressions</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-12">4.12 Conditional Operator</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.COND1"></A><A NAME="CH04.COND2"></A><A NAME="CH04.COND3"></A><A NAME="CH04.COND4"></A>The conditional
+operator (<tt CLASS=literal>? :</tt>) is a ternary
+operator. The operator
+selects
+one of two expressions for evaluation, based on the value of its
+first operand. In this way, the conditional operator is similar
+to an <tt CLASS=literal>if</tt> statement. A conditional operator may
+appear in a conditional expression:
+
+
+<p>
+<img align=middle src="./figs/jlr0425.gif" alt="[Graphic: Figure from the text]" width=450 height=60 border=0>
+
+<P CLASS=para>
+The conditional
+operator produces a pure value. Conditional expressions group from
+right to left. Consider the following expression:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+g?f:e?d:c?b:a
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It is equivalent to
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+g?f:(e?d:(c?b:a))
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first operand of the conditional operator must be of
+type <tt CLASS=literal>boolean</tt>,
+or a compile-time error occurs. If the first operand evaluates to
+<tt CLASS=literal>true</tt>, the operator evaluates the second operand
+(i.e., the one following the <tt CLASS=literal>?</tt>) and produces
+the pure value of that expression. Otherwise, if the first operand
+evaluates to <tt CLASS=literal>false</tt>, the operator evaluates the
+third operand (i.e., the one following the <tt CLASS=literal>:</tt>)
+and produces the pure value of that expression. Note that the conditional
+operator evaluates either its second operand or its third operand,
+but not both.
+
+<P CLASS=para>
+The second and third operands of the conditional
+operator may be of any type, but they must both be of the same kind
+of type or a compile-time error occurs. If one operand is of an
+arithmetic type, the other must also be of an arithmetic type. If
+one operand is of type <tt CLASS=literal>boolean</tt>, the other must
+also be of type <tt CLASS=literal>boolean</tt>. If one operand is a
+reference type, the other must also be a reference type. Note that
+neither the second nor the third operand can be an expression that
+invokes a <tt CLASS=literal>void</tt> method.
+
+<P CLASS=para>
+The types
+of the second and third operands determine the type of pure value
+that the conditional operator produces. If the second and third
+operands are of different types, the operator may perform a type
+conversion on the operand that it evaluates. The operator does this
+to ensure that it always produces the same type of result for a
+given expression, regardless of the value of its first operand.
+
+<P CLASS=para>
+If the second and third operands are both of arithmetic
+types, the conditional operator determines the type of value it
+produces as follows:[6]
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If both operands are of the same type, the conditional operator
+produces a pure value of that type.
+
+<blockquote class=footnote>
+<P CLASS=para>[6] 
+Some of these rules are different
+from the way it is done in C/C++. In those languages, integer data
+of types smaller than <tt CLASS=literal>int</tt> are always converted
+to <tt CLASS=literal>int</tt> when they appear in any expression.
+</blockquote>
+<P>
+<li CLASS=listitem>If one operand is
+of type <tt CLASS=literal>short</tt> and the other operand is of type
+<tt CLASS=literal>byte</tt>, the conditional operator produces a <tt CLASS=literal>short</tt>
+value.
+
+<P>
+<li CLASS=listitem>If one operand is of type <tt CLASS=literal>short</tt>,
+<tt CLASS=literal>char</tt>, or <tt CLASS=literal>byte</tt> and the other
+operand is a constant expression that can be represented as a value
+of that type, the conditional operator produces a pure value of
+that type.
+
+<P>
+<li CLASS=listitem>Otherwise, if either operand is of type <tt CLASS=literal>double</tt>,
+the operator produces a <tt CLASS=literal>double</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise,
+if either operand is of type <tt CLASS=literal>float</tt>, the operator
+produces a <tt CLASS=literal>float</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise,
+if either operand is of type <tt CLASS=literal>long</tt>, the operator
+produces a <tt CLASS=literal>long</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise,
+if either operand is of type <tt CLASS=literal>int</tt>, the operator
+produces an <tt CLASS=literal>int</tt> value.
+
+<P>
+</UL>
+<P CLASS=para>
+If the second
+and third operands are both of type <tt CLASS=literal>boolean</tt>,
+the conditional operator produces a pure <tt CLASS=literal>boolean</tt>
+value.
+
+<P CLASS=para>
+If the second and
+third operands are both reference types, the conditional operator
+determines the type of value it produces as follows:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If both operands are <tt CLASS=literal>null</tt>, the conditional operator
+produces the pure value <tt CLASS=literal>null</tt>.
+
+<P>
+<li CLASS=listitem>Otherwise,
+if exactly one of the operands is <tt CLASS=literal>null</tt>, the conditional
+operator produces a value of the type of the other operand.
+
+<P>
+<li CLASS=listitem>Otherwise, it must be possible to cast the value of one of
+the operands to the type of the other operand, or a compile-time
+error occurs. The conditional operator produces a value of the type
+that would be the target of the cast.
+
+<P>
+</UL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.1">Arithmetic Types</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.2">Boolean Type</A>;
+<A HREF="ch04_11.htm#JLR2-CH-4-SECT-11.2">Boolean OR Operator ||</A>;
+<I CLASS=emphasis>Expression</I> 4;
+<A HREF="ch04_14.htm#JLR2-CH-4-SECT-14">Order of Operations</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2">Reference Types</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Boolean Operators</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Assignment Operators</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

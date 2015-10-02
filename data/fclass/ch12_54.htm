@@ -1,0 +1,2220 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] SecurityManager</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:04:39 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_53.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_55.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>SecurityManager</H1>
+
+<H2>Name</H2>
+
+SecurityManager
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.346">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.SecurityManager</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.347">Description</A></h2>
+
+<P CLASS=para>
+<A NAME="MAN.SECMGR.1"></A>The <tt CLASS=literal>SecurityManager</tt> class provides a way
+of implementing a comprehensive security policy for a Java program.
+As of this writing, <tt CLASS=literal>SecurityManager</tt> objects are
+used primarily by Web browsers to establish security policies for
+applets. However, the use of a <tt CLASS=literal>SecurityManager</tt> object
+is appropriate in any situation where a hosting environment wants
+to limit the actions of hosted programs.
+
+<P CLASS=para>
+The <tt CLASS=literal>SecurityManager</tt> class contains methods
+that are called by methods in other classes to ask for permission
+to do something that can affect the security of the system. These
+permission methods all have names that begin with <tt CLASS=literal>check</tt>.
+If a <tt CLASS=literal>check</tt> method does not permit an action,
+it throws a <tt CLASS=literal>SecurityException</tt> or returns a value
+that indicates the lack of permission.
+The <tt CLASS=literal>SecurityManager</tt>
+class provides default implementations of all of the <tt CLASS=literal>check</tt>
+methods. These default implementations are the most restrictive
+possible implementations; they simply deny permission to do anything
+that can affect the security of the system.
+
+<P CLASS=para>
+The <tt CLASS=literal>SecurityManager</tt> class is an
+<tt CLASS=literal>abstract</tt>
+class. A hosting environment should define a subclass
+of <tt CLASS=literal>SecurityManager</tt> that implements an appropriate
+security policy. To give the subclass of
+<tt CLASS=literal>SecurityManager</tt>
+control over security, the hosting environment creates
+an instance of the class and installs it by passing it to the
+<tt CLASS=literal>setSecurityManager()</tt>
+method of the <tt CLASS=literal>System</tt> class.
+Once a <tt CLASS=literal>SecurityManager</tt> object is installed,
+it cannot be changed. If the <tt CLASS=literal>setSecurityManager()</tt>
+method is called any additional times, it throws a
+<tt CLASS=literal>SecurityException</tt>.
+
+<P CLASS=para>
+The methods in other classes that want to ask the
+<tt CLASS=literal>SecurityManager</tt> for permission to do
+something are able to access the <tt CLASS=literal>SecurityManager</tt>
+object by calling the <tt CLASS=literal>getSecurityManager()</tt>
+method of the <tt CLASS=literal>System</tt> class. This method returns
+the <tt CLASS=literal>SecurityManager</tt> object, or
+<tt CLASS=literal>null</tt> to indicate that there is no
+<tt CLASS=literal>SecurityManager</tt> installed.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.348">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.lang.SecurityManager extends java.lang.Object {
+    // Constructors
+    protected SecurityManager();
+    // Variables
+    protected boolean inCheck;
+    // Instance Methods
+    public void checkAccept(String host, int port);
+    public void checkAccess(Thread t);
+    public void checkAccess(ThreadGroup g);
+    public void checkAwtEventQueueAccess();                  // New in 1.1
+    public void checkConnect(String host, int port);
+    public void checkConnect(String host, int port, Object context);
+    public void checkCreateClassLoader();
+    public void checkDelete(String file);
+    public void checkExec(String cmd);
+    public void checkExit(int status);
+    public void checkLink(String libname);
+    public void checkListen(int port);
+    public void checkMemberAccess(Class clazz, int which);   // New in 1.1
+    public void checkMulticast(InetAddress maddr);           // New in 1.1
+    public void checkMulticast(InetAddress maddr, byte ttl); // New in 1.1
+    public void checkPackageAccess();
+    public void checkPackageDefinition();
+    public void checkPrintJobAccess();                       // New in 1.1
+    public void checkPropertiesAccess();
+    public void checkPropertyAccess(String key);
+    public void checkRead(int fd);
+    public void checkRead(String file);
+    public void checkRead(String file, Object context);
+    public void checkSecurityAccess(String action);          // New in 1.1
+    public void checkSetFactory();
+    public void checkSystemClipboardAccess();                // New in 1.1
+    public boolean checkTopLevelWindow();
+    public void checkWrite(int fd);
+    public void checkWrite(String file);
+    public boolean getInCheck();
+    public Object getSecurityContext();                     
+    public ThreadGroup getThreadGroup();                     // New in 1.1
+    // Protected Instance Methods
+    protected int classDepth(String name);
+    protected int classLoaderDepth();
+    protected ClassLoader currentClassLoader();
+    protected Class currentLoadedClass();                    // New in 1.1
+    protected Class[] getClassContext();
+    protected boolean inClass(String name);
+    protected boolean inClassLoader();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.349">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.326">inCheck</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.399"><tt CLASS=literal>protected boolean inCheck = false</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This variable indicates whether or not a security check is
+in progress. A subclass of <tt CLASS=literal>SecurityManager</tt> should
+set this variable to <tt CLASS=literal>true</tt> while a security check
+is in progress.
+
+<P CLASS=para>
+This variable can be useful for security checks that require access
+to resources that a hosted program may not be permitted to access.
+For example, a security policy might be based on the contents of a
+permissions file. This means that the various <tt CLASS=literal>check</tt>
+methods need to read information from a file to decide what to
+do. Even though a hosted program may not be allowed to read files,
+the <tt CLASS=literal>check</tt> methods can allow such reads when
+<tt CLASS=literal>inCheck</tt> is <tt CLASS=literal>true</tt> to support
+this style of security policy.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.350">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.327">SecurityManager</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.400"><tt CLASS=literal>protected SecurityManager()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If a <tt CLASS=literal>SecurityManager</tt> object already exists. In other
+words, if <tt CLASS=literal>System.getSecurityManager()</tt> returns
+a value other than <tt CLASS=literal>null</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>SecurityManager</tt> object. This
+constructor cannot be called if there is already a current <tt CLASS=literal>SecurityManager</tt>
+installed for the program.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.351">Public Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.328">checkAccept</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.401"><tt CLASS=literal>public void checkAccept(String host, int port)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>host</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of the host machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to accept
+the connection.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow a connection from
+the given host on the given port to be accepted. An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to accept the connection. The method is called
+by the <tt CLASS=literal>accept()</tt> method of the <tt CLASS=literal>java.net.ServerSocket</tt>
+class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkAccept()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.329">checkAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.402"><tt CLASS=literal>public void checkAccess(Thread g)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>g</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to a <tt CLASS=literal>Thread</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the current thread does not have permission to
+modify the specified thread.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the current thread
+to modify the specified <tt CLASS=literal>Thread</tt>. An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to modify the thread. Methods of the <tt CLASS=literal>Thread</tt>
+class that call this method include <tt CLASS=literal>stop()</tt>, <tt CLASS=literal>suspend()</tt>,
+<tt CLASS=literal>resume()</tt>, <tt CLASS=literal>setPriority()</tt>, <tt CLASS=literal>setName()</tt>,
+and <tt CLASS=literal>setDaemon()</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkAccess()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.403"><tt CLASS=literal>public void checkAccess(ThreadGroup g)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>g</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to a <tt CLASS=literal>ThreadGroup</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the current thread does not have permission to
+modify the specified thread group.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the current thread
+to modify the specified <tt CLASS=literal>ThreadGroup</tt>. An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to modify the thread group. Methods of the <tt CLASS=literal>ThreadGroup</tt>
+class that call this method include <tt CLASS=literal>setDaemon()</tt>,
+<tt CLASS=literal>setMaxPriority()</tt>, <tt CLASS=literal>stop()</tt>,
+<tt CLASS=literal>suspend()</tt>, <tt CLASS=literal>resume()</tt>, and <tt CLASS=literal>destroy()</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkAccess()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.330">checkAwtEventQueueAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.404"><tt CLASS=literal>public void checkAwtEventQueueAccess()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to access the AWT event queue.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow access to the AWT event
+queue.  An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to access the event queue.  The method is called
+by the <tt CLASS=literal>getSystemEventQueue()</tt> method of the 
+<tt CLASS=literal>java.awt.Toolkit</tt> class. 
+
+<P CLASS=para>
+The <tt CLASS=literal>checkAwtEventQueueAccess()</tt> method of 
+<tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.331">checkConnect</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.405"><tt CLASS=literal>public void checkConnect(String host, int port)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>host</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of the host.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number. A value of <tt CLASS=literal>-1</tt>
+indicates an attempt to determine the IP address of given hostname.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to open the
+socket connection.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow a socket connection
+to the given host on the given port to be opened. An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to open the connection. The method is called
+by the constructors of the <tt CLASS=literal>java.net.Socket</tt> class,
+the <tt CLASS=literal>send()</tt> and <tt CLASS=literal>receive()</tt> methods
+of the <tt CLASS=literal>java.net.DatagramSocket</tt> class, and the
+<tt CLASS=literal>getByName()</tt> and <tt CLASS=literal>getAllByName()</tt>
+methods of the <tt CLASS=literal>java.net.InetAddress</tt> class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkConnect()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.406"><DIV CLASS=screen> <P> <PRE> public void checkConnect(String host, int port, Object context) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>host</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of the host.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number. A value of <tt CLASS=literal>-1</tt>
+indicates an attempt to determine the IP address of given host name.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>context</tt><br>
+<DD>
+
+<P CLASS=para>
+A security context object returned by this object's
+<tt CLASS=literal>getSecurityContext()</tt> method.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified security context does not have
+permission to open the socket connection.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow a socket connection
+to the given host on the given port to be opened for the specified
+security context. An implementation of the method should throw a
+<tt CLASS=literal>SecurityException</tt> to deny permission to open
+the connection.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkConnect()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.332">checkCreateClassLoader</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.407"><tt CLASS=literal>public void checkCreateClassLoader()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to create
+a <tt CLASS=literal>ClassLoader</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow a <tt CLASS=literal>ClassLoader</tt>
+object to be created. An implementation of the method should throw
+a <tt CLASS=literal>SecurityException</tt> to deny permission to create
+a <tt CLASS=literal>ClassLoader</tt>. The method is called by the constructor
+of the <tt CLASS=literal>ClassLoader</tt> class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkCreateClassLoader()</tt> method of
+<tt CLASS=literal>SecurityManager</tt> always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.333">checkDelete</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.408"><tt CLASS=literal>public void checkDelete(String file)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>file</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a file.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to delete
+the specified file.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow a file to be deleted.
+An implementation of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to delete the specified file. The method is called
+by the <tt CLASS=literal>delete()</tt> method of the <tt CLASS=literal>java.io.File</tt>
+class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkDelete()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.334">checkExec</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.409"><tt CLASS=literal>public void checkExec(String cmd)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>cmd</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of an external command.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to execute
+the specified command.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow an external command
+to be executed. An implementation of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to execute the specified command. The method
+is called by the <tt CLASS=literal>exec()</tt> methods of the <tt CLASS=literal>Runtime</tt>
+and <tt CLASS=literal>System</tt> classes.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkExec()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.335">checkExit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.410"><tt CLASS=literal>public void checkExit(int status)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>status</tt><br>
+<DD>
+
+<P CLASS=para>
+An exit status code.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to exit the
+Java virtual machine with the given status code.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the Java virtual
+machine to exit with the given status code. An implementation of
+the method should throw a <tt CLASS=literal>SecurityException</tt> to
+deny permission to exit with the specified status code. The method
+is called by the <tt CLASS=literal>exit()</tt> methods of the <tt CLASS=literal>Runtime</tt>
+and <tt CLASS=literal>System</tt> classes.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkExit()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.336">checkLink</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.411"><tt CLASS=literal>public void checkLink(String lib)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>lib</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a library.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to load the
+specified library.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether to allow the specified
+library to be loaded. An implementation of the method should throw
+a <tt CLASS=literal>SecurityException</tt> to deny permission to load
+the specified library. The method is called by the <tt CLASS=literal>load()</tt>
+and <tt CLASS=literal>loadLibrary()</tt> methods of the <tt CLASS=literal>Runtime</tt>
+and <tt CLASS=literal>System</tt> classes.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkLink()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.337">checkListen</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.412"><tt CLASS=literal>public void checkListen(int port)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to listen
+on the specified port.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to
+listen on the specified port. An implementation of the method should
+throw a <tt CLASS=literal>SecurityException</tt> to deny permission
+to listen on the specified port. The method is called by the constructors
+of the <tt CLASS=literal>java.net.ServerSocket</tt> class and by the
+constructor of the <tt CLASS=literal>java.net.DatagramSocket</tt> class
+that takes one argument.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkListen()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.338">checkMemberAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.413"><tt CLASS=literal>public void checkMemberAccess(Class clazz, int which)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>clazz</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Class</tt> object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>which</tt><br>
+<DD>
+
+<P CLASS=para>
+The value <tt CLASS=literal>Member.PUBLIC</tt> for the set of all
+<tt CLASS=literal>public</tt> members including inherited members or
+the value <tt CLASS=literal>Member.DECLARED</tt> for the set of all
+declared members of the specified class or interface.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to access the members of
+the specified class or interface.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow access to the 
+members of the specified <tt CLASS=literal>Class</tt> object.  An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to access the members.  Methods of the 
+<tt CLASS=literal>Class</tt> class that call this method include
+<tt CLASS=literal>getField()</tt>, <tt CLASS=literal>getFields()</tt>, 
+<tt CLASS=literal>getDeclaredField()</tt>, <tt CLASS=literal>getDeclaredFields()</tt>, 
+<tt CLASS=literal>getMethod()</tt>, <tt CLASS=literal>getMethods()</tt>, 
+<tt CLASS=literal>getDeclaredMethod()</tt>, 
+<tt CLASS=literal>getDeclaredMethods()</tt>, 
+<tt CLASS=literal>getConstructor()</tt>, <tt CLASS=literal>getConstructors()</tt>, 
+<tt CLASS=literal>getDeclaredConstructor()</tt>, 
+<tt CLASS=literal>getDeclaredConstructors()</tt>, and 
+<tt CLASS=literal>getDeclaredClasses()</tt>.  
+
+<P CLASS=para>
+The <tt CLASS=literal>checkMemberAccess()</tt> method of 
+<tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.339">checkMulticast</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.414"><tt CLASS=literal>public void checkMulticast(InetAddress maddr)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>maddr</tt><br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>InetAddress</tt> object that represents a multicast
+address.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the current thread does not have permission to use the
+specified multicast address.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the current thread
+to use the specified multicast <tt CLASS=literal>InetAddress</tt>.
+An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to use the multicast address.  The method is called
+by the <tt CLASS=literal>send()</tt> method of 
+<tt CLASS=literal>java.net.DatagramSocket</tt> if the packet is being
+sent to a multicast address.  The method is also called by
+the <tt CLASS=literal>joinGroup()</tt> and <tt CLASS=literal>leaveGroup()</tt>
+methods of <tt CLASS=literal>java.net.MulticastSocket</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkMulticast()</tt> method of 
+<tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.415"><tt CLASS=literal>public void checkMulticast(InetAddress maddr, byte ttl)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>maddr</tt><br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>InetAddress</tt> object that represents a multicast
+address.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ttl</tt><br>
+<DD>
+
+<P CLASS=para>
+The time-to-live (TTL) value.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the current thread does not have permission to use the
+specified multicast address and TTL value.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the current thread
+to use the specified multicast <tt CLASS=literal>InetAddress</tt> and
+TTL value.  An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to use the multicast address.  The method is called
+by the <tt CLASS=literal>send()</tt> method of 
+<tt CLASS=literal>java.net.MulticastSocket</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkMulticast()</tt> method of 
+<tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.340">checkPackageAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.416"><tt CLASS=literal>public void checkPackageAccess(String pkg)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>pkg</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a package.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to access
+the specified package.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the specified
+package to be accessed. An implementation of the method should throw
+a <tt CLASS=literal>SecurityException</tt> to deny permission to access
+the specified package. The method is intended to be called by implementations
+of the <tt CLASS=literal>loadClass()</tt> method in subclasses of the
+<tt CLASS=literal>ClassLoader</tt> class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkPackageAccess()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.341">checkPackageDefinition</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.417"><tt CLASS=literal>public void checkPackageDefinition(String pkg)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>pkg</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a package.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to define
+classes in the specified package.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to
+define classes in the specified package. An implementation of the
+method should throw a <tt CLASS=literal>SecurityException</tt> to deny
+permission to create classes in the specified package. The method
+is intended to be called by implementations of the <tt CLASS=literal>loadClass()</tt>
+method in subclasses of the <tt CLASS=literal>ClassLoader</tt> class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkPackageDefinition()</tt> method of
+<tt CLASS=literal>SecurityManager</tt> always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.342">checkPrintJobAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.418"><tt CLASS=literal>public void checkPrintJobAccess()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to initiate a print job request.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to initiate
+a print job request.  An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to initiate the request.  
+
+<P CLASS=para>
+The <tt CLASS=literal>checkPrintJobAccess()</tt> method of 
+<tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.343">checkPropertiesAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.419"><tt CLASS=literal>public void checkPropertiesAccess()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to access
+the system properties.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to
+access and modify the system properties. An implementation of the
+method should throw a <tt CLASS=literal>SecurityException</tt> to deny
+permission to access and modify the properties. Methods of the <tt CLASS=literal>System</tt>
+class that call this method include <tt CLASS=literal>getProperties()</tt>
+and <tt CLASS=literal>setProperties()</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkPropertiesAccess()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.344">checkPropertyAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.420"><tt CLASS=literal>public void checkPropertyAccess(String key)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>key</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of an individual system property.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to access
+the specified system property.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to
+access the specified system property. An implementation of the method
+should throw a <tt CLASS=literal>SecurityException</tt> to deny permission
+to access the property. The method is called by the <tt CLASS=literal>getProperty()</tt>
+method of the <tt CLASS=literal>System</tt> class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkPropertyAccess()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.345">checkRead</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.421"><tt CLASS=literal>public void checkRead(FileDescriptor fd)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>fd</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to a <tt CLASS=literal>FileDescriptor</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to read from
+the given file descriptor.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to
+read from the specified file descriptor. An implementation of the
+method should throw a <tt CLASS=literal>SecurityException</tt> to deny
+permission to read from the file descriptor. The method is called
+by the constructor of the <tt CLASS=literal>java.io.FileInputStream</tt>
+class that takes a <tt CLASS=literal>FileDescriptor</tt> argument.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkRead()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.422"><tt CLASS=literal>public void checkRead(String file)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>file</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a file.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to read from
+the named file.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to
+read from the named file. An implementation of the method should
+throw a <tt CLASS=literal>SecurityException</tt> to deny permission
+to read from the file. The method is called by constructors of the
+<tt CLASS=literal>java.io.FileInputStream</tt> and <tt CLASS=literal>java.io.RandomAccessFile</tt>
+classes, as well as by the <tt CLASS=literal>canRead()</tt>, <tt CLASS=literal>exists()</tt>,
+<tt CLASS=literal>isDirectory()</tt>, <tt CLASS=literal>isFile()</tt>, <tt CLASS=literal>lastModified()</tt>,
+<tt CLASS=literal>length()</tt>, and <tt CLASS=literal>list()</tt> methods
+of the <tt CLASS=literal>java.io.File</tt> class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkRead()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.423"><tt CLASS=literal>public void checkRead(String file, Object context)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>file</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a file.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>context</tt><br>
+<DD>
+
+<P CLASS=para>
+A security context object returned by this object's
+<tt CLASS=literal>getSecurityContext()</tt> method.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified security context does not have
+permission to read from the named file.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the specified
+security context to read from the named file. An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to read from the file.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkRead()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.346">checkSecurityAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.424"><tt CLASS=literal>public void checkSecurityAccess(String action)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>action</tt><br>
+<DD>
+
+<P CLASS=para>
+A string that specifies a security action.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to perform the specified
+security action.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether to allow the caller to
+perform the specified security action.
+An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to perform the action.
+The method is called
+by many of the methods in the <tt CLASS=literal>java.security.Identity</tt>
+and <tt CLASS=literal>java.security.Security</tt> classes.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkSecurityAccess()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.347">checkSetFactory</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.425"><tt CLASS=literal>public void checkSetFactory()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to set the
+factory class to be used by another class.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether to allow the caller to
+set the factory class to be used by another class. An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to set the factory class. The method is called
+by the <tt CLASS=literal>setSocketFactory()</tt> method of the
+<tt CLASS=literal>java.net.ServerSocket</tt> class, the
+<tt CLASS=literal>setSocketImplFactory()</tt> method of the
+<tt CLASS=literal>java.net.Socket</tt> class, the <tt CLASS=literal>setURLStreamHandlerFactory()</tt>
+method of the <tt CLASS=literal>java.net.URL</tt> class, and the <tt CLASS=literal>setContentHandlerFactory()</tt>
+method of the <tt CLASS=literal>java.net.URLConnection</tt> class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkSetFactory()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.348">checkSystemClipboardAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.426"><tt CLASS=literal>public void checkSystemClipboardAccess()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to access the system clipboard.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to access the system
+clipboard. An implementation
+of the method should throw a <tt CLASS=literal>SecurityException</tt>
+to deny permission to access the system clipboard.  
+
+<P CLASS=para>
+The <tt CLASS=literal>checkSystemClipboardAccess()</tt> method of 
+<tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.349">checkTopLevelWindow</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.427"><tt CLASS=literal>public boolean checkTopLevelWindow(Object window)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>window</tt><br>
+<DD>
+
+<P CLASS=para>
+A window object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the caller is trusted to put up
+the specified top-level window; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to trust the caller to
+put up the specified top-level window. An implementation of the
+method should return <tt CLASS=literal>false</tt> to indicate that the
+caller is not trusted. In this case, the hosting environment can
+still decide to display the window, but the window should include
+a visual indication that it is not trusted. If the caller is trusted,
+the method should return <tt CLASS=literal>true</tt>, and the window
+can be displayed without any special indication.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkTopLevelWindow()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always returns <tt CLASS=literal>false</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.350">checkWrite</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.428"><tt CLASS=literal>public void checkWrite(FileDescriptor fd)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>fd</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>FileDescriptor</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to write
+to the given file descriptor.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to
+write to the specified file descriptor. An implementation of the
+method should throw a <tt CLASS=literal>SecurityException</tt> to deny
+permission to write to the file descriptor. The method is called
+by the constructor of the <tt CLASS=literal>java.io.FileOutputStream</tt>
+class that takes a <tt CLASS=literal>FileDescriptor</tt> argument.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkWrite()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.429"><tt CLASS=literal>public void checkWrite(String file)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>file</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a file.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the caller does not have permission to read from
+the named file.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method decides whether or not to allow the caller to
+write to the named file. An implementation of the method should
+throw a <tt CLASS=literal>SecurityException</tt> to deny permission
+to write to the file. The method is called by constructors of the
+<tt CLASS=literal>java.io.FileOutputStream</tt> and <tt CLASS=literal>java.io.RandomAccessFile</tt>
+classes, as well as by the <tt CLASS=literal>canWrite()</tt>, <tt CLASS=literal>mkdir()</tt>,
+and <tt CLASS=literal>renameTo()</tt> methods of the <tt CLASS=literal>java.io.File</tt>
+class.
+
+<P CLASS=para>
+The <tt CLASS=literal>checkWrite()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+always throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.351">getInCheck</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.430"><tt CLASS=literal>public boolean getInCheck()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if a security check is in progress;
+otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the <tt CLASS=literal>SecurityManager</tt>
+object's <tt CLASS=literal>inCheck</tt> variable, which is <tt CLASS=literal>true</tt>
+if a security check is in progress and <tt CLASS=literal>false</tt>
+otherwise.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.352">getSecurityContext</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.431"><tt CLASS=literal>public Object getSecurityContext()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An implementation-dependent object that contains enough information
+about the current execution environment to perform security checks
+at a later time.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is meant to create an object that encapsulates
+information about the current execution environment. The resulting
+security context object is used by specific versions of the <tt CLASS=literal>checkConnect()</tt>
+and <tt CLASS=literal>checkRead()</tt> methods. The intent is that such
+a security context object can be used by a trusted method to determine
+whether or not another, untrusted method can perform a particular
+operation.
+
+<P CLASS=para>
+The <tt CLASS=literal>getSecurityContext()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+simply returns <tt CLASS=literal>null</tt>. This method should be overridden
+to return an appropriate security context object for the security
+policy that is being implemented.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.353">getThreadGroup</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.432"><tt CLASS=literal>public ThreadGroup getThreadGroup()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>ThreadGroup</tt> in which to place any threads that
+are created when this method is called.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the appropriate parent <tt CLASS=literal>ThreadGroup</tt>
+for any threads that are created when the method is called.
+The <tt CLASS=literal>getThreadGroup()</tt> method of <tt CLASS=literal>SecurityManager</tt>
+simply returns the <tt CLASS=literal>ThreadGroup</tt> of the current
+thread.  This method should be overridden
+to return an appropriate <tt CLASS=literal>ThreadGroup</tt>.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.352">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.354">classDepth</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.433"><tt CLASS=literal>protected native int classDepth(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The fully qualified name of a class.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of pending method invocations from the top of the
+stack to a call to a method of the given class; <tt CLASS=literal>-1</tt>
+if no stack frame in the current thread is associated with a call
+to a method in the given class.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of pending method invocations
+between this method invocation and an invocation of a method associated
+with the named class.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.355">classLoaderDepth</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.434"><tt CLASS=literal>protected native int classLoaderDepth()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of pending method invocations from the top of the
+stack to a call to a method that is associated with a class that
+was loaded by a <tt CLASS=literal>ClassLoader</tt> object; <tt CLASS=literal>-1</tt>
+if no stack frame in the current thread is associated with a call
+to such a method.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of pending method invocations
+between this method invocation and an invocation of a method associated
+with a class that was loaded by a <tt CLASS=literal>ClassLoader</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.356">currentClassLoader</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.435"><tt CLASS=literal>protected native ClassLoader currentClassLoader()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The most recent <tt CLASS=literal>ClassLoader</tt> object executing
+on the stack.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the most recent pending invocation of a
+method associated with a class that was loaded by a <tt CLASS=literal>ClassLoader</tt>
+object. The method then returns the <tt CLASS=literal>ClassLoader</tt>
+object that loaded that class.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.357">currentLoadedClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.436"><tt CLASS=literal>protected Class currentLoadedClass()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The most recent <tt CLASS=literal>Class</tt> object loaded by a
+<tt CLASS=literal>ClassLoader</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the most recent pending invocation of a
+method associated with a class that was loaded by a <tt CLASS=literal>ClassLoader</tt>
+object. The method then returns the <tt CLASS=literal>Class</tt>
+object for that class.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.358">getClassContext</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.437"><tt CLASS=literal>protected native Class[] getClassContext()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Class</tt> objects that represents
+the current execution stack.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an array of <tt CLASS=literal>Class</tt> objects
+that represents the current execution stack. The length of the array
+is the number of pending method calls on the current thread's stack,
+not including the call to <tt CLASS=literal>getClassContext()</tt>.
+Each element of the array references a <tt CLASS=literal>Class</tt> object
+that describes the class associated with the corresponding method
+call. The first element of the array corresponds to the most recently
+called method, the second element is that method's caller, and so
+on.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.359">inClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.438"><tt CLASS=literal>protected boolean inClass(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The fully qualified name of a class.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if there is a pending method invocation
+on the stack for a method of the given class; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not there is a pending method
+invocation that is associated with the named class.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.360">inClassLoader</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.439"><tt CLASS=literal>protected boolean inClassLoader()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if there is a pending method invocation
+on the stack for a method of a class that was loaded by a
+<tt CLASS=literal>ClassLoader</tt> object; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not there is a pending method
+invocation that is associated with a class that was loaded by a
+<tt CLASS=literal>ClassLoader</tt> object. The method returns
+<tt CLASS=literal>true</tt> only if the
+<tt CLASS=literal>currentClassLoader()</tt>
+method does not return <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.353">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.354">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Class</tt>, 
+<tt CLASS=literal>ClassLoader</tt>, 
+<tt CLASS=literal>DatagramSocket</tt>,
+<tt CLASS=literal>File</tt>,  
+<tt CLASS=literal>FileDescriptor</tt>, 
+<tt CLASS=literal>FileInputStream</tt>, 
+<tt CLASS=literal>FileOutputStream</tt>,
+<tt CLASS=literal>InetAddress</tt>, 
+<tt CLASS=literal>MulticastSocket</tt>,
+<tt CLASS=literal>Object</tt>,
+<tt CLASS=literal>RandomAccessFile</tt>,
+<tt CLASS=literal>Runtime</tt>, 
+<tt CLASS=literal>SecurityException</tt>,
+<tt CLASS=literal>ServerSocket</tt>, 
+<tt CLASS=literal>Socket</tt>, 
+<tt CLASS=literal>System</tt>, 
+<tt CLASS=literal>Thread</tt>, 
+<tt CLASS=literal>ThreadGroup</tt>,
+<tt CLASS=literal>Toolkit</tt>, 
+<tt CLASS=literal>URL</tt>,
+<tt CLASS=literal>URLConnection</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_53.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_55.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>SecurityException</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Short</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

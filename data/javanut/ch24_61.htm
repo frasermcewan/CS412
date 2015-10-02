@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 24] 24.61 java.io.StreamTokenizer (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:23:02 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch24_60.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 24<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch24_62.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-61">24.61 java.io.StreamTokenizer (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-61.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class performs lexical analysis of a
+specified input stream and breaks the input up into tokens.
+It can be extremely useful when writing simple parsers.
+
+<P CLASS=para>
+<tt CLASS=literal>nextToken()</tt> returns the next token in the
+stream--this is either one of the constants defined by
+the class (which represent end-of-file, end-of-line, a
+parsed floating-point number, and a parsed word) or a
+character value. <tt CLASS=literal>pushBack()</tt> "pushes" the token back
+onto the stream, so that it is returned by the next
+call to <tt CLASS=literal>nextToken()</tt>. The public variables
+<tt CLASS=literal>sval</tt> and <tt CLASS=literal>nval</tt> contain the string and numeric
+values (if applicable) of the most recently read token. They
+are applicable when the returned token is <tt CLASS=literal>TT_WORD</tt>
+and <tt CLASS=literal>TT_NUMBER</tt>. <tt CLASS=literal>lineno()</tt> returns the current
+line number.
+
+<P CLASS=para>
+The remaining methods allow you to specify how tokens are
+recognized.  <tt CLASS=literal>wordChars()</tt>
+specifies a range of characters that should be treated as
+parts of words. <tt CLASS=literal>whitespaceChars()</tt> specifies a range
+of characters that serve to delimit tokens.
+<tt CLASS=literal>ordinaryChars()</tt> and <tt CLASS=literal>ordinaryChar()</tt> specify
+characters that are never part of tokens and should be
+returned as-is. <tt CLASS=literal>resetSyntax()</tt> makes all characters
+"ordinary."  
+<tt CLASS=literal>eolIsSignificant()</tt> specifies whether end-of-line is
+significant. If so, the <tt CLASS=literal>TT_EOL</tt> constant is
+returned for end-of-lines. Otherwise they are treated
+as whitespace.
+
+<P CLASS=para>
+<tt CLASS=literal>commentChar()</tt> specifies a character that begins a
+comment that lasts until the end of the line. No characters
+in the comment are returned.
+<tt CLASS=literal>slashStarComments()</tt> and <tt CLASS=literal>slashSlashComments()</tt>
+specify whether the <tt CLASS=literal>StreamTokenizer</tt> should recognize
+C and C++-style comments. If so, no parts of the comments
+are returned as tokens.
+<tt CLASS=literal>quoteChar()</tt> specifies a character used to delimit
+strings. When a string token is parsed, the quote character
+is returned as the token value, and the body of the
+string is stored in the <tt CLASS=literal>sval</tt> variable.
+<tt CLASS=literal>lowerCaseMode()</tt> specifies whether <tt CLASS=literal>TT_WORD</tt>
+tokens should be converted to all lowercase characters
+before being stored in <tt CLASS=literal>sval</tt>.
+<tt CLASS=literal>parseNumbers()</tt> specifies
+that the <tt CLASS=literal>StreamTokenizer</tt> should recognize and return
+double-precision floating-point number tokens.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>StreamTokenizer</tt> extends Object {
+    // <tt CLASS=literal>Public Constructors</tt>
+        #   public <tt CLASS=literal>StreamTokenizer</tt>(InputStream <tt CLASS=literal>is</tt>);
+        <b>1.1</b>  public <tt CLASS=literal>StreamTokenizer</tt>(Reader <tt CLASS=literal>r</tt>);
+    // <tt CLASS=literal>Constants</tt>
+            public static final int <tt CLASS=literal>TT_EOF</tt>;
+            public static final int <tt CLASS=literal>TT_EOL</tt>;
+            public static final int <tt CLASS=literal>TT_NUMBER</tt>;
+            public static final int <tt CLASS=literal>TT_WORD</tt>;
+    // <tt CLASS=literal>Public Instance Variables</tt>
+            public double <tt CLASS=literal>nval</tt>;
+            public String <tt CLASS=literal>sval</tt>;
+            public int <tt CLASS=literal>ttype</tt>;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public void <tt CLASS=literal>commentChar</tt>(int <tt CLASS=literal>ch</tt>);
+            public void <tt CLASS=literal>eolIsSignificant</tt>(boolean <tt CLASS=literal>flag</tt>);
+            public int <tt CLASS=literal>lineno</tt>();
+            public void <tt CLASS=literal>lowerCaseMode</tt>(boolean <tt CLASS=literal>fl</tt>);
+            public int <tt CLASS=literal>nextToken</tt>() throws IOException;
+            public void <tt CLASS=literal>ordinaryChar</tt>(int <tt CLASS=literal>ch</tt>);
+            public void <tt CLASS=literal>ordinaryChars</tt>(int <tt CLASS=literal>low</tt>, int <tt CLASS=literal>hi</tt>);
+            public void <tt CLASS=literal>parseNumbers</tt>();
+            public void <tt CLASS=literal>pushBack</tt>();
+            public void <tt CLASS=literal>quoteChar</tt>(int <tt CLASS=literal>ch</tt>);
+            public void <tt CLASS=literal>resetSyntax</tt>();
+            public void <tt CLASS=literal>slashSlashComments</tt>(boolean <tt CLASS=literal>flag</tt>);
+            public void <tt CLASS=literal>slashStarComments</tt>(boolean <tt CLASS=literal>flag</tt>);
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public void <tt CLASS=literal>whitespaceChars</tt>(int <tt CLASS=literal>low</tt>, int <tt CLASS=literal>hi</tt>);
+            public void <tt CLASS=literal>wordChars</tt>(int <tt CLASS=literal>low</tt>, int <tt CLASS=literal>hi</tt>);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch24_60.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch24_62.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.io.StreamCorruptedException (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.io.StringBufferInputStream (JDK 1.0; Deprecated.)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

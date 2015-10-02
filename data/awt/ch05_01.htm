@@ -1,0 +1,2348 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] Components</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:33:45 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-5">5. Components</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Component<br>
+<A HREF="ch05_02.htm">Labels</A><BR>
+<A HREF="ch05_03.htm">Buttons</A><BR>
+<A HREF="ch05_04.htm">A Simple Calculator</A><BR>
+<A HREF="ch05_05.htm">Canvas</A><BR>
+<A HREF="ch05_06.htm">Creating Your Own Component</A><BR>
+<A HREF="ch05_07.htm">Cursor</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+This chapter introduces the generic graphical widget used within the AWT 
+package, <tt CLASS=literal>Component</tt>, along with 
+a trio of specific components: <tt CLASS=literal>Label</tt>, 
+<tt CLASS=literal>Button</tt>, and <tt CLASS=literal>Canvas</tt>. 
+It also covers the <tt CLASS=literal>Cursor</tt> class, 
+new to Java 1.1. (Cursor support was previously part of the <tt CLASS=literal>Frame</tt> 
+class.) Although many objects within AWT don't subclass <tt CLASS=literal>Component</tt>, 
+and though you will never create an instance of <tt CLASS=literal>Component</tt>, 
+anything that provides screen-based user interaction and relies on the 
+system for its layout will be a child of <tt CLASS=literal>Component</tt>. 
+As a subclass of <tt CLASS=literal>Component</tt>, 
+each child inherits a common set of methods and an API for dealing with 
+the different events (i.e., mouse click, keyboard input) that occur within 
+your Java programs. 
+
+<P CLASS=para>
+After discussing the methods in <tt CLASS=literal>Component</tt> 
+classes, this chapter goes into detail about two specific components, <tt CLASS=literal>Label</tt> 
+and <tt CLASS=literal>Button</tt>. A <tt CLASS=literal>Label</tt> 
+is a widget that contains descriptive text, usually next to an input field. 
+A <tt CLASS=literal>Button</tt> is a basic mechanism 
+that lets the user signal the desire to perform an action. You will learn 
+about the <tt CLASS=literal>Canvas</tt> object and 
+how to use a <tt CLASS=literal>Canvas</tt> to create 
+your own component. Finally, we cover the <tt CLASS=literal>Cursor</tt> 
+class, which lets you change the cursor over a <tt CLASS=literal>Component</tt>. 
+
+<P CLASS=para>
+Before going into the mechanics of the <tt CLASS=literal>Component</tt> 
+class, it's necessary to say a little about the relationship between 
+components and containers. A <tt CLASS=literal>Container</tt> 
+is also a component with the ability to contain other components. There 
+are several different kinds of containers; they are discussed in <A HREF="ch06_01.htm">Chapter 6, <i>Containers</i></A>. To display a component, you have to put it in a container 
+by calling the container's <tt CLASS=literal>add()</tt> 
+method. We often call the container that holds a component the component's 
+<I CLASS=emphasis>parent</I>&nbsp;; likewise, 
+we call the components a container holds its <I CLASS=emphasis>children</I>. 
+Certain operations are legal only if a component has a parent--that is, 
+the component is in a container. Of course, since containers are components, containers 
+can contain other containers, <I CLASS=emphasis>ad infinitum</I>. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+If you think some component is missing a method that should obviously 
+be there, check the methods it inherits. For example, the <tt CLASS=literal>Label</tt> 
+class appears to lack a <tt CLASS=literal>setFont()</tt> 
+method. Obviously, labels ought to be able to change their fonts. The <tt CLASS=literal>setFont()</tt> 
+method really is there; it is inherited from the <tt CLASS=literal>Component</tt> 
+class, and therefore, not documented as part of the <tt CLASS=literal>Label</tt> 
+class. Even if you're familiar with object-oriented techniques, the 
+need to work up a class hierarchy to find all of the class's methods 
+can lead to confusion and frustration. While all Java objects inherit methods 
+from other classes, the potential for confusion is worst with components, 
+which inherit over a hundred methods from <tt CLASS=literal>Component</tt> 
+and may only have a few methods of their own. 
+</blockquote><P>
+</DIV>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-1">5.1 Component</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.COMP"></A>Every GUI-based program consists of a screen with a set of objects. With 
+Java, these objects are called components. Some of the more frequently 
+used components are buttons, text fields, and containers. 
+
+<P CLASS=para>
+A container is a special component that allows you to group different components 
+together within it. You will learn more about containers in the next chapter, 
+but they are in fact just another kind of component. Also, some of the 
+parameters and return types for the methods of <tt CLASS=literal>Component</tt> 
+have not been explained yet and have their own sections in future chapters. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-1.1">Component Methods</A></h3><A NAME="CH05.COMPONENTCLASS"></A>Constants
+
+<P CLASS=para>
+Prior to Java 1.1, you could not subclass <tt CLASS=literal>Component</tt> 
+or <tt CLASS=literal>Container</tt>. With the introduction 
+of the <tt CLASS=literal>LightweightPeer</tt>, you 
+can now subclass either <tt CLASS=literal>Component</tt> 
+or <tt CLASS=literal>Container</tt>. However, since 
+you no longer have a native peer, you must rely on your container to provide 
+a display area and other services that are normally provided by a full-fledged 
+peer. Because you cannot rely on your peer to determine your alignment, 
+the <tt CLASS=literal>Component</tt> class now has 
+five constants to indicate six possible alignment settings (one constant 
+is used twice). The alignment constants designate where to position a lightweight 
+component; their values range from 0.0 to 1.0. The lower the number, the 
+closer the component will be placed to the origin (top left corner) of 
+the space allotted to it.[1] 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ 
+As of Beta 3, these constants appear to be seldom used. The <tt CLASS=literal>getAlignmentX()</tt> 
+and <tt CLASS=literal>getAlignmentY()</tt> methods  return these values, but there are no <tt CLASS=literal>setAlignment</tt> 
+methods.
+</blockquote>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final float BOTTOM_ALIGNMENT <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>BOTTOM_ALIGNMENT</tt> constant 
+indicates that the component should align itself to the bottom of its available 
+space. It is a return value from the method <tt CLASS=literal>getAlignmentY()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final float CENTER_ALIGNMENT <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>CENTER_ALIGNMENT</tt> constant 
+indicates that the component should align itself to the middle of its available 
+space. It is a return value from either the <tt CLASS=literal>getAlignmentX()</tt> 
+or <tt CLASS=literal>getAlignmentY()</tt> method. This constant represents both the horizontal and vertical center. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final float LEFT_ALIGNMENT <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>LEFT_ALIGNMENT</tt> constant 
+indicates that the component should align itself to the left side of its 
+available space. It is a return value from <tt CLASS=literal>getAlignmentX()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final float RIGHT_ALIGNMENT <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>RIGHT_ALIGNMENT</tt> constant 
+indicates that the component should align itself to the right side of its 
+available space. It is a return value from the method <tt CLASS=literal>getAlignmentX()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final float TOP_ALIGNMENT <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>TOP_ALIGNMENT</tt> constant 
+indicates that the component should align itself to the top of its available 
+space. It is a return value from <tt CLASS=literal>getAlignmentY()</tt>. </DL>
+Variables
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected Locale locale <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The protected <tt CLASS=literal>locale</tt> variable 
+can be accessed by calling the <tt CLASS=literal>getLocale()</tt> 
+method. </DL>
+Constructor
+
+<P CLASS=para>
+Prior to Java 1.1, there was no public or protected constructor for <tt CLASS=literal>Component</tt>. 
+Only package members were able to subclass <tt CLASS=literal>Component</tt> 
+directly. With the introduction of lightweight peers, components can exist 
+without a native peer, so the constructor was made <tt CLASS=literal>protected</tt>, 
+allowing you to create your own <tt CLASS=literal>Component</tt> 
+subclasses. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis> protected Component() <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>Component</tt> 
+creates a new component without a native peer. Since you no longer have 
+a native peer, you must rely on your container to provide a display area. 
+This allows you to create components that require fewer system resources 
+than components that subclass <tt CLASS=literal>Canvas</tt>. 
+The example in the "Using an event multicaster" section of the previous chapter 
+is of a lightweight component. Use the <tt CLASS=literal>SystemColor</tt> 
+class to help you colorize the new component appropriately or make it transparent. </DL>
+Appearance
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Toolkit getToolkit () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getToolkit()</tt> method returns 
+the current <tt CLASS=literal>Toolkit</tt> of the 
+<tt CLASS=literal>Component</tt>. This returns the 
+parent's <tt CLASS=literal>Toolkit</tt> (from 
+a <tt CLASS=literal>getParent()</tt> call) when the 
+<tt CLASS=literal>Component</tt> has not been added 
+to the screen yet or is lightweight. If there is no parent, <tt CLASS=literal>getToolkit()</tt> 
+returns the default <tt CLASS=literal>Toolkit</tt>. 
+Through the <tt CLASS=literal>Toolkit</tt>, you have 
+access to the details of the current platform (like screen resolution, 
+screen size, and available fonts), which you can use to adjust screen real 
+estate requirements or check on the availability of a font. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Color getForeground () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getForeground()</tt> method 
+returns the foreground color of the component. If no foreground 
+color is set for the component, you get its parent's foreground color. 
+If none of the component's parents have a foreground color set, <tt CLASS=literal>null</tt> 
+is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setForeground (Color c) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setForeground()</tt> method 
+changes the current foreground color of the area of the screen occupied 
+by the component to <tt CLASS=literal>c</tt>. After 
+changing the color, it is necessary for the screen to refresh before the 
+change has any effect. To refresh the screen, call <tt CLASS=literal>repaint()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Color getBackground () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBackground()</tt> method 
+returns the background color of the component. If no background 
+color is set for the component, its parent's background color is retrieved. 
+If none of the component's parents have a background color set, <tt CLASS=literal>null </tt>is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setBackground (Color c) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setBackground()</tt> method 
+changes the current background color of the area of the screen occupied 
+by the component to <tt CLASS=literal>c</tt>. After 
+changing the color, it is necessary for the screen to refresh before the 
+change has any affect. To refresh the screen, call <tt CLASS=literal>repaint()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Font getFont () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFont()</tt> method returns 
+the font of the component. If no font is set for the component, its 
+parent's font is retrieved. If none of the component's parents 
+have a font set, <tt CLASS=literal>null</tt> is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setFont (Font f) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setFont()</tt> method changes 
+the component's font to <tt CLASS=literal>f</tt>. 
+If the font family (such as TimesRoman) provided within <tt CLASS=literal>f</tt> 
+is not available on the current platform, the system uses a default font 
+family, along with the supplied size and style (plain, bold, italic). Depending 
+upon the platform, it may be necessary to refresh the component/screen 
+before seeing any changes. 
+
+<P CLASS=para>
+Changing the font of a component could have an affect on the layout of 
+the component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized ColorModel getColorModel () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getColorModel()</tt> method 
+returns the <tt CLASS=literal>ColorModel</tt> used 
+to display the current component. If the component is not displayed, the 
+<tt CLASS=literal>ColorModel</tt> from the component's 
+<tt CLASS=literal>Toolkit</tt> is used. The normal 
+<tt CLASS=literal>ColorModel</tt> for a Java program 
+is 8 bits each for red, green, and blue. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Graphics getGraphics () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getGraphics()</tt> method gets 
+the component's graphics context. Most noncontainer components do 
+not manage them correctly and therefore throw an <tt CLASS=literal>InternalError</tt> 
+exception when you call this method. The <tt CLASS=literal>Canvas</tt> 
+component is one that does since you can draw on that directly. If the 
+component is not visible, <tt CLASS=literal>null</tt> is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public FontMetrics getFontMetrics (Font f) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFontMetrics()</tt> method 
+retrieves the component's view of the <tt CLASS=literal>FontMetrics</tt> 
+for the requested font <tt CLASS=literal>f</tt>. Through 
+the <tt CLASS=literal>FontMetrics</tt>, you have access 
+to the platform-specific sizing for the appearance of a character or string. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Locale getLocale () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLocale()</tt> method retrieves 
+the current <tt CLASS=literal>Locale</tt> of the component, 
+if it has one. Using a <tt CLASS=literal>Locale</tt> 
+allows you to write programs that can adapt themselves to different languages 
+and different regional variants. If no <tt CLASS=literal>Locale</tt> 
+has been set, <tt CLASS=literal>getLocale()</tt> returns 
+the parent's <tt CLASS=literal>Locale</tt>.[2] If the 
+component has no locale of its own and no parent (i.e., it isn't 
+in a container), <tt CLASS=literal>getLocale()</tt> 
+throws the run-time exception <tt CLASS=literal>IllegalComponentStateException</tt>. 
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+ 
+For more on the <tt CLASS=literal>Locale</tt> class, 
+see the <I CLASS=emphasis>Java Fundamental Classes Reference</I> 
+from O'Reilly &amp; Associates.
+</blockquote>
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setLocale (Locale l) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setLocale()</tt> method changes 
+the current <tt CLASS=literal>Locale</tt> of the component 
+to <tt CLASS=literal>l</tt>. In order for this change 
+to have any effect, you must localize your components so that they have 
+different labels or list values for different environments. Localization 
+is part of the broad topic of internationalization and is beyond the scope 
+of this book. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Cursor getCursor () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getCursor()</tt> method retrieves 
+the component's current <tt CLASS=literal>Cursor</tt>. 
+If one hasn't been set, the default is <tt CLASS=literal>Cursor.DEFAULT_CURSOR</tt>. 
+The <tt CLASS=literal>Cursor</tt> class is described 
+fully in <A HREF="ch05_07.htm#JAWT-CH-5-SECT-7">Cursor</A>. Prior to Java 1.1, the ability to associate 
+cursors with components was restricted to frames. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setCursor (Cursor c) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setCursor()</tt> method changes 
+the current <tt CLASS=literal>Cursor</tt> of the component 
+to <tt CLASS=literal>c</tt>. The change takes effect 
+as soon as the cursor is moved. Lightweight components cannot change their 
+cursors. </DL>
+Positioning/Sizing
+
+<P CLASS=para>
+<A NAME="CH05.SIZE1"></A><A NAME="CH05.SIZE2"></A><A NAME="CH05.SIZE3"></A><tt CLASS=literal>Component</tt> provides a handful 
+of methods for positioning and sizing objects. Most of these are used 
+behind the scenes by the system. You will also need them if you create 
+your own <tt CLASS=literal>LayoutManager</tt> or need 
+to move or size an object. All of these depend on support for the functionality 
+from the true component's peer. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Point getLocation () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Point location () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLocation()</tt> method returns 
+the current position of the <tt CLASS=literal>Component</tt> 
+in its parent's coordinate space. The <tt CLASS=literal>Point</tt> 
+is the top left corner of the bounding box around the <tt CLASS=literal>Component</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>location()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Point getLocationOnScreen () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLocationOnScreen()</tt> method 
+returns the current position of the <tt CLASS=literal>Component</tt> 
+in the screen's coordinate space. The <tt CLASS=literal>Point</tt> 
+is the top left corner of the bounding box around the <tt CLASS=literal>Component</tt>. 
+If the component is not showing, the <tt CLASS=literal>getLocationOnScreen()</tt> 
+method throws the <tt CLASS=literal>IllegalComponentStateException</tt> run-time exception. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setLocation (int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void move (int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setLocation()</tt> method moves 
+the <tt CLASS=literal>Component</tt> to the new position 
+(<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>). 
+The coordinates provided are in the parent container's coordinate 
+space. This method calls <tt CLASS=literal>setBounds() </tt>to 
+move the component. The <tt CLASS=literal>LayoutManager</tt> 
+of the container may make it impossible to change a component's location. 
+
+<P CLASS=para>
+Calling this method with a new position for the component generates a <tt CLASS=literal>ComponentEvent</tt> 
+with the ID <tt CLASS=literal>COMPONENT_MOVED</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>move()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setLocation (Point p) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>setLocation()</tt> method moves 
+the component to the position specified by the given <tt CLASS=literal>Point</tt>. 
+It is the same as calling <tt CLASS=literal>setLocation</tt>(<tt CLASS=literal>p.x</tt>, 
+<tt CLASS=literal>p.y)</tt>. 
+
+<P CLASS=para>
+Calling this method with a new position for the component generates a <tt CLASS=literal>ComponentEvent</tt> 
+with the ID <tt CLASS=literal>COMPONENT_MOVED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension size () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSize()</tt> method returns 
+the width and height of the component as a <tt CLASS=literal>Dimension</tt> 
+object. 
+
+<P CLASS=para>
+<tt CLASS=literal>size()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setSize (int width, int height) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void resize (int width, int height) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setSize()</tt> method changes 
+the component's width and height to the <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> provided. <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> are specified in 
+pixels. The component is resized by a call to <tt CLASS=literal>setBounds()</tt>. The <tt CLASS=literal>LayoutManager</tt> of 
+the <tt CLASS=literal>Container</tt> that contains 
+the component may make it impossible to change a component's size. 
+
+<P CLASS=para>
+Calling this method with a new size for the component generates a <tt CLASS=literal>ComponentEvent</tt> 
+with the ID <tt CLASS=literal>COMPONENT_RESIZED</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>resize()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setSize (Dimension d) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void resize (Dimension d) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>setSize()</tt> method changes 
+the component's width and height to the <tt CLASS=literal>Dimension</tt> 
+<tt CLASS=literal>d</tt> provided. The <tt CLASS=literal>Dimension</tt> 
+object includes the width and height attributes in one object. The component 
+is resized by a call to the <tt CLASS=literal>setBounds()</tt> 
+method. The <tt CLASS=literal>LayoutManager</tt> of 
+the <tt CLASS=literal>Container</tt> that contains 
+the component may make it impossible to change a component's size. 
+
+<P CLASS=para>
+Calling this method with a new size for the component generates a <tt CLASS=literal>ComponentEvent</tt> 
+with the ID <tt CLASS=literal>COMPONENT_RESIZED</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>resize()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle getBounds () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Rectangle bounds () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBounds()</tt> method returns 
+the bounding rectangle of the object. The fields of the <tt CLASS=literal>Rectangle</tt> that 
+you get back contain the component's position and dimensions. 
+
+<P CLASS=para>
+<tt CLASS=literal>bounds()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setBounds (int x, int y, int width, int height) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void reshape (int x, int y, int width, int height) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setBounds()</tt> method moves 
+and resizes the component to the bounding rectangle with coordinates of 
+(<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+(top left corner) and <tt CLASS=literal>width</tt> 
+x <tt CLASS=literal>height</tt>. If the size and shape 
+have not changed, no reshaping is done. If the component is resized, it 
+is invalidated, along with its parent container. The <tt CLASS=literal>LayoutManager</tt> 
+of the <tt CLASS=literal>Container</tt> that contains 
+the component may make it impossible to change the component's size 
+or position. Calling <tt CLASS=literal>setBounds()</tt> 
+invalidates the container, which results in a call to the <tt CLASS=literal>LayoutManager</tt> 
+to rearrange the container's contents. In turn, the <tt CLASS=literal>LayoutManager</tt> 
+calls <tt CLASS=literal>setBounds()</tt> to give the 
+component its new size and position, which will probably be the same size 
+and position it had originally. In short, if a layout manager is in effect, 
+it will probably undo your attempts to change the component's size 
+and position. 
+
+<P CLASS=para>
+Calling this method with a new size for the component generates a <tt CLASS=literal>ComponentEvent</tt> 
+with the ID <tt CLASS=literal>COMPONENT_RESIZED</tt>. 
+Calling this method with a new position generates a <tt CLASS=literal>ComponentEvent</tt> 
+with the ID <tt CLASS=literal>COMPONENT_MOVED</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>reshape()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setBounds (Rectangle r) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>setBounds()</tt> method calls 
+the previous method with parameters of <tt CLASS=literal>r.x</tt>, 
+<tt CLASS=literal>r.y</tt>, <tt CLASS=literal>r.width</tt>, 
+and <tt CLASS=literal>r.height</tt>. 
+
+<P CLASS=para>
+Calling this method with a new size for the component generates a <tt CLASS=literal>ComponentEvent</tt> 
+with the ID <tt CLASS=literal>COMPONENT_RESIZED</tt>. 
+Calling this method with a new position generates a <tt CLASS=literal>ComponentEvent</tt> 
+with the ID <tt CLASS=literal>COMPONENT_MOVED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getPreferredSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension preferredSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPreferredSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (width 
+and height) for the preferred size of the component. Each component's 
+peer knows its preferred size. Lightweight objects return <tt CLASS=literal>getSize()</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>preferredSize()</tt>is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMinimumSize () <img src="gifs/bstar.gif" alt="(New)" border=0></I><br><I CLASS=emphasis>public Dimension minimumSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimumSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (width 
+and height) for the minimum size of the component. Each component's 
+peer knows its minimum size. Lightweight objects return <tt CLASS=literal>getSize()</tt>. 
+It is possible that the methods <tt CLASS=literal>getMinimumSize()</tt> 
+and <tt CLASS=literal>getPreferredSize()</tt> will 
+return the same dimensions. 
+
+<P CLASS=para>
+<tt CLASS=literal>minimumSize()</tt>is the Java 1.0 
+name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMaximumSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMaximumSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (width 
+and height) for the maximum size of the component. This may be used by 
+a layout manager to prevent a component from growing beyond a predetermined 
+size. None of the <tt CLASS=literal>java.awt</tt> 
+layout managers call this method. By default, the value returned is <tt CLASS=literal>Short.MAX_VALUE</tt> 
+for both dimensions. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public float getAlignmentX () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlignmentX()</tt> method 
+returns the alignment of the component along the x axis. The alignment 
+could be used by a layout manager to position this component relative to 
+others. The return value is between 0.0 and 1.0. Values nearer 0 indicate 
+that the component should be placed closer to the left edge of the area 
+available. Values nearer 1 indicate that the component should be placed 
+closer to the right. The value 0.5 means the component should be centered. The default 
+setting is <tt CLASS=literal>Component.CENTER_ALIGNMENT</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public float getAlignmentY () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlignmentY()</tt> method 
+returns the alignment of the component along the y axis. The alignment 
+could be used by a layout manager to position this component relative to 
+others. The return value is between 0.0 and 1.0. Values nearer 0 indicate 
+that the component should be placed closer to the top of the area available. 
+Values nearer 1 indicate that the component should be placed closer to 
+the bottom. The value 0.5 means the component should be centered. The default setting 
+is <tt CLASS=literal>Component.CENTER_ALIGNMENT</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void doLayout () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void layout () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>doLayout()</tt> method of <tt CLASS=literal>Component</tt> 
+does absolutely nothing. It is called when the <tt CLASS=literal>Component</tt> 
+is validated (through the <tt CLASS=literal>validate()</tt> 
+method). The <tt CLASS=literal>Container</tt> class overrides 
+this method. 
+
+<P CLASS=para>
+<tt CLASS=literal>layout()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean contains (int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public boolean inside (int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>contains()</tt> method checks 
+if the <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> 
+coordinates are within the bounding box of the component. If the <tt CLASS=literal>Component</tt> 
+is not rectangular, the method acts as if there is a rectangle around the 
+<tt CLASS=literal>Component</tt>. <tt CLASS=literal>contains()</tt> 
+returns <tt CLASS=literal>true</tt> if the <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y </tt>coordinates are within 
+the component, <tt CLASS=literal>false</tt> otherwise. 
+
+<P CLASS=para>
+<tt CLASS=literal>inside()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean contains (Point p) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>contains()</tt> method calls 
+the previous method with parameters of <tt CLASS=literal>p.x</tt> 
+and <tt CLASS=literal>p.y</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component getComponentAt (int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Component locate (int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getComponentAt()</tt> method 
+uses <tt CLASS=literal>contains()</tt> to see if the 
+<tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> 
+coordinates are within the component. If they are, this method returns 
+the <tt CLASS=literal>Component</tt>. If they aren't, 
+it returns <tt CLASS=literal>null</tt>. <tt CLASS=literal>getComponentAt()</tt> 
+is overridden by <tt CLASS=literal>Container</tt> 
+to provide enhanced functionality. 
+
+<P CLASS=para>
+<tt CLASS=literal>locate()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component getComponentAt (Point p) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>getComponentAt()</tt> method 
+calls the previous method with parameters of <tt CLASS=literal>p.x</tt> 
+and <tt CLASS=literal>p.y</tt>. </DL>
+Painting
+
+<P CLASS=para>
+<A NAME="CH05.GRAPH"></A>The only methods in this section that you call directly are the versions 
+of <tt CLASS=literal>repaint()</tt>. The <tt CLASS=literal>paint()</tt> 
+and <tt CLASS=literal>update()</tt> methods are called 
+by the system when the display area requires refreshing, such as when a 
+user resizes a window. When your program changes the display you should 
+call <tt CLASS=literal>repaint()</tt> to trigger a 
+call to <tt CLASS=literal>update()</tt> and <tt CLASS=literal>paint()</tt>. 
+Otherwise, the system is responsible for updating the display. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void paint (Graphics g)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>paint()</tt> method is offered 
+so the system can display whatever you want in a <tt CLASS=literal>Component</tt>. 
+In the base <tt CLASS=literal>Component</tt> class, 
+this method does absolutely nothing. Ordinarily, it would be overridden in 
+an applet to do something other than the default, which is display a box 
+in the current background color. <tt CLASS=literal>g</tt> 
+is the graphics context of the component being drawn on. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void update (Graphics g)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>update()</tt> method is automatically 
+called when you ask to repaint the <tt CLASS=literal>Component</tt>. 
+If the component is not lightweight, the default implementation of <tt CLASS=literal>update()</tt> 
+clears graphics context <tt CLASS=literal>g</tt> by 
+drawing a filled rectangle in the background color, resetting the color 
+to the current foreground color, and calling <tt CLASS=literal>paint()</tt>. 
+If you do not override <tt CLASS=literal>update()</tt> 
+when you do animation, you will see some flickering because <tt CLASS=literal>Component</tt> 
+clears the screen. Animation is discussed in <A HREF="ch02_01.htm">Chapter 2, <i>Simple Graphics</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void paintAll (Graphics g)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>paintAll()</tt> method validates 
+the component and paints its peer if it is visible. <tt CLASS=literal>g</tt> 
+represents the graphics context of the component. This method is called 
+when the <tt CLASS=literal>paintComponents()</tt> 
+method of <tt CLASS=literal>Container</tt> is called. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void repaint () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>repaint()</tt> method requests 
+the scheduler to redraw the component as soon as possible. This will result 
+in <tt CLASS=literal>update()</tt> getting called 
+soon thereafter. There is not a one-to-one correlation between <tt CLASS=literal>repaint()</tt> 
+and <tt CLASS=literal>update()</tt> calls. It is possible 
+that multiple <tt CLASS=literal>repaint()</tt> calls 
+can result in a single <tt CLASS=literal>update()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void repaint (long tm) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>repaint()</tt> allows 
+for a delay of <tt CLASS=literal>tm</tt> milliseconds. 
+It says, please update this component within <tt CLASS=literal>tm</tt> 
+milliseconds, which may happen immediately. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void repaint (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>repaint()</tt> allows 
+you to select the region of the <tt CLASS=literal>Component</tt> 
+you desire to be updated. (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) are the coordinates of the 
+upper left corner of the bounding box of the component with dimensions 
+of <tt CLASS=literal>width</tt>x<tt CLASS=literal>height</tt>. 
+This is similar to creating a clipping area and results in a quicker repaint. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void repaint (long tm, int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+This final version of <tt CLASS=literal>repaint()</tt> 
+is what the other three <tt CLASS=literal>repaint()</tt> 
+methods call. <tt CLASS=literal>tm</tt> is the maximum 
+delay in milliseconds before update should be called. (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) are the coordinates of the 
+upper left corner of the clipping area of the component with dimensions 
+of <tt CLASS=literal>width</tt> x <tt CLASS=literal>height</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void print (Graphics g)</I><br>
+<DD>
+
+<P CLASS=para>
+The default implementation of the <tt CLASS=literal>print()</tt> 
+method calls <tt CLASS=literal>paint()</tt>. 
+
+<P CLASS=para>
+In Java 1.0, there was no way to print; in Java 1.1, if the <tt CLASS=literal>graphics</tt> 
+parameter implements <tt CLASS=literal>PrintGraphics</tt>, 
+anything drawn on <tt CLASS=literal>g</tt> will be 
+printed. Printing is covered in <A HREF="ch17_01.htm">Chapter 17, <i>Printing</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void printAll (Graphics g) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>printAll()</tt> method validates 
+the component and paints its peer if it is visible. <tt CLASS=literal>g</tt> 
+represents the graphics context of the component. This method is called 
+when the <tt CLASS=literal>printComponents()</tt> 
+method of <tt CLASS=literal>Container</tt> is called 
+or when you call it with a <tt CLASS=literal>PrintGraphics</tt> 
+parameter. 
+
+<P CLASS=para>
+The default implementation of <tt CLASS=literal>printAll()</tt> 
+is identical to <tt CLASS=literal>paintAll()</tt>. 
+As with <tt CLASS=literal>paintAll()</tt>, <tt CLASS=literal>g</tt> 
+represents the graphics context of the component; if <tt CLASS=literal>g</tt> 
+implements <tt CLASS=literal>PrintGraphics</tt>, it 
+can be printed. </DL>
+Imaging
+
+<P CLASS=para>
+<A NAME="CH05.IMAGE"></A>Background information about using images is discussed in 
+<A HREF="ch02_01.htm">Chapter 2, <i>Simple Graphics</i></A> and <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. The <tt CLASS=literal>imageUpdate()</tt> method 
+of <tt CLASS=literal>Component</tt> is the sole method 
+of the <tt CLASS=literal>ImageObserver</tt> interface. 
+Since images are loaded in a separate thread, this method is called whenever 
+additional information about the image becomes available. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean imageUpdate (Image image, int infoflags, int x, int y, int width, int height)</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>imageUpdate() </tt>is the <tt CLASS=literal>java.awt.image.ImageObserver</tt> 
+method implemented by <tt CLASS=literal>Component</tt>. 
+It is an asynchronous update interface for receiving notifications about 
+<tt CLASS=literal>Image</tt> information as <tt CLASS=literal>image</tt> 
+is loaded and is automatically called when additional information becomes 
+available. This method is necessary because image loading is done in a 
+separate thread from the <tt CLASS=literal>getImage()</tt> 
+call. Ordinarily, <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> 
+would be the coordinates of the upper left corner of the image loaded so 
+far, usually (0, 0). However, the method <tt CLASS=literal>imageUpdate()</tt> 
+of the component ignores these parameters. <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> are the <tt CLASS=literal>image</tt>'s 
+dimensions, so far, in the loading process. 
+
+<P CLASS=para>
+The <tt CLASS=literal>infoflags</tt> parameter is 
+a bit-mask of information available to you about <tt CLASS=literal>image</tt>. 
+Please see the text about <tt CLASS=literal>ImageObserver</tt> in 
+<A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A> for a complete description of the different flags that can 
+be set. When overriding this method, you can wait for some condition to 
+be true by checking a flag in your program and then taking the desired 
+action. To check for a particular flag, perform an AND (<tt CLASS=literal>&amp;</tt>) of <tt CLASS=literal>infoflags</tt> 
+and the constant. For example, to check if the <tt CLASS=literal>FRAMEBITS</tt> 
+flag is set: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+if ((infoflags &amp; ImageObserver.FRAMEBITS) == ImageObserver.FRAMEBITS)
+    System.out.println ("The Flag is set");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The return value from a call to <tt CLASS=literal>imageUpdate()</tt> 
+is <tt CLASS=literal>true</tt> if <tt CLASS=literal>image</tt> has changed 
+and <tt CLASS=literal>false</tt> otherwise. 
+
+<P CLASS=para>
+Two system properties let the user control the behavior of updates: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>awt.image.incrementaldraw</tt>
+ allows the user to control whether or not partial images are displayed. Initially, the value of 
+<tt CLASS=literal>incrementaldraw</tt>
+ is unset and defaults to 
+<tt CLASS=literal>true</tt>, which means that partial images are drawn. If 
+<tt CLASS=literal>incrementaldraw</tt>
+ is set to 
+<tt CLASS=literal>false</tt>, the image will be drawn only when it is complete or when the screen is resized or refreshed.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>awt.image.redrawrate</tt>
+ allows the user to change the delay between successive repaints. If not set, the default redraw rate is 100 milliseconds.
+
+<P>
+</UL>
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Image createImage (int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>createImage()</tt> method creates 
+an empty <tt CLASS=literal>Image</tt> of size <tt CLASS=literal>width</tt> 
+x <tt CLASS=literal>height</tt>. The returned <tt CLASS=literal>Image</tt> 
+is an in-memory image that can be drawn on for double buffering to manipulate 
+an image in the background. If an image of size <tt CLASS=literal>width</tt> 
+x <tt CLASS=literal>height</tt> cannot be created, 
+the call returns <tt CLASS=literal>null</tt>. In order for <tt CLASS=literal>createImage()</tt> 
+to succeed, the peer of the <tt CLASS=literal>Component</tt> 
+must exist; if the component is lightweight, the peer of the component's 
+container must exist. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Image createImage (ImageProducer producer) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>createImage()</tt> method allows 
+you to take an existing image and modify it in some way to produce a new 
+<tt CLASS=literal>Image</tt>. This can be done through 
+<tt CLASS=literal>ImageFilter</tt> and <tt CLASS=literal>FilteredImageSource</tt> 
+or a <tt CLASS=literal>MemoryImageSource</tt>, which 
+accepts an array of pixel information. You can learn more about these classes 
+and this method in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean prepareImage (Image image, ImageObserver observer)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>prepareImage()</tt> method forces 
+<tt CLASS=literal>image</tt> to start loading, asynchronously, 
+in another thread. <tt CLASS=literal>observer</tt> 
+is the <tt CLASS=literal>Component</tt> that <tt CLASS=literal>image</tt> 
+will be rendered on and is notified (via <tt CLASS=literal>imageUpdate()</tt>) 
+as <tt CLASS=literal>image</tt> is being loaded. In 
+the case of an <tt CLASS=literal>Applet</tt>, <tt CLASS=literal>this</tt> 
+would be passed as the <tt CLASS=literal>ImageObserver</tt>. 
+If <tt CLASS=literal>image</tt> has already been fully 
+loaded, <tt CLASS=literal>prepareImage()</tt> returns 
+<tt CLASS=literal>true</tt>. Otherwise, <tt CLASS=literal>false</tt> is returned. Since <tt CLASS=literal>image</tt> 
+is loaded asynchronously, <tt CLASS=literal>prepareImage()</tt> 
+returns immediately. Ordinarily, <tt CLASS=literal>prepareImage()</tt> 
+would be called by the system when <tt CLASS=literal>image</tt> 
+is first needed to be displayed (in <tt CLASS=literal>drawImage()</tt> 
+within <tt CLASS=literal>paint()</tt>). As more information 
+about the image gets loaded, <tt CLASS=literal>imageUpdate()</tt> 
+is called periodically. 
+
+<P CLASS=para>
+If you do not want to go through the trouble of creating a <tt CLASS=literal>MediaTracker</tt> 
+instance to start the loading of the image objects, you can call <tt CLASS=literal>prepareImage()</tt> 
+to trigger the start of image loading prior to a call to <tt CLASS=literal>drawImage()</tt>. 
+
+<P CLASS=para>
+If <tt CLASS=literal>image</tt> has already started 
+loading when this is called or if this is an in-memory image, there is 
+no effect. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean prepareImage (Image image, int width, int height, ImageObserver 
+observer)</I><br>
+<DD>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>prepareImage()</tt> 
+is identical to the previous one, with the addition of a scaling factor 
+of <tt CLASS=literal>width</tt>x<tt CLASS=literal>height</tt>. 
+As with other <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+parameters, the units for these parameters are pixels. Also, if <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> are -1, no 
+scaling factor is assumed. This method is called by one of the internal 
+<tt CLASS=literal>MediaTracker</tt> methods. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int checkImage (Image image, ImageObserver observer) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>checkImage()</tt> method returns the status of the construction of a screen 
+representation of <tt CLASS=literal>image</tt>, being 
+watched by <tt CLASS=literal>observer</tt>. If <tt CLASS=literal>image</tt> 
+has not started loading yet, this will not start it. The return value is 
+the <tt CLASS=literal>ImageObserver</tt> flags ORed 
+together for the data that is now available. The available <tt CLASS=literal>ImageObserver</tt> 
+flags are: <tt CLASS=literal>WIDTH</tt>, <tt CLASS=literal>HEIGHT</tt>, 
+<tt CLASS=literal>PROPERTIES</tt>, <tt CLASS=literal>SOMEBITS</tt>, 
+<tt CLASS=literal>FRAMEBITS</tt>, <tt CLASS=literal>ALLBITS</tt>, 
+<tt CLASS=literal>ERROR</tt>, and <tt CLASS=literal>ABORT</tt>. 
+See <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A> for a complete description of <tt CLASS=literal>ImageObserver</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int checkImage (Image image, int width, int height, ImageObserver 
+observer) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>checkImage()</tt> 
+is identical to the previous one, with the addition of a scaling factor 
+of <tt CLASS=literal>width</tt>x<tt CLASS=literal>height</tt>. 
+If you are using the <tt CLASS=literal>drawImage()</tt> 
+version with <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> parameters, you should use this version of <tt CLASS=literal>checkImage()</tt> 
+with the same <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt>. </DL>
+Peers
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public ComponentPeer getPeer () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPeer()</tt> method returns 
+a reference to the component's peer as a <tt CLASS=literal>ComponentPeer</tt> 
+object. For example, if you issue this method from a <tt CLASS=literal>Button</tt> 
+object, <tt CLASS=literal>getPeer()</tt> returns an 
+instance of the <tt CLASS=literal>ComponentPeer</tt> 
+subclass <tt CLASS=literal>ButtonPeer</tt>. 
+
+<P CLASS=para>
+This method is flagged as deprecated in comments but not with <tt CLASS=literal>@deprecated</tt>. 
+There is no replacement method for Java 1.1. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addNotify ()</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method is overridden 
+by each individual component type. When <tt CLASS=literal>addNotify()</tt> 
+is called, the peer of the component gets created, and the <tt CLASS=literal>Component</tt> 
+is invalidated. The <tt CLASS=literal>addNotify()</tt> 
+method is called by the system when it needs to create the peer. The peer 
+needs to be created when a <tt CLASS=literal>Component</tt> 
+is first shown, or when a new <tt CLASS=literal>Component</tt> 
+is added to a <tt CLASS=literal>Container</tt> and 
+the <tt CLASS=literal>Container</tt> is already being 
+shown (in which case it already has a peer, but a new one must be created 
+to take account of the new <tt CLASS=literal>Component</tt>). 
+If you override this method for a specific <tt CLASS=literal>Component</tt>, 
+call <tt CLASS=literal>super.addNotify()</tt> first, 
+then do what you need for the <tt CLASS=literal>Component</tt>. 
+You will then have information available about the newly created peer. 
+
+<P CLASS=para>
+Certain tasks cannot succeed unless the peer has been created. An incomplete 
+list includes finding the size of a component, laying out a container (because 
+it needs the component's size), and creating an <tt CLASS=literal>Image</tt> 
+object. Peers are discussed in more depth in <A HREF="ch15_01.htm">Chapter 15, <i>Toolkit and Peers</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void removeNotify ()</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeNotify()</tt> method destroys 
+the peer of the component and removes it from the screen. The state information 
+about the <tt CLASS=literal>Component</tt> is retained 
+by the specific subtype. The <tt CLASS=literal>removeNotify()</tt> 
+method is called by the system when it determines the peer is no longer 
+needed. Such times would be when the <tt CLASS=literal>Component</tt> 
+is removed from a <tt CLASS=literal>Container</tt>, 
+when its container changes, or when the <tt CLASS=literal>Component</tt> 
+is disposed. If you override this method for a specific <tt CLASS=literal>Component</tt>, 
+issue the particular commands for you need for this <tt CLASS=literal>Component</tt>, 
+then call <tt CLASS=literal>super.removeNotify()</tt> 
+last. </DL>
+State Procedures
+
+<P CLASS=para>
+<A NAME="CH05.STATE1"></A><A NAME="CH05.STATE2"></A>These methods determine whether the component is ready to be displayed 
+and can be seen by the user. The first requirement is that it be <I CLASS=emphasis>valid</I>--that 
+is, whether the system knows its size, and (in the case of a container) 
+whether the layout manager is aware of all its parts and has placed them 
+as requested. A component becomes invalid if the size has changed since 
+it was last displayed. If the component is a container, it becomes invalid 
+when one of the components contained within it becomes invalid. 
+
+<P CLASS=para>
+<A NAME="CH05.SHOW2"></A>Next, the component must be <I CLASS=emphasis>visible</I>--a 
+possibly confusing term, because components can be considered "visible" 
+without being seen by the user. Frames (because they have their own top-level 
+windows) are not visible until you request that they be shown, but other 
+components are visible as soon as you create them. 
+
+<P CLASS=para>
+<A NAME="CH05.SHOW1"></A>Finally, to be seen, a component must be <I CLASS=emphasis>showing</I>. 
+You show a component by adding it to its container. For something to be 
+showing, it must be visible and be in a container that is visible and showing. 
+
+<P CLASS=para>
+A subsidiary aspect of state is the <I CLASS=emphasis>enabled</I> 
+quality, which determines whether a component can accept input. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isValid () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isValid()</tt> method tells 
+you whether or not the component needs to be laid out. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void validate () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>validate()</tt> method sets 
+the component's valid state to <tt CLASS=literal>true</tt>. Ordinarily, this is done for you 
+when the <tt CLASS=literal>Component</tt> is laid 
+out by its <tt CLASS=literal>Container</tt>. Since 
+objects are invalid when they are first drawn on the screen, you should 
+call <tt CLASS=literal>validate()</tt> to tell the 
+system you are finished adding objects so that it can validate the screen and 
+components. One reason you can override <tt CLASS=literal>validate()</tt> 
+is to find out when the container that the component exists in has 
+been resized. The only requirement when overriding is that the original 
+<tt CLASS=literal>validate()</tt> be called. With 
+Java 1.1, instead of overriding, you can listen for resize events. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void invalidate () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>invalidate()</tt> method sets 
+the component's valid state to <tt CLASS=literal>false</tt> and propagates the invalidation 
+to its parent. Ordinarily, this is done for you, or should be, whenever anything 
+that affects the layout is changed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isVisible () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isVisible()</tt> methods tells 
+you if the component is currently visible. Most components are initially 
+visible, except for top-level objects like frames. Any component that is 
+visible will be shown on the screen when the screen is painted. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isShowing () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isShowing()</tt> method tells 
+you if the component is currently shown on the screen. It is possible for 
+<tt CLASS=literal>isVisible()</tt> to return <tt CLASS=literal>true</tt> 
+and <tt CLASS=literal>isShowing()</tt> to return 
+<tt CLASS=literal>false</tt> if the screen has not been painted yet. </DL>
+<P CLASS=para>
+<A HREF="ch05_01.htm#JAWT-CH-5-TAB-1">Table 5.1</A> compares possible return values from <tt CLASS=literal>isVisible()</tt> 
+and <tt CLASS=literal>isShowing()</tt>. The first 
+two entries are for objects that have their own <tt CLASS=literal>Window</tt>. 
+These will always return the same values for <tt CLASS=literal>isVisible()</tt> 
+and <tt CLASS=literal>isShowing()</tt>. The next three 
+are for <tt CLASS=literal>Component</tt> objects that 
+exist within a <tt CLASS=literal>Window</tt>, <tt CLASS=literal>Panel</tt>, 
+or <tt CLASS=literal>Applet</tt>. The visible setting 
+is always initially <tt CLASS=literal>true</tt>. However, the showing setting is not true until 
+the object is actually drawn. The last case shows another possibility. 
+If the component exists within an invisible <tt CLASS=literal>Container</tt>, 
+the component will be visible but will not be shown. 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-5-TAB-1">Table 5.1: isVisible vs. isShowing</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Happenings</TH>
+<TH ALIGN="left">isVisible</TH>
+<TH ALIGN="left">isShowing</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Frame</tt> created</TD>
+<TD ALIGN="left"><tt CLASS=literal>false</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>false</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Frame f = new Frame ()</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Frame</tt> showing</TD>
+<TD ALIGN="left"><tt CLASS=literal>true</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>true</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>f.show ()</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt> created</TD>
+<TD ALIGN="left"><tt CLASS=literal>true</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>false</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Button b= new Button ("Help")</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Button</tt> added to screen in <tt CLASS=literal>init()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>true</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>false</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>add (b)</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Container</tt> laid out with <tt CLASS=literal>Button</tt> in it</TD>
+<TD ALIGN="left"><tt CLASS=literal>true</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>true</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Button</tt> within <tt CLASS=literal>Panel</tt> that is not visible</TD>
+<TD ALIGN="left"><tt CLASS=literal>true</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>false</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void show () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>show()</tt> method displays 
+a component by making it visible and showing its peer. The parent <tt CLASS=literal>Container</tt> 
+becomes invalid because the set of children to display has changed. You 
+would call <tt CLASS=literal>show()</tt> directly 
+to display a <tt CLASS=literal>Frame</tt> or <tt CLASS=literal>Dialog</tt>. 
+
+<P CLASS=para>
+In Java 1.1, you should use <tt CLASS=literal>setVisible()</tt> 
+instead. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void hide () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>hide()</tt> method hides a component 
+by making it invisible and hiding its peer. The parent <tt CLASS=literal>Container</tt> 
+becomes invalid because the set of children to display has changed. If 
+you call <tt CLASS=literal>hide()</tt> for a <tt CLASS=literal>Component</tt> 
+that does not subclass <tt CLASS=literal>Window</tt>, 
+the component's <tt CLASS=literal>Container</tt> 
+reserves space for the hidden object. 
+
+<P CLASS=para>
+In Java 1.1, you should use <tt CLASS=literal>setVisible()</tt> 
+instead. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setVisible(boolean condition) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void show (boolean condition) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setVisible()</tt> method calls 
+either <tt CLASS=literal>show()</tt> or <tt CLASS=literal>hide()</tt> 
+based on the value of <tt CLASS=literal>condition</tt>. 
+If <tt CLASS=literal>condition</tt> is <tt CLASS=literal>true</tt>, 
+<tt CLASS=literal>show()</tt> is called. When <tt CLASS=literal>condition</tt> 
+is <tt CLASS=literal>false</tt>, <tt CLASS=literal>hide()</tt> 
+is called. 
+
+<P CLASS=para>
+<tt CLASS=literal>show()</tt> is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isEnabled () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isEnabled()</tt> method checks 
+to see if the component is currently enabled. An enabled <tt CLASS=literal>Component</tt> 
+can be selected and trigger events. A disabled <tt CLASS=literal>Component</tt> 
+usually has a slightly lighter font and doesn't permit the user to 
+select or interact with it. Initially, every <tt CLASS=literal>Component</tt> is enabled. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void enable () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>enable()</tt> method allows 
+the user to interact with the component. Components are enabled by default 
+but can be disabled by a call to <tt CLASS=literal>disabled()</tt> 
+or <tt CLASS=literal>setEnabled(false)</tt>. 
+
+<P CLASS=para>
+In Java 1.1, you should use <tt CLASS=literal>setEnabled()</tt> 
+instead. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void disable () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>disable()</tt> method disables 
+the component so that it is unresponsive to user interactions. 
+
+<P CLASS=para>
+In Java 1.1, you should use <tt CLASS=literal>setEnabled()</tt> 
+instead. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setEnabled (boolean condition) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void enable (boolean condition) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setEnabled()</tt> method calls 
+either <tt CLASS=literal>enable()</tt> or <tt CLASS=literal>disable()</tt> 
+based on the value of <tt CLASS=literal>condition</tt>. 
+If <tt CLASS=literal>condition</tt> is <tt CLASS=literal>true</tt>, 
+<tt CLASS=literal>enable()</tt> is called. When <tt CLASS=literal>condition</tt> 
+is <tt CLASS=literal>false</tt>, <tt CLASS=literal>disable()</tt> 
+is called. Enabling and disabling lets you create components that can 
+be operated only under certain conditions--for example, a <tt CLASS=literal>Button</tt> 
+that can be pressed only after the user has typed into a <tt CLASS=literal>TextArea</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>enable()</tt> is the Java 1.0 name 
+for this method. </DL>
+Focus
+
+<P CLASS=para>
+Although there was some support for managing input focus in version 1.0, 
+1.1 improved on this greatly by including support for Tab and Shift+Tab 
+to move input focus to the next or previous component, and by being more 
+consistent across different platforms. This support is provided by the 
+package-private class <tt CLASS=literal>FocusManager</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isFocusTraversable() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isFocusTraversable()</tt> method 
+is the support method that tells you whether or not a component is capable 
+of receiving the input focus. Every component asks its peer whether or 
+not it is traversable. If there is no peer, this method returns <tt CLASS=literal>false</tt>. 
+
+<P CLASS=para>
+If you are creating a component by subclassing <tt CLASS=literal>Component</tt> 
+or <tt CLASS=literal>Canvas</tt> and you want it 
+to be traversable, you should override this method; a <tt CLASS=literal>Canvas</tt> 
+is not traversable by default. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void requestFocus () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>requestFocus()</tt> method allows 
+you to request that a component get the input focus. If it can't 
+(<tt CLASS=literal>isFocusTraversable()</tt> returns 
+<tt CLASS=literal>false</tt>), it won't. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void transferFocus () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void nextFocus () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>transferFocus()</tt> method 
+moves the focus from the current component to the next one. 
+
+<P CLASS=para>
+<tt CLASS=literal>nextFocus()</tt> is the Java 1.0 
+name for this method. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final Object getTreeLock () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getTreeLock()</tt> method retrieves 
+the synchronization lock for all AWT components. Instead of using <tt CLASS=literal>synchronized</tt> 
+methods in Java 1.1, previously synchronized methods lock the tree within 
+a <tt CLASS=literal>synchronized (component.getTreeLock()) {}</tt> 
+code block. This results in a more efficient locking mechanism to improve 
+performance. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getName () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getName()</tt> method retrieves 
+the current name of the component. The component's name is useful 
+for object serialization. Components are given a name by default; you can 
+change the name by calling <tt CLASS=literal>setName()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setName (String name) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setName()</tt> method changes 
+the name of the component to <tt CLASS=literal>name</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Container getParent () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getParent()</tt> method returns 
+the component's <tt CLASS=literal>Container</tt>. 
+The container for anything added to an applet is the applet itself, since 
+it subclasses <tt CLASS=literal>Panel</tt>. The container 
+for the applet is the browser. In the case of Netscape Navigator versions 2.0 and 3.0, 
+the return value would be a specific instance of the <tt CLASS=literal>netscape.applet.EmbeddedAppletFrame</tt> 
+class. If the applet is running within the <I CLASS=emphasis>appletviewer</I>, the return value 
+would be an instance of <tt CLASS=literal>sun.applet.AppletViewerPanel</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void add(PopupMenu popup) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>add()</tt> method introduced 
+in Java 1.1 provides the ability to associate a <tt CLASS=literal>PopupMenu</tt> 
+with a <tt CLASS=literal>Component</tt>. The pop-up 
+menu can be used to provide context-sensitive menus for specific components. 
+(On some platforms for some components, pop-up menus exist already and cannot 
+be overridden.) Interaction with the menu is discussed in <A HREF="ch10_01.htm">Chapter 10, <i>Would You Like to Choose from the Menu?</i></A> 
+
+<P CLASS=para>
+Multiple pop-up menus can be associated with a component. To display 
+the appropriate pop-up menu, call the pop-up menu's <tt CLASS=literal>show()</tt>method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void remove(MenuComponent popup) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>remove()</tt> method is the 
+<tt CLASS=literal>MenuContainer</tt> interface method 
+to disassociate the <tt CLASS=literal>popup</tt> from 
+the component. (<tt CLASS=literal>PopupMenu</tt> is 
+a subclass of <tt CLASS=literal>MenuComponent</tt>.) 
+If <tt CLASS=literal>popup</tt> is not associated 
+with the <tt CLASS=literal>Component</tt>, nothing 
+happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString ()</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>paramString()</tt> method is 
+a protected method that helps build a <tt CLASS=literal>String</tt> 
+listing the different parameters of the <tt CLASS=literal>Component</tt>. 
+When the <tt CLASS=literal>toString()</tt> method 
+is called for a specific <tt CLASS=literal>Component</tt>, 
+<tt CLASS=literal>paramString()</tt> is called for 
+the lowest level and works its way up the inheritance hierarchy to build 
+a complete parameter string to display. At the <tt CLASS=literal>Component</tt> 
+level, potentially seven (&nbsp;&nbsp;Java1.0) or eight (1.1) items are added. 
+The first five items added are the component's name (if non-null 
+and using Java 1.1), x and y coordinates (as returned by <tt CLASS=literal>getLocation()</tt>), 
+along with its width and height (as returned by <tt CLASS=literal>getSize()</tt>). 
+If the component is not valid, "invalid" is added next. If 
+the component is not visible, "hidden" is added next. Finally, 
+if the component is not enabled, "disabled" is added. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString ()</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method returns 
+a <tt CLASS=literal>String</tt> representation of 
+the object's values. At the <tt CLASS=literal>Component</tt> 
+level, the class's name is placed before the results of <tt CLASS=literal>paramString()</tt>. 
+This method is called automatically by the system if you try to print an 
+object using <tt CLASS=literal>System.out.println()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void list () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>list()</tt> method prints the 
+contents of the <tt CLASS=literal>Component</tt> (as 
+returned by <tt CLASS=literal>toString()</tt>) to 
+<tt CLASS=literal>System.out</tt>. If <tt CLASS=literal>c</tt> 
+is a type of <tt CLASS=literal>Component</tt>, the 
+two statements <tt CLASS=literal>System.out.println(c)</tt> 
+and <tt CLASS=literal>c.list()</tt> are equivalent. 
+This method is more useful at the <tt CLASS=literal>Container</tt> 
+level, because it prints all the components within the container. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void list (PrintWriter out) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void list (PrintStream out) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>list()</tt> prints 
+the contents of the <tt CLASS=literal>Component</tt> 
+(as returned by <tt CLASS=literal>toString()</tt>) 
+to a different <tt CLASS=literal>PrintStream</tt>, 
+<tt CLASS=literal>out</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void list (PrintWriter out, int indentation) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void list (PrintStream out, int indentation)</I><br>
+<DD>
+
+<P CLASS=para>
+These versions of <tt CLASS=literal>list()</tt> are called 
+by the other two. They print the component's contents (as returned 
+by <tt CLASS=literal>toString()</tt>) with the given 
+indentation. This allows you to prepare nicely formatted lists of a container's 
+contents for debugging; you could use the indentation to reflect how deeply 
+the component is nested within the container. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-1.2">Component Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.EVENT"></A><A HREF="ch04_01.htm">Chapter 4, <i>Events</i></A> covers event handling in detail. This section 
+summarizes what <tt CLASS=literal>Component</tt> does 
+for the different event-related methods. 
+
+<P CLASS=para>
+With the Java 1.0 event model, many methods return <tt CLASS=literal>true</tt> 
+to indicate that the program has handled the event and <tt CLASS=literal>false</tt> 
+to indicate that the event was not handled (or only partially handled); 
+when <tt CLASS=literal>false</tt> is returned, the 
+system passes the event up to the parent container. Thus, it is good form 
+to return <tt CLASS=literal>true</tt> only when you 
+have fully handled the event, and no further processing is necessary. 
+
+<P CLASS=para>
+With the Java 1.1 event model, you register a listener for a specific event 
+type. When that type of event happens, the listener is notified. Unlike 
+the 1.0 model, you do not need to override any methods of <tt CLASS=literal>Component</tt> 
+to handle the event. Controllers
+
+<P CLASS=para>
+The Java 1.0 event model controllers are <tt CLASS=literal>deliverEvent()</tt>, 
+<tt CLASS=literal>postEvent()</tt>, and <tt CLASS=literal>handleEvent()</tt>. 
+With 1.1, the controller is a method named <tt CLASS=literal>dispatchEvent()</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void deliverEvent (Event e) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>deliverEvent()</tt> method delivers 
+the 1.0 <tt CLASS=literal>Event</tt> <tt CLASS=literal>e</tt> 
+to the <tt CLASS=literal>Component</tt> in which an 
+event occurred. Internally, this method calls <tt CLASS=literal>postEvent()</tt>. 
+The <tt CLASS=literal>deliverEvent()</tt> method is an important 
+enhancement to <tt CLASS=literal>postEvent()</tt> 
+for <tt CLASS=literal>Container</tt> objects since 
+they have to determine which component in the <tt CLASS=literal>Container</tt> 
+gets the event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean postEvent (Event e) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>postEvent()</tt> method tells 
+the <tt CLASS=literal>Component</tt> to deal with 
+1.0 <tt CLASS=literal>Event</tt> <tt CLASS=literal>e</tt>. 
+It calls <tt CLASS=literal>handleEvent()</tt>, which 
+returns <tt CLASS=literal>true</tt> if some other 
+object handled <tt CLASS=literal>e</tt> and <tt CLASS=literal>false</tt> 
+if no one handles it. If <tt CLASS=literal>handleEvent()</tt> 
+returns <tt CLASS=literal>false</tt>, <tt CLASS=literal>postEvent()</tt> 
+posts the <tt CLASS=literal>Event</tt> to the component's 
+parent. You can use <tt CLASS=literal>postEvent()</tt> 
+to hand any events you generate yourself to some other component for processing. 
+(Creating your own events is a useful technique that few developers take 
+advantage of.) You can also use <tt CLASS=literal>postEvent()</tt> 
+to reflect an event from one component into another. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean handleEvent (Event e) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>handleEvent()</tt> method determines 
+the type of event <tt CLASS=literal>e</tt> and passes 
+it along to an appropriate method to deal with it. For example, when a 
+mouse motion event is delivered to <tt CLASS=literal>postEvent()</tt>, 
+it is passed off to <tt CLASS=literal>handleEvent()</tt>, 
+which calls <tt CLASS=literal>mouseMove()</tt>. As 
+shown in the following listing, <tt CLASS=literal>handleEvent()</tt> 
+can be implemented as one big switch statement. Since not all event types have 
+default event handlers, you may need to override this 
+method. If you do, remember to call the overridden method to ensure that 
+the default behavior still takes place. To do so, call <tt CLASS=literal>super.handleEvent(event)</tt> 
+for any event your method does not deal with. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean handleEvent(Event event) {
+    switch (event.id) {
+      case Event.MOUSE_ENTER:
+        return mouseEnter (event, event.x, event.y);
+      case Event.MOUSE_EXIT:
+        return mouseExit (event, event.x, event.y);
+      case Event.MOUSE_MOVE:
+        return mouseMove (event, event.x, event.y);
+      case Event.MOUSE_DOWN:
+        return mouseDown (event, event.x, event.y);
+      case Event.MOUSE_DRAG:
+        return mouseDrag (event, event.x, event.y);
+      case Event.MOUSE_UP:
+        return mouseUp (event, event.x, event.y);
+      case Event.KEY_PRESS:
+      case Event.KEY_ACTION:
+        return keyDown (event, event.key);
+      case Event.KEY_RELEASE:
+      case Event.KEY_ACTION_RELEASE:
+        return keyUp (event, event.key);
+      case Event.ACTION_EVENT:
+        return action (event, event.arg);
+      case Event.GOT_FOCUS:
+        return gotFocus (event, event.arg);
+      case Event.LOST_FOCUS:
+        return lostFocus (event, event.arg);
+    }
+    return false;
+}
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final void dispatchEvent(AWTEvent e)</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>dispatchEvent()</tt> method allows you to post new AWT events to this component's listeners. <tt CLASS=literal>dispatchEvent()</tt> tells the <tt CLASS=literal>Component</tt> to deal with the <tt CLASS=literal>AWTEvent e</tt> by calling its <tt CLASS=literal>processEvent()</tt> method. This method is similar to Java 1.0's <tt CLASS=literal>postEvent()</tt> method. Events delivered in this way bypass the system's event queue. It's not clear why you would want to bypass the event queue, except possibly to deliver some kind of high priority event.</DL>
+Action
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean action (Event e, Object o) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>action()</tt> method is called 
+when the user performs some action in the <tt CLASS=literal>Component</tt>. 
+<tt CLASS=literal>e</tt> is the 1.0 <tt CLASS=literal>Event</tt> 
+instance for the specific event, while the content of <tt CLASS=literal>o</tt> 
+ varies depending upon the specific <tt CLASS=literal>Component</tt>. 
+The particular action that triggers a call to <tt CLASS=literal>action()</tt> 
+depends on the <tt CLASS=literal>Component</tt>. For 
+example, with a <tt CLASS=literal>TextField</tt>, 
+<tt CLASS=literal>action()</tt> is called when the 
+user presses the carriage return. This method should not be called directly; 
+to deliver any event you generate, call <tt CLASS=literal>postEvent()</tt>, 
+and let it decide how the event should propagate. 
+
+<P CLASS=para>
+The default implementation of the <tt CLASS=literal>action()</tt> 
+method does nothing and returns <tt CLASS=literal>false</tt>. 
+When you override this method, return <tt CLASS=literal>true</tt> 
+only if you fully handle the event. Your method should always have a default 
+case that returns <tt CLASS=literal>false</tt> or 
+calls <tt CLASS=literal>super.action(e, o)</tt> to 
+ensure that the event propagates to the component's container or 
+component's superclass, respectively. </DL>
+Keyboard
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyDown (Event e, int key) <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyDown()</tt> method is called 
+whenever the user presses a key. <tt CLASS=literal>e</tt> 
+is the 1.0 <tt CLASS=literal>Event</tt> instance for 
+the specific event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) could 
+be either <tt CLASS=literal>Event.KEY_PRESS</tt> for 
+a regular key or <tt CLASS=literal>Event.KEY_ACTION</tt> 
+for an action-oriented key (e.g., arrow or function key). The default <tt CLASS=literal>keyDown()</tt> 
+method does nothing and returns <tt CLASS=literal>false</tt>. 
+If you are doing input validation, return <tt CLASS=literal>true</tt> 
+if the character is invalid; this keeps the event from propagating to a 
+higher component. If you wish to alter the input (i.e., convert to uppercase), 
+return <tt CLASS=literal>false</tt>, but change <tt CLASS=literal>e.key</tt> 
+to the new character. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyUp (Event e, int key)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyUp()</tt> method is called 
+whenever the user releases a key. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) could 
+be either <tt CLASS=literal>Event.KEY_RELEASE</tt> 
+for a regular key or <tt CLASS=literal>Event.KEY_ACTION_RELEASE</tt> 
+for an action-oriented key (e.g., arrow or function key). <tt CLASS=literal>keyUp()</tt> 
+may be used to determine how long <tt CLASS=literal>key</tt> 
+has been pressed. The default <tt CLASS=literal>keyUp()</tt> 
+method does nothing and returns <tt CLASS=literal>false</tt>. </DL>
+Mouse
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH05.COMPMOUSE"></A>Early releases of Java (1.0.2 and earlier) propagated only mouse events 
+from <tt CLASS=literal>Canvas</tt> and <tt CLASS=literal>Container</tt> objects. However, Netscape Navigator seems to 
+have jumped the gun and corrected the situation with their 3.0 release, 
+which is based on Java release 1.0.2.1. Until other Java releases catch up, 
+use these events with care. For more information on platform dependencies, 
+see <A HREF="appc_01.htm">Appendix C, <i>Platform-Specific Event Handling</i></A>.
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean mouseDown (Event e, int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>mouseDown()</tt> method is called 
+when the user presses a mouse button over the <tt CLASS=literal>Component</tt>. 
+<tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt> are the coordinates where 
+the cursor was located when the event was initiated. It is necessary to 
+examine the modifiers field of <tt CLASS=literal>e</tt> 
+to determine which mouse button the user pressed. The default <tt CLASS=literal>mouseDown()</tt> 
+method does nothing and returns <tt CLASS=literal>false</tt>. 
+When you override this method, return <tt CLASS=literal>true</tt> 
+only if you fully handle the event. Your method should always have a default 
+case that returns <tt CLASS=literal>false</tt> or 
+calls <tt CLASS=literal>super.mouseDown(e, x, y)</tt> 
+to ensure that the event propagates to the component's container 
+or component's superclass, respectively. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean mouseDrag (Event e, int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>mouseDrag()</tt> method is called 
+when the user is pressing a mouse button and moves the mouse. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt> are the coordinates where 
+the cursor was located when the event was initiated. <tt CLASS=literal>mouseDrag()</tt> 
+could be called multiple times as the mouse is moved. The default <tt CLASS=literal>mouseDrag()</tt> 
+method does nothing and returns <tt CLASS=literal>false</tt>. When you override this method, return 
+<tt CLASS=literal>true</tt> only if you fully handle 
+the event. Your method should always have a default case that returns <tt CLASS=literal>false</tt> 
+or calls <tt CLASS=literal>super.mouseDrag(e, x, y)</tt> 
+to ensure that the event propagates to the component's container 
+or component's superclass, respectively. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean mouseEnter (Event e, int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>mouseEnter()</tt> method is 
+called when the mouse enters the <tt CLASS=literal>Component</tt>. 
+<tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt> are the coordinates where 
+the cursor was located when the event was initiated. The default <tt CLASS=literal>mouseEnter()</tt> 
+method does nothing and returns <tt CLASS=literal>false</tt>. <tt CLASS=literal>mouseEnter()</tt> 
+can be used for implementing balloon help. When you override this method, 
+return <tt CLASS=literal>true</tt> only if you fully 
+handle the event. Your method should always have a default case that returns 
+<tt CLASS=literal>false</tt> or calls <tt CLASS=literal>super.mouseEnter(e, 
+x, y)</tt> to ensure that the event propagates to 
+the component's container or component's superclass, respectively. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean mouseExit (Event e, int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>mouseExit()</tt> method is called 
+when the mouse exits the <tt CLASS=literal>Component</tt>. 
+<tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt> are the coordinates where 
+the cursor was located when the event was initiated. The default method <tt CLASS=literal>mouseExit()</tt> 
+does nothing and returns <tt CLASS=literal>false</tt>. When you override this method, return 
+<tt CLASS=literal>true</tt> only if you fully handle 
+the event. Your method should always have a default case that returns <tt CLASS=literal>false</tt> 
+or calls <tt CLASS=literal>super.mouseExit(e, x, y)</tt> 
+to ensure that the event propagates to the component's container 
+or component's superclass, respectively. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean mouseMove (Event e, int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>mouseMove()</tt> method is called 
+when the user moves the mouse without pressing a mouse button. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>x</tt> and 
+<tt CLASS=literal>y</tt> are the coordinates where 
+the cursor was located when the event was initiated. <tt CLASS=literal>mouseMove()</tt> 
+will be called numerous times as the mouse is moved. The default <tt CLASS=literal>mouseMove()</tt> 
+method does nothing and returns <tt CLASS=literal>false</tt>. When you override this method, return 
+<tt CLASS=literal>true</tt> only if you fully handle 
+the event. Your method should always have a default case that returns <tt CLASS=literal>false</tt> 
+or calls <tt CLASS=literal>super.mouseMove(e, x, y)</tt> 
+to ensure that the event propagates to the component's container 
+or component's superclass, respectively. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean mouseUp (Event e, int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>mouseUp()</tt> method is called 
+when the user releases a mouse button over the <tt CLASS=literal>Component</tt>. 
+<tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt> are the coordinates where 
+the cursor was located when the event was initiated. The default <tt CLASS=literal>mouseUp()</tt> 
+method does nothing and returns <tt CLASS=literal>false</tt>. When you override this method, return 
+<tt CLASS=literal>true</tt> only if you fully handle 
+the event. Your method should always have a default case that returns <tt CLASS=literal>false</tt> 
+or calls <tt CLASS=literal>super.mouseUp(e, x, y)</tt> 
+to ensure that the event propagates to the component's container 
+or component's superclass, respectively. </DL>
+Focus
+
+<P CLASS=para>
+Focus events indicate whether a component can get keyboard input. Not all 
+components can get focus (e.g., <tt CLASS=literal>Label</tt> 
+cannot). Precisely which components can get the focus is platform specific. 
+
+<P CLASS=para>
+Ordinarily, the item with the focus has a light gray rectangle around it, 
+though the actual display depends on the platform and the component. <A HREF="ch05_01.htm#JAWT-CH-5-FIG-1">Figure 5.1</A> displays the effect of focus for buttons in 
+Windows 95. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-5-FIG-1">Figure 5.1: Focused and UnFocused buttons</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0501.gif" alt="[Graphic: Figure 5-1]" width=193 height=155 border=0>
+
+</DIV>
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Early releases of Java (1.0.2 and earlier) do not propagate all focus 
+events on all platforms. Java 1.1 seems to propagate them properly. For 
+more information on platform dependencies, see <A HREF="appc_01.htm">Appendix C, <i>Platform-Specific Event Handling</i></A>.
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean gotFocus (Event e, Object o) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>gotFocus()</tt> method is triggered 
+when the <tt CLASS=literal>Component</tt> gets the 
+input focus. <tt CLASS=literal>e</tt> is the 1.0 <tt CLASS=literal>Event</tt> 
+instance for the specific event, while the content of <tt CLASS=literal>o</tt> 
+varies depending upon the specific <tt CLASS=literal>Component</tt>. 
+The default <tt CLASS=literal>gotFocus()</tt> method 
+does nothing and returns <tt CLASS=literal>false</tt>. For a <tt CLASS=literal>TextField</tt>, 
+when the cursor becomes active, it has the focus. When you override this 
+method, return <tt CLASS=literal>true</tt> to indicate that you have handled the event completely 
+or <tt CLASS=literal>false</tt> if you want the event to propagate to the component's container. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean lostFocus (Event e, Object o) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>lostFocus()</tt> method is triggered 
+when the input focus leaves the <tt CLASS=literal>Component</tt>. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while the content of <tt CLASS=literal>o</tt> varies depending upon the specific <tt CLASS=literal>Component</tt>. 
+The default <tt CLASS=literal>lostFocus()</tt> method 
+does nothing and returns <tt CLASS=literal>false</tt>. When you override this method, return <tt CLASS=literal>true</tt> 
+to indicate that you have handled the event completely or <tt CLASS=literal>false</tt> if you 
+want the event to propagate to the component's container. </DL>
+Listeners and 1.1 Event Handling
+
+<P CLASS=para>
+With the 1.1 event model, you receive events by registering event listeners, 
+which are told when the event happens. Components don't have to receive 
+and handle their own events; you can cleanly separate the event-handling 
+code from the user interface itself. This section covers the methods used 
+to add and remove event listeners, which are part of the <tt CLASS=literal>Component</tt> 
+class. There is a pair of methods to add and remove listeners for each 
+event type that is appropriate for a <tt CLASS=literal>Component</tt>: 
+<tt CLASS=literal>ComponentEvent</tt>, <tt CLASS=literal>FocusEvent</tt>, 
+<tt CLASS=literal>KeyEvent</tt>, <tt CLASS=literal>MouseEvent</tt>, 
+and <tt CLASS=literal>MouseMotionEvent</tt>. Subclasses 
+of <tt CLASS=literal>Component</tt> may have additional 
+event types and therefore will have additional methods for adding and 
+removing listeners. For example, <tt CLASS=literal>Button</tt>, 
+<tt CLASS=literal>List</tt>, <tt CLASS=literal>MenuItem</tt>, 
+and <tt CLASS=literal>TextField</tt> each generate 
+action events and therefore have methods to add and remove action listeners. 
+These additional listeners are covered with their respective components. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addComponentListener(ComponentListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addComponentListener()</tt> 
+method registers <tt CLASS=literal>listener</tt> as 
+an object interested in being notified when a <tt CLASS=literal>ComponentEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Component</tt> as its 
+target. When such an event occurs, a method in the <tt CLASS=literal>ComponentListener</tt> 
+interface is called. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeComponentListener(ComponentListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeComponentListener()</tt> 
+method removes <tt CLASS=literal>listener</tt> as 
+a interested listener. If <tt CLASS=literal>listener</tt> 
+is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addFocusListener(FocusListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addFocusListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in being notified when a <tt CLASS=literal>FocusEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Component</tt> as its 
+target. When such an event occurs, a method in the <tt CLASS=literal>FocusListener</tt> 
+interface is called. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeFocusListener(FocusListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeFocusListener()</tt> method 
+removes <tt CLASS=literal>listener</tt> as a interested 
+listener. If <tt CLASS=literal>listener</tt> is not 
+registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addKeyListener(KeyListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addKeyListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in being notified when a <tt CLASS=literal>KeyEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Component</tt> as its 
+target. When such an event occurs, a method in the <tt CLASS=literal>KeyListener</tt> 
+interface is called. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeKeyListener(KeyListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeKeyListener()</tt> method 
+removes <tt CLASS=literal>listener</tt> as a interested 
+listener. If listener is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addMouseListener(MouseListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addMouseListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in being notified when a nonmotion-oriented <tt CLASS=literal>MouseEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Component</tt> as its 
+target. When such an event occurs, a method in the <tt CLASS=literal>MouseListener</tt> 
+interface is called. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeMouseListener(MouseListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeMouseListener()</tt> method 
+removes <tt CLASS=literal>listener</tt> as a interested 
+listener. If listener is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addMouseMotionListener(MouseMotionListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addMouseMotionListener()</tt> 
+method registers <tt CLASS=literal>listener</tt> as 
+an object interested in being notified when a motion-oriented <tt CLASS=literal>MouseEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Component</tt> as its 
+target. When such an event occurs, a method in the <tt CLASS=literal>MouseMotionListener</tt> 
+interface is called. Multiple listeners can be registered. 
+
+<P CLASS=para>
+The mouse motion-oriented events are separate from the other mouse events 
+because of their frequency of generation. If they do not have to propagate 
+around, resources can be saved. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeMouseMotionListener(MouseMotionListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeMouseMotionListener()</tt> 
+method removes <tt CLASS=literal>listener</tt> as 
+a interested listener. If <tt CLASS=literal>listener</tt> 
+is not registered, nothing happens. </DL>
+Handling your own events
+
+<P CLASS=para>
+<A NAME="CH05.HAND1"></A><A NAME="CH05.HAND2"></A>Under the 1.1 event model, it is still possible for components to receive 
+their own events, simulating the old event mechanism. If you want to write 
+components that process their own events but are also compatible 
+with the new model, you can override <tt CLASS=literal>processEvent()</tt> 
+or one of its related methods. <tt CLASS=literal>processEvent()</tt> 
+is logically similar to <tt CLASS=literal>handleEvent()</tt> 
+in the old model; it receives all the component's events and sees 
+that they are forwarded to the appropriate listeners. Therefore, by overriding 
+<tt CLASS=literal>processEvent()</tt>, you get access 
+to every event the component generates. If you want only a specific type 
+of event, you can override <tt CLASS=literal>processComponentEvent()</tt>, 
+<tt CLASS=literal>processKeyEvent()</tt>, or one of 
+the other event-specific methods. 
+
+<P CLASS=para>
+However, there is one problem. In Java 1.1, events aren't normally 
+generated if there are no listeners. Therefore, if you want to receive 
+your own events without registering a listener, you should first enable 
+event processing (by a call to <tt CLASS=literal>enableEvent()</tt>) 
+to make sure that the events you are interested in are generated. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected final void enableEvents(long eventsToEnable) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>enableEvents()</tt> method allows 
+you to configure a component to listen for events without having any active 
+listeners. Under normal circumstances (i.e., if you are not subclassing 
+a component), it is not necessary to call this method. 
+
+<P CLASS=para>
+The <tt CLASS=literal>eventsToEnable</tt> parameter 
+contains a mask specifying which event types you want to enable. The <tt CLASS=literal>AWTEvent</tt> 
+class (covered in <A HREF="ch04_01.htm">Chapter 4, <i>Events</i></A>) contains constants for the 
+following types of events:
+
+<DIV CLASS=simplelist>
+
+<P>
+<I CLASS=emphasis>COMPONENT_EVENT_MASK</I><br>
+<I CLASS=emphasis>CONTAINER_EVENT_MASK</I><br>
+<I CLASS=emphasis>FOCUS_EVENT_MASK</I><br>
+<I CLASS=emphasis>KEY_EVENT_MASK</I><br>
+<I CLASS=emphasis>MOUSE_EVENT_MASK</I><br>
+<I CLASS=emphasis>MOUSE_MOTION_EVENT_MASK</I><br>
+<I CLASS=emphasis>WINDOW_EVENT_MASK</I><br>
+<I CLASS=emphasis>ACTION_EVENT_MASK</I><br>
+<I CLASS=emphasis>ADJUSTMENT_EVENT_MASK</I><br>
+<I CLASS=emphasis>ITEM_EVENT_MASK</I><br>
+<I CLASS=emphasis>TEXT_EVENT_MASK</I><br>
+</DIV>
+
+<P CLASS=para>
+OR the masks for 
+the events you want; for example, call <tt CLASS=literal>enableEvents(MOUSE_EVENT_MASK | MOUSE_MOTION_EVENT_MASK)</tt> to enable all mouse 
+events. Any previous event mask settings are retained. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected final void disableEvents(long eventsToDisable) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>disableEvents()</tt> method 
+allows you to stop the delivery of events when they are no longer needed. 
+<tt CLASS=literal>eventsToDisable</tt> is similar 
+to the <tt CLASS=literal>eventsToEnable</tt> parameter 
+but instead contains a mask specifying which event types to stop. A disabled 
+event would still be delivered if someone were listening. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+all <tt CLASS=literal>AWTEvent</tt> with this <tt CLASS=literal>Component</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes them along to one of the event-specific processing methods 
+(e.g., <tt CLASS=literal>processKeyEvent()</tt>). 
+When you subclass <tt CLASS=literal>Component</tt>, 
+overriding <tt CLASS=literal>processEvent()</tt> allows 
+you to process all events without providing listeners. Remember to call 
+<tt CLASS=literal>super.processEvent(e)</tt> last 
+to ensure that normal event processing still occurs; if you don't, 
+events won't get distributed to any registered listeners. Overriding 
+<tt CLASS=literal>processEvent()</tt> is like overriding 
+the <tt CLASS=literal>handleEvent()</tt> method using the 1.0 
+event model. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processComponentEvent(ComponentEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processComponentEvent()</tt> 
+method receives <tt CLASS=literal>ComponentEvent</tt> 
+with this <tt CLASS=literal>Component</tt> as its 
+target. If any listeners are registered, they are then notified. 
+When you subclass <tt CLASS=literal>Component</tt>, 
+overriding <tt CLASS=literal>processComponentEvent()</tt> 
+allows you to process component events without providing listeners. Remember 
+to call <tt CLASS=literal>super.processComponentEvent(e)</tt> 
+last to ensure that normal event processing still occurs; if you don't, 
+events won't get distributed to any registered listeners. Overriding 
+<tt CLASS=literal>processComponentEvent()</tt> is 
+roughly similar to overriding <tt CLASS=literal>resize()</tt>, 
+<tt CLASS=literal>move()</tt>, <tt CLASS=literal>show()</tt>, 
+and <tt CLASS=literal>hide()</tt> to add additional 
+functionality when those methods are called. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processFocusEvent(FocusEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processFocusEvent()</tt> method 
+receives <tt CLASS=literal>FocusEvent</tt> with 
+this <tt CLASS=literal>Component</tt> as its target. 
+If any listeners are registered, they are then notified. When you 
+subclass <tt CLASS=literal>Component</tt>, overriding 
+<tt CLASS=literal>processFocusEvent()</tt> allows 
+you to process the focus event without providing listeners. Remember to 
+call <tt CLASS=literal>super.processFocusEvent(e)</tt> 
+last to ensure that normal event processing still occurs; if you don't, 
+events won't get distributed to any registered listeners. Overriding 
+<tt CLASS=literal>processFocusEvent()</tt> is like 
+overriding the methods <tt CLASS=literal>gotFocus()</tt> and <tt CLASS=literal>lostFocus()</tt> 
+using the 1.0 event model. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processKeyEvent(KeyEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processKeyEvent()</tt> method 
+receives <tt CLASS=literal>KeyEvent</tt> with 
+this <tt CLASS=literal>Component</tt> as its target. 
+If any listeners are registered, they are then notified. When you 
+subclass <tt CLASS=literal>Component</tt>, overriding 
+<tt CLASS=literal>processKeyEvent()</tt> allows you 
+to process key events without providing listeners. Be sure to remember to call <tt CLASS=literal>super.processKeyEvent(e)</tt> 
+last to ensure that normal event processing still occurs; if you don't, 
+events won't get distributed to any registered listeners. Overriding 
+<tt CLASS=literal>processKeyEvent()</tt> is roughly 
+similar to overriding <tt CLASS=literal>keyDown()</tt> 
+and <tt CLASS=literal>keyUp()</tt> with one method 
+using the 1.0 event model. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processMouseEvent(MouseEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>processMouseEvent()</tt> method 
+receives all nonmotion-oriented <tt CLASS=literal>MouseEvent</tt>s 
+with this <tt CLASS=literal>Component</tt> as its 
+target. If any listeners are registered, they are then notified. 
+When you subclass <tt CLASS=literal>Component</tt>, 
+overriding the method <tt CLASS=literal>processMouseEvent()</tt> 
+allows you to process mouse events without providing listeners. Remember 
+to call <tt CLASS=literal>super.processMouseEvent(e)</tt> 
+last to ensure that normal event processing still occurs; if you don't, 
+events won't get distributed to any registered listeners. Overriding 
+the method <tt CLASS=literal>processMouseEvent()</tt> is roughly 
+similar to overriding <tt CLASS=literal>mouseDown()</tt>, 
+<tt CLASS=literal>mouseUp()</tt>, <tt CLASS=literal>mouseEnter()</tt>, 
+and <tt CLASS=literal>mouseExit()</tt> with one method 
+using the 1.0 event model. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processMouseMotionEvent(MouseEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processMouseMotionEvent()</tt> 
+method receives all motion-oriented <tt CLASS=literal>MouseEvents</tt> 
+with this <tt CLASS=literal>Component</tt> as its 
+target. If there are any listeners registered, they are then notified. 
+When you subclass <tt CLASS=literal>Component</tt>, 
+overriding <tt CLASS=literal>processMouseMotionEvent()</tt> 
+allows you to process mouse motion events without providing listeners. 
+Remember to call <tt CLASS=literal>super.processMouseMotionEvent(e)</tt> 
+last to ensure that normal event processing still occurs; if you don't, 
+events won't get distributed to any registered listeners. Overriding 
+the method <tt CLASS=literal>processMouseMotionEvent()</tt> is 
+roughly similar to overriding <tt CLASS=literal>mouseMove()</tt> 
+and <tt CLASS=literal>mouseDrag()</tt> with one method 
+using the 1.0 event model. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Java 1.1 Event Model</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Labels</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,577 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 22] ImageConsumer</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:25:12 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 22<br>java.awt.image Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch22_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ImageConsumer</H1>
+
+<H2>Name</H2>
+
+ImageConsumer
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.33"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/imageco.gif" alt="[Graphic: Figure from the text]" width=503 height=78 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.34">Description</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer</tt> is an interface 
+that provides the means to consume pixel data and render it for display. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.35">Interface Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract interface java.awt.image.ImageConsumer {
+  // Constants
+  public final static int COMPLETESCANLINES;
+  public final static int IMAGEABORTED;
+  public final static int IMAGEERROR;
+  public final static int RANDOMPIXELORDER;
+  public final static int SINGLEFRAME;
+  public final static int SINGLEFRAMEDONE;
+  public final static int SINGLEPASS;
+  public final static int STATICIMAGEDONE;
+  public final static int TOPDOWNLEFTRIGHT;
+  // Interface Methods
+  public abstract void imageComplete (int status);
+  public abstract void setColorModel (ColorModel model);
+  public abstract void setDimensions (int width, int height);
+  public abstract void setHints (int hints);
+  public abstract void setPixels (int x, int y, int width, int height, 
+      ColorModel model, byte[] pixels, int offset, int scansize);
+  public abstract void setPixels (int x, int y, int width, int height, 
+      ColorModel model, int[] pixels, int offset, int scansize);
+  public abstract void setProperties (Hashtable properties);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.36">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.34">COMPLETESCANLINES</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.37">public final static int COMPLETESCANLINES</A></h4>
+
+<P CLASS=para>
+Hint flag for the <tt CLASS=literal>setHints(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method; indicates that the image will be delivered one or more scanlines 
+at a time. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.35">IMAGEABORTED</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.38">public final static int IMAGEABORTED</A></h4>
+
+<P CLASS=para>
+Status flag for the <tt CLASS=literal>imageComplete(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method indicating that the loading process for the image aborted. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.36">IMAGEERROR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.39">public final static int IMAGEERROR</A></h4>
+
+<P CLASS=para>
+Status flag for the <tt CLASS=literal>imageComplete(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method indicating that an error happened during image loading. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.37">RANDOMPIXELORDER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.40">public final static int RANDOMPIXELORDER</A></h4>
+
+<P CLASS=para>
+Hint flag for the <tt CLASS=literal>setHints(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method; indicates that the pixels will be delivered in no particular order. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.38">SINGLEFRAME</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.41">public final static int SINGLEFRAME</A></h4>
+
+<P CLASS=para>
+Hint flag for the <tt CLASS=literal>setHints(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method; indicates that the image consists of a single frame. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.39">SINGLEFRAMEDONE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.42">public final static int SINGLEFRAMEDONE</A></h4>
+
+<P CLASS=para>
+Status flag for the <tt CLASS=literal>imageComplete(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method indicating a single frame of the image has loaded. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.40">SINGLEPASS</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.43">public final static int SINGLEPASS</A></h4>
+
+<P CLASS=para>
+Hint flag for the <tt CLASS=literal>setHints(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method; indicates that each pixel will be delivered once (i.e., the producer 
+will not make multiple passes over the image). 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.41">STATICIMAGEDONE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.44">public final static int STATICIMAGEDONE</A></h4>
+
+<P CLASS=para>
+Status flag for the <tt CLASS=literal>imageComplete(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method indicating that the image has fully and successfully loaded, and 
+that there are no additional frames. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.42">TOPDOWNLEFTRIGHT</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.45">public final static int TOPDOWNLEFTRIGHT</A></h4>
+
+<P CLASS=para>
+Hint flag for the <tt CLASS=literal>setHints(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+method; indicates that pixels will be delivered in a top to bottom, left 
+to right order. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.37">Interface Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.43">imageComplete</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.46">public abstract void imageComplete (int status)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>status</I><br>
+<DD>
+
+<P CLASS=para>
+Image loading status flags. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Called when the image, or a frame of an image sequence, is complete to 
+report the completion status. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.44">setColorModel</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.47">public abstract void setColorModel (ColorModel model)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+The color model for the image. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Tells the <tt CLASS=literal>ImageConsumer</tt> the 
+color model used for most of the pixels in the image. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.45">setDimensions</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.48">public abstract void setDimensions (int width, int height)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width for image.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height for image. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Tells the consumer the image's dimensions. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.46">setHints</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.49">public abstract void setHints (int hints)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>hints</I><br>
+<DD>
+
+<P CLASS=para>
+Image consumption hints. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Gives the consumer information about how pixels will be delivered. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.47">setPixels</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.50">public abstract void setPixels (int x, int y, int width, int height, ColorModel model, byte[] pixels, int offset, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+Color model of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of the pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Delivers a rectangular block of pixels to the image consumer. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.51">public abstract void setPixels (int x, int y, int width, int height, ColorModel model, int[] pixels, int offset, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+Color model of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of the pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Delivers a rectangular block of pixels to the image consumer. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.48">setProperties</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.52">public abstract void setProperties (Hashtable properties)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>properties</I><br>
+<DD>
+
+<P CLASS=para>
+The properties for the image. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Delivers a Hashtable that contains the image's properties. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.38">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ColorModel</tt>, <tt CLASS=literal>Hashtable</tt>, 
+<tt CLASS=literal>ImageFilter</tt>, <tt CLASS=literal>PixelGrabber</tt>, 
+<tt CLASS=literal>Object</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch22_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>FilteredImageSource</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ImageFilter</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

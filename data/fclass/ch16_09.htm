@@ -1,0 +1,1486 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] DecimalFormat</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:30:41 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>The java.text Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>DecimalFormat</H1>
+
+<H2>Name</H2>
+
+DecimalFormat
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.64">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.DecimalFormat</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.NumberFormat</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.65">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>DecimalFormat</tt> class is 
+a concrete subclass of <tt CLASS=literal>NumberFormat</tt> 
+that formats and parses numbers using a formatting pattern. Typically, 
+you do not need to instantiate <tt CLASS=literal>DecimalFormat</tt> 
+yourself. Instead, the factory methods of <tt CLASS=literal>NumberFormat</tt> 
+return instances of <tt CLASS=literal>DecimalFormat</tt> 
+that are appropriate for particular locales. 
+
+<P CLASS=para>
+However, if you need a specialized number format, you can instantiate your 
+own <tt CLASS=literal>DecimalFormat</tt> using a pattern 
+string. You can also modify the formatting pattern of an existing <tt CLASS=literal>DecimalFormat</tt> 
+object using the <tt CLASS=literal>applyPattern()</tt> 
+method. A pattern string has the following form: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+positive-pattern[;negative-pattern]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If the negative pattern is omitted, negative numbers are formatted using 
+the positive pattern with a <tt CLASS=literal>-</tt> 
+character prepended to the result. Each pattern has the following form: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+[prefix]integer[.fraction][suffix]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The following symbols are significant in the pattern string. 
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Symbol</TH>
+<TH ALIGN="LEFT">Description</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>0</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+A digit</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>#</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+A digit where 0 is not shown</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>.</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+A placeholder for a decimal separator</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>,</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+A placeholder for a grouping separator</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>;</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The format separator</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>-</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The default negative prefix</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>%</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+Divides value by 100 and shows as a percentage</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+Any characters other than these special characters can appear in the prefix 
+or the suffix. A single quote can be used to escape a special character, 
+if you need to use one of these symbols in a prefix or a suffix. 
+
+<P CLASS=para>
+For example, the pattern string for U.S. currency values is: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+$#,##0.00;($#,##0.00)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This indicates that a <tt CLASS=literal>$</tt> 
+character is prepended to all formatted values. The grouping separator 
+character <tt CLASS=literal>,</tt> is 
+inserted every three digits. Exactly two digits after the decimal place 
+are always shown. Negative values are shown in parentheses. Thus, the value 
+<tt CLASS=literal>-1234.56</tt> produces output like: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+($1,234.56)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Internally, the <tt CLASS=literal>DecimalFormat</tt> 
+class uses a <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object to get the numerical strings that are appropriate for a particular 
+locale. If you want to modify these strings, you can get the <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object by calling <tt CLASS=literal>getDecimalFormatSymbols()</tt>. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.66">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.text.DecimalFormat extends java.text.NumberFormat {
+  // Constructors
+  public DecimalFormat();
+  public DecimalFormat(String pattern);
+  public DecimalFormat(String pattern, DecimalFormatSymbols symbols);
+  // Instance Methods
+  public void applyLocalizedPattern(String pattern);
+  public void applyPattern(String pattern);
+  public Object clone();
+  public boolean equals(Object obj); 
+  public StringBuffer format(double number, StringBuffer result, 
+                      FieldPosition fieldPosition); 
+  public StringBuffer format(long number, StringBuffer result, 
+                      FieldPosition fieldPosition); 
+  public DecimalFormatSymbols getDecimalFormatSymbols();
+  public int getGroupingSize();
+  public int getMultiplier();
+  public String getNegativePrefix();
+  public String getNegativeSuffix();
+  public String getPositivePrefix();
+  public String getPositiveSuffix();
+  public int hashCode();
+  public boolean isDecimalSeparatorAlwaysShown();
+  public Number parse(String text, ParsePosition status); 
+  public void setDecimalFormatSymbols(DecimalFormatSymbols newSymbols);
+  public void setDecimalSeparatorAlwaysShown(boolean newValue);
+  public void setGroupingSize(int newValue);
+  public void setMultiplier(int newValue);
+  public void setNegativePrefix(String newValue);
+  public void setNegativeSuffix(String newValue);
+  public void setPositivePrefix(String newValue);
+  public void setPositiveSuffix(String newValue);
+  public String toLocalizedPattern();
+  public String toPattern();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.67">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.136">DecimalFormat</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.157">public DecimalFormat()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>DecimalFormat</tt> 
+that uses the default formatting pattern and <tt CLASS=literal>DecimalFormatSymbols</tt> 
+that are appropriate for the default locale. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.158">public DecimalFormat(String pattern)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>pattern</tt><br>
+<DD>
+
+<P CLASS=para>
+The pattern string. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>DecimalFormat</tt> 
+that uses the given formatting pattern and a <tt CLASS=literal>DecimalFormatSymbols</tt> 
+that is appropriate for the default locale. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.159">public DecimalFormat(String pattern, DecimalFormatSymbols symbols)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>pattern</tt><br>
+<DD>
+
+<P CLASS=para>
+The pattern string.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>symbols</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>DecimalFormatSymbols</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>DecimalFormat</tt> 
+that uses the given formatting pattern and <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.68">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.137">applyLocalizedPattern</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.160">public void applyLocalizedPattern(String pattern)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>pattern</tt><br>
+<DD>
+
+<P CLASS=para>
+The pattern string. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>DecimalFormat</tt> 
+to use the given formatting pattern to format and parse numbers. The pattern 
+string is assumed to have been localized to the <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object this <tt CLASS=literal>DecimalFormat</tt> uses. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.138">applyPattern</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.161">public void applyPattern(String pattern)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>pattern</tt><br>
+<DD>
+
+<P CLASS=para>
+The pattern string. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>DecimalFormat</tt> 
+to use the given formatting pattern to format and parse numbers. The pattern 
+string is localized to the <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object this <tt CLASS=literal>DecimalFormat</tt> uses. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.139">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.162">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this <tt CLASS=literal>DecimalFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>DecimalFormat</tt>
+and then returns it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.140">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.163">public boolean equals(Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be compared 
+with this object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; 
+<tt CLASS=literal>false</tt> if they are not. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.equals()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>obj</tt> is an instance of <tt CLASS=literal>DecimalFormat</tt> 
+and is equivalent to this <tt CLASS=literal>DecimalFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.141">format</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.164"><DIV CLASS=screen> <P> <PRE> public StringBuffer format(double number, StringBuffer result, FieldPosition fieldPosition) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>number</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>double</tt> 
+value to be formatted.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>result</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>StringBuffer</tt> 
+on which to append the formatted information.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>fieldPosition</tt><br>
+<DD>
+
+<P CLASS=para>
+A number field. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The given buffer <tt CLASS=literal>result</tt> with 
+the formatted representation of the number appended to it. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.format(double,</tt> <tt CLASS=literal>StringBuffer,</tt> <tt CLASS=literal>FieldPosition)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method formats the given number and appends the result to the given 
+<tt CLASS=literal>StringBuffer</tt>. If <tt CLASS=literal>fieldPosition</tt> 
+refers to one of the number fields, its beginning and ending indices are 
+filled with the beginning and ending positions of the given field in the 
+resulting formatted string. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.165"><DIV CLASS=screen> <P> <PRE> public StringBuffer format(long number, StringBuffer result, FieldPosition fieldPosition) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>number</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>long</tt> 
+value to be formatted.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>result</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>StringBuffer</tt> 
+on which to append the formatted information.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>fieldPosition</tt><br>
+<DD>
+
+<P CLASS=para>
+A number field. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The given buffer <tt CLASS=literal>result</tt> with 
+the formatted representation of the number appended to it. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.format(double,</tt> <tt CLASS=literal>StringBuffer,</tt> <tt CLASS=literal>FieldPosition)</tt> 
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method formats the given number and appends the result to the given 
+<tt CLASS=literal>StringBuffer</tt>. If <tt CLASS=literal>fieldPosition</tt> 
+refers to one of the number fields, its beginning and ending indices are 
+filled with the beginning and ending positions of the given field in the 
+resulting formatted string. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.142">getDecimalFormatSymbols</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.166">public DecimalFormatSymbols getDecimalFormatSymbols()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object used by this <tt CLASS=literal>DecimalFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object that this <tt CLASS=literal>DecimalFormat</tt> 
+uses internally. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.143">getGroupingSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.167">public int getGroupingSize()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The grouping size of this <tt CLASS=literal>DecimalFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the grouping size of this <tt CLASS=literal>DecimalFormat</tt>. 
+The grouping size is the number of digits between grouping separators in 
+the integer portion of a number. For example, in the number <tt CLASS=literal>1,234.56</tt>, 
+the grouping size is <tt CLASS=literal>3</tt> (and the grouping symbol is ","). </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.144">getMultiplier</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.168">public int getMultiplier()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The multiplier of this <tt CLASS=literal>DecimalFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the multiplier of this <tt CLASS=literal>DecimalFormat</tt>. 
+The multiplier is used to adjust a number before it is formatted or after 
+it is parsed. For example, a percent format has a multiplier of 100 and 
+a suffix of `<tt CLASS=literal>%</tt>'. 
+Thus, a value of <tt CLASS=literal>.42</tt> could 
+be formatted as <tt CLASS=literal>42%</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.145">getNegativePrefix</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.169">public String getNegativePrefix()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The string that is prepended to negative values. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the prefix string for negative numbers. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.146">getNegativeSuffix</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.170">public String getNegativeSuffix()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The string that is appended to negative values. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the suffix string for negative numbers. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.147">getPositivePrefix</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.171">public String getPositivePrefix()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The string that is prepended to positive values. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the prefix string for positive numbers. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.148">getPositiveSuffix</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.172">public String getPositiveSuffix()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The string that is appended to positive values. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the suffix string for positive numbers. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.149">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.173">public int hashCode()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode for this object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.hashCode()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a hashcode for this <tt CLASS=literal>DecimalFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.150">isDecimalSeparatorAlwaysShown</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.174">public boolean isDecimalSeparatorAlwaysShown()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates 
+whether or not the decimal separator symbol is always shown. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+this <tt CLASS=literal>DecimalFormat</tt> always shows 
+the decimal separator. The method returns <tt CLASS=literal>false</tt> 
+if the decimal separator is only shown if there is a fractional portion 
+of the number being formatted. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.151">parse</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.175">public Number parse(String text, ParsePosition status)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>text</tt><br>
+<DD>
+
+<P CLASS=para>
+The string to be parsed.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>status</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>ParsePosition</tt> 
+object that specifies a position in the string. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Number</tt> object represented 
+by the text starting at the given position. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.parse(String, 
+ParsePosition)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method parses a number from the given string, starting from the given 
+position. After the string has been parsed, the given <tt CLASS=literal>ParsePosition</tt> 
+object is updated so that its index is after the parsed text. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.152">setDecimalFormatSymbols</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.176"><DIV CLASS=screen> <P> <PRE> public void setDecimalFormatSymbols( DecimalFormatSymbols newSymbols) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newSymbols</tt><br>
+<DD>
+
+<P CLASS=para>
+The new <tt CLASS=literal>DecimalFormatSymbols</tt> object to use. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object that this <tt CLASS=literal>DecimalFormat</tt> 
+uses internally. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.153">setDecimalSeparatorAlwaysShown</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.177">public void setDecimalSeparatorAlwaysShown(boolean newValue)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newValue</tt><br>
+<DD>
+
+<P CLASS=para>
+The new decimal separator value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method specifies whether or not the decimal separator symbol is always 
+shown in formatted numbers. If <tt CLASS=literal>newValue</tt> 
+is <tt CLASS=literal>false</tt>, the separator is 
+only shown for numbers that have a fractional part. Otherwise, the separator 
+is always shown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.154">setGroupingSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.178">public void setGroupingSize(int newValue)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newValue</tt><br>
+<DD>
+
+<P CLASS=para>
+The new grouping size. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the grouping size of this <tt CLASS=literal>DecimalFormat</tt>. 
+The grouping size is the number of digits between grouping separators in 
+the integer portion of a number. For example, in the number <tt CLASS=literal>1,234.56</tt>, 
+the grouping size is <tt CLASS=literal>3</tt> (and the grouping symbol is ","). </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.155">setMultiplier</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.179">public void setMultiplier(int newValue)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newValue</tt><br>
+<DD>
+
+<P CLASS=para>
+The new multiplier. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the multiplier of this <tt CLASS=literal>DecimalFormat</tt>. 
+The multiplier is used to adjust a number before it is formatted or after 
+it is parsed. For example, a percent format has a multiplier of 100 and 
+a suffix of <tt CLASS=literal>%</tt>. 
+Thus, a value of <tt CLASS=literal>.42</tt> could 
+be formatted as <tt CLASS=literal>42%</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.156">setNegativePrefix</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.180">public void setNegativePrefix(String newValue)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newValue</tt><br>
+<DD>
+
+<P CLASS=para>
+The new prefix. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the prefix string for negative values. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.157">setNegativeSuffix</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.181">public void setNegativeSuffix(String newValue)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newValue</tt><br>
+<DD>
+
+<P CLASS=para>
+The new suffix. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the suffix string for negative values. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.158">setPositivePrefix</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.182">public void setPositivePrefix(String newValue)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newValue</tt><br>
+<DD>
+
+<P CLASS=para>
+The new prefix. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the prefix string for positive values. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.159">setPositiveSuffix</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.183">public void setPositiveSuffix(String newValue)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newValue</tt><br>
+<DD>
+
+<P CLASS=para>
+The new suffix. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the suffix string for positive values. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.160">toLocalizedPattern</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.184">public String toLocalizedPattern()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The pattern string of this <tt CLASS=literal>DecimalFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the pattern string of this <tt CLASS=literal>DecimalFormat</tt>, 
+localized with the <tt CLASS=literal>DecimalFormatSymbols</tt> 
+object of this <tt CLASS=literal>DecimalFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.161">toPattern</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.185">public String toPattern()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The pattern string of this <tt CLASS=literal>DecimalFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the pattern string of this <tt CLASS=literal>DecimalFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.69">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>format(double)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>format(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>format(Object, StringBuffer, FieldPosition)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMaximumFractionDigits()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMaximumIntegerDigits()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMinimumFractionDigits()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMinimumIntegerDigits()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>isGroupingUsed()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>isParseIntegerOnly()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>parse(String)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>parseObject(String)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Format</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>parseObject(String, ParsePosition)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setGroupingUsed(boolean)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setMaximumFractionDigits(int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setMaximumIntegerDigits(int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setMinimumFractionDigits(int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setMinimumIntegerDigits(int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setParseIntegerOnly(boolean)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.70">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>DecimalFormatSymbols</tt>, 
+<tt CLASS=literal>FieldPosition</tt>, 
+<tt CLASS=literal>Number</tt>, 
+<tt CLASS=literal>NumberFormat</tt>, 
+<tt CLASS=literal>ParsePosition</tt>, 
+<tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>StringBuffer</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>DateFormatSymbols</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>DecimalFormatSymbols</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

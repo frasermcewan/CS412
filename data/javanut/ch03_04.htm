@@ -1,0 +1,396 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.4 Class Methods</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:49:42 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Classes and Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-4">3.4 Class Methods</A></h2>
+
+<P CLASS=para>
+<A NAME="CH3.CLASS.METHOD1"></A><A NAME="CH3.METHODS2"></A>Let's define a new method in our <tt CLASS=literal>Circle</tt>
+class.  This one tests whether a specified point falls within
+the defined circle:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Circle {
+    double x, y, r;
+    // is point (a,b) inside this circle?  
+    public boolean isInside(double a, double b)
+    {
+        double dx = a - x;
+        double dy = b - y;
+        double distance = Math.sqrt(dx*dx + dy*dy);
+        if (distance &lt; r) return true;
+        else return false;
+    }
+        .
+        .  // Constructor and other methods omitted.
+        .
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+What's this <tt CLASS=literal>Math.sqrt()</tt> thing?  It looks like a
+method call and, given its name and its context, we can guess
+that it is computing a square root.  But the method calls
+we've discussed are done through an object.  <tt CLASS=literal>Math</tt>
+isn't the name of an object that we've declared, and there
+aren't any global objects in Java, so this must be a kind of
+method call that we haven't seen before.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-4.1">static Methods</A></h3>
+
+<P CLASS=para>
+What's going on here is that <tt CLASS=literal>Math</tt> is the name of a
+class.  <tt CLASS=literal>sqrt()</tt> is the name of a <I CLASS=emphasis>class method</I>
+(or static method) defined in <tt CLASS=literal>Math</tt>.  It differs from the <I CLASS=emphasis>instance
+methods</I>, such as <tt CLASS=literal>area()</tt> in <tt CLASS=literal>Circle</tt>, that
+we've seen so far.
+
+<P CLASS=para>
+Class methods are like class variables in a number of ways:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Class methods are declared with the <tt CLASS=literal>static</tt> keyword.
+
+<P>
+<li CLASS=listitem>Class methods are often referred to as "static methods."
+
+<P>
+<li CLASS=listitem>Class methods are invoked through the class rather than
+through an instance.  (Although within the class they may be
+invoked by method name alone.)
+
+<P>
+<li CLASS=listitem>Class methods are the closest Java comes to "global"
+methods.  Because they must be referred to by the class name,
+there is no danger of name conflicts.
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-4.2">No this</A></h3>
+
+<P CLASS=para>
+Class methods differ from instance methods in one
+important way: they are not passed an implicit <tt CLASS=literal>this</tt>
+reference.  Thus, these <tt CLASS=literal>this</tt>-less methods are not
+associated with any instance of the class and may not refer
+to any instance variables or invoke instance methods.
+
+<P CLASS=para>
+Since class methods are not passed a <tt CLASS=literal>this</tt> reference,
+and are not invoked through an object, they are the closest
+thing that Java offers to the "normal" C procedures that you
+may be accustomed to, and may therefore seem familiar and comforting.
+If you're sick and tired of this object-oriented business,
+it is perfectly possible to write complete Java programs
+using only class methods, although this does defeat
+an important purpose of using the language!
+
+<P CLASS=para>
+But don't think that class methods are somehow
+cheating--there are perfectly good reasons to declare a
+method <tt CLASS=literal>static</tt>.  And indeed, there are classes like
+<tt CLASS=literal>Math</tt> that declare all their methods (and variables)
+<tt CLASS=literal>static</tt>.  Since <tt CLASS=literal>Math</tt> is a collection of
+functions that operate on floating-point numbers, which are
+a primitive type, there are no objects involved, and no need
+for instance methods.  <tt CLASS=literal>System</tt> is another class that
+defines only class methods--it provides a varied collection of
+system functions for which there is no appropriate object
+framework. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-4.3">A Class Method for Circles</A></h3>
+
+<P CLASS=para>
+<A HREF="ch03_04.htm#JNUT2-CH-3-EX-5">Example 3.5</A>
+shows two (overloaded) definitions of a method for our
+<tt CLASS=literal>Circle</tt> class.  One is an instance method and one is a
+class method.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-5">Example 3.5: A Class Method and an Instance Method</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Circle {
+    public double x, y, r;
+    // An instance method.  Returns the bigger of two circles.
+    public Circle bigger(Circle c) { 
+        if (c.r &gt; r) return c; else return this; 
+    }
+    // A class method.  Returns the bigger of two circles.
+    public static Circle bigger(Circle a, Circle b) {
+        if (a.r &gt; b.r) return a; else return b;
+    }
+        .
+        .  // Other methods omitted here.
+        .
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+You would invoke the instance method like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle a = new Circle(2.0);
+Circle b = new Circle(3.0);
+Circle c = a.bigger(b);         // or, b.bigger(a);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+And you would invoke the class method like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle a = new Circle(2.0);
+Circle b = new Circle(3.0);
+Circle c = Circle.bigger(a,b);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Neither of these is the "correct" way to implement this
+method.  One or the other will seem more natural, depending
+on circumstances.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-4.4">A Mystery Explained</A></h3>
+
+<P CLASS=para>
+Now that we understand class variables, instance variables,
+class methods, and instance methods, we are in a position to
+explore that mysterious method call we saw in our very first
+Java "Hello World" example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+System.out.println("Hello world!");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+One hypothesis is that <tt CLASS=literal>println()</tt> is a class method
+in a class named <tt CLASS=literal>out</tt>, which is in a package named <tt CLASS=literal>System</tt>.
+Syntactically, this is perfectly reasonable (except perhaps
+that class names always seem to be capitalized by
+convention, and <tt CLASS=literal>out</tt> isn't capitalized).  But if you
+look at the API documentation, you'll find that
+<tt CLASS=literal>System</tt> is not a package name; it is the name of a class
+(which is in the <tt CLASS=literal>java.lang</tt> package, by the way).
+Can you figure it out?
+
+<P CLASS=para>
+Here's the story: <tt CLASS=literal>System</tt> is a class.  It has a class
+variable named <tt CLASS=literal>out</tt>.  <tt CLASS=literal>out</tt> refers to an object
+of type <tt CLASS=literal>PrintStream</tt>.  The object <tt CLASS=literal>System.out</tt>
+has an instance method named <tt CLASS=literal>println()</tt>.  Mystery
+solved!
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-4.5">Static Initializers</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.INITIALIZERS1"></A><A NAME="CH3.STATIC1"></A><A NAME="CH3.CLASS.VARIAB2"></A><A NAME="CH3.INSTANCE.VAR1"></A><A NAME="CH3.VARIABLES2"></A>Both class and instance variables can have initializers
+attached to their declarations.  For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+static int num_circles = 0;
+float r = 1.0;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Class variables are initialized when the class is first
+loaded.  Instance variables are initialized when an object
+is created.
+
+<P CLASS=para>
+Sometimes we need more complex initialization than is
+possible with these simple variable initializers.  For
+instance variables, there are constructor methods, which are
+run when a new instance of the class is created.  Java also
+allows you to write an initialization method for class
+variables.  Such a method is called a <I CLASS=emphasis>static
+initializer</I>.
+
+<P CLASS=para>
+The syntax of static initializers gets kind of bizarre.
+Consider that a static initializer is invoked automatically
+by the system when the class is loaded.  Thus there are no
+meaningful arguments that can be passed to it (unlike the
+arguments we can pass to a constructor method when creating
+a new instance).  There is also no value to return.  So a
+static initializer has no arguments and no return value.
+Furthermore, it is not really necessary to give it a name,
+since the system calls the method automatically for us.
+What part of a method declaration is left?  Just the
+<tt CLASS=literal>static</tt> keyword and the curly brackets!
+
+<P CLASS=para>
+<A HREF="ch03_04.htm#JNUT2-CH-3-EX-6">Example 3.6</A> 
+shows a class declaration with a static initializer.
+Notice that the class contains a regular static variable
+initializer of the kind we've seen before, and also a static
+initializer--an arbitrary block of code between <tt CLASS=literal>{</tt>
+and <tt CLASS=literal>}</tt>.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-6">Example 3.6: A Static Initializer</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// We can draw the outline of a circle using trigonometric functions.
+// Trigonometry is slow though, so we pre-compute a bunch of values.
+public class Circle {
+    // Here are our static lookup tables, and their own simple initializers.
+    static private double sines[] = new double[1000];
+    static private double cosines[] = new double[1000];
+    // Here's a static initializer "method" that fills them in.  
+    // Notice the lack of any method declaration!
+    static {
+        double x, delta_x;
+        int i;
+        delta_x = (Circle.PI/2)/(1000-1);
+        for(i = 0, x = 0.0; i &lt; 1000; i++, x += delta_x) {
+            sines[i] = Math.sin(x);
+            cosines[i] = Math.cos(x);
+        }
+    }
+        .
+        .  // The rest of the class omitted.
+        .
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The syntax gets even a little stranger than this.  Java
+allows any number of static initializer blocks of code to
+appear within a class definition.  What the compiler
+actually does is to internally produce a single class
+initialization routine that combines all the static variable
+initializers and all of the static initializer blocks of
+code, in the order that they appear in the class
+declaration.  This single initialization procedure is run
+automatically, one time only, when the class is first
+loaded.
+
+<P CLASS=para>
+One common use of static initializers is for classes that
+implement <tt CLASS=literal>native</tt> methods--i.e., methods written in
+C.  The static initializer for such a class should call
+<tt CLASS=literal>System.load()</tt> or <tt CLASS=literal>System.loadLibrary()</tt> to
+read in the native library that implements these native
+methods.  
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-4.6">Instance Initializers</A></h3>
+
+<P CLASS=para>
+In Java 1.1, a class definition may also include <I CLASS=emphasis>instance
+initializers</I>.  These look like static initializers, but
+without the <tt CLASS=literal>static</tt> keyword.  An instance initializer
+is like a constructor: it runs when an instance of the class
+is created.  We'll see more about instance initializers in
+<A HREF="ch05_01.htm">Chapter 5, <i>Inner Classes and Other New Language Features</i></A>, <I CLASS=emphasis>Inner Classes and Other New Language
+Features</I>.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Class Variables</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Object Destruction</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,729 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] Scrolling</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:47:56 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-11">11. Scrolling</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Scrollbar<br>
+<A HREF="ch11_02.htm">Scrolling An Image</A><BR>
+<A HREF="ch11_03.htm">The Adjustable Interface</A><BR>
+<A HREF="ch11_04.htm">ScrollPane</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+This chapter describes how Java deals with scrolling. AWT provides two 
+means for scrolling. The first is the fairly primitive <tt CLASS=literal>Scrollbar</tt> 
+object. It really provides only the means to read a value from a slider 
+setting. Anything else is your responsibility: if you want to display the 
+value of the setting (for example, if you're using the scrollbar 
+as a volume control) or want to change the display (if you're using 
+scrollbars to control an area that's too large to display), you have 
+to do it yourself. The <tt CLASS=literal>Scrollbar</tt> 
+reports scrolling actions through the standard event mechanisms; it is 
+up to the programmer to handle those events and perform the scrolling. <A NAME="CH11.SCROLL"></A>
+
+<P CLASS=para>
+Unlike other components, which generate an <tt CLASS=literal>ACTION_EVENT</tt> 
+when something exciting happens, the <tt CLASS=literal>Scrollbar</tt> 
+generates five events: <tt CLASS=literal>SCROLL_LINE_UP</tt>, 
+<tt CLASS=literal>SCROLL_LINE_DOWN</tt>, <tt CLASS=literal>SCROLL_PAGE_UP</tt>, 
+<tt CLASS=literal>SCROLL_PAGE_DOWN</tt>, and <tt CLASS=literal>SCROLL_ABSOLUTE</tt>. 
+In Java 1.0, none of these events trigger a default event handler like 
+the <tt CLASS=literal>action()</tt> method. To work 
+with them, you must override the <tt CLASS=literal>handleEvent()</tt> 
+method. With Java 1.1, you handle scrolling events by registering an <tt CLASS=literal>AdjustmentListener</tt> 
+with the <tt CLASS=literal>Scrollbar.addAdjustmentListener()</tt> 
+method; when adjustment events occur, the listener's <tt CLASS=literal>adjustmentValueChanged()</tt> 
+method is called. 
+
+<P CLASS=para>
+Release 1.1 of AWT also includes a <tt CLASS=literal>ScrollPane</tt> 
+container object; it is a response to one of the limitations of AWT 1.0. 
+A <tt CLASS=literal>ScrollPane</tt> is like a <tt CLASS=literal>Panel</tt>, 
+but it has scrollbars and scrolling built in. In this sense, it's 
+like <tt CLASS=literal>TextArea</tt>, which contains 
+its own scrollbars. You could use a <tt CLASS=literal>ScrollPane</tt> 
+to implement a drawing pad that could cover an arbitrarily large area. 
+This saves you the burden of implementing scrolling yourself: generating 
+scrollbars, handling their events, and figuring out how to redisplay the 
+screen accordingly. 
+
+<P CLASS=para>
+Both <tt CLASS=literal>Scrollbar</tt> and <tt CLASS=literal>ScrollPane</tt> 
+take advantage of the <tt CLASS=literal>Adjustable</tt> 
+interface. <tt CLASS=literal>Adjustable</tt> defines 
+the common scrolling activities of the two classes. The <tt CLASS=literal>Scrollbar</tt> 
+class implements <tt CLASS=literal>Adjustable</tt>; 
+a <tt CLASS=literal>ScrollPane</tt> has two methods 
+that return an <tt CLASS=literal>Adjustable</tt> object, 
+one for each scrollbar. Currently, you can use the <tt CLASS=literal>ScrollPane</tt>'s 
+"adjustables" to find out the scrollbar settings in each direction. 
+You can't change the settings or register <tt CLASS=literal>AdjustmentListener</tt>s; 
+the appropriate methods exist, but they don't do anything. It's 
+not clear whether this is appropriate behavior or a bug (remember, an interface 
+only lists methods that must be present but doesn't require them 
+to do anything); it may change in a later release. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-11-SECT-1">11.1 Scrollbar</A></h2>
+
+<P CLASS=para>
+<A NAME="CH11.SCR1"></A>Scrollbars come in two flavors: horizontal and vertical. Although there 
+are several methods for setting the page size, scrollbar range (minimum 
+and maximum values), and so on, basically all you can do is get and set 
+the scrollbar's value. Scrollbars don't contain any area to 
+display their value, though if you want one, you could easily attach a 
+label. 
+
+<P CLASS=para>
+To work with a <tt CLASS=literal>Scrollbar</tt>, you 
+need to understand the pieces from which it is built. <A HREF="ch11_01.htm#JAWT-CH-11-FIG-1">Figure 11.1</A> 
+identifies each of the pieces. At both ends are arrows, which are 
+used to change the <tt CLASS=literal>Scrollbar</tt> 
+value the default amount (one unit) in the direction selected. The paging 
+areas are used to change the <tt CLASS=literal>Scrollbar</tt> 
+value one page (ten units by default) at a time in the direction selected. 
+The slider can be moved to set the scrollbar to an arbitrary value within 
+the available range. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-11-FIG-1">Figure 11.1: Scrollbar elements</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1101.gif" alt="[Graphic: Figure 11-1]" width=193 height=155 border=0>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-11-SECT-1.1">Scrollbar Methods</A></h3>Constants
+
+<P CLASS=para>
+There are two direction specifiers for <tt CLASS=literal>Scrollbar</tt>. 
+The direction tells the <tt CLASS=literal>Scrollbar</tt> 
+which way to orient itself. They are used in the constructors, as a parameter 
+to <tt CLASS=literal>setOrientation()</tt>, and as 
+the return value for the <tt CLASS=literal>getOrientation()</tt> 
+method. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static int HORIZONTAL </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>HORIZONTAL</tt> is the constant 
+for horizontal orientation. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static int VERTICAL </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>VERTICAL</tt> is the constant for 
+vertical orientation. </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Scrollbar (int orientation, int value, int visible, int minimum, 
+int maximum) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Scrollbar</tt> constructor creates 
+a <tt CLASS=literal>Scrollbar</tt> with a direction 
+of <tt CLASS=literal>orientation</tt> and initial 
+value of <tt CLASS=literal>value</tt>. <tt CLASS=literal>visible</tt> 
+is the size of the slider. <tt CLASS=literal>minimum</tt> 
+and <tt CLASS=literal>maximum</tt> are the range of 
+values that the <tt CLASS=literal>Scrollbar</tt> can 
+be. If <tt CLASS=literal>orientation</tt> is not <tt CLASS=literal>HORIZONTAL</tt> 
+or <tt CLASS=literal>VERTICAL</tt>, the constructor 
+throws the run-time exception 
+<tt CLASS=literal>IllegalArgumentException</tt>. If 
+<tt CLASS=literal>maximum</tt> is below the value 
+of <tt CLASS=literal>minimum</tt>, the scrollbar's 
+minimum and maximum values are both set to <tt CLASS=literal>minimum</tt>. 
+If <tt CLASS=literal>value</tt> is outside the range 
+of the scrollbar, it is set to the limit it exceeded. The default line 
+scrolling amount is one. The default paging amount is ten. 
+
+<P CLASS=para>
+If you are using the scrollbar to control a visual object, <tt CLASS=literal>visible</tt> 
+should be set to the amount of a displayed object that is on the screen 
+at one time, relative to the entire size of the object (i.e., relative 
+to the scrollbar's range: <tt CLASS=literal>maximum</tt> 
+- <tt CLASS=literal>minimum</tt>). Some platforms 
+ignore this parameter and set the scrollbar to a fixed size. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Scrollbar (int orientation) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor for <tt CLASS=literal>Scrollbar</tt> 
+creates a <tt CLASS=literal>Scrollbar</tt> with the 
+direction of <tt CLASS=literal>orientation</tt>. In 
+Java 1.0, the initial settings for <tt CLASS=literal>value</tt>, 
+<tt CLASS=literal>visible</tt>, <tt CLASS=literal>minimum</tt>, 
+and <tt CLASS=literal>maximum</tt> are 0. In Java 
+1.1, the default value for <tt CLASS=literal>visible</tt> 
+is 10, and the default for <tt CLASS=literal>maximum</tt> 
+is 100; the other values default to 0. If <tt CLASS=literal>orientation</tt> 
+is not <tt CLASS=literal>HORIZONTAL</tt> or <tt CLASS=literal>VERTICAL</tt>, 
+the constructor throws the run-time 
+exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+This constructor is helpful if you want to reserve space for the <tt CLASS=literal>Scrollbar</tt> 
+on the screen, to be configured later. You would then use the <tt CLASS=literal>setValues()</tt> 
+method to configure the scrollbar. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Scrollbar () </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>VERTICAL</tt> 
+<tt CLASS=literal>Scrollbar</tt>. In Java 1.0, the 
+initial settings for <tt CLASS=literal>value</tt>, 
+<tt CLASS=literal>visible</tt>, <tt CLASS=literal>minimum</tt>, 
+and <tt CLASS=literal>maximum</tt> are 0. In Java 
+1.1, the default value for <tt CLASS=literal>visible</tt> 
+is 10, and the default for <tt CLASS=literal>maximum</tt> 
+is 100; the other values default to 0. You would then use the <tt CLASS=literal>setValues()</tt> 
+method to configure the scrollbar. </DL>
+<P CLASS=para>
+<A HREF="ch11_01.htm#JAWT-CH-11-FIG-2">Figure 11.2</A> shows both vertical and horizontal 
+scrollbars. It also demonstrates a problem you'll run into if you're not careful. If not constrained by the <tt CLASS=literal>LayoutManager</tt>, 
+scrollbars can get very fat. The result is rarely pleasing. The solution 
+is to place scrollbars in layout managers that restrict width for vertical 
+scrollbars or height for horizontal ones. The side regions (i.e., everything 
+except the center) of a border layout are ideal. In the long term, the solution will be scrollbars that give you their maximum size and layout managers that observe the maximum size.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-11-FIG-2">Figure 11.2: Vertical and horizontal scrollbars</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1102.gif" alt="[Graphic: Figure 11-2]" width=164 height=155 border=0>
+
+</DIV>
+
+Adjustable Methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getOrientation () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getOrientation()</tt> method 
+returns the current orientation of the scrollbar: either <tt CLASS=literal>Scrollbar.HORIZONTAL</tt> 
+or <tt CLASS=literal>Scrollbar.VERTICAL</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setOrientation (int orientation) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setOrientation()</tt> method changes the orientation
+of the scrollbar to <tt CLASS=literal>orientation</tt>, which must be
+either <tt CLASS=literal>Scrollbar.HORIZONTAL</tt> or
+<tt CLASS=literal>Scrollbar.VERTICAL</tt>. If
+<tt CLASS=literal>orientation</tt> is not <tt CLASS=literal>HORIZONTAL</tt> or
+<tt CLASS=literal>VERTICAL</tt>, this method throws the run-time exception
+<tt CLASS=literal>IllegalArgumentException</tt>. It was not possible to
+change the orientation of a scrollbar prior to Java 1.1.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getVisibleAmount () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public int getVisible () </I> <img src="gifs/wstar.gif" alt="(Deprecated)" border=0><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getVisibleAmount()</tt> method gets the
+<tt CLASS=literal>visible</tt> setting of the
+<tt CLASS=literal>Scrollbar</tt>. If the scrollbar's
+<tt CLASS=literal>Container</tt> is resized, the
+<tt CLASS=literal>visible</tt> setting is not automatically changed. <tt CLASS=literal>getVisible()</tt> is the Java 1.0 
+name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setVisibleAmount (int amount) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setVisibleAmount()</tt> method 
+changes the current <tt CLASS=literal>visible</tt> 
+setting of the <tt CLASS=literal>Scrollbar</tt> to 
+<tt CLASS=literal>amount</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getValue () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getValue()</tt> method is probably 
+the most frequently called method of <tt CLASS=literal>Scrollbar</tt>. 
+It returns the current value of the scrollbar queried. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setValue (int value) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setValue()</tt> method changes 
+the value of the scrollbar to <tt CLASS=literal>value</tt>. 
+If <tt CLASS=literal>value</tt> exceeds a scrollbar 
+limit, the scrollbar's new value is set to that limit. In Java 1.1, 
+this method is synchronized; it was not in earlier versions. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getMinimum () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimum()</tt> method returns 
+the current minimum setting for the scrollbar. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setMinimum (int minimum) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setMinimum()</tt> method changes 
+the <tt CLASS=literal>Scrollbar</tt>'s minimum 
+value to <tt CLASS=literal>minimum</tt>. The current 
+setting for the <tt CLASS=literal>Scrollbar</tt> may 
+change to <tt CLASS=literal>minimum</tt> if <tt CLASS=literal>minimum</tt> 
+increases above <tt CLASS=literal>getValue()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getMaximum () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMaximum()</tt> method returns 
+the current maximum setting for the scrollbar. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setMaximum (int maximum) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setMaximum()</tt> method changes 
+the maximum 
+value of the <tt CLASS=literal>Scrollbar</tt> to <tt CLASS=literal>maximum</tt>. The current 
+setting for the <tt CLASS=literal>Scrollbar</tt> may 
+change to <tt CLASS=literal>maximum</tt> if <tt CLASS=literal>maximum</tt> 
+decreases below <tt CLASS=literal>getValue()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setValues (int value, int visible, int minimum, 
+int maximum) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setValues()</tt> method changes 
+the <tt CLASS=literal>value</tt>, <tt CLASS=literal>visible</tt>, 
+<tt CLASS=literal>minimum</tt>, and <tt CLASS=literal>maximum</tt> 
+settings all at once. In Java 1.0.2, separate methods do not exist for 
+changing <tt CLASS=literal>visible</tt>, <tt CLASS=literal>minimum</tt>, 
+or <tt CLASS=literal>maximum</tt>. The scrollbar's 
+value is set to <tt CLASS=literal>value</tt>, visible 
+to <tt CLASS=literal>visible</tt>, minimum to <tt CLASS=literal>minimum</tt>, 
+and maximum to <tt CLASS=literal>maximum</tt>. If 
+<tt CLASS=literal>maximum</tt> is below the value 
+of <tt CLASS=literal>minimum</tt>, it is set to <tt CLASS=literal>minimum</tt>. 
+If <tt CLASS=literal>value</tt> is outside the range 
+of the scrollbar, it is set to the limit it exceeded. In Java 1.1, this 
+method is synchronized; it was not in earlier versions. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getUnitIncrement () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public int getLineIncrement () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getUnitIncrement()</tt> method 
+returns the current line increment. This is the amount the scrollbar will 
+scroll if the user clicks on one of the scrollbar's arrows. 
+
+<P CLASS=para>
+<tt CLASS=literal>getLineIncrement()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setUnitIncrement (int amount) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void setLineIncrement (int amount) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setUnitIncrement()</tt> method 
+changes the line increment amount to <tt CLASS=literal>amount</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>setLineIncrement()</tt> is the Java 
+1.0 name for this method. 
+
+<P CLASS=para>
+Changing the line increment amount was not possible in Java 1.0.2. This 
+method acted like it returned successfully, and <tt CLASS=literal>getLineIncrement()</tt> 
+returned the new value, but the <tt CLASS=literal>Scrollbar</tt> 
+changed its value by only one (the default) when you clicked on one of 
+the arrows. However, you could work around this defect by explicitly handling the 
+<tt CLASS=literal>SCROLL_LINE_UP</tt> and <tt CLASS=literal>SCROLL_LINE_DOWN</tt> 
+events: get the correct line increment, adjust the display appropriately, 
+and then set call <tt CLASS=literal>setValue()</tt> 
+to correct the scrollbar's value. This workaround is not needed in 
+Java 1.1. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getBlockIncrement () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public int getPageIncrement () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBlockIncrement()</tt> method 
+returns the current paging increment. This is the amount the scrollbar will 
+scroll if the user clicks between the slider and one of the scrollbar's 
+arrows. 
+
+<P CLASS=para>
+<tt CLASS=literal>getPageIncrement()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setBlockIncrement (int amount) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void setPageIncrement (int amount) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setBlockIncrement()</tt> method 
+changes the paging increment amount to <tt CLASS=literal>amount</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>setPageIncrement()</tt> is the Java 
+1.0 name for this method. 
+
+<P CLASS=para>
+Changing the paging increment amount was not possible in Java 1.0.2. This method 
+acts like it returns successfully, and <tt CLASS=literal>getPageIncrement()</tt> 
+returns the new value, but the <tt CLASS=literal>Scrollbar</tt> 
+changes its value only by 10 (the default) when you click on one of the 
+paging areas. However, you can work around this defect by explicitly handling the 
+<tt CLASS=literal>SCROLL_PAGE_UP</tt> and <tt CLASS=literal>SCROLL_PAGE_DOWN</tt> 
+events: get the correct page increment, adjust the display appropriately, 
+and then set call <tt CLASS=literal>setValue()</tt> 
+to correct the scrollbar's value. This workaround is not necessary 
+in Java 1.1. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>Scrollbar</tt>'s peer. 
+If you override this method, call <tt CLASS=literal>super.addNotify()</tt> 
+first. You will then be able to do everything you need with the information 
+about the newly created peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString ()  </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Scrollbar</tt> doesn't have 
+its own <tt CLASS=literal>toString()</tt> method; 
+when you call the <tt CLASS=literal>toString()</tt> 
+method of a <tt CLASS=literal>Scrollbar</tt>, you 
+are actually calling the method <tt CLASS=literal>Component.toString()</tt>. This in turn calls <tt CLASS=literal>paramString()</tt>, 
+which builds the string to display. For a <tt CLASS=literal>Scrollbar</tt>, 
+<tt CLASS=literal>paramString()</tt> puts the scrollbar's 
+value, visibility, minimum, maximum, and direction into the string. In 
+Java 1.0, there is a minor bug in the output. Instead of displaying the 
+scrollbar's <tt CLASS=literal>visible</tt> setting 
+(an integer), <tt CLASS=literal>paramString()</tt> 
+displays the component's 
+<tt CLASS=literal>visible</tt> setting (a boolean). 
+(This is corrected in Java 1.1.) The following <tt CLASS=literal>String</tt> 
+is the result of calling <tt CLASS=literal>toString()</tt> 
+for a horizontal <tt CLASS=literal>Scrollbar</tt> 
+that hasn't been configured yet: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Scrollbar[0,0,0x0,invalid,val=0,vis=true,min=0,max=0,horz]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-11-SECT-1.2">Scrollbar Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH11.EVENT2"></A><A NAME="CH11.EVENT3"></A>With the 1.0 event model, scrollbars generate five kinds of events 
+in response to user interaction: <tt CLASS=literal>SCROLL_LINE_UP</tt>, 
+<tt CLASS=literal>SCROLL_LINE_DOWN</tt>, <tt CLASS=literal>SCROLL_PAGE_UP</tt>, 
+<tt CLASS=literal>SCROLL_PAGE_DOWN</tt>, and <tt CLASS=literal>SCROLL_ABSOLUTE</tt>. 
+The event that occurs depends on what the user did, as shown in <A HREF="ch11_01.htm#JAWT-CH-11-TAB-1">Table 11.1</A>; 
+the event type is specified in the <tt CLASS=literal>id</tt> 
+field of the <tt CLASS=literal>Event</tt> object passed 
+to <tt CLASS=literal>handleEvent()</tt>. However, 
+as a programmer, you often do not care which of these five events happened. 
+You care only about the scrollbar's 
+new value, which is always passed as the <tt CLASS=literal>arg</tt> 
+field of the <tt CLASS=literal>Event</tt> object. 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-11-TAB-1">Table 11.1: Scrollbar Events</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Event Type (Event.id)</TH>
+<TH ALIGN="left">Event Meaning</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_ABSOLUTE</tt></TD>
+<TD ALIGN="left">User drags slider.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_LINE_DOWN</tt></TD>
+<TD ALIGN="left">User presses down arrow.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_LINE_UP</tt></TD>
+<TD ALIGN="left">User presses up arrow.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_PAGE_DOWN</tt></TD>
+<TD ALIGN="left">User selects down paging area.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_PAGE_UP</tt></TD>
+<TD ALIGN="left">User selects up paging area.</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Because scrollbar events do not trigger any default event handlers (like 
+<tt CLASS=literal>action()</tt>), it is necessary 
+to override the <tt CLASS=literal>handleEvent()</tt> 
+method to deal with them. Unless your version of <tt CLASS=literal>handleEvent()</tt> 
+deals with all conceivable events, you must ensure that the original <tt CLASS=literal>handleEvent()</tt> 
+method is called. The simplest way is to have the return statement call 
+<tt CLASS=literal>super.handleEvent()</tt>. 
+
+<P CLASS=para>
+Most <tt CLASS=literal>handleEvent()</tt> 
+methods first identify the type of event that occurred. The following two 
+code blocks demonstrate different ways of checking for the <tt CLASS=literal>Scrollbar</tt> 
+events. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+if ((e.id == Event.SCROLL_LINE_UP) ||
+    (e.id == Event.SCROLL_LINE_DOWN) ||
+    (e.id == Event.SCROLL_PAGE_UP) ||
+    (e.id == Event.SCROLL_PAGE_DOWN) ||
+    (e.id == Event.SCROLL_ABSOLUTE)) {
+    // Then determine which Scrollbar was selected and act upon it
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Or more simply: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+if (e.target instanceof Scrollbar) {
+    // Then determine which Scrollbar was selected and act upon it.
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Although the second code block is simpler, the first is the better choice 
+because it is more precise. For example, what would happen if mouse events 
+are passed to scrollbars? Different Java platforms differ most in the types 
+of events passed to different objects; Netscape Navigator 
+3.0 for Windows 95 sends <tt CLASS=literal>MOUSE_ENTER</tt>, <tt CLASS=literal>MOUSE_EXIT</tt>, 
+and <tt CLASS=literal>MOUSE_MOVE</tt> events to the 
+<tt CLASS=literal>Scrollbar</tt>.[1] The second code block executes for 
+all the mouse events--in fact, any event coming from a <tt CLASS=literal>Scrollbar</tt>. 
+Therefore, it executes much more frequently (there can be many <tt CLASS=literal>MOUSE_MOVE</tt> 
+events), leading to poor interactive performance. 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+<tt CLASS=literal>MOUSE_UP</tt>, <tt CLASS=literal>MOUSE_DOWN</tt>, and <tt CLASS=literal>MOUSE_DRAG</tt> are not generated since these operations 
+generate <tt CLASS=literal>SCROLL</tt> events.
+</blockquote>
+<P CLASS=para>
+Another platform-specific issue is the way the system generates <tt CLASS=literal>SCROLL_ABSOLUTE</tt> 
+events. Some platforms generate many events while the user drags the scrollbar. 
+Others don't generate the event until the user stops dragging the 
+scrollbar. Some implementations wait until the user stops dragging the 
+scrollbar and then generate a flood of <tt CLASS=literal>SCROLL_ABSOLUTE</tt> 
+events for you to handle. In theory, it does not matter which is happening, 
+as long as your event-processing code is tight. If your event-processing 
+code is time consuming, you may wish to start another thread to perform 
+the work. If the thread is still alive when the next event comes along, 
+flag it down, and restart the operation. Listeners and 1.1 event handling
+
+<P CLASS=para>
+With the 1.1 event model, you register an <tt CLASS=literal>AdjustmentListener</tt> 
+by calling the <tt CLASS=literal>addAdjustmentListener()</tt> 
+method. Then when the user moves the <tt CLASS=literal>Scrollbar</tt> 
+slider, the <tt CLASS=literal>AdjustmentListener.adjustmentValueChanged()</tt> 
+method is called through the protected <tt CLASS=literal>Scrollbar.processAdjustmentEvent()</tt> 
+method. Key, mouse, and focus listeners are registered through the three <tt CLASS=literal>Component</tt> 
+methods of <tt CLASS=literal>addKeyListener()</tt>, 
+<tt CLASS=literal>addMouseListener()</tt>, and <tt CLASS=literal>addFocusListener()</tt>, 
+respectively. Because you need to register a separate listener for mouse 
+events, you no longer have the problem of distinguishing between mouse 
+events and slider events. An adjustment listener will never receive mouse 
+events. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addAdjustmentListener(AdjustmentListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addAdjustmentListener()</tt> 
+method registers <tt CLASS=literal>listener</tt> as 
+an object interested in being notified when an <tt CLASS=literal>AdjustmentEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Scrollbar</tt> as its 
+target. The method <tt CLASS=literal>listener.adjustmentValueChanged()</tt> 
+is called when an event occurs. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeAdjustmentListener(ItemListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeAdjustmentListener()</tt> 
+method removes <tt CLASS=literal>listener</tt> as 
+a interested listener. If <tt CLASS=literal>listener</tt> 
+is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+every <tt CLASS=literal>AWTEvent</tt> with this <tt CLASS=literal>Scrollbar</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes it along to any listeners for processing. When you subclass 
+<tt CLASS=literal>Scrollbar</tt>, overriding <tt CLASS=literal>processEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding <tt CLASS=literal>processEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override the <tt CLASS=literal>processEvent()</tt> method, 
+remember to call the <tt CLASS=literal>super.processEvent(e)</tt> method last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processAdjustmentEvent(ItemEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processAdjustmentEvent()</tt> 
+method receives all <tt CLASS=literal>AdjustmentEvent</tt>s 
+with this <tt CLASS=literal>Scrollbar</tt> as its 
+target. <tt CLASS=literal>processAdjustmentEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>Scrollbar</tt>, overriding <tt CLASS=literal>processAdjustmentEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processAdjustmentEvent()</tt>, 
+you must remember to call <tt CLASS=literal>super.processAdjustmentEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>PopupMenu</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Scrolling An Image</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 17] 17.4 Printing Example</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:58:08 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 17<br>Printing</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch17_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-17-SECT-4">17.4 Printing Example</A></h2>
+
+<P CLASS=para>
+Now that you know about the different classes necessary to print, let's 
+put it all together. Printing takes four steps: 
+
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>Get the <tt CLASS=literal>PrintJob</tt>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PrintJob pjob = getToolkit().getPrintJob(this, "Job Title", (Properties)null);
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>Get the graphics context from the <tt CLASS=literal>PrintJob</tt>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Graphics pg = pjob.getGraphics();
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>Print by calling <tt CLASS=literal>printAll()</tt> 
+or <tt CLASS=literal>print()</tt>. When this method 
+returns, you can call <tt CLASS=literal>dispose()</tt> 
+to send the page to the printer: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+printAll(pg);
+pg.dispose(); // This is like sending a form feed
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>Clean up after yourself: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+pjob.end();
+</PRE>
+</DIV>
+
+<P>
+</OL>
+<P CLASS=para>
+The following code summarizes how to print: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+PrintJob pjob = getToolkit().getPrintJob(this, "Print?", (Properties)null);
+if (pjob != null) {
+        Graphics pg = pjob.getGraphics();
+        if (pg != null) {
+            printAll(pg);
+            pg.dispose();
+        }
+    pjob.end();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This code prints the current component: what you get from the printer should 
+be a reasonable rendition of what you see on the screen. Note that we didn't 
+need to modify <tt CLASS=literal>paint()</tt> at all. 
+That should always be the case if you want your printer output to look 
+like your onscreen component. 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch17_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Component Methods</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Printing Arbitrary Content</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

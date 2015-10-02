@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] javap</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:04:25 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>JDK Tools</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<A NAME="CH16.JAVAP.CLASS.1"></A><A NAME="CH16.CLASS.FILES-1"></A>
+
+<DIV CLASS=refnamediv>
+<H1>javap</H1>
+
+<H2>Name</H2>
+
+javap---The Java Class Disassembler
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-8.1">Availability</A></h2>
+
+<P CLASS=para>
+JDK 1.0 and later.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-8.2">Synopsis</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+javap [ <I CLASS=emphasis>options</I> ] <I CLASS=emphasis>classnames</I>
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-8.3">Description</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>javap</I> disassembles the class files specified by the
+class names on the command line and prints a human-readable
+version of those classes.
+
+<P CLASS=para>
+By default, <I CLASS=emphasis>javap</I> prints declarations of the
+non-<tt CLASS=literal>private</tt> members of each of the classes specified
+on the command line.  The <tt CLASS=literal>-l</tt>, <tt CLASS=literal>-p</tt>, and
+<tt CLASS=literal>-c</tt> options specify additional information to be
+printed, including a complete disassembly of the byte-codes
+in each of the specified classes.  <I CLASS=emphasis>javap</I> can also be
+used to run the class verifier on Java classes.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-8.4">Options</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>-c</tt><br>
+<DD>
+
+<P CLASS=para>
+Print the Java Virtual Machine instructions for each of the
+methods in each of the specified classes.  This option
+disassembles all methods, including <tt CLASS=literal>private</tt> methods.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-classpath</tt> <I CLASS=emphasis>path</I><br>
+<DD>
+
+<P CLASS=para>
+The path that <I CLASS=emphasis>javap</I> uses to look up the classes named
+on the command line.  This option overrides the default
+path and any path specified by the <tt CLASS=literal>CLASSPATH</tt>
+environment variable.  The <tt CLASS=literal>path</tt> specified is an
+ordered list of directories and ZIP files, separated by
+colons on UNIX systems or semicolons on Windows systems.
+
+<P CLASS=para>
+To specify additional directories or ZIP files for
+<I CLASS=emphasis>javap</I> to search without overriding the default system
+class path, use the <tt CLASS=literal>CLASSPATH</tt> environment variable.
+See the <I CLASS=emphasis>java</I> reference page for more information on
+specifying paths.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-h</tt><br>
+<DD>
+
+<P CLASS=para>
+Outputs the class in a form suitable for inclusion in a C
+header file.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-l</tt><br>
+<DD>
+
+<P CLASS=para>
+Prints line numbers and local variable tables in addition to
+the public fields of the class.  Note that line numbers and local
+variable information is included for use with
+debuggers. Local variable information is available only if a
+class was compiled with the <tt CLASS=literal>-g</tt> option to
+<I CLASS=emphasis>javac</I>; line number information is available only
+if a class was compiled <I CLASS=emphasis>without</I> the <tt CLASS=literal>-O</tt> option.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-p</tt><br>
+<DD>
+
+<P CLASS=para>
+Prints <tt CLASS=literal>private</tt> methods and
+variables of the specified class in addition to the <tt CLASS=literal>public</tt>
+ones. Note that some compilers (though not <I CLASS=emphasis>javac</I>) may
+allow this <tt CLASS=literal>private</tt> field information to be "obfuscated"
+in such a way that <tt CLASS=literal>private</tt> fields and method arguments
+no longer have meaningful names.  This makes Java classes harder
+to disassemble or reverse engineer.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-s</tt><br>
+<DD>
+
+<P CLASS=para>
+Outputs the class member declarations using the internal
+Virtual Machine format.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-v</tt><br>
+<DD>
+
+<P CLASS=para>
+Verbose.  Outputs additional information (in the form of
+Java comments) about each member of each specified class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-verify</tt><br>
+<DD>
+
+<P CLASS=para>
+Causes <I CLASS=emphasis>javap</I> to run the class verifier on the
+specified classes and display the results of verification.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-version</tt><br>
+<DD>
+
+<P CLASS=para>
+Causes <I CLASS=emphasis>javap</I> to display its version number.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-8.5">Environment</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>CLASSPATH</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies an ordered list (colon-separated on UNIX,
+semicolon-separated on Windows systems) of directories and
+ZIP files in which <I CLASS=emphasis>javap</I> should look for class 
+definitions.  When a path is specified with this environment
+variable, <I CLASS=emphasis>javap</I> always implicitly appends the location
+of the system classes to the end of the path.  If this
+environment variable is not specified, the default path
+is the current directory and the system classes.  This
+variable is overridden by the <tt CLASS=literal>-classpath</tt> option.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-8.6">See Also</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>java</I>, <I CLASS=emphasis>javac</I>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>javakey</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>jdb</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

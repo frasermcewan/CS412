@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.6 Images and Sounds</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:53:28 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Applets</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-6">6.6 Images and Sounds</A></h2>
+
+<P CLASS=para>
+<A NAME="CH6.IMAGES-IMAGE1"></A><A NAME="CH6.APPLETS-IMAG1"></A><A HREF="ch06_06.htm#JNUT2-CH-6-EX-5">Example 6.5</A>
+shows a Java applet that implements a simple client-side
+imagemap, which has the capability to highlight the "hot
+spots" in the image and play a sound clip when the user
+clicks on the image.
+<A HREF="ch06_06.htm#JNUT2-CH-6-FIG-4">Figure 6.4</A>
+shows what this applet might look like, when configured with
+an appropriate image.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-6-FIG-4">Figure 6.4: An imagemap applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_0604.gif" alt="[Graphic: Figure 6-4]" width=464 height=302 border=0>
+
+</DIV>
+
+<P CLASS=para>
+This applet demonstrates quite a few important applet
+techniques:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>getParameter()</tt> looks up the name of the
+image to display and the audio clip to play when the user clicks, and
+it also reads a list of rectangles and URLs that define the
+hot spots and hyperlinks of the imagemap.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>getImage()</tt> and <tt CLASS=literal>getDocumentBase()</tt> methods
+load the image in the <tt CLASS=literal>init()</tt> method, and
+<tt CLASS=literal>Graphics.drawImage()</tt> displays the image
+in the <tt CLASS=literal>paint()</tt> method.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>getAudioClip()</tt> loads a sound file in the
+<tt CLASS=literal>init()</tt> method, and <tt CLASS=literal>AudioClip.play()</tt> plays the
+sound in the <tt CLASS=literal>mousePressed()</tt> method.
+
+<P>
+<li CLASS=listitem>Events are handled by an "event listener" object, which is
+defined by an inner class (see <A HREF="ch05_01.htm">Chapter 5, <i>Inner Classes and Other New Language Features</i></A>).  This is an
+example of the Java 1.1 event handling model (see <A HREF="ch07_01.htm">Chapter 7, <i>Events</i></A>).
+Therefore, this applet only runs in Web browsers that support Java
+1.1.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>showStatus()</tt> method displays the
+destination URL when the user presses the mouse button over
+a hot spot, while the
+<tt CLASS=literal>AppletContext.showDocument()</tt> method makes the
+browser display that URL when the user releases the mouse
+button.
+
+<P>
+<li CLASS=listitem>The applet uses "XOR mode" of the <tt CLASS=literal>Graphics</tt> class to
+highlight an area of the image in a way that can be easily
+"un-highlighted" by redrawing.
+
+<P>
+<li CLASS=listitem>The individual hot spots are represented by instances of a nested top-level
+class.  The <tt CLASS=literal>java.util.Vector</tt> class stores
+the list of hot spot objects, and
+<tt CLASS=literal>java.util.StringTokenizer</tt> parses the descriptions
+of those hot spots.
+
+<P>
+</UL>
+<P CLASS=para>
+The following HTML fragment shows an example of the
+properties read by this applet:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;APPLET code="Soundmap.class" width=288 height=288&gt;
+&lt;PARAM name="image" value="image.gif"&gt;
+&lt;PARAM name="sound" value="sound.au"&gt;
+&lt;PARAM name="rect0" value="114,95,151,33,#part1"&gt;
+&lt;PARAM name="rect1" value="114,128,151,33,#part2"&gt;
+&lt;PARAM name="rect2" value="114,161,151,33,#part3"&gt;
+&lt;PARAM name="rect3" value="114,194,151,33,#part4"&gt;
+&lt;PARAM name="rect4" value="114,227,151,33,#part5"&gt;
+&lt;/APPLET&gt;
+</PRE>
+</DIV>
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-6-EX-5">Example 6.5: An Imagemap Applet</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.net.*;
+import java.util.*;
+/**
+ * A Java applet that simulates a client-side imagemap.
+ * Plays a sound whenever the user clicks on one of the hyperlinks.
+ */
+public class Soundmap extends Applet {
+  protected Image image;      // The image to display.
+  protected Vector rects;     // A list of rectangles in it.
+  protected AudioClip sound;  // A sound to play on user clicks in a rectangle.
+  /** Initialize the applet. */
+  public void init() {
+    // Look up the name of the image, relative to a base URL, and load it.
+    // Note the use of three Applet methods in this one line.
+    image = this.getImage(this.getDocumentBase(), this.getParameter("image"));
+    // Lookup and parse a list of rectangular areas and the URLs they map to.
+    // The convenience routine getRectangleParameter() is defined below.
+    rects = new Vector();
+    ImagemapRectangle r;
+    for(int i = 0; (r = getRectangleParameter("rect" + i)) != null; i++)
+      rects.addElement(r);
+    // Look up a sound to play when the user clicks one of those areas.
+    sound = this.getAudioClip(this.getDocumentBase(),
+                  this.getParameter("sound"));
+    // Specify an "event listener" object to respond to mouse button
+    // presses and releases.  Note that this is the Java 1.1 event model.
+    // Note that it also uses a Java 1.1 inner class, defined below.
+    this.addMouseListener(new Listener());
+  }
+  /** Called when the applet is being unloaded from the system.
+   * We use it here to "flush" the image we no longer need. This may
+   * result in memory and other resources being freed more quickly. */
+  public void destroy() { image.flush(); }
+  /** To display the applet, we simply draw the image. */
+  public void paint(Graphics g) { g.drawImage(image, 0, 0, this); }
+  /** We override this method so that it doesn't clear the background
+   * before calling paint().  No clear is necessary, since paint() overwrites
+   * everything with an image.  Causes less flickering this way. */
+  public void update(Graphics g) { paint(g); }
+  /** Parse a comma-separated list of rectangle coordinates and a URL.
+   * Used to read the imagemap rectangle definitions from applet parameters. */
+  protected ImagemapRectangle getRectangleParameter(String name) {
+    int x, y, w, h;
+    URL url;
+    String value = this.getParameter(name);
+    if (value == null) return null;
+    try {
+      StringTokenizer st = new StringTokenizer(value, ",");
+      x = Integer.parseInt(st.nextToken());
+      y = Integer.parseInt(st.nextToken());
+      w = Integer.parseInt(st.nextToken());
+      h = Integer.parseInt(st.nextToken());
+      url = new URL(this.getDocumentBase(), st.nextToken());
+    }
+    catch (NoSuchElementException e) { return null; }
+    catch (NumberFormatException e) { return null; }
+    catch (MalformedURLException e) { return null; }
+    return new ImagemapRectangle(x, y, w, h, url);
+  }
+  /**
+   * An instance of this inner class is used to respond to mouse events.
+   */
+  class Listener extends MouseAdapter {
+    /** The rectangle that the mouse was pressed in. */
+    private ImagemapRectangle lastrect;
+    /** Called when a mouse button is pressed. */
+    public void mousePressed(MouseEvent e) {
+      // On button down, check if we're inside one of the specified rectangles.
+      // If so, highlight the rectangle, display a message, and play a sound.
+      // The utility routine findrect() is defined below.
+      ImagemapRectangle r = findrect(e);
+      if (r == null) return;
+      Graphics g = Applet.this.getGraphics();
+      g.setXORMode(Color.red);
+      g.drawRect(r.x, r.y, r.width, r.height);  // highlight rectangle
+      Applet.this.showStatus("To: " + r.url);   // display URL
+      sound.play();                             // play the sound
+      lastrect = r;   // Remember the rectangle so it can be un-highlighted.
+    }
+    /** Called when a mouse button is released. */
+    public void mouseReleased(MouseEvent e) {
+      // When the button is released, un-highlight the rectangle.  If the
+      // mouse is still inside it, ask the browser to go to the URL.
+      if (lastrect != null) {
+    Graphics g = Applet.this.getGraphics();
+    g.setXORMode(Color.red);
+    g.drawRect(lastrect.x, lastrect.y, lastrect.width, lastrect.height);
+    Applet.this.showStatus("");   // Clear the message.
+    ImagemapRectangle r = findrect(e);
+    if ((r != null) &amp;&amp; (r == lastrect))  // If still in the same rectangle
+      Applet.this.getAppletContext().showDocument(r.url); // Go to the URL
+    lastrect = null;
+      }
+    }
+    /** Find the rectangle we're inside. */
+    protected ImagemapRectangle findrect(MouseEvent e) {
+      int i, x = e.getX(), y = e.getY();
+      for(i = 0; i &lt; rects.size(); i++)  {
+    ImagemapRectangle r = (ImagemapRectangle) rects.elementAt(i);
+    if (r.contains(x, y)) return r;
+      }
+      return null;
+    }
+  }
+  /**
+   * A helper class.  Just like java.awt.Rectangle, but with a URL field.
+   * Note the use of a nested top-level class for neatness.
+   */
+  static class ImagemapRectangle extends Rectangle {
+    URL url;
+    public ImagemapRectangle(int x, int y, int w, int h, URL url) {
+      super(x, y, w, h);
+      this.url = url;
+    }
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Reading Applet Parameters</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>JAR Files</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

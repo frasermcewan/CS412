@@ -1,0 +1,639 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.2 Math Utilities</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:55:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Basic Utility Classes</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-2">7.2 Math Utilities</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.MATH1"></A><A NAME="CH07.MATH2"></A>Java supports integer and floating-point arithmetic
+directly. Higher-level math operations are supported through the
+<tt CLASS=literal>java.lang.Math</tt> class. Java provides wrapper classes
+for all primitive data types, so you can treat them as objects if
+necessary. Java also provides the <tt CLASS=literal>java.util.Random</tt>
+class for generating random numbers.
+
+<P CLASS=para>
+Java handles errors in integer arithmetic by throwing an
+<tt CLASS=literal>ArithmeticException</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int zero = 0; 
+ 
+try { 
+    int i = 72 / zero; 
+}  
+catch ( ArithmeticException e ) {       // division by zero 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To generate the error in the above example, we created the
+intermediate variable <tt CLASS=literal>zero</tt>. The compiler is
+somewhat crafty and would have caught us if we had blatantly tried to
+perform a division by zero.
+
+<P CLASS=para>
+Floating-point arithmetic expressions, on the other hand,
+don't throw exceptions. Instead, they take on the special
+out-of-range values shown in <A HREF="ch07_02.htm#EXJ-CH-7-TAB-3">Table 7.3</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-3">Table 7.3: Special Floating-Point Values</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Value</TH>
+<TH ALIGN="left">Mathematical representation</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>POSITIVE_INFINITY</tt></TD>
+<TD ALIGN="left">1.0/0.0</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NEGATIVE_INFINITY</tt></TD>
+<TD ALIGN="left">-1.0/0.0</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NaN</tt></TD>
+<TD ALIGN="left">0.0/0.0</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+The following example generates an infinite result: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+double zero = 0.0; 
+double d = 1.0/zero; 
+ 
+if ( d == Double.POSITIVE_INFINITY ) 
+    System.out.println( "Division by zero" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The special value <tt CLASS=literal>NaN</tt> indicates the result is
+"not a number." The value <tt CLASS=literal>NaN</tt> has the
+special distinction of not being equal to itself (<tt CLASS=literal>NaN !=
+NaN</tt>). Use <tt CLASS=literal>Float.isNaN()</tt> or
+<tt CLASS=literal>Double.isNaN()</tt> to test for <tt CLASS=literal>NaN</tt>.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-2.1">java.lang.Math</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.lang.Math</tt> class serves as Java's
+math library. All its methods are <tt CLASS=literal>static</tt> and
+used directly&nbsp;; you can't instantiate a <tt CLASS=literal>Math</tt>
+object. We use this kind of degenerate class when we really want
+methods to approximate normal functions in C. While this tactic defies the
+principles of object-oriented design, it makes sense in this
+case, as it provides a means of grouping some related utility
+functions in a single class. <A HREF="ch07_02.htm#EXJ-CH-7-TAB-4">Table 7.4</A> summarizes the methods in <tt CLASS=literal>java.lang.Math</tt>. 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-4">Table 7.4: Methods in java.lang.Math</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Argument type(s)</TH>
+<TH ALIGN="left">Functionality</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.abs(a)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>int</tt>, <tt CLASS=literal>long</tt>, <tt CLASS=literal>float</tt>, <tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Absolute value</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.acos(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Arc cosine</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.asin(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Arc sine</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.atan(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Arc tangent</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.atan2(a,b)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Converts rectangular to polar coordinates</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.ceil(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Smallest whole number greater than or equal to <tt CLASS=literal>a</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.cos(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Cosine</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.exp(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Exponential number to the power of <tt CLASS=literal>a</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.floor(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Largest whole number less than or equal to <tt CLASS=literal>a</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.log(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Natural logarithm of <tt CLASS=literal>a</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.max(a, b)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>int</tt>, <tt CLASS=literal>long</tt>, <tt CLASS=literal>float</tt>, <tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Maximum</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.min(a, b)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>int</tt>, <tt CLASS=literal>long</tt>, <tt CLASS=literal>float</tt>, <tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Minimum</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.pow(a, b)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>a</tt> to the power of <tt CLASS=literal>b</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.random()</tt></TD>
+<TD ALIGN="left">None</TD>
+<TD ALIGN="left">Random number generator</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.rint(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Converts double value to integral value in double format</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.round(a)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>float</tt>, <tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Rounds</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.sin(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Sine</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.sqrt(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Square root</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Math.tan(a)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">Tangent</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+<tt CLASS=literal>log()</tt>, <tt CLASS=literal>pow()</tt>, and
+<tt CLASS=literal>sqrt()</tt> can throw an
+<tt CLASS=literal>ArithmeticException</tt>. <tt CLASS=literal>abs()</tt>,
+<tt CLASS=literal>max()</tt>, and <tt CLASS=literal>min()</tt> are overloaded
+for all the scalar values, <tt CLASS=literal>int</tt>,
+<tt CLASS=literal>long</tt>, <tt CLASS=literal>float</tt>, or
+<tt CLASS=literal>double</tt>, and return the corresponding type. Versions
+of <tt CLASS=literal>Math.round()</tt> accept either
+<tt CLASS=literal>float</tt> or <tt CLASS=literal>double</tt> and return
+<tt CLASS=literal>int</tt> or <tt CLASS=literal>long</tt> respectively. The
+rest of the methods operate on and return <tt CLASS=literal>double</tt>
+values:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+double irrational = Math.sqrt( 2.0 ); 
+int bigger = Math.max( 3, 4 ); 
+long one = Math.round( 1.125798 ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+For convenience, <tt CLASS=literal>Math</tt> also contains the
+<tt CLASS=literal>static</tt> <tt CLASS=literal>final</tt>
+<tt CLASS=literal>double</tt> values <tt CLASS=literal>E</tt> and
+<tt CLASS=literal>PI</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+double circumference = diameter * Math.PI; 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-2.2">java.math</A></h3>
+
+<P CLASS=para>
+If a <tt CLASS=literal>long</tt> or a <tt CLASS=literal>double</tt>
+just isn't big enough for you, the <tt CLASS=literal>java.math</tt> package
+provides two classes, <tt CLASS=literal>BigInteger</tt> and
+<tt CLASS=literal>BigDecimal</tt>, that support arbitrary-precision
+numbers.  These are full-featured classes with a bevy of methods for
+performing arbitrary-precision math.  In the following example, we
+use <tt CLASS=literal>BigInteger</tt> to add two numbers together.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try {
+    BigDecimal twentyone = new BigDecimal("21");
+    BigDecimal seven = new BigDecimal("7");
+    BigDecimal sum = twentyone.add(seven);
+     
+    int twentyeight = sum.intValue();
+}
+catch (NumberFormatException nfe) { }
+catch (ArithmeticException ae) { }
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-2.3">Wrappers for Primitive Types</A></h3>
+
+<P CLASS=para>
+In languages like Smalltalk, numbers and other simple types are
+objects, which makes for an elegant language design, but has
+trade-offs in efficiency and complexity. By contrast, there is a
+schism in the Java world between class types (i.e., objects) and
+primitive types (i.e., numbers, characters, and boolean values). Java
+accepts this trade-off simply for efficiency reasons. When
+you're crunching numbers you want your computations to be
+lightweight; having to use objects for primitive types would seriously
+affect performance. For the times you want to treat values as
+objects, Java supplies a wrapper class for each of the primitive
+types, as shown in <A HREF="ch07_02.htm#EXJ-CH-7-TAB-5">Table 7.5</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-5">Table 7.5: Primitive Type Wrappers</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Primitive</TH>
+<TH ALIGN="left">Wrapper</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>void</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Void</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Boolean</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>char</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Character</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>byte</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Byte</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>short</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Short</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>int</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Integer</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>long</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Long</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>float</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Float</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>java.lang.Double</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+An instance of a wrapper class encapsulates a single value of
+its corresponding type. It's an immutable object that serves as a
+container to hold the value and let us retrieve it later. You can
+construct a wrapper object from a primitive value or from a
+<tt CLASS=literal>String</tt> representation of the value. The following
+code is equivalent:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Float pi = new Float( 3.14 ); 
+Float pi = new Float( "3.14" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Wrapper classes throw a <tt CLASS=literal>NumberFormatException</tt> when
+there is an error in parsing from a string:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    Double bogus = new Double( "huh?" ); 
+} 
+catch ( NumberFormatException e ) {     // bad number 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You should arrange to catch this exception if you want to deal with
+it. Otherwise, since it's a subclass of
+<tt CLASS=literal>RuntimeException</tt>, it will propagate up the call
+stack and eventually cause a run-time error if not caught.
+
+<P CLASS=para>
+Sometimes you'll use the wrapper classes simply to parse
+the <tt CLASS=literal>String</tt> representation of a number:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String sheep = getParameter("sheep"); 
+int n = new Integer( sheep ).intValue(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we are retrieving the value of the <tt CLASS=literal>sheep</tt>
+parameter. This value is returned as a <tt CLASS=literal>String</tt>, so
+we need to convert it to a numeric value before we can use it. Every
+wrapper class provides methods to get primitive values out of the
+wrapper; we are using <tt CLASS=literal>intValue()</tt> to retrieve an
+<tt CLASS=literal>int</tt> out of <tt CLASS=literal>Integer</tt>. Since
+parsing a <tt CLASS=literal>String</tt> representation of a number is such
+a common thing to do, the <tt CLASS=literal>Integer</tt> and
+<tt CLASS=literal>Long</tt> classes also provide the
+<tt CLASS=literal>static</tt> methods
+<tt CLASS=literal>Integer.parseInt()</tt> and
+<tt CLASS=literal>Long.parseLong()</tt> that read a
+<tt CLASS=literal>String</tt> and return the appropriate type. So the
+second line above is equivalent to:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int n = Integer.parseInt( sheep ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+All wrappers provide access to their values in various
+forms. You can retrieve scalar values with the methods
+<tt CLASS=literal>doubleValue()</tt>, <tt CLASS=literal>floatValue()</tt>,
+<tt CLASS=literal>longValue()</tt>, and <tt CLASS=literal>intValue()</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Double size = new Double ( 32.76 ); 
+ 
+double d = size.doubleValue(); 
+float f = size.floatValue(); 
+long l = size.longValue(); 
+int i = size.intValue(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The code above is equivalent to the primitive
+<tt CLASS=literal>double</tt> value cast to the various types. For
+convenience, you can cast between the wrapper classes like 
+<tt CLASS=literal>Double</tt> class and the primitive data types.
+
+<P CLASS=para>
+Another common use of wrappers occurs when we have to treat a
+primitive value as an object in order to place it in a list or other
+structure that operates on objects. As you'll see shortly, a
+<tt CLASS=literal>Vector</tt> is an extensible array of
+<tt CLASS=literal>Object</tt>s. We can use wrappers to hold numbers in
+a <tt CLASS=literal>Vector</tt>, along with other objects:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Vector myNumbers = new Vector(); 
+ 
+Integer thirtyThree = new Integer( 33 ); 
+myNumbers.addElement( thirtyThree ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we have created an <tt CLASS=literal>Integer</tt> wrapper so that we
+can insert the number into the <tt CLASS=literal>Vector</tt> using
+<tt CLASS=literal>addElement()</tt>. Later, when we are taking elements
+back out of the <tt CLASS=literal>Vector</tt>, we can get the number back
+out of the <tt CLASS=literal>Integer</tt> as follows:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Integer theNumber = (Integer)myNumbers.firstElement(); 
+int n = theNumber.intValue();           // n = 33 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-2.4">Random Numbers</A></h3>
+
+<P CLASS=para>
+You can use the <tt CLASS=literal>java.util.Random</tt> class to generate
+random values. It's a pseudo-random number generator that can be
+initialized with a 48-bit seed.[1]
+ The default constructor uses the current 
+time as a seed, but if you want a repeatable sequence, specify your 
+own seed with: 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+The generator uses a linear congruential formula. See <i CLASS=citetitle>The Art of 
+Computer Programming</i>, Volume 2 "Semi-numerical Algorithms,"
+by Donald Knuth (Addison-Wesley). 
+</blockquote>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+long seed = mySeed; 
+Random rnums = new Random( seed ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This code creates a random-number generator. Once you have a generator, 
+you can ask for random values of various types using the methods listed 
+in <A HREF="ch07_02.htm#EXJ-CH-7-TAB-6">Table 7.6</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-6">Table 7.6: Random Number Methods</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Range</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>nextInt()</tt></TD>
+<TD ALIGN="left">-2147483648 to 2147483647</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>nextLong()</tt></TD>
+<TD ALIGN="left">-9223372036854775808 to 9223372036854775807</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>nextFloat()</tt></TD>
+<TD ALIGN="left">-1.0 to 1.0</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>nextDouble()</tt></TD>
+<TD ALIGN="left">-1.0 to 1.0</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+By default, the values are uniformly distributed. You can use the
+<tt CLASS=literal>nextGaussian()</tt> method to create a Gaussian
+distribution of <tt CLASS=literal>double</tt> values, with a mean of 0.0
+and a standard deviation of 1.0.
+
+<P CLASS=para>
+The <tt CLASS=literal>static</tt> method <tt CLASS=literal>Math.random()</tt>
+retrieves a random <tt CLASS=literal>double</tt> value. This method
+initializes a <tt CLASS=literal>private</tt> random-number generator in
+the <tt CLASS=literal>Math</tt> class, using the default
+<tt CLASS=literal>Random</tt> constructor.
+ So every call to
+<tt CLASS=literal>Math.random()</tt> corresponds to a call to
+<tt CLASS=literal>nextDouble()</tt> on that random number generator.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Strings</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Dates</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

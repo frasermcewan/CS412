@@ -1,0 +1,455 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.3 Buttons</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:34:28 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Components</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-3">5.3 Buttons</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.BUTTON"></A>The <tt CLASS=literal>Button</tt> component provides 
+one of the most frequently used objects in graphical applications. When 
+the user selects a button, it signals the program that something needs 
+to be done by sending an action event. The program responds in its <tt CLASS=literal>handleEvent()</tt> 
+method (for Java 1.0) or its <tt CLASS=literal>actionPerformed()</tt> 
+method (defined by Java 1.1's <tt CLASS=literal>ActionListener</tt> 
+interface). Next to <tt CLASS=literal>Label</tt>, 
+which does nothing, <tt CLASS=literal>Button</tt> 
+is the simplest component to understand. Because it is so simple, we will 
+use a lot of buttons in our examples for the next few chapters. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-3.1">Button Methods</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Button () </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>Button</tt>. 
+You can set the label later with <tt CLASS=literal>setLabel()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Button (String label) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Button</tt> 
+whose initial text is <tt CLASS=literal>label</tt>. </DL>
+Button Labels
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getLabel () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLabel()</tt> method retrieves 
+the current text of the label on the <tt CLASS=literal>Button</tt> 
+and returns it as a <tt CLASS=literal>String</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setLabel (String label) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setLabel()</tt> method changes 
+the text of the label on the <tt CLASS=literal>Button</tt> 
+to <tt CLASS=literal>label</tt>. If the new text is 
+a different size from the old, it is necessary to revalidate the screen 
+to ensure that the button size is correct. </DL>
+Action Commands
+
+<P CLASS=para>
+With Java 1.1, every button can have two names. One is what the user sees 
+(the button's label); the other is what the programmer sees and 
+is called the button's <I CLASS=emphasis>action command</I>. 
+Distinguishing between the label and the action command is a major help to 
+internationalization. The label can be localized for the user's environment. 
+However, this means that labels can vary at run-time and are therefore 
+useless for comparisons within the program. For example, you can't 
+test whether the user pushed the Yes button if that button 
+might read Oui or Ja, depending on some run-time 
+environment setting. To give the programmer something reliable for comparisons, 
+Java 1.1 introduces the action command. The action command for our button 
+might be Yes, regardless of the button's actual label. 
+
+<P CLASS=para>
+By default, the action command is equivalent to the button's label. 
+Java 1.0 code, which only relies on the label, will continue to work. Furthermore, 
+you can continue to write in the Java 1.0 style as long as you're 
+sure that your program will never have to account for other languages. 
+These days, that's a bad bet. Even if you aren't implementing 
+multiple locales now, get in the habit of testing a button's action 
+command rather than its label; you will have less work to do when internationalization 
+does become an issue. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getActionCommand () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getActionCommand()</tt> method 
+returns the button's current action command. If no action command 
+was explicitly set, this method returns the label. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setActionCommand (String command) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setActionCommand()</tt> method 
+changes the button's action command to <tt CLASS=literal>command</tt>. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>Button</tt> peer. If 
+you override this method, first call <tt CLASS=literal>super.addNotify()</tt>, 
+then add your customizations. Then you can do everything you need with 
+the information about the newly created peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>paramString()</tt> method overrides 
+the component's <tt CLASS=literal>paramString()</tt> 
+method. It is a protected method that calls the overridden <tt CLASS=literal>paramString()</tt> 
+to build a <tt CLASS=literal>String</tt> from the 
+different parameters of the <tt CLASS=literal>Component</tt>. 
+When the method <tt CLASS=literal>paramString()</tt> is called for a <tt CLASS=literal>Button</tt>, the 
+button's label is added. Thus, for the <tt CLASS=literal>Button</tt> 
+created by the constructor <tt CLASS=literal>new Button ("ZapfDingbats")</tt>, 
+the results displayed from a call to <tt CLASS=literal>toString()</tt> 
+could be: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Button[77,5,91x21,label=ZapfDingbats]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-3.2">Button Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.BUTTON2"></A>With the 1.0 event model, <tt CLASS=literal>Button</tt> 
+components generate an <tt CLASS=literal>ACTION_EVENT</tt> 
+when the user selects the button. 
+
+<P CLASS=para>
+With the version 1.1 event model, you register an <tt CLASS=literal>ActionListener</tt> 
+with the method <tt CLASS=literal>addActionListener()</tt>. When the user selects the <tt CLASS=literal>Button</tt>, 
+the method <tt CLASS=literal>ActionListener.actionPerformed()</tt> 
+is called through the protected <tt CLASS=literal>Button.processActionEvent()</tt> 
+method. Key, mouse, and focus listeners are registered through the <tt CLASS=literal>Component</tt> 
+methods of <tt CLASS=literal>addKeyListener()</tt>, 
+<tt CLASS=literal>addMouseListener()</tt>, or <tt CLASS=literal>addMouseMotionListener()</tt>, 
+and <tt CLASS=literal>addFocusListener()</tt>, respectively. Action
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean action (Event e, Object o)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>action()</tt> method for a <tt CLASS=literal>Button</tt> 
+is called when the user presses and releases the button. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>o</tt> is 
+the button's label. The default implementation of <tt CLASS=literal>action()</tt> 
+does nothing and returns <tt CLASS=literal>false</tt>, 
+passing the event to the button's container for processing. For a 
+button to do something useful, you should override either this method or the container's <tt CLASS=literal>action()</tt> 
+method. <A HREF="ch05_03.htm#JAWT-CH-5-EX-1">Example 5.1</A> is a simple applet called <tt CLASS=literal>ButtonTest</tt> 
+that demonstrates the first approach; it creates a <tt CLASS=literal>Button</tt> 
+subclass called <tt CLASS=literal>TheButton</tt>, 
+which overrides <tt CLASS=literal>action()</tt>. This 
+simple subclass doesn't do much; it just labels the button and prints 
+a message when the button is pressed. <A HREF="ch05_03.htm#JAWT-CH-5-FIG-3">Figure 5.3</A> 
+shows what <tt CLASS=literal>ButtonTest</tt> looks 
+like. </DL>
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-5-EX-1">Example 5.1: Button Event Handling</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+class TheButton extends Button {
+    TheButton (String s) {
+        super (s);
+    }
+    public boolean action (Event e, Object o) {
+        if ("One".equals(o)) {
+            System.out.println ("Do something for One");
+        } else if ("Two".equals(o)) {
+            System.out.println ("Ignore Two");
+        } else if ("Three".equals(o)) {
+            System.out.println ("Reverse Three");
+        } else if ("Four".equals(o)) {
+            System.out.println ("Four is the one");
+        } else {
+            return false;
+        }
+        return true;
+    }
+}
+public class ButtonTest extends Applet {
+   public void init () {
+        add (new TheButton ("One"));
+        add (new TheButton ("Two"));
+        add (new TheButton ("Three"));
+        add (new TheButton ("Four"));
+   }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-5-FIG-3">Figure 5.3: The ButtonTest applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0503.gif" alt="[Graphic: Figure 5-3]" width=285 height=155 border=0>
+
+</DIV>
+
+Keyboard
+
+<P CLASS=para>
+Buttons are able to capture keyboard-related events once the button has 
+the input focus. In order to give a <tt CLASS=literal>Button</tt> 
+the input focus without triggering the action event, call <tt CLASS=literal>requestFocus()</tt>. 
+The button also gets the focus if the user selects it and drags the mouse 
+off of it without releasing the mouse. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyDown (Event e, int key) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyDown()</tt> method is called 
+whenever the user presses a key while the <tt CLASS=literal>Button</tt> 
+has the input focus. <tt CLASS=literal>e</tt> is the 
+<tt CLASS=literal>Event</tt> instance for the specific 
+event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) could 
+be either <tt CLASS=literal>Event.KEY_PRESS</tt> for 
+a regular key or <tt CLASS=literal>Event.KEY_ACTION</tt> 
+for an action-oriented key (i.e., an arrow or a function key). There is 
+no visible indication that the user has pressed a key over the button. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyUp (Event e, int key) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyUp()</tt> method is called 
+whenever the user releases a key while the <tt CLASS=literal>Button</tt> 
+has the input focus. <tt CLASS=literal>e</tt> is the 
+<tt CLASS=literal>Event</tt> instance for the specific 
+event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) could 
+be either <tt CLASS=literal>Event.KEY_RELEASE</tt> 
+for a regular key or <tt CLASS=literal>Event.KEY_ACTION_RELEASE</tt> 
+for an action-oriented key (i.e., an arrow or a function key). <tt CLASS=literal>keyUp()</tt> 
+may be used to determine how long <tt CLASS=literal>key</tt> 
+has been pressed. </DL>
+Listeners and 1.1 event handling
+
+<P CLASS=para>
+With the 1.1 event model, you register listeners, which are told when the 
+event happens. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addActionListener(ActionListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addActionListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in receiving notifications when an <tt CLASS=literal>ActionEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Button</tt> as its target. 
+The <tt CLASS=literal>listener.actionPerformed()</tt> 
+method is called when these events occur. Multiple listeners can be registered. 
+The following code demonstrates how to use an <tt CLASS=literal>ActionListener</tt> 
+to handle the events that occur when the user selects a button. This applet 
+has the same display as the previous one, shown in <A HREF="ch05_03.htm#JAWT-CH-5-FIG-3">Figure 5.3</A>. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only 
+import java.awt.*;
+import java.applet.*;
+import java.awt.event.*;
+public class ButtonTest11 extends Applet implements ActionListener {
+    Button b;
+    public void init () {
+        add (b = new Button ("One"));
+        b.addActionListener (this);
+        add (b = new Button ("Two"));
+        b.addActionListener (this);
+        add (b = new Button ("Three"));
+        b.addActionListener (this);
+        add (b = new Button ("Four"));
+        b.addActionListener (this);
+    }
+    public void actionPerformed (ActionEvent e) {
+        String s = e.getActionCommand();
+        if ("One".equals(s)) {
+            System.out.println ("Do something for One");
+        } else if ("Two".equals(s)) {
+            System.out.println ("Ignore Two");
+        } else if ("Three".equals(s)) {
+            System.out.println ("Reverse Three");
+        } else if ("Four".equals(s)) {
+            System.out.println ("Four is the one");
+        }
+    }
+}
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeActionListener(ActionListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeActionListener()</tt> 
+method removes <tt CLASS=literal>listener</tt> as 
+an interested listener. If <tt CLASS=literal>listener</tt> 
+is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+<tt CLASS=literal>AWTEvent</tt> with this <tt CLASS=literal>Button</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>Button</tt>, overriding <tt CLASS=literal>processEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding <tt CLASS=literal>processEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processEvent()</tt>, 
+remember to call <tt CLASS=literal>super.processEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processActionEvent(ActionEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processActionEvent()</tt> method 
+receives <tt CLASS=literal>ActionEvent</tt> with 
+this <tt CLASS=literal>Button</tt> as its target. 
+<tt CLASS=literal>processActionEvent()</tt> then passes 
+them along to any listeners for processing. When you subclass <tt CLASS=literal>Button</tt>, 
+overriding <tt CLASS=literal>processActionEvent()</tt> 
+allows you to process all action events yourself, before sending them to 
+any listeners. In a way, overriding <tt CLASS=literal>processActionEvent()</tt> 
+is like overriding <tt CLASS=literal>action() </tt>using 
+the 1.0 event model. 
+
+<P CLASS=para>
+If you override the <tt CLASS=literal>processActionEvent()</tt> method, 
+you must remember to call <tt CLASS=literal>super.processActionEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Labels</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>A Simple Calculator</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

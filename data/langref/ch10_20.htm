@@ -1,0 +1,2958 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] String</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Fri Aug  8 15:27:19 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_19.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_21.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>String</H1>
+
+<H2>Name</H2>
+
+String
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.147">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.String</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.Serializable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.148">Description</A></h2>
+
+<P CLASS=para>
+<A NAME="MAN.STRING.1"></A>The <tt CLASS=literal>String</tt> class represents sequences
+of characters. Once a <tt CLASS=literal>String</tt> object is created,
+it is immutable. In other words, the sequence of characters that
+a <tt CLASS=literal>String</tt> represents cannot be changed after it
+is created. The <tt CLASS=literal>StringBuffer</tt> class, on the other
+hand, represents a sequence of characters that can be changed. <tt CLASS=literal>StringBuffer</tt>
+objects are used to perform computations on <tt CLASS=literal>String</tt> objects.
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> class includes a number of utility
+methods, such as methods for fetching individual characters or ranges
+of contiguous characters, for translating characters to upper- or
+lowercase, for searching strings, and for parsing numeric values
+in strings.
+
+<P CLASS=para>
+<tt CLASS=literal>String</tt> literals are compiled into <tt CLASS=literal>String</tt>
+objects. Where a <tt CLASS=literal>String</tt> literal appears in an
+expression, the compiled code contains a <tt CLASS=literal>String</tt> object.
+If <tt CLASS=literal>s</tt> is declared as <tt CLASS=literal>String</tt>,
+the following two expressions are identical:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+s.equals("ABC")
+"ABC".equals(s)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The string concatenation operator implicitly creates
+<tt CLASS=literal>String</tt> objects.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.149">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final class java.lang.String extends java.lang.Object {
+    // Constructors
+    public String();
+    public String(byte[] bytes);                          // New in 1.1
+    public String(byte[] bytes, String enc);              // New in 1.1
+    public String(byte[] bytes, int offset, int length);  // New in 1.1
+    public String(byte[] bytes, int offset, 
+                  int length, String enc);                // New in 1.1
+    public String(byte[] lowbytes, int hibyte);        // Deprecated in 1.1
+    public String(byte[] lowbytes, int hibyte, 
+                  int offset, int count);              // Deprecated in 1.1
+    public String(char[] value);
+    public String(char[] value, int offset, int;
+    public String(String value);
+    public String(StringBuffer buffer);
+    // Class Methods
+    public static String copyValueOf(char data[]);
+    public static String copyValueOf(char data[], int offset, int count);
+    public static String valueOf(boolean b);
+    public static String valueOf(char c);
+    public static String valueOf(char[] data);
+    public static String valueOf(char[] data, int offset, int count);
+    public static String valueOf(double d);
+    public static String valueOf(float f);
+    public static String valueOf(int i);
+    public static String valueOf(long l);
+    public static String valueOf(Object obj);
+    // Instance Methods
+    public char charAt(int index);
+    public int compareTo(String anotherString);
+    public String concat(String str);
+    public boolean endsWith(String suffix);
+    public boolean equals(Object anObject);
+    public boolean equalsIgnoreCase(String anotherString);
+    public byte[] getBytes();                             // New in 1.1
+    public byte[] getBytes(String enc);                   // New in 1.1
+    public void getBytes(int srcBegin, int srcEnd, 
+                         byte[] dst, int dstBegin);     // Deprecated in 1.1
+    public void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin);
+    public int hashCode();
+    public int indexOf(int ch);
+    public int indexOf(int ch, int fromIndex);
+    public int indexOf(String str);
+    public int indexOf(String str, int fromIndex);
+    public native String intern();
+    public int lastIndexOf(int ch);
+    public int lastIndexOf(int ch, int fromIndex);
+    public int lastIndexOf(String str);
+    public int lastIndexOf(String str, int fromIndex;
+    public int length();
+    public boolean regionMatches(boolean ignoreCase, int toffset,
+                                 String other, int ooffset, int len);
+    public boolean regionMatches(int toffset, String other,
+                                 int ooffset, int len);
+    public String replace(char oldChar, char newChar);
+    public boolean startsWith(String prefix);
+    public boolean startsWith(String prefix, int toffset);
+    public String substring(int beginIndex);
+    public String substring(int beginIndex, int endIndex);
+    public char[] toCharArray();
+    public String toLowerCase();
+    public String toLowerCase(Locale locale);             // New in 1.1
+    public String toString();
+    public String toUpperCase();
+    public String toUpperCase(Locale locale);             // New in 1.1
+    public String trim();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.150">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.341">String</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.385"><tt CLASS=literal>public String()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the empty string (i.e., a string with zero characters).<A NAME="STRING.3"></A></DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.386"><tt CLASS=literal>public String(byte[] bytes)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>bytes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>byte</tt> values.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the sequence of characters stored 
+in the given <tt CLASS=literal>bytes</tt>
+array. The bytes in the array are converted to characters 
+using the system's default character encoding scheme.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.387"><tt CLASS=literal>public String(byte[] bytes, String enc)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>bytes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>byte</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>enc</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of an encoding scheme.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>UnsupportedEncodingException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>enc</tt> is not a supported encoding scheme.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the sequence of characters stored 
+in the given <tt CLASS=literal>bytes</tt>
+array. The bytes in the array are converted to characters 
+using the specified character encoding scheme.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.388"><tt CLASS=literal>public String(byte[] bytes, int offset, int length)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>bytes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>byte</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>length</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes to be included.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> or <tt CLASS=literal>length</tt>
+indexes an element that is outside the bounds of the <tt CLASS=literal>bytes</tt>
+array.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the sequence of characters stored in the specified portion
+of the given <tt CLASS=literal>bytes</tt>
+array. The bytes in the array are converted to characters 
+using the system's default character encoding scheme.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.389"><DIV CLASS=screen> <P> <PRE> public String(byte[] bytes, int offset, int length, String enc) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>bytes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>byte</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>length</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes to be included.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>enc</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of an encoding scheme.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> or <tt CLASS=literal>length</tt>
+indexes an element that is outside the bounds of the <tt CLASS=literal>bytes</tt>
+array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>UnsupportedEncodingException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>enc</tt> is not a supported encoding scheme.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the sequence of characters stored in the specified portion
+of the given <tt CLASS=literal>bytes</tt>
+array. The bytes in the array are converted to characters 
+using the specified character encoding scheme.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.390"><tt CLASS=literal>public String(byte[] lowbytes, int hibyte)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>lowbytes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>byte</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>hibyte</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to be put in the high-order byte of each
+16-bit character.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the sequence of characters stored in the given <tt CLASS=literal>lowbytes</tt>
+array. The type of the array elements is <tt CLASS=literal>byte</tt>,
+which is an 8-bit data type, so each element must be converted
+to a <tt CLASS=literal>char</tt>, which is a 16-bit data type. The value
+of the <tt CLASS=literal>hibyte</tt> argument is used to provide the
+value of the high-order byte when the <tt CLASS=literal>byte</tt> values
+in the array are converted to <tt CLASS=literal>char</tt> values.
+
+<P CLASS=para>
+More specifically, for each element <tt CLASS=literal>i</tt> in
+the array <tt CLASS=literal>lowbytes</tt>, the character at position <tt CLASS=literal>i</tt>
+in the created <tt CLASS=literal>String</tt> object is:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+((hibyte &amp; 0xff)&lt;&lt;8) | lowbytes[i]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This method is deprecated as of JDK 1.1 because it does not 
+convert bytes into characters properly.  You should instead use 
+one of the constructors that takes a specific character encoding
+argument or that uses the default encoding.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.391"><DIV CLASS=screen> <P> <PRE> public String(byte[] lowbytes, int hibyte, int offset, int count) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>lowbytes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>byte</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>hibyte</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to be put in the high-order byte of each
+16-bit character.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>count</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes from the array to be included
+in the string.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> or <tt CLASS=literal>count</tt>
+indexes an element that is outside the bounds of the <tt CLASS=literal>lowbytes</tt>
+array.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the sequence of characters stored in the specified portion of the
+<tt CLASS=literal>lowbytes</tt> array. That is, the portion of the array
+that starts at <tt CLASS=literal>offset</tt> elements from the beginning
+of the array and is <tt CLASS=literal>count</tt> elements long.
+
+<P CLASS=para>
+The type of the array elements is <tt CLASS=literal>byte</tt>,
+which is an 8-bit data type, so each element must be converted
+to a <tt CLASS=literal>char</tt>, which is a 16-bit data type. The value
+of the <tt CLASS=literal>hibyte</tt> argument is used to provide the
+value of the high-order byte when the <tt CLASS=literal>byte</tt> values
+in the array are converted to <tt CLASS=literal>char</tt> values.
+
+<P CLASS=para>
+More specifically, for each element <tt CLASS=literal>i</tt> in
+the array <tt CLASS=literal>lowbytes</tt> that is included in the <tt CLASS=literal>String</tt>
+object, the character at position <tt CLASS=literal>i</tt> in the created
+<tt CLASS=literal>String</tt> is:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+ ((hibyte &amp; 0xff)&lt;&lt;8) | lowbytes[I]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This method is deprecated as of JDK 1.1 because it does not 
+convert bytes into characters properly.  You should instead use 
+one of the constructors that takes a specific character encoding
+argument or that uses the default encoding.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.392"><tt CLASS=literal>public String(char[] value)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the sequence of characters stored in the given array.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.393"><tt CLASS=literal>public String(char[] value, int offset, int count)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>count</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of characters from the array to be included
+in the string.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> or <tt CLASS=literal>count</tt>
+indexes an element that is outside the bounds of the <tt CLASS=literal>value</tt>
+array.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the sequence of characters stored in the specified portion of the
+given array. That is, the portion of the given array that starts
+at <tt CLASS=literal>offset</tt> elements from the beginning of the
+array and is <tt CLASS=literal>count</tt> elements long.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.394"><tt CLASS=literal>public String(String value)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the same sequence of characters as the given <tt CLASS=literal>String</tt>
+object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.395"><tt CLASS=literal>public String(StringBuffer value)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>StringBuffer</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>String</tt> object that represents
+the same sequence of characters as the given object.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.151">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.342">copyValueOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.396"><tt CLASS=literal>public static String copyValueOf(char data[])</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>data</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that represents the
+sequence of characters stored in the given array.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> object
+that represents the character sequence contained in the given array.
+The <tt CLASS=literal>String</tt> object produced by this method is
+guaranteed not to refer to the given array, but instead to use a
+copy. Because the <tt CLASS=literal>String</tt> object uses a copy of
+the array, subsequent changes to the array do not change the contents
+of this <tt CLASS=literal>String</tt> object.
+
+<P CLASS=para>
+This method is now obsolete. The same result can be obtained
+using the <tt CLASS=literal>valueOf()</tt> method that takes an array
+of <tt CLASS=literal>char</tt> values.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.397"><DIV CLASS=screen> <P> <PRE> public static String copyValueOf(char data[], int offset, int count) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>data</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>count</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of characters from the array to be included
+in the string.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that represents the
+sequence of characters stored in the specified portion of the given
+array.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> or <tt CLASS=literal>count</tt>
+indexes an element that is outside the bounds of the <tt CLASS=literal>data</tt>
+array.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> object
+that represents the character sequence contained in the specified
+portion of the given array. That is, the portion of the given array
+that starts at <tt CLASS=literal>offset</tt> elements from the beginning
+of the array and is <tt CLASS=literal>count</tt> elements long. The
+<tt CLASS=literal>String</tt> object produced by this method is guaranteed
+not to refer to the given array, but instead to use a copy. Because
+the <tt CLASS=literal>String</tt> object uses a copy of the array, subsequent
+changes to the array do not change the contents of this <tt CLASS=literal>String</tt>
+object.
+
+<P CLASS=para>
+This method is obsolete. The same result can be obtained by
+using the <tt CLASS=literal>valueOf()</tt> method that takes an array
+of <tt CLASS=literal>char</tt> values, an offset, and a count.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.343">valueOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.398"><tt CLASS=literal>public static String valueOf(boolean b)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value.<A NAME="STRING.4"></A></DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+
+A new <tt CLASS=literal>String</tt> object that contains
+<tt CLASS=literal>'true'</tt> if <tt CLASS=literal>b</tt> is
+<tt CLASS=literal>true</tt> or <tt CLASS=literal>'false'</tt> if
+<tt CLASS=literal>b</tt> is <tt CLASS=literal>false</tt>.
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This method returns a string representation of a
+<tt CLASS=literal>boolean</tt> value. In other words, it returns
+<tt CLASS=literal>'true'</tt> if <tt CLASS=literal>b</tt> is
+<tt CLASS=literal>true</tt> or <tt CLASS=literal>'false'</tt> if
+<tt CLASS=literal>b</tt> is <tt CLASS=literal>false</tt>.
+</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.399"><tt CLASS=literal>public static String valueOf(char c)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>c</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains just
+the given character.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of a <tt CLASS=literal>char</tt>
+value. In other words, it returns a <tt CLASS=literal>String</tt> object
+that contains just the given character.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.400"><tt CLASS=literal>public static String valueOf(char[] data)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>data</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the sequence
+of characters stored in the given array.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of an array of
+<tt CLASS=literal>char</tt> values. In other words, it returns a <tt CLASS=literal>String</tt> object that contains the sequence of characters stored
+in the given array.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.401"><DIV CLASS=screen> <P> <PRE> public static String valueOf(char[] data, int offset, int count) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>data</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>count</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of characters from the array to be included
+in the string.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the sequence
+of characters stored in the specified portion of the given array.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> or <tt CLASS=literal>count</tt>
+indexes an element that is outside the bounds of the <tt CLASS=literal>data</tt>
+array.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of the specified
+portion of an array of char values. In other words, it returns a
+<tt CLASS=literal>String</tt> object that contains the sequence of characters
+in the given array that starts <tt CLASS=literal>offset</tt> elements
+from the beginning of the array and is <tt CLASS=literal>count</tt>
+elements long.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.402"><tt CLASS=literal>public static String valueOf(double d)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>d</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>double</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains a string
+representation of the given <tt CLASS=literal>double</tt> value.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of a <tt CLASS=literal>double</tt>
+value. In other words, it returns the <tt CLASS=literal>String</tt>
+object returned by <tt CLASS=literal>Double.toString(d)</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.403"><tt CLASS=literal>public static String valueOf(float f)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>f</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>float</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains a string
+representation of the given <tt CLASS=literal>float</tt> value.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of a <tt CLASS=literal>float</tt>
+value. In other words, it returns the <tt CLASS=literal>String</tt>
+object returned by <tt CLASS=literal>Float.toString(f)</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.404"><tt CLASS=literal>public static String valueOf(int i)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>i</tt><br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>int</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains a string
+representation of the given <tt CLASS=literal>int</tt> value.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of an <tt CLASS=literal>int</tt>
+value. In other words, it returns the <tt CLASS=literal>String</tt>
+object returned by <tt CLASS=literal>Integer.toString(i)</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.405"><tt CLASS=literal>public static String valueOf(long l)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>l</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>long</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains a string
+representation of the given <tt CLASS=literal>long</tt> value.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of a <tt CLASS=literal>long</tt>
+value. In other words, it returns the <tt CLASS=literal>String</tt>
+object returned by <tt CLASS=literal>Long.toString(l)</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.406"><tt CLASS=literal>public static String valueOf (Object obj)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> that contains a string representation
+of the given object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of the given object.
+If <tt CLASS=literal>obj</tt> is <tt CLASS=literal>null</tt>, the method
+returns<tt CLASS=literal>'null'</tt>. Otherwise, the method returns the <tt CLASS=literal>String</tt>
+object returned by the <tt CLASS=literal>toString()</tt> method
+of the object.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.152">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.344">charAt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.407"><tt CLASS=literal>public char charAt(int index)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+An index into the string.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The character at the specified position in this string.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>index</tt> is less than zero or
+greater than or equal to the length of the string.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the character at the specified position
+in the <tt CLASS=literal>String</tt> object; the first character in
+the string is at position <tt CLASS=literal>0</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.345">compareTo</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.408"><tt CLASS=literal>public int compareTo(String anotherString)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>anotherString</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> object to be compared.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A positive value if this string is greater than <tt CLASS=literal>anotherString</tt>,
+<tt CLASS=literal>0</tt> if the two strings are the same, or a negative
+value if this string is less than <tt CLASS=literal>anotherString</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method lexicographically compares this <tt CLASS=literal>String</tt>
+object to <tt CLASS=literal>anotherString</tt>.
+
+<P CLASS=para>
+Here is how the comparison works: the two <tt CLASS=literal>String</tt>
+objects are compared character-by-character, starting at index <tt CLASS=literal>0</tt>
+and continuing until a position is found in which the two strings
+contain different characters or until all of the characters in the
+shorter string have been compared. If the characters at <tt CLASS=literal>k</tt>
+are different, the method returns:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+this.charAt(k)-anotherString.charAt(k)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Otherwise, the comparison is based on the lengths of the strings
+and the method returns:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+this.length()-anotherString.length()
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.346">concat</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.409"><tt CLASS=literal>public String concat(String str)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> object to be concatenated.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the character
+sequences of this string and <tt CLASS=literal>str</tt> concatenated
+together.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> object
+that concatenates the characters from the argument string
+<tt CLASS=literal>str</tt> onto
+the characters from this <tt CLASS=literal>String</tt> object. Although
+this is a good way to concatenate two strings, concatenating more
+than two strings can be done more efficiently using a <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.347">endsWith</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.410"><tt CLASS=literal>public boolean endsWith(String suffix)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>suffix</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> object suffix to be
+tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this string ends with the sequence
+of characters specified by <tt CLASS=literal>suffix</tt>; otherwise
+<tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this <tt CLASS=literal>String</tt>
+object ends with the specified <tt CLASS=literal>suffix</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.348">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.411"><tt CLASS=literal>public boolean equals(Object anObject)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>anObject</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Object</tt> to be compared.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; <tt CLASS=literal>false</tt>
+if they are not.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.equals()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if <tt CLASS=literal>anObject</tt>
+is an instance of <tt CLASS=literal>String</tt> and it contains the
+same sequence of characters as this <tt CLASS=literal>String</tt> object.
+
+<P CLASS=para>
+Note the difference between this method and the <tt CLASS=literal>==</tt>
+operator, which only returns <tt CLASS=literal>true</tt> if both of
+its arguments are references to the same object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.349">equalsIgnoreCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.412"><tt CLASS=literal>public boolean equalsIgnoreCase(String anotherString)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>anotherString</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> object to be compared.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the strings are equal, ignoring
+case; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this <tt CLASS=literal>String</tt>
+object contains the same sequence of characters, ignoring case,
+as <tt CLASS=literal>anotherString</tt>. More specifically, corresponding
+characters in the two strings are considered equal if any of the
+following conditions are true:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The two characters compare as equal
+using the <tt CLASS=literal>==</tt> operator.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>Character.toUppercase()</tt> method
+returns the same result for both characters.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>Character.toLowercase()</tt> method
+returns the same result for both characters.
+
+<P>
+</UL>
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.350">getBytes</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.413"><DIV CLASS=screen> <P> <PRE> public byte[] getBytes() </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>byte</tt> array that contains the characters of this
+<tt CLASS=literal>String</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the characters in this <tt CLASS=literal>String</tt>
+object to an array of <tt CLASS=literal>byte</tt> values.  The characters
+in the string are converted to bytes using the system's default character
+encoding scheme.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.414"><DIV CLASS=screen> <P> <PRE> public byte[] getBytes(String enc) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>enc</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of an encoding scheme.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>byte</tt> array that contains the characters of this
+<tt CLASS=literal>String</tt>.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>UnsupportedEncodingException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>enc</tt> is not a supported encoding scheme.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the characters in this <tt CLASS=literal>String</tt>
+object to an array of <tt CLASS=literal>byte</tt> values.  The characters
+in the string are converted to bytes using the specified character 
+encoding scheme.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.415"><DIV CLASS=screen> <P> <PRE> public void getBytes(int srcBegin, int srcEnd, byte[] dst, int dstBegin) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>srcBegin</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character to be copied.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>srcEnd</tt><br>
+<DD>
+
+<P CLASS=para>
+The index after the last character to be copied.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>dst</tt><br>
+<DD>
+
+<P CLASS=para>
+The destination <tt CLASS=literal>byte</tt> array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>dstBegin</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the destination array.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>srcBegin</tt>, <tt CLASS=literal>srcEnd</tt>,
+or <tt CLASS=literal>dstBegin</tt> is out of range.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method copies the low-order byte of each character in
+the specified range of this <tt CLASS=literal>String</tt> object to
+the given array of <tt CLASS=literal>byte</tt> values. More specifically,
+the first character to be copied is at index <tt CLASS=literal>srcBegin</tt>;
+the last character to be copied is at index <tt CLASS=literal>srcEnd-1</tt>.
+The low-order bytes of these characters are copied into <tt CLASS=literal>dst</tt>,
+starting at index <tt CLASS=literal>dstBegin</tt> and ending at index:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+dstBegin + (srcEnd-srcBegin) - 1
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This method is deprecated as of JDK 1.1 because it does not 
+convert characters into bytes properly.  You should instead use 
+the <tt CLASS=literal>getBytes()</tt> method
+that takes a specific character encoding
+argument or the one that uses the default encoding.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.351">getChars</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.416"><DIV CLASS=screen> <P> <PRE> public void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>srcBegin</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character to be copied.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>srcEnd</tt><br>
+<DD>
+
+<P CLASS=para>
+The index after the last character to be copied.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>dst</tt><br>
+<DD>
+
+<P CLASS=para>
+The destination <tt CLASS=literal>char</tt> array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>dstBegin</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the destination array.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>srcBegin</tt>, <tt CLASS=literal>srcEnd</tt>,
+or <tt CLASS=literal>dstBegin</tt> is out of range.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method copies each character in the specified range of
+this <tt CLASS=literal>String</tt> object to the given array of <tt CLASS=literal>char</tt>
+values. More specifically, the first character to be copied is at
+index <tt CLASS=literal>srcBegin</tt>; the last character to be copied
+is at index <tt CLASS=literal>srcEnd-1</tt>. These characters are copied
+into <tt CLASS=literal>dst</tt>, starting at index <tt CLASS=literal>dstBegin</tt>
+and ending at index:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+dstBegin + (srcEnd-srcBegin) - 1
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.352">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.417"><tt CLASS=literal>public int hashCode()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode based on the sequence of characters in this string.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.hashCode()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a hashcode based on the sequence of characters
+this <tt CLASS=literal>String</tt> object represents.
+
+<P CLASS=para>
+More specifically, one of two algorithms is used to compute a hash
+code for the string, depending on its length. If
+<I CLASS=emphasis>n</I> is the length of the string and
+<I CLASS=emphasis>S_i</I> is the character at position
+<I CLASS=emphasis>i</I> in the string, then if
+<I CLASS=emphasis>n</I> = 15 the method returns:
+
+<P CLASS=blockquote><BLOCKQUOTE><P>
+<P CLASS=para>
+<img src='figs/eq10_1.gif' border=0>
+</BLOCKQUOTE><P>
+<P CLASS=para>
+If <I CLASS=emphasis>n</I> &gt; 15, the method returns:
+
+<P CLASS=blockquote><BLOCKQUOTE><P>
+<P CLASS=para>
+<img src='figs/eq10_2.gif' border=0>
+</BLOCKQUOTE><P>
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.353">indexOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.418"><tt CLASS=literal>public int indexOf(int ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the first occurrence of the given character in
+this string or <tt CLASS=literal>-1</tt> if the character does not
+occur.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the first occurrence of the
+given character in this <tt CLASS=literal>String</tt> object. If there
+is no such occurrence, the method returns the value <tt CLASS=literal>-1</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.419"><tt CLASS=literal>public int indexOf(int ch, int fromIndex)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>fromIndex</tt><br>
+<DD>
+
+<P CLASS=para>
+The index where the search is to begin.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the first occurrence of the given character in
+this string after <tt CLASS=literal>fromIndex</tt> or <tt CLASS=literal>-1</tt>
+if the character does not occur.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the first occurrence of the
+given character in this <tt CLASS=literal>String</tt> object after ignoring
+the first <tt CLASS=literal>fromIndex</tt> characters. If there is no
+such occurrence, the method returns the value <tt CLASS=literal>-1</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.420"><tt CLASS=literal>public int indexOf(String str)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the first occurrence of <tt CLASS=literal>str</tt>
+in this string or <tt CLASS=literal>-1</tt> if the substring does not
+occur.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the first character of the
+first occurrence of the substring <tt CLASS=literal>str</tt> in this
+<tt CLASS=literal>String</tt> object. If there is no such occurrence,
+the method returns the value <tt CLASS=literal>-1</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.421"><tt CLASS=literal>public int indexOf(String str, int fromIndex)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>fromIndex</tt><br>
+<DD>
+
+<P CLASS=para>
+The index where the search is to begin.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the first occurrence of <tt CLASS=literal>str</tt>
+in this string after <tt CLASS=literal>fromIndex</tt> or <tt CLASS=literal>-1</tt>
+if the substring does not occur.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the first character of the
+first occurrence of the substring <tt CLASS=literal>str</tt> in this
+<tt CLASS=literal>String</tt> object after ignoring the first <tt CLASS=literal>fromIndex</tt>
+characters. If there is no such occurrence, the method returns the
+value <tt CLASS=literal>-1</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.354">intern</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.422"><tt CLASS=literal>public native String intern()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object that is guaranteed to be
+the same object for every <tt CLASS=literal>String</tt> that contains
+the same character sequence.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a canonical representation for this
+<tt CLASS=literal>String</tt>
+object. The returned <tt CLASS=literal>String</tt> object is guaranteed
+to be the same <tt CLASS=literal>String</tt> object for every
+<tt CLASS=literal>String</tt> object that contains the same character
+sequence. In other words, if:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+s1.equals(s2)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+then:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+s1.intern() == s2.intern()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>intern</tt>() method is used by the Java
+environment to ensure that <tt CLASS=literal>String</tt> literals and
+constant-value <tt CLASS=literal>String</tt> expressions that contain
+the same sequence of characters are all represented by a single
+<tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.355">lastIndexOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.423"><tt CLASS=literal>public int lastIndexOf(int ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the last occurrence of the given character in
+this string or <tt CLASS=literal>-1</tt> if the character does not
+occur.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the last occurrence of the
+given character in this <tt CLASS=literal>String</tt> object. If there
+is no such occurrence, the method returns the value <tt CLASS=literal>-1</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.424"><tt CLASS=literal>public int lastIndexOf(int ch, int fromIndex)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>fromIndex</tt><br>
+<DD>
+
+<P CLASS=para>
+The index where the search is to begin.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the last occurrence of the given character in
+this string after <tt CLASS=literal>fromIndex</tt> or <tt CLASS=literal>-1</tt>
+if the character does not occur.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the last occurrence of the
+given character in this <tt CLASS=literal>String</tt> object after ignoring
+the first <tt CLASS=literal>fromIndex</tt> characters. If there is no
+such occurrence, the method returns the value <tt CLASS=literal>-1</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.425"><tt CLASS=literal>public int lastIndexOf(String str)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the last occurrence of <tt CLASS=literal>str</tt>
+in this string or <tt CLASS=literal>-1</tt> if the substring does not
+occur.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the first character of the
+last occurrence of the substring <tt CLASS=literal>str</tt> in this
+<tt CLASS=literal>String</tt> object. If there is no such occurrence,
+the method returns the value <tt CLASS=literal>-1</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.426"><tt CLASS=literal>public int lastIndexOf(String str, int fromIndex)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>fromIndex</tt><br>
+<DD>
+
+<P CLASS=para>
+The index where the search is to begin.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the last occurrence of <tt CLASS=literal>str</tt>
+in this string after <tt CLASS=literal>fromIndex</tt> or <tt CLASS=literal>-1</tt>
+if the substring does not occur.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the first character of the
+last occurrence of the substring <tt CLASS=literal>str</tt> in this
+<tt CLASS=literal>String</tt> object after ignoring the first <tt CLASS=literal>fromIndex</tt>
+characters. If there is no such occurrence, the method returns the
+value <tt CLASS=literal>-1</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.356">length</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.427"><tt CLASS=literal>public int length()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The length of the character sequence represented by this string.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of characters in the character
+sequence represented by this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.357">regionMatches</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.428"><DIV CLASS=screen> <P> <PRE> public boolean regionMatches(int toffset, String other, int ooffset, int len) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>toffset</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character in this string.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>other</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> object to be used
+in the comparison.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ooffset</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character in <tt CLASS=literal>other</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The length of the sub-sequences to be compared.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the sub-sequences are identical;
+otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified sub-sequences
+in this <tt CLASS=literal>String</tt> object and <tt CLASS=literal>other</tt> are
+identical. The method returns false if <tt CLASS=literal>toffset</tt>
+is negative, if <tt CLASS=literal>ooffset</tt> is negative, if <tt CLASS=literal>toffset+len</tt>
+is greater than the length of this string, or if <tt CLASS=literal>ooffset+len</tt>
+is greater than the length of <tt CLASS=literal>other</tt>.
+Otherwise, the method returns
+<tt CLASS=literal>true</tt> if for all nonnegative integers <tt CLASS=literal>k</tt>
+less than <tt CLASS=literal>len</tt> it is true that:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+this.charAt(toffset+k) == other.charAt(ooffset+k)
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.429"><DIV CLASS=screen> <P> <PRE> public boolean regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ignoreCase</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates whether case should
+be ignored.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>toffset</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character in this string.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>other</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> object to be used
+in the comparison.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ooffset</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character in <tt CLASS=literal>other</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The length of the sub-sequences to be compared.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the sub-sequences are identical;
+otherwise <tt CLASS=literal>false</tt>. The <tt CLASS=literal>ignoreCase</tt>
+argument controls whether or not case is ignored in the comparison.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the specified sub-sequences
+in this <tt CLASS=literal>String</tt> object and <tt CLASS=literal>other</tt> are
+identical. The method returns false if <tt CLASS=literal>toffset</tt>
+is negative, if <tt CLASS=literal>ooffset</tt> is negative,
+if <tt CLASS=literal>toffset+len</tt>
+is greater than the length of this string, or if <tt CLASS=literal>ooffset+len</tt>
+is greater than the length of <tt CLASS=literal>other</tt>.
+Otherwise, if <tt CLASS=literal>ignoreCase</tt>
+is <tt CLASS=literal>false</tt>, the method returns <tt CLASS=literal>true</tt>
+if for all nonnegative integers <tt CLASS=literal>k</tt> less than
+<tt CLASS=literal>len</tt> it is true that:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+this.charAt(toffset+k) == other.charAt(ooffset+k)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If <tt CLASS=literal>ignoreCase</tt> is <tt CLASS=literal>true</tt>,
+the method returns <tt CLASS=literal>true</tt> if for all nonnegative
+integers <tt CLASS=literal>k</tt> less than <tt CLASS=literal>len</tt> it
+is true that:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Character.toLowerCase(this.charAt(toffset+k))
+== Character.toLowerCase(other.charAt(ooffset+k))
+</PRE>
+</DIV>
+
+<P CLASS=para>
+or:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Character.toUpperCase(this.charAt(toffset+k))
+== Character.toUpperCase(other.charAt(ooffset+k))
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.358">replace</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.430"><tt CLASS=literal>public String replace(char oldChar, char newChar)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>oldChar</tt><br>
+<DD>
+
+<P CLASS=para>
+The character to be replaced.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>newChar</tt><br>
+<DD>
+
+<P CLASS=para>
+The replacement character.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that results from replacing
+every occurrence of <tt CLASS=literal>oldChar</tt> in the string with
+<tt CLASS=literal>newChar</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> object
+that results from replacing every occurrence of <tt CLASS=literal>oldChar</tt>
+in this <tt CLASS=literal>String</tt> object with <tt CLASS=literal>newChar</tt>.
+If there are no occurrences of <tt CLASS=literal>oldChar</tt>, the method
+simply returns this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.359">startsWith</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.431"><tt CLASS=literal>public boolean startsWith(String prefix)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>prefix</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> object prefix to be
+tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this string begins with the sequence
+of characters specified by <tt CLASS=literal>prefix</tt>; otherwise
+<tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this <tt CLASS=literal>String</tt>
+object begins with the specified <tt CLASS=literal>prefix</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.432"><tt CLASS=literal>public boolean startsWith(String prefix, int toffset)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>prefix</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> object prefix to be
+tested.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>toffset</tt><br>
+<DD>
+
+<P CLASS=para>
+The index where the search is to begin.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this string contains the sequence
+of characters specified by <tt CLASS=literal>prefix</tt> starting at
+the index <tt CLASS=literal>toffset</tt>; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this <tt CLASS=literal>String</tt>
+object contains the specified <tt CLASS=literal>prefix</tt> at the index
+specified by <tt CLASS=literal>toffset</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.360">substring</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.433"><tt CLASS=literal>public String substring(int beginIndex)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>beginIndex</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character in the substring.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the sub-sequence
+of this string that starts at <tt CLASS=literal>beginIndex</tt> and
+extends to the end of the string.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>beginIndex</tt> is less than zero
+or greater than or equal to the length of the string.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> object
+that represents a sub-sequence of this <tt CLASS=literal>String</tt>
+object. The sub-sequence consists of the characters starting at
+<tt CLASS=literal>beginIndex</tt> and extending through the end of this
+<tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.434"><tt CLASS=literal>public String substring(int beginIndex, int endIndex)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>beginIndex</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character in the substring.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>endIndex</tt><br>
+<DD>
+
+<P CLASS=para>
+The index after the last character in the substring.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the sub-sequence
+of this string that starts at <tt CLASS=literal>beginIndex</tt> and
+extends to the character at <tt CLASS=literal>endindex-1</tt>.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>beginIndex</tt> or <tt CLASS=literal>endIndex</tt>
+is less than zero or greater than or equal to the length of the
+string.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> object
+that represents a sub-sequence of this <tt CLASS=literal>String</tt>
+object. The sub-sequence consists of the characters starting at
+<tt CLASS=literal>beginIndex</tt> and extending through <tt CLASS=literal>endIndex-1</tt>
+of this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.361">toCharArray</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.435"><tt CLASS=literal>public char[] toCharArray()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>char</tt> array that contains the same
+sequence of characters as this string.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>char</tt> array that
+contains the same sequence of characters as this <tt CLASS=literal>String</tt>object. The length of the array is the same as the length
+of this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.362">toLowerCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.436"><tt CLASS=literal>public String toLowerCase()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the characters
+of this string converted to lowercase.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> that represents
+a character sequence of the same length as this <tt CLASS=literal>String</tt>
+object, but with each character replaced by its lowercase equivalent
+if it has one. If no character in the string has a lowercase equivalent,
+the method returns this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.437"><tt CLASS=literal>public String toLowerCase(Locale locale)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>locale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the characters
+of this string converted to lowercase using the rules of the
+specified locale.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> that represents
+a character sequence of the same length as this <tt CLASS=literal>String</tt>
+object, but with each character replaced by its lowercase equivalent
+if it has one according to the rules of the specified locale.
+If no character in the string has a lowercase equivalent,
+the method returns this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.363">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.438"><tt CLASS=literal>public String toString()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>String</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.364">toUpperCase</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.439"><tt CLASS=literal>public String toUpperCase()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the characters
+of this string converted to uppercase.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> that represents
+a character sequence of the same length as this <tt CLASS=literal>String</tt>
+object, but with each character replaced by its uppercase equivalent
+if it has one. If no character in the string has an uppercase equivalent,
+the method returns this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.440"><tt CLASS=literal>public String toUpperCase(Locale locale)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>locale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that contains the characters
+of this string converted to uppercase using the rules of the
+specified locale.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> that represents
+a character sequence of the same length as this <tt CLASS=literal>String</tt>
+object, but with each character replaced by its uppercase equivalent
+if it has one according to the rules of the specified locale. 
+If no character in the string has an uppercase equivalent,
+the method returns this <tt CLASS=literal>String</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.365">trim</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.441"><tt CLASS=literal>public String trim()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that represents the
+same character sequence as this string, but with leading and trailing
+whitespace and control characters removed.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If the first and last character in this <tt CLASS=literal>String</tt>
+object are greater than <tt CLASS=literal>'\u0020'</tt> (the space character),
+the method returns this <tt CLASS=literal>String</tt> object. Otherwise,
+the method returns a new <tt CLASS=literal>String</tt> object that contains
+the same character sequence as this <tt CLASS=literal>String</tt> object,
+but with leading and trailing characters that are less than <tt CLASS=literal>'\u0020'</tt>'
+removed.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.153">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.154">See Also</A></h2>
+
+<P CLASS=para>
+<A HREF="ch10_03.htm">Character</A>;
+<A HREF="ch10_04.htm">Class</A>;
+<A HREF="ch10_08.htm">Double</A>;
+<A HREF="ch09_04.htm#JLR2-CH-9-SECT-4.1">Exceptions</A>;
+<A HREF="ch10_09.htm">Float</A>;
+<A HREF="ch10_10.htm">Integer</A>;
+<A HREF="ch10_11.htm">Long</A>;
+<A HREF="ch10_14.htm">Object</A>;
+<A HREF="ch10_21.htm">StringBuffer</A>;
+<A HREF="ch04_06.htm#JLR2-CH-4-SECT-6.3">String Concatenation Operator +</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.3.5">String literals</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_19.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_21.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Short</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>StringBuffer</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

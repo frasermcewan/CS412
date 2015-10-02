@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.2 Threading Applets</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:53:56 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Threads</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-6-SECT-2">6.2 Threading Applets</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.APPLETS"></A>Applets are embeddable Java applications that are expected to be able
+to start and stop themselves on command. Unlike threads, applets can
+be started and stopped any number of times. A Java-enabled Web browser
+normally starts an applet when the applet is displayed and stops it
+when the user moves to another page or scrolls the applet out of
+view. In general, we would like an applet to cease its nonessential
+activity when it is stopped, and resume it when started
+again. (See <A HREF="ch10_01.htm">Chapter 10, <i>Understand the Abstract Windowing Toolkit</i></A> for a complete discussion of
+applets.)
+
+<P CLASS=para>
+In this section, we will build <tt CLASS=literal>UpdateApplet</tt>, a
+simple base class for an <tt CLASS=literal>Applet</tt> that maintains a
+<tt CLASS=literal>Thread</tt> to automatically update its display at
+regular intervals. <tt CLASS=literal>UpdateApplet</tt> handles the basic
+starting and stopping behavior for us, as shown below.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public class UpdateApplet extends java.applet.Applet 
+    implements Runnable { 
+    
+    private Thread updateThread; 
+    int updateInterval = 1000; 
+ 
+    public void run() { 
+        while ( true ) { 
+            try {   
+                Thread.sleep( updateInterval );  
+            }  
+            catch (InterruptedException e ) { } 
+ 
+            repaint(); 
+        } 
+    } 
+ 
+    public void start() { 
+        if ( updateThread == null ) { 
+            updateThread = new Thread(this); 
+            updateThread.start(); 
+        } 
+    } 
+ 
+    public void stop() { 
+        if ( updateThread != null ) { 
+            updateThread.stop(); 
+            updateThread = null; 
+        } 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>UpdateApplet</tt> is a <tt CLASS=literal>Runnable</tt>
+object that alternately sleeps and calls its
+<tt CLASS=literal>repaint()</tt> method. It has two other public methods:
+<tt CLASS=literal>start()</tt> and <tt CLASS=literal>stop()</tt>. These are
+methods of the <tt CLASS=literal>Applet</tt> class we are overriding;
+do not confuse them with the similarly named methods of the
+<tt CLASS=literal>Thread</tt> class. These <tt CLASS=literal>start()</tt> and
+<tt CLASS=literal>stop()</tt> methods are called by the Java environment
+to tell the applet when it should and should not be running.
+
+<P CLASS=para>
+<tt CLASS=literal>UpdateApplet</tt> illustrates an environmentally
+friendly way to deal with threads in a simple
+applet. <tt CLASS=literal>UpdateApplet</tt> kills its thread each time the
+applet is stopped and recreates it if the applet is restarted. When
+<tt CLASS=literal>UpdateApplet</tt>'s <tt CLASS=literal>start()</tt>
+method is called, we first check to make sure there is no
+currently executing <tt CLASS=literal>updateThread</tt>. We then create
+one to begin our execution. When our applet is subsequently stopped,
+we kill the thread by invoking its <tt CLASS=literal>stop()</tt> method
+and throw away the reference by setting it to <tt CLASS=literal>null</tt>.
+Setting <tt CLASS=literal>updateThread</tt> 
+to <tt CLASS=literal>null</tt> serves both to allow the garbage collector to 
+clean up the dead <tt CLASS=literal>Thread</tt> object, and to indicate to 
+<tt CLASS=literal>UpdateApplet</tt>'s <tt CLASS=literal>start()</tt> method 
+that the thread is gone.
+
+<P CLASS=para>
+In truth, an <tt CLASS=literal>Applet</tt>'s
+<tt CLASS=literal>start()</tt> and <tt CLASS=literal>stop()</tt> methods are
+guaranteed to be called in sequence. As a result, we
+shouldn't have to check for the existence of
+<tt CLASS=literal>updateThread</tt> in <tt CLASS=literal>start()</tt> (it
+should always be <tt CLASS=literal>null</tt>). However, it's good
+programming practice to perform the test. If we didn't, and for
+some reason <tt CLASS=literal>stop()</tt> were to fail at its job, we
+might inadvertently start a lot of threads.
+
+<P CLASS=para>
+With <tt CLASS=literal>UpdateApplet</tt> 
+doing all of the work for us, we can now create the world's simplest 
+clock applet with just a few lines of code. <A HREF="ch06_02.htm#EXJ-CH-6-FIG-3">Figure 6.3</A> shows our <tt CLASS=literal>Clock</tt>. 
+(This might be a good one to run on your Java wrist watch.)
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public class Clock extends UpdateApplet { 
+    public void paint( java.awt.Graphics g ) { 
+        g.drawString( new java.util.Date().toString(), 10, 25 ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-6-FIG-3">Figure 6.3: The clock applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0603.gif" alt="[Graphic: Figure 6-3]" width=503 height=103 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.util.Date().toString()</tt> sequence 
+simply creates a string that contains the current time; we'll see 
+where this code comes from in <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A>.
+
+<P CLASS=para>
+Our <tt CLASS=literal>Clock</tt> applet provides a good example of a
+simple thread; we don't mind throwing it away and subsequently
+rebuilding it if the user should happen to wander on and off of our
+Web page a few times. But what if the task that our thread handles
+isn't so simple? What if, for instance, we have to open a socket
+and establish a connection with another system? One solution is to use
+<tt CLASS=literal>Thread</tt>'s <tt CLASS=literal>suspend()</tt> and
+<tt CLASS=literal>resume()</tt> methods, as I'll show you
+momentarily.
+
+<P CLASS=para>
+ 
+ 
+Now if you've been wondering why we've been using
+<tt CLASS=literal>stop()</tt> to kill the thread, rather than using the
+<tt CLASS=literal>suspend()</tt> and <tt CLASS=literal>resume()</tt> methods
+all along, here's the explanation you've been waiting
+for. The problem with applets is that we have no control over how a
+user navigates Web pages. For example, say a user scrolls our applet
+out of view, and we use <tt CLASS=literal>suspend()</tt> to suspend the
+applet. Now we have no way of ensuring that the user will bring the
+applet back into view before moving on to another page. And actually,
+the same situation would occur if the user simply moves on to another
+page and never comes back.
+
+<P CLASS=para>
+If we call <tt CLASS=literal>suspend()</tt>, we'd really like to
+make sure we call <tt CLASS=literal>resume()</tt> at a later date, or
+we'll end up leaving the thread hanging in permanent
+suspense. But we have no way of knowing if the applet will ever be
+restarted, so just putting a call to <tt CLASS=literal>resume()</tt> in
+the applet's <tt CLASS=literal>start()</tt> method won't
+work. Leaving the suspended thread around forever might not hurt us,
+but it's not good programming practice to be wasteful.  What we
+need is a way to guarantee we can clean up our mess if the applet
+is never used again. What to do?
+
+<P CLASS=para>
+There is a solution for this dilemma, but in many cases, like with our
+simple <tt CLASS=literal>Clock</tt>, it's just easier to use
+<tt CLASS=literal>stop()</tt>, with a subsequent call to
+<tt CLASS=literal>start()</tt> if necessary. In cases where it is
+expensive to set up and tear down a thread, we could make the
+following modifications to <tt CLASS=literal>UpdateApplet</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public void start() { 
+    if ( updateThread == null ) { 
+        updateThread = new Thread(this); 
+        updateThread.start(); 
+    } 
+    else 
+        updateThread.resume(); 
+} 
+ 
+public void stop() { 
+    updateThread.suspend(); 
+ 
+public void destroy() { 
+    if ( updateThread != null ) { 
+        updateThread.stop(); 
+        updateThread = null; 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+These modifications change <tt CLASS=literal>UpdateApplet</tt> so that it
+suspends and restarts its <tt CLASS=literal>updateThread</tt>, rather than
+killing and recreating it. The new <tt CLASS=literal>start()</tt> method
+creates the thread and calls <tt CLASS=literal>start()</tt> if
+<tt CLASS=literal>updateThread</tt> is <tt CLASS=literal>null</tt>; otherwise
+it assumes that the thread has been suspended, so it calls
+<tt CLASS=literal>resume()</tt>. The applet's
+<tt CLASS=literal>stop()</tt> method simply suspends the thread by calling
+<tt CLASS=literal>suspend()</tt>.
+
+<P CLASS=para>
+What's new here is the <tt CLASS=literal>destroy()</tt> method. This
+is another method that <tt CLASS=literal>UpdateApplet</tt> inherits from
+the <tt CLASS=literal>Applet</tt> class. The method is called by the Java
+environment when the applet is going to be removed (often from a
+cache). It provides a place where we can free up any resources
+the applet is holding. This is the perfect place to cut the suspense
+and clean up after our thread. In our <tt CLASS=literal>destroy()</tt>
+method, we check to see that the thread exists, and if it does, we
+call <tt CLASS=literal>stop()</tt> to kill it and set its reference to
+<tt CLASS=literal>null</tt>.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Introducing Threads</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Synchronization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

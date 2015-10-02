@@ -1,0 +1,1226 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] ThreadGroup</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:07:05 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_62.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_64.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ThreadGroup</H1>
+
+<H2>Name</H2>
+
+ThreadGroup
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.413">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.ThreadGroup</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.414">Description</A></h2>
+
+<P CLASS=para>
+<A NAME="MAN.THRGRP.1"></A>The <tt CLASS=literal>ThreadGroup</tt> class implements a grouping
+scheme for threads. A <tt CLASS=literal>ThreadGroup</tt> object can own
+<tt CLASS=literal>Thread</tt> objects and other
+<tt CLASS=literal>ThreadGroup</tt> objects. The <tt CLASS=literal>ThreadGroup</tt>
+class provides methods that allow a <tt CLASS=literal>ThreadGroup</tt>
+object to control its <tt CLASS=literal>Thread</tt> and <tt CLASS=literal>ThreadGroup</tt>
+objects as a group. For example, <tt CLASS=literal>suspend()</tt> and
+<tt CLASS=literal>resume()</tt> methods of a <tt CLASS=literal>ThreadGroup</tt>
+object call the <tt CLASS=literal>suspend()</tt> and <tt CLASS=literal>resume()</tt> methods of each of the <tt CLASS=literal>Thread</tt> and <tt CLASS=literal>ThreadGroup</tt>
+objects that belong to the particular <tt CLASS=literal>ThreadGroup</tt>.
+
+<P CLASS=para>
+When a Java program starts, a <tt CLASS=literal>ThreadGroup</tt> object
+is created to own the first <tt CLASS=literal>Thread</tt>. Any additional
+<tt CLASS=literal>ThreadGroup</tt> objects are explicitly created by
+the program.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.415">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.lang.ThreadGroup extends java.lang.Object {
+    // Constructors
+    public ThreadGroup(String name);
+    public ThreadGroup(ThreadGroup parent, String name;
+    // Instance Methods
+    public int activeCount();
+    public int activeGroupCount();
+    public boolean allowThreadSuspension(boolean b);       // New in 1.1
+    public final void checkAccess();
+    public final void destroy();
+    public int enumerate(Thread list[]);
+    public int enumerate(Thread list[], boolean recurse);
+    public int enumerate(ThreadGroup list[]);
+    public int enumerate(ThreadGroup list[], boolean recurse);
+    public final int getMaxPriority();
+    public final String getName();
+    public final ThreadGroup getParent();
+    public final boolean isDaemon();
+    public synchronized boolean isDestroyed();             // New in 1.1
+    public void list();
+    public final boolean parentOf(ThreadGroup g);
+    public final void resume();
+    public final void setDaemon(boolean daemon);
+    public final void setMaxPriority(int pri);
+    public final void stop();
+    public final void suspend();
+    public String toString();
+    public void uncaughtException(Thread t, Throwable e);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.416">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.470">ThreadGroup</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.615"><tt CLASS=literal>public ThreadGroup(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of this <tt CLASS=literal>ThreadGroup</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>ThreadGroup</tt> object that has the
+specified name and the same parent <tt CLASS=literal>ThreadGroup</tt>
+as the current thread.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.616"><tt CLASS=literal>public ThreadGroup(ThreadGroup parent, String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>parent</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ThreadGroup</tt> object that this
+<tt CLASS=literal>ThreadGroup</tt> object is to be added to.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of this <tt CLASS=literal>ThreadGroup</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>ThreadGroup</tt> object with the specified
+name and parent <tt CLASS=literal>ThreadGroup</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.417">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.471">activeCount</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.617"><tt CLASS=literal>public int activeCount()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An approximation of the current number of threads in this
+<tt CLASS=literal>ThreadGroup</tt> object and any child <tt CLASS=literal>ThreadGroup</tt>
+objects.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an approximation of the number of threads
+that belong to this <tt CLASS=literal>ThreadGroup</tt> object and any
+child <tt CLASS=literal>ThreadGroup</tt> objects. The count is approximate
+because a thread can die after it is counted, but before the complete
+count is returned. Also, after a child <tt CLASS=literal>ThreadGroup</tt>
+is counted but before the total count is returned, additional <tt CLASS=literal>Thread</tt>
+and <tt CLASS=literal>ThreadGroup</tt> objects can be added to a child
+<tt CLASS=literal>ThreadGroup</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.472">activeGroupCount</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.618"><tt CLASS=literal>public int activeGroupCount()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An approximation of the current number of child <tt CLASS=literal>ThreadGroup</tt>
+objects in this <tt CLASS=literal>ThreadGroup</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an approximation of the number of child
+<tt CLASS=literal>ThreadGroup</tt> objects that belong to this <tt CLASS=literal>ThreadGroup</tt>
+object. The count is approximate because after a child <tt CLASS=literal>ThreadGroup</tt>
+is counted but before the total count is returned, additional <tt CLASS=literal>ThreadGroup</tt>
+objects can be added to a child <tt CLASS=literal>ThreadGroup</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.473">allowThreadSuspension</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.619"><tt CLASS=literal>public boolean allowThreadSuspension(boolean b)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that specifies whether or not
+the run-time system is allowed to suspend threads due to low memory.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>boolean</tt> value <tt CLASS=literal>true</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method specifies whether or not the Java virtual machine is allowed
+to suspend threads due to low memory.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.474">checkAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.620"><tt CLASS=literal>public final void checkAccess()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines if the currently running thread has
+permission to modify this <tt CLASS=literal>ThreadGroup</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.475">destroy</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.621"><tt CLASS=literal>public final void destroy()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalThreadStateException</tt><br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>ThreadGroup</tt> object is
+not empty, or if it has already been destroyed.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method destroys this <tt CLASS=literal>ThreadGroup</tt> object
+and any child <tt CLASS=literal>ThreadGroup</tt> objects. The <tt CLASS=literal>ThreadGroup</tt> must not contain any <tt CLASS=literal>Thread</tt> objects.
+This method also removes the <tt CLASS=literal>ThreadGroup</tt> object
+from its parent <tt CLASS=literal>ThreadGroup</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.476">enumerate</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.622"><tt CLASS=literal>public int enumerate(Thread list[])</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>list</tt><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="MAN.THRGRP.2"></A>A reference to an array of <tt CLASS=literal>Thread</tt>
+objects.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of <tt CLASS=literal>Thread</tt> objects stored in
+the array.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method stores a reference in the array for each of the
+<tt CLASS=literal>Thread</tt> objects that belongs to this <tt CLASS=literal>ThreadGroup</tt>
+or any of its child <tt CLASS=literal>ThreadGroup</tt> objects.
+
+<P CLASS=para>
+If the array is not big enough to contain references to all
+the <tt CLASS=literal>Thread</tt> objects, only as many references as
+will fit are put into the array. No indication is given that some
+<tt CLASS=literal>Thread</tt> objects were left out, so it is a good
+idea to call <tt CLASS=literal>activeCount()</tt> before calling this
+method, to get an idea of how large to make the array.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.623"><tt CLASS=literal>public int enumerate(Thread list[], boolean recurse)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>list</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an array of <tt CLASS=literal>Thread</tt>
+objects.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>recurse</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that specifies
+whether or not to include <tt CLASS=literal>Thread</tt> objects that
+belong to child <tt CLASS=literal>ThreadGroup</tt> objects of this <tt CLASS=literal>ThreadGroup</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of <tt CLASS=literal>Thread</tt> objects stored in
+the array.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method stores a reference in the array for each of the
+<tt CLASS=literal>Thread</tt> objects that belongs to this <tt CLASS=literal>ThreadGroup</tt>
+object. If <tt CLASS=literal>recurse</tt> is <tt CLASS=literal>true</tt>,
+the method also stores a reference for each of the <tt CLASS=literal>Thread</tt>
+objects that belongs to a child <tt CLASS=literal>ThreadGroup</tt> object
+of this <tt CLASS=literal>ThreadGroup</tt>.
+
+<P CLASS=para>
+If the array is not big enough to contain references to all
+the <tt CLASS=literal>Thread</tt> objects, only as many references as
+will fit are put into the array. No indication is given that some
+<tt CLASS=literal>Thread</tt> objects were left out, so it is a good
+idea to call <tt CLASS=literal>activeCount()</tt> before calling this
+method, to get an idea of how large to make the array.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.624"><tt CLASS=literal>public int enumerate(ThreadGroup list[])</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>list</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an array of <tt CLASS=literal>ThreadGroup</tt>
+objects.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of <tt CLASS=literal>ThreadGroup</tt> objects stored
+in the array.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method stores a reference in the array
+for each <tt CLASS=literal>ThreadGroup</tt>
+object that belongs to this <tt CLASS=literal>ThreadGroup</tt>
+or any of its child <tt CLASS=literal>ThreadGroup</tt> objects.
+
+<P CLASS=para>
+If the array is not big enough to contain references to all
+the <tt CLASS=literal>ThreadGroup</tt> objects, only as many references
+as will fit are put into the array. No indication is given that
+some <tt CLASS=literal>ThreadGroup</tt> objects were left out, so it
+is a good idea to call <tt CLASS=literal>activeGroupCount()</tt> before
+calling this method, to get an idea of how large to make the array.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.625"><tt CLASS=literal>public int enumerate(Thread list[], boolean recurse)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>list</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an array of <tt CLASS=literal>ThreadGroup</tt>
+objects.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>recurse</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that specifies
+whether or not to include <tt CLASS=literal>ThreadGroup</tt> objects
+that belong to child <tt CLASS=literal>ThreadGroup</tt> objects of this
+<tt CLASS=literal>ThreadGroup</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of <tt CLASS=literal>ThreadGroup</tt> objects stored
+in the array.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method stores a reference in the array for each of the
+<tt CLASS=literal>ThreadGroup</tt> objects that belongs to this <tt CLASS=literal>ThreadGroup</tt>
+object. If <tt CLASS=literal>recurse</tt> is <tt CLASS=literal>true</tt>,
+the method also stores a reference for each of the <tt CLASS=literal>ThreadGroup</tt>
+objects that belongs to a child <tt CLASS=literal>ThreadGroup</tt> object
+of this <tt CLASS=literal>ThreadGroup</tt>.
+
+<P CLASS=para>
+If the array is not big enough to contain references to all
+the <tt CLASS=literal>ThreadGroup</tt> objects, only as many references
+as will fit are put into the array. No indication is given that
+some <tt CLASS=literal>ThreadGroup</tt> objects were left out, so it
+is a good idea to call <tt CLASS=literal>activeGroupCount()</tt> before
+calling this method, to get an idea of how large to make the array.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.477">getMaxPriority</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.626"><tt CLASS=literal>public final int getMaxPriority()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The maximum priority that can be assigned to <tt CLASS=literal>Thread</tt>
+objects that belong to this <tt CLASS=literal>ThreadGroup</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the maximum priority that can be assigned
+to <tt CLASS=literal>Thread</tt> objects that belong to this <tt CLASS=literal>ThreadGroup</tt>
+object.
+
+<P CLASS=para>
+It is possible for a <tt CLASS=literal>ThreadGroup</tt> to contain
+<tt CLASS=literal>Thread</tt> objects that have higher priorities than
+this maximum, if they were given that higher priority before the
+maximum was set to a lower value.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.478">getName</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.627"><tt CLASS=literal>public final String getName()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The name of this <tt CLASS=literal>ThreadGroup</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the name of this <tt CLASS=literal>ThreadGroup</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.479">getParent</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.628"><tt CLASS=literal>public final ThreadGroup getParent()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The parent <tt CLASS=literal>ThreadGroup</tt>
+object of this <tt CLASS=literal>ThreadGroup</tt>, or <tt CLASS=literal>null</tt> 
+if this <tt CLASS=literal>ThreadGroup</tt>
+is the root of the thread group hierarchy.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the parent
+<tt CLASS=literal>ThreadGroup</tt> object of this <tt CLASS=literal>ThreadGroup</tt>
+object. If this <tt CLASS=literal>ThreadGroup</tt> is at the root of
+the thread group hierarchy and has no parent, the method returns
+<tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.480">isDaemon</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.629"><tt CLASS=literal>public final boolean isDaemon()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this <tt CLASS=literal>ThreadGroup</tt>
+is a daemon thread group; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this <tt CLASS=literal>ThreadGroup</tt>
+is a daemon thread group, based on the value of daemon
+attribute of this <tt CLASS=literal>ThreadGroup</tt> object. A daemon
+thread group is destroyed when the last <tt CLASS=literal>Thread</tt>
+in it is stopped, or the last <tt CLASS=literal>ThreadGroup</tt> in
+it is destroyed.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.481">isDestroyed</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.630"><tt CLASS=literal>public synchronized boolean isDestroyed()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this <tt CLASS=literal>ThreadGroup</tt>
+has been destroyed; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this <tt CLASS=literal>ThreadGroup</tt>
+has been destroyed.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.482">list</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.631"><tt CLASS=literal>public void list()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method outputs a listing of the contents of this <tt CLASS=literal>ThreadGroup</tt>
+object to <tt CLASS=literal>System.out</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.483">parentOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.632"><tt CLASS=literal>public final boolean parentOf(ThreadGroup g)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>g</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>ThreadGroup</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this <tt CLASS=literal>ThreadGroup</tt>
+object is the same <tt CLASS=literal>ThreadGroup</tt>, or a direct or indirect parent of
+the specified <tt CLASS=literal>ThreadGroup</tt>; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines if this <tt CLASS=literal>ThreadGroup</tt>
+object is the same as the specified <tt CLASS=literal>ThreadGroup</tt>
+or one of its ancestors in the thread-group hierarchy.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.484">resume</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.633"><tt CLASS=literal>public final void resume()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method resumes each <tt CLASS=literal>Thread</tt> object
+that directly or indirectly belongs to this <tt CLASS=literal>ThreadGroup</tt>
+object by calling its <tt CLASS=literal>resume()</tt> method.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.485">setDaemon</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.634"><tt CLASS=literal>public final void setDaemon(boolean daemon)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>daemon</tt><br>
+<DD>
+
+<P CLASS=para>
+The new value for this <tt CLASS=literal>ThreadGroup</tt>
+object's daemon attribute.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the daemon attribute
+of this <tt CLASS=literal>ThreadGroup</tt> object to the given value.
+A daemon thread group is destroyed when the last <tt CLASS=literal>Thread</tt>
+in it is stopped, or the last <tt CLASS=literal>ThreadGroup</tt> in
+it is destroyed.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.486">setMaxPriority</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.635"><tt CLASS=literal>public final void setMaxPriority(int pri)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>pri</tt><br>
+<DD>
+
+<P CLASS=para>
+The new maximum priority for <tt CLASS=literal>Thread</tt> objects
+that belong to this <tt CLASS=literal>ThreadGroup</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the maximum priority that can be assigned
+to <tt CLASS=literal>Thread</tt> objects that belong to this <tt CLASS=literal>ThreadGroup</tt>
+object.
+
+<P CLASS=para>
+It is possible for a <tt CLASS=literal>ThreadGroup</tt> to contain
+<tt CLASS=literal>Thread</tt> objects that have higher priorities than
+this maximum, if they were given that higher priority before the
+maximum was set to a lower value.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.487">stop</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.636"><tt CLASS=literal>public final void stop()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method stops each <tt CLASS=literal>Thread</tt> object that
+directly or indirectly belongs to this <tt CLASS=literal>ThreadGroup</tt>
+object by calling its <tt CLASS=literal>stop()</tt> method.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.488">suspend</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.637"><tt CLASS=literal>public final void suspend()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method suspends each <tt CLASS=literal>Thread</tt> object
+that directly or indirectly belongs to this <tt CLASS=literal>ThreadGroup</tt>
+object by calling its <tt CLASS=literal>suspend()</tt> method.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.489">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.638"><tt CLASS=literal>public String toString()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of this <tt CLASS=literal>ThreadGroup</tt>
+object.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of this <tt CLASS=literal>ThreadGroup</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.490">uncaughtException</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.639"><tt CLASS=literal>public void uncaughtException(Thread t, Throwable e)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>t</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to a <tt CLASS=literal>Thread</tt> that
+just died because of an uncaught exception.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>e</tt><br>
+<DD>
+
+<P CLASS=para>
+The uncaught exception.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is called when a <tt CLASS=literal>Thread</tt> object
+that belongs to this <tt CLASS=literal>ThreadGroup</tt> object dies
+because of an uncaught exception. If this <tt CLASS=literal>ThreadGroup</tt>
+object has a parent <tt CLASS=literal>ThreadGroup</tt> object, this
+method just calls the parent's <tt CLASS=literal>uncaughtException()</tt>
+method. Otherwise, this method must determine whether the uncaught exception
+is an instance of <tt CLASS=literal>ThreadDeath</tt>. If it is, nothing
+is done. If it is not, the method calls the <tt CLASS=literal>printStackTrace()</tt>
+method of the exception object.
+
+<P CLASS=para>
+If this method is overridden, the overriding method should
+end with a call to <tt CLASS=literal>super.uncaughtException()</tt>.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.418">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.419">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>IllegalThreadStateException</tt>, 
+<tt CLASS=literal>Object</tt>, 
+<tt CLASS=literal>Runnable</tt>, 
+<tt CLASS=literal>SecurityException</tt>, 
+<tt CLASS=literal>SecurityManager</tt>, 
+<tt CLASS=literal>Thread</tt>, 
+<tt CLASS=literal>Throwable</tt>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_62.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_64.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ThreadDeath</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Throwable</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

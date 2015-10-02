@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<TITLE>[Appendix D] D.2 A Brief Tour of sun.awt.image</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:19:02 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="appd_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Appendix D<br>Image Loading</FONT></B></TD>
+<td width=172 align=right valign=top>&nbsp;</td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-APP-D-SECT-2">D.2 A Brief Tour of sun.awt.image</A></h2>
+
+<P CLASS=para>
+The classes in <tt CLASS=literal>sun.awt.image</tt> 
+do the behind-the-scenes work for rendering an image from a file or across 
+the network. This information is purely for the curious; you should never 
+have to work with these classes yourself. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>Image</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Image</tt> class in this package 
+represents a concrete <tt CLASS=literal>Image</tt> 
+instance. It contains the basis for the <tt CLASS=literal>Image</tt> 
+class that is actually used on the run-time platform, which exists in the 
+package for the specific environment. For instance, the <tt CLASS=literal>sun.awt.win32</tt> 
+package includes the <tt CLASS=literal>W32Image</tt> 
+(&nbsp;&nbsp;Java 1.0), the <tt CLASS=literal>sun.awt.windows</tt> 
+package includes <tt CLASS=literal>WImage</tt> (&nbsp;&nbsp;Java 
+1.1), while the <tt CLASS=literal>sun.awt.motif</tt> 
+package includes the <tt CLASS=literal>X11Image</tt>, 
+and the <tt CLASS=literal>sun.awt.macos</tt> package 
+includes the <tt CLASS=literal>MacImage</tt>. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ImageRepresentation</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageRepresentation</tt> is 
+the <tt CLASS=literal>ImageConsumer</tt> that watches 
+the creation of the image and notifies the <tt CLASS=literal>ImageObserver</tt> 
+when it is time to update the display. It plays an important part in the 
+overall control of the <tt CLASS=literal>Image</tt> 
+production process. 
+
+<p>
+<DT CLASS=varlistentry>Image sources<br>
+<DD>
+
+<P CLASS=para>
+A Java image can come from 
+three different sources: memory (through <tt CLASS=literal>createImage()</tt>), 
+local disk, or the network (through <tt CLASS=literal>getImage()</tt>). 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem> 
+<tt CLASS=literal>OffScreenImageSource</tt> implements
+<tt CLASS=literal>ImageProducer</tt> for a single framed image in
+memory. When an <tt CLASS=literal>Image</tt> created from an
+<tt CLASS=literal>OffScreenImageSource</tt> is drawn with
+<tt CLASS=literal>drawImage()</tt>, the <tt CLASS=literal>ImageObserver</tt>
+parameter can be <tt CLASS=literal>null</tt> since all the image
+information is already in memory and there is no need for periodic
+updating as more is retrieved from disk. You can get the graphics
+context of <tt CLASS=literal>OffScreenImageSource</tt> images and use the
+context to draw on the image area. This is how double buffering works.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>InputStreamImageSource</tt> implements
+<tt CLASS=literal>ImageProducer</tt> for an image that comes from disk or
+across the network. When an <tt CLASS=literal>Image</tt> created from an
+<tt CLASS=literal>InputStreamImageSource</tt> is drawn with
+<tt CLASS=literal>drawImage()</tt>, the <tt CLASS=literal>ImageObserver</tt>
+parameter should be the component being drawn on (usually
+<tt CLASS=literal>this</tt>) since the image information will be loaded
+periodically with the help of the <tt CLASS=literal>ImageObserver</tt>
+interface). This class determines how to decode the image type and
+initializes the <tt CLASS=literal>ImageDecoder</tt> to one of
+<tt CLASS=literal>GifImageDecoder</tt>,
+<tt CLASS=literal>JPEGImageDecoder</tt>, or
+<tt CLASS=literal>XbmImageDecoder</tt>, although that can be overridden by
+a subclass. It can use a <tt CLASS=literal>ContentHandler</tt> to work
+with unknown image types.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>FileImageSource</tt> is a subclass of
+<tt CLASS=literal>InputStreamImageSource</tt> for images that come from
+the filesystem. It uses the filename to determine the type of image
+to decode and checks the security manager to ensure that access is
+allowed.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>URLImageSource</tt> is a subclass of
+<tt CLASS=literal>InputStreamImageSource</tt> for images that are
+specified by a URL.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>ByteArrayImageSource</tt> (&nbsp;&nbsp;Java 1.1 only) is a subclass
+of <tt CLASS=literal>InputStreamImageSource</tt> for images that are
+created by calling <tt CLASS=literal>Toolkit.createImage(byte[])</tt>.
+
+<P>
+</UL>
+<p>
+<DT CLASS=varlistentry>Image decoders<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>ImageDecoder</tt> is utilized 
+to convert the image source to an image object. If there is no decoder 
+for an image type, it can be read in with the help of a <tt CLASS=literal>ContentHandler</tt> 
+or your own class that implements <tt CLASS=literal>ImageProducer</tt>, 
+like the <tt CLASS=literal>PPMImageDecoder</tt> shown 
+in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>GifImageDecoder</tt> reads in an image file in the GIF format.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>JPEGImageDecoder</tt> reads in an image file in the JPEG format.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>XbmImageDecoder</tt> reads in an image file in the XBM
+format. Although XBM support is not required by the language
+specification, support is provided with Netscape Navigator, Internet
+Explorer, HotJava, and the Java Developer's Kit from Sun.
+
+<P>
+</UL>
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ImageFetcher</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageFetcher</tt> class fetches 
+the actual image from its source. This class creates a separate daemon 
+thread to fetch each image. The thread is run at a higher priority than 
+the default but not at the maximum priority. </DL>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="appd_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top>&nbsp;</td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>How Images are Loaded</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>&nbsp;</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

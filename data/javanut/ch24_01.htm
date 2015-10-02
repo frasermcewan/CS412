@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 24] The java.io Package</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:21:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch24_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch23_23.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 24</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch24_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-24">24. The java.io Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch24_02.htm'>java.io.BufferedOutputStream (JDK 1.0)</a><br>
+<a href='ch24_03.htm'>java.io.BufferedReader (JDK 1.1)</a><br>
+<a href='ch24_04.htm'>java.io.BufferedWriter (JDK 1.1)</a><br>
+<a href='ch24_05.htm'>java.io.ByteArrayInputStream (JDK 1.0)</a><br>
+<a href='ch24_06.htm'>java.io.ByteArrayOutputStream (JDK 1.0)</a><br>
+<a href='ch24_07.htm'>java.io.CharArrayReader (JDK 1.1)</a><br>
+<a href='ch24_08.htm'>java.io.CharArrayWriter (JDK 1.1)</a><br>
+<a href='ch24_09.htm'>java.io.CharConversionException (JDK 1.1)</a><br>
+<a href='ch24_10.htm'>java.io.DataInput (JDK 1.0)</a><br>
+<a href='ch24_11.htm'>java.io.DataInputStream (JDK 1.0)</a><br>
+<a href='ch24_12.htm'>java.io.DataOutput (JDK 1.0)</a><br>
+<a href='ch24_13.htm'>java.io.DataOutputStream (JDK 1.0)</a><br>
+<a href='ch24_14.htm'>java.io.EOFException (JDK 1.0)</a><br>
+<a href='ch24_15.htm'>java.io.Externalizable (JDK 1.1)</a><br>
+<a href='ch24_16.htm'>java.io.File (JDK 1.0)</a><br>
+<a href='ch24_17.htm'>java.io.FileDescriptor (JDK 1.0)</a><br>
+<a href='ch24_18.htm'>java.io.FileInputStream (JDK 1.0)</a><br>
+<a href='ch24_19.htm'>java.io.FileNotFoundException (JDK 1.0)</a><br>
+<a href='ch24_20.htm'>java.io.FileOutputStream (JDK 1.0)</a><br>
+<a href='ch24_21.htm'>java.io.FileReader (JDK 1.1)</a><br>
+<a href='ch24_22.htm'>java.io.FileWriter (JDK 1.1)</a><br>
+<a href='ch24_23.htm'>java.io.FilenameFilter (JDK 1.0)</a><br>
+<a href='ch24_24.htm'>java.io.FilterInputStream (JDK 1.0)</a><br>
+<a href='ch24_25.htm'>java.io.FilterOutputStream (JDK 1.0)</a><br>
+<a href='ch24_26.htm'>java.io.FilterReader (JDK 1.1)</a><br>
+<a href='ch24_27.htm'>java.io.FilterWriter (JDK 1.1)</a><br>
+<a href='ch24_28.htm'>java.io.InputStream (JDK 1.0)</a><br>
+<a href='ch24_29.htm'>java.io.InputStreamReader (JDK 1.1)</a><br>
+<a href='ch24_30.htm'>java.io.InterruptedIOException (JDK 1.0)</a><br>
+<a href='ch24_31.htm'>java.io.InvalidClassException (JDK 1.1)</a><br>
+<a href='ch24_32.htm'>java.io.InvalidObjectException (JDK 1.1)</a><br>
+<a href='ch24_33.htm'>java.io.IOException (JDK 1.0)</a><br>
+<a href='ch24_34.htm'>java.io.LineNumberInputStream (JDK 1.0; Deprecated.)</a><br>
+<a href='ch24_35.htm'>java.io.LineNumberReader (JDK 1.1)</a><br>
+<a href='ch24_36.htm'>java.io.NotActiveException (JDK 1.1)</a><br>
+<a href='ch24_37.htm'>java.io.NotSerializableException (JDK 1.1)</a><br>
+<a href='ch24_38.htm'>java.io.ObjectInput (JDK 1.1)</a><br>
+<a href='ch24_39.htm'>java.io.ObjectInputStream (JDK 1.1)</a><br>
+<a href='ch24_40.htm'>java.io.ObjectInputValidation (JDK 1.1)</a><br>
+<a href='ch24_41.htm'>java.io.ObjectOutput (JDK 1.1)</a><br>
+<a href='ch24_42.htm'>java.io.ObjectOutputStream (JDK 1.1)</a><br>
+<a href='ch24_43.htm'>java.io.ObjectStreamClass (JDK 1.1)</a><br>
+<a href='ch24_44.htm'>java.io.ObjectStreamException (JDK 1.1)</a><br>
+<a href='ch24_45.htm'>java.io.OptionalDataException (JDK 1.1)</a><br>
+<a href='ch24_46.htm'>java.io.OutputStream (JDK 1.0)</a><br>
+<a href='ch24_47.htm'>java.io.OutputStreamWriter (JDK 1.1)</a><br>
+<a href='ch24_48.htm'>java.io.PipedInputStream (JDK 1.0)</a><br>
+<a href='ch24_49.htm'>java.io.PipedOutputStream (JDK 1.0)</a><br>
+<a href='ch24_50.htm'>java.io.PipedReader (JDK 1.1)</a><br>
+<a href='ch24_51.htm'>java.io.PipedWriter (JDK 1.1)</a><br>
+<a href='ch24_52.htm'>java.io.PrintStream (JDK 1.0)</a><br>
+<a href='ch24_53.htm'>java.io.PrintWriter (JDK 1.1)</a><br>
+<a href='ch24_54.htm'>java.io.PushbackInputStream (JDK 1.0)</a><br>
+<a href='ch24_55.htm'>java.io.PushbackReader (JDK 1.1)</a><br>
+<a href='ch24_56.htm'>java.io.RandomAccessFile (JDK 1.0)</a><br>
+<a href='ch24_57.htm'>java.io.Reader (JDK 1.1)</a><br>
+<a href='ch24_58.htm'>java.io.SequenceInputStream (JDK 1.0)</a><br>
+<a href='ch24_59.htm'>java.io.Serializable (JDK 1.1)</a><br>
+<a href='ch24_60.htm'>java.io.StreamCorruptedException (JDK 1.1)</a><br>
+<a href='ch24_61.htm'>java.io.StreamTokenizer (JDK 1.0)</a><br>
+<a href='ch24_62.htm'>java.io.StringBufferInputStream (JDK 1.0; Deprecated.)</a><br>
+<a href='ch24_63.htm'>java.io.StringReader (JDK 1.1)</a><br>
+<a href='ch24_64.htm'>java.io.StringWriter (JDK 1.1)</a><br>
+<a href='ch24_65.htm'>java.io.SyncFailedException (JDK 1.1)</a><br>
+<a href='ch24_66.htm'>java.io.UnsupportedEncodingException (JDK 1.1)</a><br>
+<a href='ch24_67.htm'>java.io.UTFDataFormatException (JDK 1.0)</a><br>
+<a href='ch24_68.htm'>java.io.WriteAbortedException (JDK 1.1)</a><br>
+<a href='ch24_69.htm'>java.io.Writer (JDK 1.1)</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.io</tt> package contains a relatively large
+number of classes, but, as you can see from
+<A HREF="ch24_01.htm#JNUT2-CH-24-FIG-1">Figure 24.1</A> 
+and
+<A HREF="ch24_01.htm#JNUT2-CH-24-FIG-2">Figure 24.2</A>,
+the classes form a fairly structured hierarchy.  Most of the
+package consists of byte streams--subclasses of
+<tt CLASS=literal>InputStream</tt> or <tt CLASS=literal>OutputStream</tt>--and (in Java
+1.1) character streams--subclasses of <tt CLASS=literal>Reader</tt> or
+<tt CLASS=literal>Writer</tt>. Each of these stream types has a very
+specific purpose, and despite its size, <tt CLASS=literal>java.io</tt> is a
+straightforward package to understand and to use.<A NAME="CH24.JAVA.IO.PACK1"></A>
+
+<P CLASS=para>
+Before we consider the stream classes in the package, we'll
+consider the important non-stream classes. <tt CLASS=literal>File</tt>
+represents a file or directory name in a system independent
+way, and provides methods for listing directories, querying
+file attributes, and for renaming and deleting files.
+<tt CLASS=literal>FilenameFilter</tt> is an interface that defines a method
+that accepts or rejects specified filenames. It is used by
+the <tt CLASS=literal>java.awt.FileDialog</tt> dialog box and by the
+<tt CLASS=literal>File</tt> class to specify what types of files should be
+included in directory listings. <tt CLASS=literal>RandomAccessFile</tt>
+allows you to read or write from or to arbitrary locations
+of a file. Often, though, you'll prefer sequential access
+to a file and should use one of the stream classes.
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream</tt> and <tt CLASS=literal>OutputStream</tt> are abstract
+classes that define methods for reading and writing bytes.
+Their subclasses allow bytes to be read from and written to
+a variety of sources and sinks. <tt CLASS=literal>FileInputStream</tt> and
+<tt CLASS=literal>FileOutputStream</tt> read from and write to files.
+<tt CLASS=literal>ByteArrayInputStream</tt> and
+<tt CLASS=literal>ByteArrayOutputStream</tt> read from and write to an
+array of bytes in memory. <tt CLASS=literal>PipedInputStream</tt> reads
+bytes from a <tt CLASS=literal>PipedOutputStream</tt>, and
+<tt CLASS=literal>PipedOutputStream</tt> writes bytes to a
+<tt CLASS=literal>PipedInputStream</tt>. These classes work together to
+implement a "pipe" for communication between threads.
+
+<P CLASS=para>
+<tt CLASS=literal>FilterInputStream</tt> and <tt CLASS=literal>FilterOutputStream</tt> are
+special--they filter input and output bytes. When a
+<tt CLASS=literal>FilterInputStream</tt> is created, an <tt CLASS=literal>InputStream</tt>
+is specified for it to filter. When you call the
+<tt CLASS=literal>read()</tt> method of a <tt CLASS=literal>FilterInputStream</tt>, it
+calls the <tt CLASS=literal>read()</tt> method of its specified stream,
+processes the bytes it reads somehow, and then returns the
+filtered bytes.
+Similarly, you specify an <tt CLASS=literal>OutputStream</tt> to be filtered when
+you create a <tt CLASS=literal>FilterOutputStream</tt>. Calling the
+<tt CLASS=literal>write()</tt> method of a <tt CLASS=literal>FilterOutputStream</tt> causes it to
+process your bytes in some way and then pass those filtered
+bytes to the <tt CLASS=literal>write()</tt> method of its <tt CLASS=literal>OutputStream</tt>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-24-FIG-1">Figure 24.1: The java.io package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_2401.gif" alt="[Graphic: Figure 24-1]" width=464 height=739 border=0>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-24-FIG-2">Figure 24.2: The exception classes of the java.io package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_2402.gif" alt="[Graphic: Figure 24-2]" width=464 height=286 border=0>
+
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>FilterInputStream</tt> and <tt CLASS=literal>FilterOutputStream</tt> do
+not perform any filtering themselves; this is done by their
+subclasses. <tt CLASS=literal>BufferedInputStream</tt> and
+<tt CLASS=literal>BufferedOutputStream</tt> provide input and output
+buffering and can increase I/O efficiency.
+<tt CLASS=literal>DataInputStream</tt> reads raw bytes from a stream and
+interprets them in various binary formats. It has various
+methods to read primitive Java data types in their standard
+binary formats.  <tt CLASS=literal>DataOutputStream</tt> allows you to
+write Java primitive data types in binary format.
+
+<P CLASS=para>
+In Java 1.1, the byte streams just described are
+complemented by an analogous set of character input and
+output streams.  <tt CLASS=literal>Reader</tt> is the superclass of all
+character input streams, and <tt CLASS=literal>Writer</tt> is the
+superclass of all character output streams.  These character
+streams supersede the byte streams for all textual I/O.
+They are more efficient than the byte streams, and they
+correctly handle the conversion between local encodings and
+Unicode text, making them invaluable for internationalized
+programs.  Most of the <tt CLASS=literal>Reader</tt> and <tt CLASS=literal>Writer</tt>
+streams have obvious byte stream analogs.
+<tt CLASS=literal>BufferedReader</tt> is a commonly used stream.  It
+provides buffering for efficiency, and also has a
+<tt CLASS=literal>readLine()</tt> method to read one line of text at a time.
+<tt CLASS=literal>PrintWriter</tt> is another very common stream--its
+methods allow output of a textual representation of any
+primitive Java type or of any object (via the object's
+<tt CLASS=literal>toString()</tt> method).  See <A HREF="ch11_01.htm">Chapter 11, <i>Internationalization</i></A>
+for a discussion of the use of
+character streams in internationalized programs.
+
+<P CLASS=para>
+The <tt CLASS=literal>ObjectInputStream</tt> and <tt CLASS=literal>ObjectOutputStream</tt>
+classes are special.  These byte stream classes are new in
+Java 1.1 and are part of the Object Serialization API.  See
+<A HREF="ch09_01.htm">Chapter 9, <i>Object Serialization</i></A> for further details.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-1">24.1 java.io.BufferedInputStream (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-1.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class is a <tt CLASS=literal>FilterInputStream</tt> that provides
+input data buffering--efficiency is increased by reading in large
+amounts of data and storing them in an internal buffer.
+When data is requested, it is usually available from the
+buffer. Thus, most calls to read data do not have to make a
+call to actually read data from a disk, network, or
+other slow source. Create a
+<tt CLASS=literal>BufferedInputStream</tt> by specifying the
+<tt CLASS=literal>InputStream</tt> that is to have buffering applied in the
+call to the constructor.  See also <tt CLASS=literal>BufferedReader</tt>.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>BufferedInputStream</tt> extends FilterInputStream {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>BufferedInputStream</tt>(InputStream <tt CLASS=literal>in</tt>);
+            public <tt CLASS=literal>BufferedInputStream</tt>(InputStream <tt CLASS=literal>in</tt>, int <tt CLASS=literal>size</tt>);
+    // <tt CLASS=literal>Protected Instance Variables</tt>
+            protected byte[] <tt CLASS=literal>buf</tt>;
+            protected int <tt CLASS=literal>count</tt>;
+            protected int <tt CLASS=literal>marklimit</tt>;
+            protected int <tt CLASS=literal>markpos</tt>;
+            protected int <tt CLASS=literal>pos</tt>;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public synchronized int <tt CLASS=literal>available</tt>() throws IOException;  //<tt CLASS=literal> Overrides FilterInputStream</tt>
+            public synchronized void <tt CLASS=literal>mark</tt>(int <tt CLASS=literal>readlimit</tt>);  //<tt CLASS=literal> Overrides FilterInputStream</tt>
+            public boolean <tt CLASS=literal>markSupported</tt>();  //<tt CLASS=literal> Overrides FilterInputStream</tt>
+            public synchronized int <tt CLASS=literal>read</tt>() throws IOException;  //<tt CLASS=literal> Overrides FilterInputStream</tt>
+            public synchronized int <tt CLASS=literal>read</tt>(byte[] <tt CLASS=literal>b</tt>, int <tt CLASS=literal>off</tt>, int <tt CLASS=literal>len</tt>) throws IOException;  //<tt CLASS=literal> Overrides FilterInputStream</tt>
+            public synchronized void <tt CLASS=literal>reset</tt>() throws IOException;  //<tt CLASS=literal> Overrides FilterInputStream</tt>
+            public synchronized long <tt CLASS=literal>skip</tt>(long <tt CLASS=literal>n</tt>) throws IOException;  //<tt CLASS=literal> Overrides FilterInputStream</tt>
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-1.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+Object->InputStream->FilterInputStream->BufferedInputStream
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch23_23.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch24_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.beans.Visibility (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.io.BufferedOutputStream (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

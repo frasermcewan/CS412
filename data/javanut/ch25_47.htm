@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 25] 25.47 java.lang.Object (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:27:26 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_46.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 25<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch25_48.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-47">25.47 java.lang.Object (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-47.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This is the root class in Java. All classes are subclasses
+of <tt CLASS=literal>Object</tt>, and thus all objects can invoke the
+<tt CLASS=literal>public</tt> and <tt CLASS=literal>protected</tt> methods of this class.
+<tt CLASS=literal>equals()</tt> tests whether two objects have the same
+value (i.e., not whether two variables refer to the same
+object, but whether two distinct objects have byte-for-byte equivalence).
+For classes that implement the <tt CLASS=literal>Cloneable</tt>
+interface, <tt CLASS=literal>clone()</tt> makes a byte-for-byte copy of an
+<tt CLASS=literal>Object</tt>. <tt CLASS=literal>getClass()</tt> returns the
+<tt CLASS=literal>Class</tt> object associated with any <tt CLASS=literal>Object</tt>, and
+the <tt CLASS=literal>notify()</tt>, <tt CLASS=literal>notifyAll()</tt>, and
+<tt CLASS=literal>wait()</tt> methods are used for thread synchronization
+on a given <tt CLASS=literal>Object</tt>.
+
+<P CLASS=para>
+A number of these <tt CLASS=literal>Object</tt> methods should be
+overridden by subclasses of <tt CLASS=literal>Object</tt>. Subclasses
+should provide their own definition of the
+<tt CLASS=literal>toString()</tt> method so that they can be used with the
+string concatenation operator and with the
+<tt CLASS=literal>PrintWriter.println()</tt> methods. Defining the
+<tt CLASS=literal>toString()</tt> method for all objects also helps with
+debugging.
+
+<P CLASS=para>
+Classes that contain references to other objects may want to
+override the <tt CLASS=literal>equals()</tt> and <tt CLASS=literal>clone()</tt> methods
+(for <tt CLASS=literal>Cloneable</tt> objects) so that they recursively
+call the <tt CLASS=literal>equals()</tt> and <tt CLASS=literal>clone()</tt> methods of the
+objects referred to within the original object.
+Some classes, particularly those that override
+<tt CLASS=literal>equals()</tt>, may also want to override the
+<tt CLASS=literal>hashCode()</tt> method to provide an appropriate hashcode
+to be used when storing instances in a
+<tt CLASS=literal>Hashtable</tt> data structure.
+
+<P CLASS=para>
+Classes that allocate system resources other than memory
+(such as file descriptors or windowing system graphic
+contexts) should override the <tt CLASS=literal>finalize()</tt> method to
+release these resources when the object is no longer
+referred to and is about to be garbage collected.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>Object</tt> {
+    // <tt CLASS=literal>Default Constructor: public Object()</tt>
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>obj</tt>);
+            public final native Class <tt CLASS=literal>getClass</tt>();
+            public native int <tt CLASS=literal>hashCode</tt>();
+            public final native void <tt CLASS=literal>notify</tt>();
+            public final native void <tt CLASS=literal>notifyAll</tt>();
+            public String <tt CLASS=literal>toString</tt>();
+            public final native void <tt CLASS=literal>wait</tt>(long <tt CLASS=literal>timeout</tt>) throws InterruptedException;
+            public final void <tt CLASS=literal>wait</tt>(long <tt CLASS=literal>timeout</tt>, int <tt CLASS=literal>nanos</tt>) throws InterruptedException;
+            public final void <tt CLASS=literal>wait</tt>() throws InterruptedException;
+    // <tt CLASS=literal>Protected Instance Methods</tt>
+            protected native Object <tt CLASS=literal>clone</tt>() throws CloneNotSupportedException;
+            protected void <tt CLASS=literal>finalize</tt>() throws Throwable;
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-47.2">Extended By:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Many classes</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-47.3">Passed To:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Many methods</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-47.4">Returned By:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Many methods</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-47.5">Type Of:</A></h3>
+
+<P CLASS=para>
+Event.arg, 
+Event.target, 
+EventObject.source, 
+Image.UndefinedProperty, 
+Reader.lock, 
+ReplicateScaleFilter.outpixbuf, 
+Vector.elementData, 
+Writer.lock
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_46.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch25_48.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.lang.NumberFormatException (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.lang.OutOfMemoryError (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

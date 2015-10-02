@@ -1,0 +1,398 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.8 Data Hiding and Encapsulation</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:49:56 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Classes and Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-8">3.8 Data Hiding and Encapsulation</A></h2>
+
+<P CLASS=para>
+<A NAME="CH3.PROGRAMMING.1"></A><A NAME="CH3.ENCAPSULATIO1"></A>We started this chapter by describing a class as "a
+collection of data and methods." One of the important object-oriented 
+techniques that we haven't discussed so far is
+hiding the data within the class, and making it available
+only through the methods.  This technique is often known as
+<I CLASS=emphasis>encapsulation</I>, because it seals the class's data (and
+internal methods)
+safely inside the "capsule" of the class, where it can be
+accessed only by trusted users--i.e., by the methods of the class. 
+
+<P CLASS=para>
+Why would you want to do this?  The most important reason is
+to hide the internal implementation details of your class.
+If you prevent programmers from relying on those details,
+then you can safely modify the implementation without
+worrying that you will break existing code that uses the
+class.
+
+<P CLASS=para>
+Another reason for encapsulation is to protect
+your class against accidental or willful stupidity.  A class
+often contains a number of variables that are interdependent
+and must be in a consistent state.  If you allow a
+programmer (this may be you yourself) to manipulate those
+variables directly, she may change one variable without changing 
+important related variables, thus leaving the class in an 
+inconsistent state. If, instead, she had to call a method 
+to change the variable, that method can be sure to do everything
+necessary to keep the state consistent.
+
+<P CLASS=para>
+Here's another way to think about encapsulation:  
+When all of a class's variables are hidden, the
+class's methods define the only possible operations that can
+be performed on objects of that class.  Once you have
+carefully tested and debugged your methods, you can be
+confident that the class will work as expected.  On the
+other hand, if all the variables can be directly
+manipulated, the number of possibilities you have to test
+becomes unmanageable.
+
+<P CLASS=para>
+There are other reasons to hide data, too:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Internal variables that are visible externally to the class
+just clutter up your class's API. Keeping visible variables
+to a minimum keeps your class tidy and elegant.
+
+<P>
+<li CLASS=listitem>If a variable is visible in your class, you have to document
+it.  Save time by hiding it instead!
+
+<P>
+</UL>
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-8.1">Visibility Modifiers</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.VISIBILITY.M1"></A><A NAME="CH3.PUBLIC.MODIF1"></A>In most of our examples so far, you've probably noticed the
+<tt CLASS=literal>public</tt> keyword being used.  When applied to a class,
+it means that the class is visible everywhere.  When applied
+to a method or variable, it means that the method or
+variable is visible everywhere.
+
+<P CLASS=para>
+<A NAME="CH3.PRIVATE.MODI1"></A>To hide variables (or methods, for that matter) you just
+have to declare them <tt CLASS=literal>private</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Laundromat {       // People can use this class.
+    private Laundry[] dirty;    // They can't see this internal variable,
+    public void wash() { ... }  // but they can use these public methods
+    public void dry() { ... }   // to manipulate the internal variable.
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>private</tt> field of a class is visible only in
+methods defined within that class.  (Or, in Java 1.1, in
+classes defined within the class.)  Similarly, a
+<tt CLASS=literal>private</tt> method may only be invoked by methods within
+the class (or methods of classes within the class).  Private
+members are not visible within subclasses, and are <I CLASS=emphasis>not</I>
+inherited by subclasses as other members are.
+[11]
+Of course, non-<tt CLASS=literal>private</tt> methods that invoke
+<tt CLASS=literal>private</tt> methods internally are inherited and may be
+invoked by subclasses.
+
+<blockquote class=footnote>
+<P CLASS=para>[11] 
+Every object does, of course, have its own copy of all
+fields of all superclasses, including the <tt CLASS=literal>private</tt>
+fields.  The methods defined by the object can never refer
+to or use the <tt CLASS=literal>private</tt> fields of superclasses,
+however, and so we say that those fields are not inherited.
+</blockquote>
+<P CLASS=para>
+<A NAME="CH3.PROTECTED.MO1"></A>Besides <tt CLASS=literal>public</tt> and <tt CLASS=literal>private</tt>, Java has two
+other visibility levels: <tt CLASS=literal>protected</tt> and the default
+visibility level, "package visibility," which applies if
+none of the <tt CLASS=literal>public</tt>, <tt CLASS=literal>private</tt>, and
+<tt CLASS=literal>protected</tt> keywords are used.
+
+<P CLASS=para>
+A <tt CLASS=literal>protected</tt> member of a class is visible within the
+class where it is defined, of course, and within all
+subclasses of the class, and also within all classes that
+are in the same package as that class.  You should use
+<tt CLASS=literal>protected</tt> visibility when you want to hide fields
+and methods from code that uses your class, but want those
+fields and methods to be fully accessible to code that
+extends your class.
+
+<P CLASS=para>
+The default package visibility is more restrictive than
+<tt CLASS=literal>protected</tt>, but less restrictive than
+<tt CLASS=literal>private</tt>.  If a class member is not declared with any
+of the <tt CLASS=literal>public</tt>, <tt CLASS=literal>private</tt>, or <tt CLASS=literal>protected</tt>
+keywords, then it is visible only within the class that
+defines it and within classes that are part of the same
+package.  It is not visible to subclasses unless those
+subclasses are part of the same package.
+
+<P CLASS=para>
+A note about packages: A package is a group of related and
+possibly cooperating classes.  All non-<tt CLASS=literal>private</tt>
+members of all classes in the package are
+visible to all other classes in the package.  This is okay
+because the classes are assumed to know about, and trust,
+each other.
+[12]
+The only time difficulty arises is when you write programs
+without a <tt CLASS=literal>package</tt> statement.  These classes are
+thrown into a default package with other
+<tt CLASS=literal>package</tt>-less classes, and all their
+non-<tt CLASS=literal>private</tt> members are visible throughout the
+package.  (The default package usually consists of all
+classes in the current working directory.)
+
+<blockquote class=footnote>
+<P CLASS=para>[12] 
+If you're a C++ programmer, you can say that classes
+within the same package are <tt CLASS=literal>friend</tt>-ly to each other.
+</blockquote>
+<P CLASS=para>
+There is an important point to make about subclass access to
+<tt CLASS=literal>protected</tt> members.  A subclass inherits the
+<tt CLASS=literal>protected</tt> members of its superclass, but it can only
+access those members through instances of itself, not
+directly in instances of the superclass.  Suppose, for
+example, that <tt CLASS=literal>A</tt>, <tt CLASS=literal>B</tt>, and <tt CLASS=literal>C</tt> are
+<tt CLASS=literal>public</tt> classes, each defined in a different package,
+and that <tt CLASS=literal>a</tt>, <tt CLASS=literal>b</tt>, and <tt CLASS=literal>c</tt> are instances
+of those classes.  Let <tt CLASS=literal>B</tt> be a subclass of <tt CLASS=literal>A</tt>,
+and <tt CLASS=literal>C</tt> be a subclass of <tt CLASS=literal>B</tt>.  Now, if <tt CLASS=literal>A</tt>
+has a <tt CLASS=literal>protected</tt> field <tt CLASS=literal>x</tt>, then the class B
+inherits that field, and its methods can use <tt CLASS=literal>this.x</tt>,
+<tt CLASS=literal>b.x</tt> and <tt CLASS=literal>c.x</tt>.  But it cannot access
+<tt CLASS=literal>a.x</tt>.  Similarly, if <tt CLASS=literal>A</tt> has a
+<tt CLASS=literal>protected</tt> method <tt CLASS=literal>f()</tt>, then the methods of
+class <tt CLASS=literal>B</tt> can invoke <tt CLASS=literal>this.f()</tt>, <tt CLASS=literal>b.f()</tt>,
+and <tt CLASS=literal>c.f()</tt>, but they cannot invoke <tt CLASS=literal>a.f()</tt>.
+
+<P CLASS=para>
+<A HREF="ch03_08.htm#JNUT2-CH-3-TAB-1">Table 3.1</A>
+shows the circumstances under which class members of the
+various visibility types are accessible to other classes.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-3-TAB-1">Table 3.1: Class Member Accessibility</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Accessible to:</TH>
+<TH ALIGN="left">public</TH>
+<TH ALIGN="left">protected</TH>
+<TH ALIGN="left">package</TH>
+<TH ALIGN="left">private</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Same class</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Class in same package</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Subclass in different package</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">no</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Non-subclass, different package</TD>
+<TD ALIGN="left">yes</TD>
+<TD ALIGN="left">no</TD>
+<TD ALIGN="left">no</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+The details of member visibility in Java can become quite
+confusing.  Here are some simple rules of thumb for using
+visibility modifiers:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Use <tt CLASS=literal>public</tt> only for methods and constants that form
+part of the public API of the class.  Certain very important
+or very frequently used fields may also be <tt CLASS=literal>public</tt>,
+but it is common practice to make fields non-<tt CLASS=literal>public</tt>
+and encapsulate them with <tt CLASS=literal>public</tt> accessor methods.
+
+<P>
+<li CLASS=listitem>Use <tt CLASS=literal>protected</tt> for fields and methods that aren't
+necessary to use the class, but that may be of interest to
+anyone creating a subclass as part of a different package.
+
+<P>
+<li CLASS=listitem>Use the default package visibility for fields and methods
+that you want to be hidden outside of the package, but which
+you want cooperating classes within the same package to have
+access to.
+
+<P>
+<li CLASS=listitem>Use <tt CLASS=literal>private</tt> for fields and methods that are only
+used inside the class and should be hidden everywhere else.
+
+<P>
+</UL>
+<P CLASS=para>
+Note that you can't take advantage of package visibility
+unless you use the <tt CLASS=literal>package</tt> statement to group your
+related classes into packages.  See <A HREF="ch13_01.htm">Chapter 13, <i>Java Syntax</i></A>, <I CLASS=emphasis>Java
+Syntax</I>, for a table that summarizes the Java visibility
+modifiers and other modifiers.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-8.2">Data Access Methods</A></h3>
+
+<P CLASS=para>
+In the <tt CLASS=literal>Circle</tt> example we've been using, we've
+declared the circle position and radius to be <tt CLASS=literal>public</tt>
+fields.  In fact, the <tt CLASS=literal>Circle</tt> class is one where it
+may well make sense to keep those visible--it is a simple
+enough class, with no dependencies between the variables.
+
+<P CLASS=para>
+On the other hand, suppose we wanted to impose a maximum
+radius on objects of the <tt CLASS=literal>Circle</tt> class.  Then it
+would be better to hide the <tt CLASS=literal>r</tt> variable so that it
+could not be set directly.  Instead of a visible <tt CLASS=literal>r</tt>
+variable, we'd implement a <tt CLASS=literal>setRadius()</tt> method that
+verifies that the specified radius isn't too large and then
+sets the <tt CLASS=literal>r</tt> variable internally.
+<A HREF="ch03_08.htm#JNUT2-CH-3-EX-14">Example 3.14</A>
+shows how we might implement <tt CLASS=literal>Circle</tt> with
+encapsulated data and a restriction on radius size.  For
+convenience, we use <tt CLASS=literal>protected</tt> fields for the radius
+and position variables.  This means that subclasses of
+<tt CLASS=literal>Circle</tt>, or cooperating classes within the
+<tt CLASS=literal>shapes</tt> package are able to access these
+variables directly.  To any other classes, however, the
+variables are hidden.  Also, note the <tt CLASS=literal>private</tt>
+constant and method used to check whether a specified radius
+is legal.  And finally, notice the <tt CLASS=literal>public</tt> methods
+that allow you to set and query the values of the instance
+variables.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-14">Example 3.14: Hiding Variables in the Circle Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package shapes;             // Specify a package for the class.
+public class Circle {       // Note that the class is still public!
+    protected double x, y;  // Position is hidden, but visible to subclasses.
+    protected double r;     // Radius is hidden, but visible to subclasses.
+    private static final double MAXR = 100.0;    // Maximum radius (constant).
+    private boolean check_radius(double r) { return (r &lt;= MAXR); }
+    // Public constructors
+    public Circle(double x, double y, double r) {
+        this.x = x; this.y = y; 
+        if (check_radius(r)) this.r = r;
+        else this.r = MAXR;
+    }
+    public Circle(double r) { this(0.0, 0.0, r); }
+    public Circle() { this(0.0, 0.0, 1.0); }
+    // Public data access methods
+    public void moveto(double x, double y) { this.x = x; this.y = y;}
+    public void move(double dx, double dy) { x += dx;  y += dy; }
+    public void setRadius(double r) { this.r = (check_radius(r))?r:MAXR; }
+    // Declare these trivial methods final so we don't get dynamic
+    // method lookup and so that they can be inlined by the compiler.
+    public final double getX() { return x; };
+    public final double getY() { return y; };
+    public final double getRadius() { return r; };
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Overriding Methods</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Abstract Classes and Interfaces</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

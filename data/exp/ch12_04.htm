@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] 12.4 CardLayout</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:02:02 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>Layout Managers</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-12-SECT-4">12.4 CardLayout</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.C"></A> 
+<tt CLASS=literal>CardLayout</tt> is a special layout manager for creating
+the effect of a stack of cards. Instead of arranging all of the
+container's components, it displays only one at a time.  You would use
+this kind of layout to implement a hypercard stack or a Windows-style
+set of configuration screens. When you add a component to the layout,
+you use the two-argument version of <tt CLASS=literal>add()</tt>; the
+extra argument is an arbitrary string that serves as the card's
+name:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+add("netconfigscreen", myComponent); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To bring a particular card to the top of the stack, call the
+<tt CLASS=literal>CardLayout</tt>'s <tt CLASS=literal>show()</tt>
+method with two arguments: the parent <tt CLASS=literal>Container</tt>
+and the name of the card you want to show. There are also methods like
+<tt CLASS=literal>first()</tt>, <tt CLASS=literal>last()</tt>,
+<tt CLASS=literal>next()</tt>, and <tt CLASS=literal>previous()</tt> for
+working with the stack of cards. These methods take a single argument:
+the parent <tt CLASS=literal>Container</tt>. Here's a simple
+example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*; 
+      
+public class main extends java.applet.Applet { 
+    CardLayout cards = new CardLayout(); 
+      
+    public void init() { 
+        setLayout( cards ); 
+        add( new Button("one"), "one" ); 
+        add( new Button("two"), "two" ); 
+        add( new Button("three"), "three" ); 
+    } 
+      
+    public boolean action( Event e, Object arg) { 
+        cards.next( this ); 
+        return true; 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We add three buttons to the layout and cycle through them as they are
+pressed. In a more realistic example, we would build a group of
+panels, each of which might implement some part of a complex user
+interface, and add those panels to the layout. Each panel would have
+its own layout manager. The panels would be resized to fill the entire
+area available (i.e., the area of the <tt CLASS=literal>Container</tt>
+they are in), and their individual layout managers would arrange their
+internal components.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>BorderLayout</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>GridBagLayout</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

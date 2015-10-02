@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.9 Java Beans</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:51:15 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>What's New in Java 1.1</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-9">4.9 Java Beans</A></h2>
+
+<P CLASS=para>
+<A NAME="CH4.APIS.APPLIC1"></A><A NAME="CH4.JAVABEANS.AP1"></A>JavaBeans is a "software component model" for Java that has
+generated quite a lot of interest from many quarters.  The
+JavaBeans API specification defines "beans" as follows: "A
+Java Bean is a reusable software component that can be
+manipulated visually in a builder tool."  The
+<tt CLASS=literal>java.beans</tt> package defines classes and interfaces
+designed to work with beans at three distinct levels,
+described below.
+
+<P CLASS=para>
+Much of the JavaBeans API is intended for use only by those
+few people who are writing interface builder tools that
+manipulate beans.  The main thing that a builder tool needs
+to be able to do with beans is "introspect" on them--i.e., to
+determine what properties are exposed by a bean, what
+methods it exports, and what events it can generate.  This
+is information that a builder tool must be able to display
+to the programmer who is using the tool.  The JavaBeans API
+defines a set of naming conventions for the methods that a
+bean defines.  If a bean follows these conventions, a
+builder tool can use the new Reflection API to determine
+what properties, methods, and events the bean supports.  The
+<tt CLASS=literal>Introspector</tt> class uses reflection to obtain
+information about a bean and presents it to the builder
+tool in the form of a <tt CLASS=literal>BeanInfo</tt> object, which itself
+contains various <tt CLASS=literal>FeatureDescriptor</tt> objects
+describing the properties, methods, and events of the bean.
+
+<P CLASS=para>
+At the second level, the JavaBeans API contains classes and
+interfaces intended for use by programmers who are creating
+beans for others to use. <A HREF="ch10_01.htm">Chapter 10, <i>Java Beans</i></A>
+describes how to use the classes in <tt CLASS=literal>java.beans</tt> in this manner.
+One of the surprising features of
+the JavaBeans API is that there is no <tt CLASS=literal>Bean</tt> class that
+all beans must extend.  A bean can be of any class; however,
+as we've seen, beans should follow certain naming
+conventions.  The <tt CLASS=literal>java.beans</tt> classes that a bean
+creator uses are generally auxiliary classes, used not by
+the bean, but by the builder tool that manipulates the bean.
+These auxiliary classes are shipped with a bean, and
+provide additional information or methods that a builder
+tool may use with the bean.  These classes are not
+included in finished software built with the bean.
+
+<P CLASS=para>
+For example, one of the auxiliary classes a bean may define
+is a custom <tt CLASS=literal>BeanInfo</tt> class to provide information to
+the builder tool that is not available through the
+Reflection API.  This information might include a
+human-readable description of the bean's properties,
+methods, and events, for example.  Or, if a bean does not
+follow the standard naming conventions, this custom
+<tt CLASS=literal>BeanInfo</tt> class must also provide more basic
+information about the bean's properties, methods, and
+events.
+
+<P CLASS=para>
+Besides a <tt CLASS=literal>BeanInfo</tt> class, complex beans may also
+provide a <tt CLASS=literal>Customizer</tt> class and one or more
+<tt CLASS=literal>PropertyEditor</tt> classes.  A <tt CLASS=literal>Customizer</tt> class
+is a kind of configuration tool or "wizard" for a bean.  It
+is instantiated by the builder tool in order to guide the
+user through bean customization.  A <tt CLASS=literal>PropertyEditor</tt>
+class is used to allow the user to edit the value of bean
+properties of a particular class.  Builder tools have
+built-in property editors for common types such as strings,
+colors, and fonts, but a bean that has properties of some
+unusual or custom type may want to provide a
+<tt CLASS=literal>PropertyEditor</tt> subclass to allow the user to easily
+specify values for those properties.
+
+<P CLASS=para>
+The third level at which the JavaBeans API can be used is by programmers
+who are assembling an application using beans.  Some
+programmers may do this through a builder tool, while others
+may do it "by hand", the old-fashioned way.  Programmers
+using beans do not typically have to use the
+<tt CLASS=literal>java.beans</tt> package.  At this level, it is more a
+matter of reading the documentation for the particular beans
+being used and following those instructions.  Nevertheless,
+a programmer using beans does need to be familiar with the
+event model used by beans, which is the same as the Java 1.1
+event model for AWT.  Also, programmers using beans "by
+hand" should be familiar with the naming conventions for
+bean properties, methods, and events, in order to more
+easily understand how a given bean can be used.  In Java
+1.1, all AWT components are beans and follow these naming
+conventions.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Reflection</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Enterprise APIs: JDBC, RMI, and Security</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,625 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.6 Arrays</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:51:13 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>The Java Language</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-6">4.6 Arrays</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.ARRAYS"></A>An array is a special type of object that can hold an ordered
+collection of elements. The type of the elements of the array is
+called the <I CLASS=emphasis>base type</I> of the array; the number of
+elements it holds is a fixed attribute called its
+<I CLASS=emphasis>length</I>. (For a collection with a variable length,
+see the discussion of <tt CLASS=literal>Vector</tt> objects in <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A>.) Java supports arrays of all numeric and
+reference types.
+
+<P CLASS=para>
+The basic syntax of arrays looks much like that of C or C++. We
+create an array of a specified length and access the elements with the
+special index operator, <tt CLASS=literal>[]</tt>. Unlike other
+languages, however, arrays in Java are true, first-class objects, which
+means they are real objects within the Java language. An array is
+an instance of a special Java array class and has a corresponding type
+in the type system. This means that to use an array, as with any other
+object, we first declare a variable of the appropriate type and then
+use the <tt CLASS=literal>new</tt> operator to create an instance of it.
+
+<P CLASS=para>
+Array objects differ from other objects in Java in three respects: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Java implicitly creates a special array class for us whenever we
+declare an array type variable. It's not strictly necessary to know
+about this process in order to use arrays, but it helps in
+understanding their structure and their relationship to other objects
+in Java.
+
+<P>
+<li CLASS=listitem>Java lets us use the special <tt CLASS=literal>[]</tt> operator to access
+array elements, so that arrays look as we expect. We could implement
+our own classes that act like arrays, but because Java doesn't have
+user-defined operator overloading, we would have to settle for having
+methods like <tt CLASS=literal>get()</tt> and <tt CLASS=literal>put()</tt>
+instead of using the special <tt CLASS=literal>[]</tt> notation.
+
+<P>
+<li CLASS=listitem>Java provides a corresponding special form of the
+<tt CLASS=literal>new</tt> operator that lets us construct an instance of
+an array and specify its length with the <tt CLASS=literal>[]</tt>
+notation.
+
+<P>
+</UL>
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-6.1">Array Types</A></h3>
+
+<P CLASS=para>
+An array type variable is denoted by a base type followed by empty brackets 
+<tt CLASS=literal>[]</tt>. Alternatively, Java accepts a C-style declaration, 
+with the brackets placed after the array name. The following are equivalent: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int [] arrayOfInts; 
+int arrayOfInts []; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In each case, <tt CLASS=literal>arrayOfInts</tt> is declared as an array 
+of integers. The size of the array is not yet an issue, because we are 
+declaring only the array type variable. We have not yet created an actual 
+instance of the array class, with its associated storage. It's not even 
+possible to specify the length of an array as part of its type. 
+
+<P CLASS=para>
+An array of objects can be created in the same way: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String [] someStrings; 
+Button someButtons []; 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-6.2">Array Creation and Initialization</A></h3>
+
+<P CLASS=para>
+Having declared an array type variable, we can now use the
+<tt CLASS=literal>new</tt> operator to create an instance of the
+array. After the <tt CLASS=literal>new</tt> operator, we specify the base
+type of the array and its length, with a bracketed integer expression:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+arrayOfInts = new int [42]; 
+someStrings = new String [ number + 2 ]; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We can, of course, combine the steps of declaring and allocating the
+array:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+double [] someNumbers = new double [20]; 
+Component widgets [] = new Component [12]; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+ As in C, array indices start with
+zero. Thus, the first element of <tt CLASS=literal>someNumbers []</tt> is
+<tt CLASS=literal>0</tt> and the last element is
+<tt CLASS=literal>19</tt>. After creation, the array elements are
+initialized to the default values for their type. For numeric types,
+this means the elements are initially zero:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int [] grades = new int [30]; 
+grades[0] = 99; 
+grades[1] = 72; 
+// grades[2] == 0 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The elements of an array of objects are references to the objects, not
+actual instances of the objects. The default value of each element is
+therefore <tt CLASS=literal>null</tt>, until we assign instances of
+appropriate objects:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String names [] = new String [4]; 
+names [0] = new String(); 
+names [1] = "Boofa"; 
+names [2] = someObject.toString(); 
+// names[3] == null 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This is an important distinction that can cause confusion. In many
+other languages, the act of creating an array is the same as
+allocating storage for its elements. In Java, an array of objects
+actually contains only reference variables and those variables, have
+the value <tt CLASS=literal>null</tt> until they are assigned to real
+objects.[5] 
+ <A HREF="ch04_06.htm#EXJ-CH-4-FIG-4">Figure 4.4</A> illustrates the
+<tt CLASS=literal>names</tt> array of the previous example:
+
+<blockquote class=footnote>
+<P CLASS=para>[5] 
+The analog in C or C++ would be an array of pointers to objects.
+However, pointers in C or C++ are themselves two- or four-byte
+values. Allocating an array of pointers is, in actuality, allocating
+the storage for some number of those pointer objects. An array of
+references is conceptually similar, although references are not
+themselves objects. We can't manipulate references or parts of
+references other than by assignment, and their storage requirements (or
+lack thereof) are not part of the high-level language specification.
+</blockquote>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-4-FIG-4">Figure 4.4: The names array</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0404.gif" alt="[Graphic: Figure 4-4]" width=503 height=203 border=0>
+
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>names</tt> is a variable of type
+<tt CLASS=literal>String[]</tt> (i.e., a string array). The
+<tt CLASS=literal>String[]</tt> object can be thought of as containing
+four <tt CLASS=literal>String</tt> type variables. We have assigned
+<tt CLASS=literal>String</tt> objects to the first three array
+elements. The fourth has the default value <tt CLASS=literal>null</tt>.
+
+<P CLASS=para>
+Java supports the C-style curly braces <tt CLASS=literal>{}</tt>
+construct for creating an array and initializing its elements when it
+is declared:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int [] primes = { 1, 2, 3, 5, 7, 7+4 };    // primes[2] == 3 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+An array object of the proper type and length is implicitly created
+and the values of the comma-separated list of expressions are assigned
+to its elements.
+
+<P CLASS=para>
+We can use the <tt CLASS=literal>{}</tt> syntax with an array of
+objects.  In this case, each of the expressions must evaluate to an
+object that can be assigned to a variable of the base type of the
+array, or the value <tt CLASS=literal>null</tt>.  Here are some examples:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String [] verbs = { "run", "jump", someWord.toString() }; 
+Button [] controls = { stopButton, new Button("Forwards"),  
+    new Button("Backwards") }; 
+// all types are subtypes of Object 
+Object [] objects = { stopButton, "A word", null }; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You should create and initialize arrays in whatever manner is
+appropriate for your application. The following are equivalent:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Button [] threeButtons = new Button [3]; 
+Button [] threeButtons = { null, null, null }; 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-6.3">Using Arrays</A></h3>
+
+<P CLASS=para>
+The size of an array object is available in the public variable
+<tt CLASS=literal>length</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+char [] alphabet = new char [26]; 
+int alphaLen = alphabet.length;             // alphaLen == 26 
+ 
+String [] musketeers = { "one", "two", "three" }; 
+int num = musketeers.length;                // num == 3 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>length</tt> is the only accessible field of an array; it
+is a variable, not a method.
+
+<P CLASS=para>
+Array access in Java is just like array access in C; you access
+an element by putting an integer-valued expression between brackets
+after the name of the array. The following example creates an array of
+<tt CLASS=literal>Button</tt> objects called <tt CLASS=literal>keyPad</tt> and
+then fills the array with <tt CLASS=literal>Button</tt> objects:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Button [] keyPad = new Button [ 10 ]; 
+for ( int i=0; i &lt; keyPad.length; i++ )      keyPad[ i ] = new Button( Integer.toString( i ) );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Attempting to access an element that is outside the range of the array
+generates an <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>.  This
+is a type of <tt CLASS=literal>RuntimeException</tt>, so you can either
+catch it and handle it yourself, or ignore it, as we already
+discussed:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String [] states = new String [50]; 
+ 
+try { 
+    states[0] = "California"; 
+    states[1] = "Oregon"; 
+    ... 
+    states[50] = "McDonald's Land";  // Error--array out of bounds 
+}  
+catch ( ArrayIndexOutOfBoundsException err ) { 
+    System.out.println( "Handled error: " + err.getMessage() ); 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It's a common task to copy a range of elements from one array
+into another. Java supplies the <tt CLASS=literal>arraycopy()</tt> method
+for this purpose; it's a utility method of the
+<tt CLASS=literal>System</tt> class:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+System.arraycopy( source, sourceStart, destination, 
+                  destStart, length ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The following example doubles the size of the <tt CLASS=literal>names</tt> 
+array from an earlier example: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String [] tmpVar = new String [ 2 * names.length ]; 
+System.arraycopy( names, 0, tmpVar, 0, names.length ); 
+names = tmpVar; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A new array, twice the size of <tt CLASS=literal>names</tt>, is allocated
+and assigned to a temporary variable <tt CLASS=literal>tmpVar</tt>.
+<tt CLASS=literal>arraycopy()</tt> is used to copy the elements of
+<tt CLASS=literal>names</tt> to the new array. Finally, the new array is
+assigned to <tt CLASS=literal>names</tt>.  If there are no remaining
+references to the old array object after <tt CLASS=literal>names</tt> has
+been copied, it will be garbage collected on the next pass.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch04-SECT2-AUTOID.1">Anonymous Arrays</A></h3>
+
+<P CLASS=para>
+You often want to create "throw-away" arrays: arrays that are only
+used in one place, and never referenced anywhere else. Such arrays
+don't need to have a name, because you never need to refer to them again
+in that context.
+For example, you may want to create a collection of objects to pass as
+an argument to some method. It's easy enough to create a normal,
+named array--but if you don't actually work with the array (if you use
+the array only as a holder for some collection), you shouldn't have to.
+Java makes it easy to create "anonymous" (i.e., unnamed) arrays. 
+
+<P CLASS=para>
+Let's say you need to call a method named
+<tt CLASS=literal>setPets()</tt>, which takes an array of
+<tt CLASS=literal>Animal</tt> objects as arguments.
+<tt CLASS=literal>Cat</tt> and <tt CLASS=literal>Dog</tt>
+are subclasses of <tt CLASS=literal>Animal</tt>.  Here's how to
+call <tt CLASS=literal>setPets()</tt> using an anonymous array:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Dog pokey = new Dog ("gray");
+Cat squiggles = new Cat ("black");
+Cat jasmine = new Cat ("orange");
+setPets ( new Animal [] { pokey, squiggles, jasmine });
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The syntax looks just like the initialization of an array in a variable
+declaration.  We implicitly define the size of the array and fill in its
+elements using the curly brace notation.  However, since this is not a
+variable declaration we have to explicitly use the new operator to create
+the array object.
+
+<P CLASS=para>
+You can use anonymous arrays to simulate variable length argument lists
+(often called VARARGS), a feature of many programming languages that
+Java doesn't provide. The advantage of anonymous arrays over variable
+length argument lists is that it allows stricter type checking; the
+compiler always knows exactly what arguments are expected, and
+therefore can verify that method calls are correct.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-6.4">Multidimensional Arrays</A></h3>
+
+<P CLASS=para>
+Java supports multidimensional arrays in the form of arrays of array type 
+objects. You create a multidimensional array with C-like syntax, using 
+multiple bracket pairs, one for each dimension. You also use this syntax 
+to access elements at various positions within the array. Here's 
+an example of a multidimensional array that represents a chess board: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+ChessPiece [][] chessBoard; 
+chessBoard = new ChessPiece [8][8]; 
+chessBoard[0][0] = new ChessPiece( "Rook" ); 
+chessBoard[1][0] = new ChessPiece( "Pawn" ); 
+... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here <tt CLASS=literal>chessBoard</tt> is declared as a variable of
+type <tt CLASS=literal>ChessPiece[][]</tt> (i.e., an array of
+<tt CLASS=literal>ChessPiece</tt> arrays).  This declaration implicitly
+creates the type <tt CLASS=literal>ChessPiece[]</tt> as well. The example
+illustrates the special form of the <tt CLASS=literal>new</tt> operator
+used to create a multidimensional array. It creates an array of
+<tt CLASS=literal>ChessPiece[]</tt> objects and then, in turn, creates each
+array of <tt CLASS=literal>ChessPiece</tt> objects. We then index
+<tt CLASS=literal>chessBoard</tt> to specify values for particular
+<tt CLASS=literal>ChessPiece</tt> elements. (We'll neglect the color
+of the pieces here.)
+
+<P CLASS=para>
+Of course, you can create arrays of with more than two
+dimensions. Here's a slightly impractical example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Color [][][] rgbCube = new Color [256][256][256]; 
+rgbCube[0][0][0] = Color.black; 
+rgbCube[255][255][0] = Color.yellow; 
+... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As in C, we can specify the initial index of a multidimensional array
+to get an array type object with fewer dimensions. In our example, the
+variable <tt CLASS=literal>chessBoard</tt> is of type
+<tt CLASS=literal>ChessPiece[][]</tt>.  The expression
+<tt CLASS=literal>chessBoard[0]</tt> is valid and refers to the first
+element of <tt CLASS=literal>chessBoard</tt>, which is of type
+<tt CLASS=literal>ChessPiece[]</tt>. For example, we can create a row for
+our chess board:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+ChessPiece [] startRow =  { 
+    new ChessPiece("Rook"), new ChessPiece("Knight"), 
+    new ChessPiece("Bishop"), new ChessPiece("King"), 
+    new ChessPiece("Queen"), new ChessPiece("Bishop"), 
+    new ChessPiece("Knight"), new ChessPiece("Rook") 
+}; 
+ 
+chessBoard[0] = startRow; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We don't necessarily have to specify the
+dimension sizes of a multidimensional array with a single
+<tt CLASS=literal>new</tt> operation. The syntax of the
+<tt CLASS=literal>new</tt> operator lets us leave the sizes of some
+dimensions unspecified. The size of
+at least the first dimension (the most significant dimension of the
+array) has to be specified, but the sizes of any number of the less
+significant array dimensions may be left undefined. We can assign
+appropriate array type values later.
+
+<P CLASS=para>
+We can create a checkerboard of <tt CLASS=literal>boolean</tt>
+values (which is not quite sufficient for a real game of checkers)
+using this technique:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+boolean [][] checkerBoard; 
+checkerBoard = new boolean [8][]; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here, <tt CLASS=literal>checkerBoard</tt> is declared and created, but its
+elements, the eight <tt CLASS=literal>boolean[]</tt> objects of the next
+level, are left empty. Thus, for example,
+<tt CLASS=literal>checkerBoard[0]</tt> is <tt CLASS=literal>null</tt> until we
+explicitly create an array and assign it, as follows:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+checkerBoard[0] = new boolean [8]; 
+checkerBoard[1] = new boolean [8]; 
+... 
+checkerBoard[7] = new boolean [8]; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The code of the previous two examples is equivalent to: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+boolean [][] checkerBoard = new boolean [8][8]; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+One reason we might want to leave dimensions of an array unspecified is 
+so that we can store arrays given to us by another method. 
+
+<P CLASS=para>
+Note that since the length of the array is not part of its type, the arrays 
+in the checkerboard do not necessarily have to be of the same length. 
+Here's a defective (but perfectly legal) checkerboard: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+checkerBoard[2] = new boolean [3]; 
+checkerBoard[3] = new boolean [10]; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Since Java implements multidimensional arrays as arrays of arrays,
+multidimensional arrays do not have to be rectangular. For example,
+here's how you could create and initialize a triangular array:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int []][] triangle = new int [5][]; 
+for (int i = 0; i &lt; triangle.length; i++) {  
+    triangle[i] = new int [i + 1]; 
+    for (int j = 0; j &lt; i + 1; j++) 
+        triangle[i][j] = i + j;    } 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-6.5">Inside Arrays</A></h3>
+
+<P CLASS=para>
+I said earlier that arrays are instances of special array classes in
+the Java language. If arrays have classes, where do they fit into the
+class hierarchy and how are they related? These are good questions;
+however, we need to talk more about the object-oriented aspects of
+Java before I can answer them. For now, take it on faith that arrays
+fit into the class hierarchy; details are in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Exceptions</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Objects in Java</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

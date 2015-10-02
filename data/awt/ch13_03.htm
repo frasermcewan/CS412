@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 13] 13.3 AWTError</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:52:31 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 13<br>AWT Exceptions and Errors</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-13-SECT-3">13.3 AWTError</A></h2>
+
+<P CLASS=para>
+<A NAME="CH13.ERROR2"></A><A NAME="CH13.ERROR3"></A><tt CLASS=literal>AWTError</tt> is a subclass of <tt CLASS=literal>Error</tt> 
+that is used when a serious run-time error has occurred within AWT. For 
+example, an <tt CLASS=literal>AWTError</tt> is thrown 
+if the default <tt CLASS=literal>Toolkit</tt> cannot 
+be initialized or if you try to create a <tt CLASS=literal>FileDialog</tt> 
+within Netscape Navigator (since that program does not permit local file system 
+access). When an <tt CLASS=literal>AWTError</tt> is 
+thrown and not caught, the virtual machine stops your program. You may 
+throw this <tt CLASS=literal>Error</tt> to indicate 
+a serious run-time problem in any subclass of the AWT classes. Using <tt CLASS=literal>AWTError</tt> 
+is slightly preferable to creating your own <tt CLASS=literal>Error</tt> 
+because you don't have to provide another class file. Since it is part of Java, <tt CLASS=literal>AWTError</tt> is guaranteed 
+to exist on the run-time platform. 
+
+<P CLASS=para>
+Methods are not required to declare that they throw 
+<tt CLASS=literal>AWTError</tt>. If you throw an error 
+that is not caught, it will eventually propagate to the top level of the 
+system. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-13-SECT-3.1">AWTError Method</A></h3>Constructor
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public AWTError (String message) </I><br>
+<DD>
+
+<P CLASS=para>
+The sole constructor creates an <tt CLASS=literal>AWTError</tt> 
+with a detail message of <tt CLASS=literal>message</tt>. 
+This message can be retrieved using <tt CLASS=literal>getMessage()</tt>, 
+which it inherits from <tt CLASS=literal>Error</tt> 
+(and is required by the <tt CLASS=literal>Throwable</tt> 
+interface). If you do not want a detailed message, <tt CLASS=literal>message</tt> 
+may be <tt CLASS=literal>null</tt>. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-13-SECT-3.2">Throwing an AWTError</A></h3>
+
+<P CLASS=para>
+The code in <A HREF="ch13_03.htm#JAWT-CH-13-EX-1">Example 13.1</A> throws an <tt CLASS=literal>AWTError</tt> if it is executed with this command:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+java -Dawt.toolkit=foo throwme
+</PRE>
+</DIV>
+
+<P CLASS=para>
+ 
+The error occurs because the Java interpreter tries to use the <tt CLASS=literal>toolkit 
+foo</tt>, which does not exist (assuming that class <tt CLASS=literal>foo</tt> does not 
+exist in your <tt CLASS=literal>CLASSPATH</tt>). Therefore, 
+<tt CLASS=literal>getDefaultToolkit()</tt> throws 
+an <tt CLASS=literal>AWTError</tt>, and the next statement 
+never executes. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-13-EX-1">Example 13.1: The throwme class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.Toolkit;
+public class throwme {
+    public static void main (String[] args) {
+        System.out.println (Toolkit.getDefaultToolkit());
+        System.out.println ("Never Gets Here");
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>IllegalComponentStateException</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>And Then There Were Applets</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

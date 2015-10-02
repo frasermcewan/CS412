@@ -1,0 +1,1090 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] The java.text Package</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:29:32 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch16_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-16">16. The java.text Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch16_02.htm'>CharacterIterator</a><br>
+<a href='ch16_03.htm'>ChoiceFormat</a><br>
+<a href='ch16_04.htm'>CollationElementIterator</a><br>
+<a href='ch16_05.htm'>CollationKey</a><br>
+<a href='ch16_06.htm'>Collator</a><br>
+<a href='ch16_07.htm'>DateFormat</a><br>
+<a href='ch16_08.htm'>DateFormatSymbols</a><br>
+<a href='ch16_09.htm'>DecimalFormat</a><br>
+<a href='ch16_10.htm'>DecimalFormatSymbols</a><br>
+<a href='ch16_11.htm'>FieldPosition</a><br>
+<a href='ch16_12.htm'>Format</a><br>
+<a href='ch16_13.htm'>MessageFormat</a><br>
+<a href='ch16_14.htm'>NumberFormat</a><br>
+<a href='ch16_15.htm'>ParseException</a><br>
+<a href='ch16_16.htm'>ParsePosition</a><br>
+<a href='ch16_17.htm'>RuleBasedCollator</a><br>
+<a href='ch16_18.htm'>SimpleDateFormat</a><br>
+<a href='ch16_19.htm'>StringCharacterIterator</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+The package <tt CLASS=literal>java.text</tt> is new as of Java 1.1.
+It contains classes that support the internationalization of
+Java programs.  The internationalization classes can be grouped
+as follows:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Classes for formatting string representations
+of dates, times, numbers, and messages based on the conventions
+of a locale.
+
+<P>
+<li CLASS=listitem>Classes that collate strings according to the rules of a
+locale.
+
+<P>
+<li CLASS=listitem>Classes for finding boundaries in text according to the rules
+of a locale.
+
+<P>
+</UL>
+<P CLASS=para>
+Many of the classes in <tt CLASS=literal>java.text</tt> rely upon
+a <tt CLASS=literal>java.util.Locale</tt> object to provide information
+about the locale that is in use.
+
+<P CLASS=para>
+The <tt CLASS=literal>Format</tt> class is the superclass of 
+all of the classes that generate and parse string representations 
+of various types of data.  The 
+<tt CLASS=literal>DateFormat</tt> class formats and parses dates
+and times according to the customs and language of a particular
+locale.  Similarly, the <tt CLASS=literal>NumberFormat</tt> class
+formats and parses numbers, including currency values, 
+in a locale-dependent manner.  
+
+<P CLASS=para>
+The <tt CLASS=literal>MessageFormat</tt> 
+class can create a textual message from a pattern
+string, while <tt CLASS=literal>ChoiceFormat</tt> maps numerical
+ranges to strings.
+By themselves, these classes do not provide different results for
+different locales.  However, they can be used in conjunction with 
+<tt CLASS=literal>java.util.ResourceBundle</tt> objects that 
+generate locale-specific pattern strings.
+
+<P CLASS=para>
+The <tt CLASS=literal>Collator</tt> class handles collating strings
+according to the rules of a particular locale.
+Different languages have different
+characters and different rules for sorting those characters; 
+<tt CLASS=literal>Collator</tt> and its subclass, 
+<tt CLASS=literal>RuleBasedCollator</tt>, 
+are designed to take those differences into account when collating
+strings.  In addition, 
+the <tt CLASS=literal>CollationKey</tt> class can be used to
+optimize the sorting of a large collection of strings.
+
+<P CLASS=para>
+The <tt CLASS=literal>BreakIterator</tt> class finds various
+boundaries, such as word boundaries and line boundaries, in
+textual data.  Again, <tt CLASS=literal>BreakIterator</tt>
+locates these boundaries according to the rules of a
+particular locale.
+
+<P CLASS=para>
+<A HREF="ch16_01.htm#JFC-CH-16-FIG-1">Figure 16.1</A> shows the class hierarchy for
+the <tt CLASS=literal>java.text</tt> package.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JFC-CH-16-FIG-1">Figure 16.1: The java.text package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jfc_1601.gif" alt="[Graphic: Figure 16-1]" width=502 height=453 border=0>
+
+</DIV>
+
+<DIV CLASS=refnamediv>
+<H1>BreakIterator</H1>
+
+<H2>Name</H2>
+
+BreakIterator
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.1">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.BreakIterator</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Cloneable</tt>, 
+<tt CLASS=literal>java.io.Serializable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.2">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>BreakIterator</tt> class is 
+an <tt CLASS=literal>abstract</tt> class that defines 
+methods that find the locations of boundaries in text, such as word boundaries 
+and sentence boundaries. A <tt CLASS=literal>BreakIterator</tt> 
+operates on the object passed to its <tt CLASS=literal>setText()</tt> 
+method; that object must implement the <tt CLASS=literal>CharacterIterator</tt> 
+interface or be a <tt CLASS=literal>String</tt> object. 
+When a <tt CLASS=literal>String</tt> is passed to <tt CLASS=literal>setText()</tt>,
+the <tt CLASS=literal>BreakIterator</tt> creates an internal
+<tt CLASS=literal>StringCharacterIterator</tt> to iterate over the
+<tt CLASS=literal>String</tt>.
+
+<P CLASS=para>
+When you use a <tt CLASS=literal>BreakIterator</tt>, you call
+<tt CLASS=literal>first()</tt> to get the location of the first
+boundary and then repeatedly call <tt CLASS=literal>next()</tt> 
+to iterate through the subsequent boundaries.
+
+<P CLASS=para>
+The <tt CLASS=literal>BreakIterator</tt> class defines 
+four static factory methods that return instances of <tt CLASS=literal>BreakIterator</tt> 
+that locate various kinds of boundaries. 
+Each of these factory methods selects a concrete subclass of 
+<tt CLASS=literal>BreakIterator</tt> based either on the default locale or
+a specified locale. You must create a separate instance 
+of <tt CLASS=literal>BreakIterator</tt> to handle 
+each kind of boundary you are trying to locate:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>getWordInstance()</tt> 
+returns an iterator that locates word boundaries, which 
+is useful for search-and-replace 
+operations. A word iterator correctly handles punctuation marks.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>getSentenceInstance()</tt> 
+returns an iterator that locates sentence boundaries, which is useful for 
+textual selection. A sentence iterator correctly handle punctuation 
+marks. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>getLineInstance()</tt> returns 
+an iterator that locates line boundaries, which is useful in line wrapping. 
+A line iterator correctly handles hyphenation and punctuation. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>getCharacterInstance()</tt> 
+returns an iterator that locates boundaries between characters, which is 
+useful for allowing the cursor to interact with characters appropriately, 
+since some characters are stored as a base character and a diacritical 
+mark, but only represent one display character. 
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.3">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.util.BreakIterator extends java.lang.Object
+                      implements java.lang.Cloneable, 
+                                 java.io.Serializable {
+  // Constants
+  public final static int DONE;
+  // Constructors
+  protected BreakIterator();
+  // Class Methods
+  public static synchronized Locale[] getAvailableLocales();
+  public static BreakIterator getCharacterInstance();
+  public static BreakIterator getCharacterInstance(Locale where);
+  public static BreakIterator getLineInstance();
+  public static BreakIterator getLineInstance(Locale where);
+  public static BreakIterator getSentenceInstance();
+  public static BreakIterator getSentenceInstance(Locale where);
+  public static BreakIterator getWordInstance();
+  public static BreakIterator getWordInstance(Locale where);
+  // Instance Methods
+  public Object clone();
+  public abstract int current();
+  public abstract int first();
+  public abstract int following(int offset);
+  public abstract CharacterIterator getText();
+  public abstract int last();
+  public abstract int next();
+  public abstract int next(int n)
+  public abstract int previous();
+  public abstract void setText(CharacterIterator newText);
+  public void setText(String newText);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.4">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.1">DONE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.1">public final static int DONE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that is returned by <tt CLASS=literal>next()</tt> 
+or <tt CLASS=literal>previous()</tt> if there are 
+no more breaks to be returned. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.5">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.2">BreakIterator</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.2">protected BreakIterator()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor should be called only from constructors of subclasses.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.6">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.3">getAvailableLocales</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.3">public static synchronized Locale[] getAvailableLocales()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Locale</tt> objects.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an array of the <tt CLASS=literal>Locale</tt> 
+objects that can be passed to <tt CLASS=literal>getCharacterInstance()</tt>,
+<tt CLASS=literal>getLineInstance()</tt>, 
+<tt CLASS=literal>getSentenceInstance()</tt>, 
+or <tt CLASS=literal>getWordInstance()</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.4">getCharacterInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.4">public static BreakIterator getCharacterInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BreakIterator</tt> appropriate 
+for the default <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BreakIterator</tt> 
+that can locate character boundaries in the default <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.5">public static BreakIterator getCharacterInstance(Locale where)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>where</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BreakIterator</tt> appropriate 
+for the given <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BreakIterator</tt> 
+that can locate character boundaries in the given <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.5">getLineInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.6">public static BreakIterator getLineInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BreakIterator</tt> appropriate 
+for the default <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BreakIterator</tt> 
+that can locate line boundaries in the default <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.7">public static BreakIterator getLineInstance(Locale where)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>where</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BreakIterator</tt> appropriate 
+for the given <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BreakIterator</tt> 
+that can locate line boundaries in the given <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.6">getSentenceInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.8">public static BreakIterator getSentenceInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BreakIterator</tt> appropriate 
+for the default <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BreakIterator</tt> 
+that can locate sentence boundaries in the default <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.9">public static BreakIterator getSentenceInstance(Locale where)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>where</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BreakIterator</tt> appropriate 
+for the given <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BreakIterator</tt> 
+that can locate sentence boundaries in the given <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.7">getWordInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.10">public static BreakIterator getWordInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BreakIterator</tt> appropriate 
+for the default <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BreakIterator</tt> 
+that can locate word boundaries in the default <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.11">public static BreakIterator getWordInstance(Locale where)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>where</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BreakIterator</tt> appropriate 
+for the given <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BreakIterator</tt> 
+that can locate word boundaries in the given <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.7">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.8">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.12">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this <tt CLASS=literal>BreakIterator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>BreakIterator</tt> 
+and then returns it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.9">current</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.13">public abstract int current()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current position of this <tt CLASS=literal>BreakIterator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current position of this <tt CLASS=literal>BreakIterator</tt>. 
+The current position is the character index of the most recently returned 
+boundary. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.10">first</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.14">public abstract int first()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The position of the first boundary of this <tt CLASS=literal>BreakIterator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the first boundary in this <tt CLASS=literal>BreakIterator</tt> 
+and returns its character index. The current position of the iterator is 
+set to this boundary. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.11">following</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.15">public abstract int following(int offset)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into this <tt CLASS=literal>BreakIterator</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The position of the first boundary after the given offset of this <tt CLASS=literal>BreakIterator</tt> 
+or <tt CLASS=literal>DONE</tt> if there are no more 
+boundaries. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is not a valid value 
+for the <tt CLASS=literal>CharacterIterator</tt> of 
+this <tt CLASS=literal>BreakIterator</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the first boundary after the given offset in this <tt CLASS=literal>BreakIterator</tt> 
+and returns its character index. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.12">getText</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.16">public abstract CharacterIterator getText()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>CharacterIterator</tt> 
+that this <tt CLASS=literal>BreakIterator</tt> uses. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>CharacterIterator</tt> 
+that represents the text this <tt CLASS=literal>BreakIterator</tt> 
+examines. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.13">last</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.17">public abstract int last()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The position of the last boundary of this <tt CLASS=literal>BreakIterator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the last boundary in this <tt CLASS=literal>BreakIterator</tt> 
+and returns its character index. The current position of the iterator is 
+set to this boundary. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.14">next</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.18">public abstract int next()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The position of the next boundary of this <tt CLASS=literal>BreakIterator</tt> 
+or <tt CLASS=literal>DONE</tt> if there are no more 
+boundaries. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the next boundary in this <tt CLASS=literal>BreakIterator</tt> 
+after the current position and returns its character index. The current 
+position of the iterator is set to this boundary. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.19">public abstract int next(int n)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+
+The boundary to return. A positive value moves to a later boundary  a
+negative value moves to a previous boundary; the value 0 does nothing.
+</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The position of the requested boundary of this <tt CLASS=literal>BreakIterator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the <tt CLASS=literal>n</tt>th boundary 
+in this <tt CLASS=literal>BreakIterator</tt>, starting 
+from the current position, and returns its character index. The current 
+position of the iterator is set to this boundary.
+
+<P CLASS=para>
+For example, <tt CLASS=literal>next(-2)</tt> finds 
+the third previous boundary. Thus <tt CLASS=literal>next(1)</tt> 
+is equivalent to <tt CLASS=literal>next()</tt>, <tt CLASS=literal>next(-1)</tt> 
+is equivalent to <tt CLASS=literal>previous()</tt>, 
+and <tt CLASS=literal>next(0)</tt> does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.15">previous</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.20">public abstract int previous()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The position of the previous boundary of this 
+<tt CLASS=literal>BreakIterator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the previous boundary in this <tt CLASS=literal>BreakIterator</tt>, 
+starting from the current position, and returns its character index. The 
+current position of the iterator is set to this boundary. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.16">setText</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.21">public abstract void setText(CharacterIterator newText)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newText</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>CharacterIterator</tt> 
+that contains the text to be examined. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>BreakIterator</tt> 
+to examine the piece of text specified by the <tt CLASS=literal>CharacterIterator</tt>. 
+This current position of this <tt CLASS=literal>BreakIterator</tt> 
+is set to <tt CLASS=literal>first()</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.22">public void setText(String newText)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newText</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> 
+that contains the text to be examined. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>BreakIterator</tt> 
+to examine the piece of text specified by the <tt CLASS=literal>String</tt>, 
+using a <tt CLASS=literal>StringCharacterIterator</tt> 
+created from the given string. This current position of this <tt CLASS=literal>BreakIterator</tt> 
+is set to <tt CLASS=literal>first()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.8">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.9">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>CharacterIterator</tt>, 
+<tt CLASS=literal>Locale</tt>, 
+<tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>StringCharacterIterator</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>UnknownServiceException</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>CharacterIterator</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

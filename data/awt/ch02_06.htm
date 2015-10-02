@@ -1,0 +1,217 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.6 Polygon</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:25:05 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>Simple Graphics</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-6">2.6 Polygon</A></h2>
+
+<P CLASS=para>
+<A NAME="CH02.POLY2"></A><A NAME="CH02.POLY2A"></A>A <tt CLASS=literal>Polygon</tt> is a collection of 
+points used to create a series of line segments. Its primary purpose is 
+to draw arbitrary shapes like triangles or pentagons. If the points are 
+sufficiently close, you can create a curve. To display the <tt CLASS=literal>Polygon</tt>, 
+call <tt CLASS=literal>drawPolygon()</tt> or <tt CLASS=literal>fillPolygon()</tt>. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-6.1">Polygon Methods</A></h3><A NAME="CH02.POLY"></A>Variables
+
+<P CLASS=para>
+The collection of points maintained by <tt CLASS=literal>Polygon</tt> are stored in three variables: 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int npoints </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>npoints</tt> variable stores 
+the number of points. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int xpoints[] </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>xpoints</tt> array holds the 
+x component of each point. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int ypoints[] </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ypoints</tt> array holds the 
+y component of each point. </DL>
+<P CLASS=para>
+You might expect the <tt CLASS=literal>Polygon</tt> 
+class to use an array of points, 
+rather than separate arrays of integers. More important, you might expect 
+the instance variables to be private or protected, which would prevent 
+them from being modified directly. Since the three instance variables are 
+public, there is no guarantee that the array sizes are in sync with each 
+other or with <tt CLASS=literal>npoints</tt>. To avoid 
+trouble, always use <tt CLASS=literal>addPoints()</tt> 
+to modify your polygons, and avoid modifying the instance variables directly. Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Polygon () </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>Polygon</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Polygon (int xPoints[], int yPoints[], int numPoints) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Polygon</tt> 
+that consists of <tt CLASS=literal>numPoints</tt> 
+points. Those points are formed from the first <tt CLASS=literal>numPoints</tt> 
+elements of the <tt CLASS=literal>xPoints</tt> and 
+<tt CLASS=literal>yPoints</tt> arrays. If the <tt CLASS=literal>xPoints</tt> 
+or <tt CLASS=literal>yPoints</tt> arrays are larger 
+than <tt CLASS=literal>numPoints</tt>, the additional 
+entries are ignored. If the <tt CLASS=literal>xPoints</tt> 
+or <tt CLASS=literal>yPoints</tt> arrays do not contain 
+at least <tt CLASS=literal>numPoints</tt> elements, 
+the constructor throws the run-time exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addPoint (int x, int y) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addPoint()</tt> method adds 
+the point (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+to the <tt CLASS=literal>Polygon</tt> as its last 
+point. If you alter the <tt CLASS=literal>xpoints</tt>, 
+<tt CLASS=literal>ypoints</tt>, and <tt CLASS=literal>npoints</tt> 
+instance variables directly, <tt CLASS=literal>addPoint()</tt> 
+could add the new point at a place other than the end, or it could throw 
+the run-time exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+with a message showing the position at which it tried to add the point. 
+Again, for safety, don't modify a <tt CLASS=literal>Polygon</tt>'s 
+instance variables yourself; always use <tt CLASS=literal>addPoint()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle getBounds () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Rectangle getBoundingBox () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBounds()</tt> method returns 
+the <tt CLASS=literal>Polygon</tt>'s bounding 
+<tt CLASS=literal>Rectangle</tt> (i.e., the smallest 
+rectangle that contains all the points within the polygon). Once you have 
+the bounding box, it's easy to use methods like <tt CLASS=literal>copyArea()</tt> 
+to copy the <tt CLASS=literal>Polygon</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>getBoundingBox()</tt> is the Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean contains (int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public boolean inside (int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>contains()</tt> method checks 
+to see if the (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+point is within an area that would be filled if the <tt CLASS=literal>Polygon</tt> 
+was drawn with <tt CLASS=literal>Graphics.fillPolygon()</tt>. 
+A point may be within the bounding rectangle of the polygon, but <tt CLASS=literal>contains()</tt> 
+can still return <tt CLASS=literal>false</tt> if not within a closed part of the polygon. 
+
+<P CLASS=para>
+<tt CLASS=literal>inside()</tt> is the 
+Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean contains (Point p) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>contains()</tt> method checks 
+to see if the point <tt CLASS=literal>p</tt> is within 
+an area that would be filled if the <tt CLASS=literal>Polygon</tt> 
+were drawn with <tt CLASS=literal>Graphics.fillPolygon()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void translate (int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>translate()</tt> method moves 
+all the <tt CLASS=literal>Polygon</tt>'s points 
+by the amount (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>). 
+This allows you to alter the location of the <tt CLASS=literal>Polygon</tt> 
+by shifting the points. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Rectangle</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Image</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

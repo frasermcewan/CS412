@@ -1,0 +1,650 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.3 Color</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:27:27 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Fonts and Colors</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-3-SECT-3">3.3 Color</A></h2>
+
+<P CLASS=para>
+<A NAME="CH03.COLOR"></A>Not so long ago, color was a luxury; these days, color is a requirement. 
+A program that uses only black and white seems hopelessly old fashioned. 
+AWT's <tt CLASS=literal>Color</tt> class lets 
+you define and work with <tt CLASS=literal>Color</tt> 
+objects. When we discuss the <tt CLASS=literal>Component</tt> 
+class (see <A HREF="ch05_01.htm">Chapter 5, <i>Components</i></A>), you will see how to use these color objects, 
+and our discussion of the <tt CLASS=literal>SystemColor</tt> 
+subclass (new to Java 1.1; discussed later in this chapter) shows you how to control 
+the colors that are painted on the screen. 
+
+<P CLASS=para>
+A few words of warning: while colors give you the opportunity to make visually 
+pleasing applications, they also let you do things that are incredibly 
+ugly. Resist the urge to go overboard with your use of color; it's 
+easy to make something hideous when you are trying to use every color 
+in the palette. Also, realize that colors are fundamentally platform dependent, 
+and in a very messy way. Java lets you use the same <tt CLASS=literal>Color</tt> 
+objects on any platform, but it can't guarantee that every display 
+will treat the color the same way; the result depends on everything from 
+your software to the age of your monitor. What looks pink on 
+one monitor may be red on another. Furthermore, when running in an environment 
+with a limited palette, AWT picks the available color that is closest to 
+what you requested. If you really care about appearance, there is no substitute 
+for testing. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-3-SECT-3.1">Color Methods</A></h3><A NAME="CH03.COLORCLASS"></A>Constants
+
+<P CLASS=para>
+The <tt CLASS=literal>Color</tt> class has predefined constants 
+(all of type <tt CLASS=literal>public static final Color</tt>) for frequently 
+used colors. These constants, their RGB values, and their HSB values 
+(hue, saturation, brightness) are given in <A HREF="ch03_03.htm#JAWT-CH-3-TAB-1">Table 3.1</A>. 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-3-TAB-1">Table 3.1: Comparison of RGB and HSB Colors</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Color</TH>
+<TH ALIGN="left">Red</TH>
+<TH ALIGN="left">Green</TH>
+<TH ALIGN="left">Blue</TH>
+<TH ALIGN="left">Hue</TH>
+<TH ALIGN="left">Saturation</TH>
+<TH ALIGN="left">Brightness</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">black</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">blue</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">.666667</TD>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">cyan</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">.5</TD>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">darkGray</TD>
+<TD ALIGN="left">64</TD>
+<TD ALIGN="left">64</TD>
+<TD ALIGN="left">64</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">.25098</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">gray</TD>
+<TD ALIGN="left">128</TD>
+<TD ALIGN="left">128</TD>
+<TD ALIGN="left">128</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">.501961</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">green</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">.333333</TD>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">lightGray</TD>
+<TD ALIGN="left">192</TD>
+<TD ALIGN="left">192</TD>
+<TD ALIGN="left">192</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">.752941</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">magenta</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">.833333</TD>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">orange</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">200</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">.130719</TD>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">pink</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">175</TD>
+<TD ALIGN="left">175</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">.313726</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">red</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">white</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">yellow</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">255</TD>
+<TD ALIGN="left">0</TD>
+<TD ALIGN="left">.166667</TD>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left">1</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+These constants are used like any other class variable: for example, <tt CLASS=literal>Color.red</tt> 
+is a constant <tt CLASS=literal>Color</tt> object 
+representing the color red. Many other color constants are defined 
+in the <tt CLASS=literal>SystemColor</tt> class. Constructors
+
+<P CLASS=para>
+When you're not using a predefined constant, you create <tt CLASS=literal>Color</tt> 
+objects by specifying the color's red, green, and blue components. 
+Depending on which constructor you use, you can specify the components 
+as integers between 0 and 255 (most intense) or as floating point intensities 
+between 0.0 and 1.0 (most intense). The result is a 24-bit quantity that 
+represents a color. The remaining 8 bits are used to represent transparency: 
+that is, if the color is painted on top of something, does whatever was 
+underneath show through? The <tt CLASS=literal>Color</tt> 
+class doesn't let you work with the transparency bits; all <tt CLASS=literal>Color</tt> 
+objects are opaque. However, you can use transparency when working with 
+images; this topic is covered in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Color (int red, int green, int blue) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor is the most commonly used. You provide the specific <tt CLASS=literal>red</tt>, 
+<tt CLASS=literal>green</tt>, and <tt CLASS=literal>blue</tt> 
+values for the color. Valid 
+values for <tt CLASS=literal>red</tt>, <tt CLASS=literal>green</tt>, 
+and <tt CLASS=literal>blue</tt> are between 0 and 
+255. The constructor examines only the low-order byte of the integer and 
+ignores anything outside the range, including the sign bit. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Color (int rgb) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor allows you to combine all three variables in one
+parameter, <tt CLASS=literal>rgb</tt>. Bits 16-23 represent the red
+component, and bits 8-15 represent the green component. Bits
+0-7 represent the blue component. Bits 24-31 are
+ignored. Going from three bytes to one integer is fairly easy:</DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+(((red &amp; 0xFF) &lt;&lt; 16 ) | ((green &amp; 0xFF) &lt;&lt; 8) | ((blue &amp; 0xFF) &lt;&lt; 0))
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Color (float red, float green, float blue) </I><br>
+<DD>
+
+<P CLASS=para>
+This final constructor allows you to provide floating point values between 
+0.0 and 1.0 for each of <tt CLASS=literal>red</tt>, 
+<tt CLASS=literal>green</tt>, and <tt CLASS=literal>blue</tt>. 
+Values outside of this range yield unpredictable results. </DL>
+Settings
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getRed () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRed()</tt> method retrieves 
+the current setting for the red component of the color. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getGreen () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getGreen()</tt> method retrieves 
+the current setting for the green component of the color. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getBlue () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBlue()</tt> method retrieves 
+the current setting for the blue component of the color. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getRGB () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRGB()</tt> method retrieves 
+the current settings for red, green, and blue in one combined value. Bits 
+16-23 represent the red component. Bits 8-15 represent the green component. 
+Bits 0-7 represent the blue component. Bits 24-31 are the transparency 
+bits; they are always <tt CLASS=literal>0xff</tt> (opaque) when using the default RGB <tt CLASS=literal>ColorModel</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Color brighter () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>brighter()</tt> method creates 
+a new <tt CLASS=literal>Color</tt> that is somewhat 
+brighter than the current color. This method is useful if you want to highlight 
+something on the screen. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Black does not get any brighter. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Color darker () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>darker()</tt> method returns 
+a new <tt CLASS=literal>Color</tt> that is somewhat 
+darker than the current color. This method is useful if you are trying 
+to de-emphasize an object on the screen. If you are creating your own <tt CLASS=literal>Component</tt>, 
+you can use a <tt CLASS=literal>darker()</tt> <tt CLASS=literal>Color</tt> 
+to mark it inactive. </DL>
+Color properties<A NAME="CH03.PROP2"></A>
+
+<P CLASS=para>
+<tt CLASS=literal>Color</tt> properties are very similar 
+to <tt CLASS=literal>Font</tt> properties. You can 
+use system properties (or resource files) to allow users to select colors 
+for your programs. The settings have the form <tt CLASS=literal>0xRRGGBB</tt>, 
+where <tt CLASS=literal>RR</tt> is the red component 
+of the color, <tt CLASS=literal>GG</tt> represents 
+the green component, and <tt CLASS=literal>BB</tt> 
+represents the blue component. <tt CLASS=literal>0x</tt> 
+indicates that the number is in hexadecimal. If you (or your user) are 
+comfortable using decimal values for colors (0x112233 is 1122867 in decimal), 
+you can, but then it is harder to see the values of the different components. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+The location of the system properties file depends on the run-time 
+environment and version you are using. Ordinarily, the file will go into 
+a subdirectory of the installation directory or, for environment's 
+where users have home directories, in a subdirectory for the user. Sun's 
+HotJava, JDK, and <I CLASS=emphasis>appletviewer</I> tools use the <I CLASS=emphasis>properties</I> 
+file in the <I CLASS=emphasis>.hotjava</I> 
+directory. 
+
+<P CLASS=para>
+Most browsers do not permit modifying properties, so there is no 
+file. 
+
+<P CLASS=para>
+Java 1.1 adds the idea of "resource files," which are 
+syntactically similar to properties files. Resource files are then placed 
+on the server or within a directory found in the <tt CLASS=literal>CLASSPATH</tt>. 
+Updating the properties file is no longer recommended. 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+For example, consider a screen that uses four colors: one each for the 
+foreground, the background, inactive components, and highlighted text. 
+In the system properties file, you allow users to select colors by setting 
+the following properties:
+
+<DIV CLASS=simplelist>
+
+<P>
+<tt CLASS=literal>myPackage.myClass.foreground</tt><br>
+<tt CLASS=literal>myPackage.myClass.background</tt><br>
+<tt CLASS=literal>myPackage.myClass.inactive</tt><br>
+<tt CLASS=literal>myPackage.myClass.highlight</tt><br>
+</DIV>
+
+<P CLASS=para>
+One particular user set two: 
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+myPackage.myClass.foreground=0xff00ff        #magenta
+myPackage.myClass.background=0xe0e0e0        #light gray
+</PRE>
+</DIV>
+
+<P CLASS=para>
+These lines tell the program to use magenta as the foreground color and 
+light gray for the background. The program will use its default colors 
+for inactive components and highlighted text. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static Color getColor (String name) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getColor()</tt> method gets 
+the color specified by the system property <tt CLASS=literal>name</tt>. 
+If <tt CLASS=literal>name</tt> is not a valid system 
+property, <tt CLASS=literal>getColor()</tt> returns 
+<tt CLASS=literal>null</tt>. If the property value 
+does not convert to an integer, <tt CLASS=literal>getColor()</tt> 
+returns <tt CLASS=literal>null</tt>. 
+
+<P CLASS=para>
+For the properties listed above, if you call <tt CLASS=literal>getColor()</tt> 
+with <tt CLASS=literal>name</tt> set to the property <tt CLASS=literal>myPackage.myClass.foreground</tt>, 
+it returns a magenta <tt CLASS=literal>Color</tt> 
+object. If called with <tt CLASS=literal>name</tt> 
+set to <tt CLASS=literal>myPackage.myClass.inactive</tt>, 
+<tt CLASS=literal>getColor()</tt> returns <tt CLASS=literal>null</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static Color getColor (String name, Color defaultColor) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getColor()</tt> method gets 
+the color specified by the system property <tt CLASS=literal>name</tt>. 
+This version of the <tt CLASS=literal>getColor()</tt> 
+method returns <tt CLASS=literal>defaultColor</tt> 
+if <tt CLASS=literal>name</tt> is not a valid system 
+property or the property's value does not convert to an integer. 
+
+<P CLASS=para>
+For the previous example, if <tt CLASS=literal>getColor()</tt> is called with 
+<tt CLASS=literal>name</tt> set to <tt CLASS=literal>myPackage.myClass.inactive</tt>, 
+the <tt CLASS=literal>getColor()</tt> method returns the value 
+of <tt CLASS=literal>defaultColor</tt>. This allows 
+you to provide defaults for properties the user doesn't wish to set 
+explicitly. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static Color getColor (String name, int defaultColor) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>getColor()</tt> method gets 
+the color specified by the system property <tt CLASS=literal>name</tt>. 
+This version of the <tt CLASS=literal>getColor()</tt> 
+method returns <tt CLASS=literal>defaultColor</tt> 
+if <tt CLASS=literal>name</tt> is not a valid system 
+property or the property's value does not convert to an integer. 
+The default color is specified as an integer in which bits 16-23 represent 
+the red component, 8-15 represent the green component, and 0-7 represent 
+the blue component. Bits 24-31 are ignored. If the property value does 
+not convert to an integer, <tt CLASS=literal>defaultColor</tt> 
+is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static Color decode (String name) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>decode()</tt> method provides 
+an explicit means to decipher color property settings, regardless of where 
+the setting comes from. (The <tt CLASS=literal>getColor()</tt> 
+method can decipher settings but only if they're in the system properties 
+file.) In particular, you can use <tt CLASS=literal>decode()</tt> 
+to look up color settings in a resource file. The format of <tt CLASS=literal>name</tt> 
+is the same as that used by <tt CLASS=literal>getColor()</tt>. 
+If the contents of <tt CLASS=literal>name</tt> do 
+not translate to a 24-bit integer, the <tt CLASS=literal>NumberFormatException</tt> run-time exception is thrown. 
+To perform the equivalent of <tt CLASS=literal>getColor(`myPackage.myClass.foreground`)</tt>, 
+without using system properties, see the following example. For a more extensive 
+example using resource files, see Appendix A. </DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+InputStream is = instance.getClass().getResourceAsStream("propfile");
+Properties p = new Properties();
+try {
+    p.load (is);
+    Color c = Color.decode(p.getProperty("myPackage.myClass.foreground"));
+} catch (IOException e) {
+    System.out.println ("error loading props...");
+}
+</PRE>
+</DIV>
+
+Hue, saturation, and brightness
+
+<P CLASS=para>
+<A NAME="CH03.HSB"></A>So far, the methods we have seen work with a color's red, green, and 
+blue components. There are many other ways to represent colors. This group 
+of methods allows you to work in terms of the HSB (hue, saturation, brightness) 
+model. Hue represents the base color to work with: working through the 
+colors of the rainbow, red is represented by numbers immediately above 
+0; magenta is represented by numbers below 1; white is 0; and black is 1. Saturation 
+represents the color's purity, ranging from completely unsaturated 
+(either white or black depending upon brightness) to totally saturated 
+(&nbsp;just the base color present). Brightness is the desired level of luminance, 
+ranging from black (0) to the maximum amount determined by the saturation 
+level. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static float[] RGBtoHSB (int red, int green, int blue, float[] hsbvalues) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>RGBtoHSB()</tt> method allows 
+you to convert a specific <tt CLASS=literal>red</tt>, 
+<tt CLASS=literal>green</tt>, <tt CLASS=literal>blue</tt> 
+value to the hue, saturation, and brightness equivalent. <tt CLASS=literal>RGBtoHSB()</tt> 
+returns the results in two different ways: the parameter <tt CLASS=literal>hsbvalues</tt> 
+and the method's return value. The values of these are the same. 
+If you do not want to pass an <tt CLASS=literal>hsbvalues</tt> 
+array parameter, pass <tt CLASS=literal>null</tt>. In both the parameter and the return value, 
+the three components are placed in the array as follows: 
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>hsbvalues[0]</tt></TD>
+<TD ALIGN="left"><I CLASS=emphasis>contains hue</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>hsbvalues[1]</tt></TD>
+<TD ALIGN="left"><I CLASS=emphasis>contains saturation</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>hsbvalues[2]</tt></TD>
+<TD ALIGN="left"><I CLASS=emphasis>contains brightness</I></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DL>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static Color getHSBColor (float hue, float saturation, float brightness) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getHSBColor()</tt> method creates 
+a <tt CLASS=literal>Color</tt> object by using <tt CLASS=literal>hue</tt>, 
+<tt CLASS=literal>saturation</tt>, and <tt CLASS=literal>brightness</tt> 
+instead of <tt CLASS=literal>red</tt>, <tt CLASS=literal>green</tt>, and <tt CLASS=literal>blue </tt>values. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static int HSBtoRGB (float hue, float saturation, float brightness) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>HSBtoRGB()</tt> method converts 
+a specific <tt CLASS=literal>hue</tt>, <tt CLASS=literal>saturation</tt>, 
+and <tt CLASS=literal>brightness</tt> to a <tt CLASS=literal>Color</tt> 
+and returns the <tt CLASS=literal>red</tt>, <tt CLASS=literal>green</tt>, and <tt CLASS=literal>blue</tt> values as an integer. As with the 
+constructor, bits 16-23 represent the red component, 8-15 represent the 
+green component, and 0-7 represent the blue component. Bits 24-31 are ignored. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int hashCode ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>hashCode()</tt> method returns 
+a hash code for the color. The hash code is used whenever a color is used 
+as a key in a <tt CLASS=literal>Hashtable</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean equals (Object o) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>equals()</tt> method overrides 
+the <tt CLASS=literal>equals()</tt> 
+method of the <tt CLASS=literal>Object</tt> to define equality for <tt CLASS=literal>Color</tt> 
+objects. Two <tt CLASS=literal>Color</tt> objects 
+are equivalent if their <tt CLASS=literal>red</tt>, <tt CLASS=literal>green</tt>, and <tt CLASS=literal>blue</tt> values are equal. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Color</tt> 
+returns a string showing the color's red, green, and blue settings. 
+For example <tt CLASS=literal>System.out.println (Color.orange)</tt> 
+would result in the following: </DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Color[r=255,g=200,b=0]
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>FontMetrics</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>SystemColor</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,1752 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 14] The java.math Package</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:15:53 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 14</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-14">14. The java.math Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+BigDecimal<br>
+<A HREF="ch14_02.htm">BigInteger</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+The package <tt CLASS=literal>java.math</tt> is new as of Java 1.1.
+It contains two classes that support arithmetic on arbitrarily large
+integers and floating-point numbers.  
+<A HREF="ch14_01.htm#JFC-CH-14-FIG-1">Figure 14.1</A> shows the class hierarchy for
+the <tt CLASS=literal>java.math</tt> package.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JFC-CH-14-FIG-1">Figure 14.1: The java.math package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jfc_1401.gif" alt="[Graphic: Figure 14-1]" width=502 height=163 border=0>
+
+</DIV>
+
+<DIV CLASS=refnamediv>
+<H1>BigDecimal</H1>
+
+<H2>Name</H2>
+
+BigDecimal
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.1">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.math.BigDecimal</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Number</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.2">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>BigDecimal</tt> class represents arbitrary-precision
+rational numbers. A <tt CLASS=literal>BigDecimal</tt> object provides a
+good way to represent a real number that exceeds the range or
+precision that can be represented by a <tt CLASS=literal>double</tt> value
+or the rounding that is done on a <tt CLASS=literal>double</tt> value is
+unacceptable.
+
+<P CLASS=para>
+The representation for a <tt CLASS=literal>BigDecimal</tt> consists of an
+unlimited precision integer value and an integer scale factor. The
+scale factor indicates a power of 10 that the integer value is
+implicitly divided by.  For example, a <tt CLASS=literal>BigDecimal</tt>
+would represent the value 123.456 with an integer value of 123456 and
+the scale factor of 3.  Note that the scale factor cannot be negative
+and a <tt CLASS=literal>BigDecimal</tt> cannot overflow.
+
+<P CLASS=para>
+Most of the methods in <tt CLASS=literal>BigDecimal</tt> perform
+mathematical operations or make comparisons with other
+<tt CLASS=literal>BigDecimal</tt> objects. Operations that result in some
+loss of precision, such as division, require a rounding method to be
+specified. The <tt CLASS=literal>BigDecimal</tt> class defines constants
+to represent the different rounding methods. The rounding method
+determines if the digit before a discarded fraction is rounded up or
+left unchanged.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.3">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.math.BigDecimal extends java.lang.Number {
+  // Constants
+  public static final int ROUND_CEILING;
+  public static final int ROUND_DOWN;
+  public static final int ROUND_FLOOR;
+  public static final int ROUND_HALF_DOWN;
+  public static final int ROUND_HALF_EVEN;
+  public static final int ROUND_HALF_UP;
+  public static final int ROUND_UNNECESSARY;
+  public static final int ROUND_UP;
+  // Constructors
+  public BigDecimal(double val);
+  public BigDecimal(String val);
+  public BigDecimal(BigInteger val);
+  public BigDecimal(BigInteger val, int scale);
+  // Class Methods
+  public static BigDecimal valueOf(long val);
+  public static BigDecimal valueOf(long val, int scale);
+  // Instance Methods
+  public BigDecimal abs();
+  public BigDecimal add(BigDecimal val);
+  public int compareTo(BigDecimal val);
+  public BigDecimal divide(BigDecimal val, int roundingMode);
+  public BigDecimal divide(BigDecimal val, int scale, int roundingMode);
+  public double doubleValue();
+  public boolean equals(Object x); 
+  public float floatValue();
+  public int hashCode();
+  public int intValue();
+  public long longValue();
+  public BigDecimal max(BigDecimal val);
+  public BigDecimal min(BigDecimal val);
+  public BigDecimal movePointLeft(int n);
+  public BigDecimal movePointRight(int n);
+  public BigDecimal multiply(BigDecimal val);
+  public BigDecimal negate();
+  public int scale();
+  public BigDecimal setScale(int scale);
+  public BigDecimal setScale(int scale, int roundingMode);
+  public int signum();
+  public BigDecimal subtract(BigDecimal val);
+  public BigInteger toBigInteger();
+  public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.4">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.1">ROUND_CEILING</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.1">public static final int ROUND_CEILING</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A rounding method that rounds towards positive infinity.
+Under this method, the value is rounded to the least integer 
+greater than or equal to its value. For example, 
+2.5 rounds to 3 and -2.5 rounds to -2.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.2">ROUND_DOWN</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.2">public static final int ROUND_DOWN</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+ 
+A rounding method that rounds towards zero by truncating. 
+For example, 2.5 rounds to 2 and -2.5 rounds to -2.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.3">ROUND_FLOOR</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.3">public static final int ROUND_FLOOR</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A rounding method that rounds towards negative infinity. Under this 
+method, the value is rounded to the greatest integer less than
+or equal to its value. For example, 2.5 rounds to 2 and -2.5 rounds to -3.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.4">ROUND_HALF_DOWN</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.4">public static final int ROUND_HALF_DOWN</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A rounding method that increments the digit prior to a discarded fraction 
+if the fraction is greater than 0.5; otherwise, the digit is left unchanged. 
+For example, 2.5 rounds to 2, 2.51 rounds to 3, -2.5
+rounds to -2, and -2.51 rounds to -3.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.5">ROUND_HALF_EVEN</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.5">public static final int ROUND_HALF_EVEN</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A rounding method that behaves like <tt CLASS=literal>ROUND_HALF_UP</tt> 
+if the digit prior to the discarded fraction is odd; otherwise it behaves 
+like <tt CLASS=literal>ROUND_HALF_DOWN</tt>. 
+For example, 2.5 rounds to 2, 3.5 rounds to 4,
+-2.5 rounds to -2, and -3.5 rounds to -4.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.6">ROUND_HALF_UP</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.6">public static final int ROUND_HALF_UP</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A rounding method that increments the digit prior to a discarded fraction 
+if the fraction is greater than or equal to 0.5; otherwise, the digit is 
+left unchanged. 
+For example, 2.5 rounds to 3, 2.49 rounds to 2,
+-2.5 rounds to -3, and -2.49 rounds to -2.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.7">ROUND_UNNECESSARY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.7">public static final int ROUND_UNNECESSARY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A constant that specifies that rounding is not necessary. If the 
+result really does require rounding, an <tt CLASS=literal>ArithmeticException</tt> 
+is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.8">ROUND_UP</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.8">public static final int ROUND_UP</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A rounding method that rounds away from zero by truncating. 
+For example, 2.5 rounds to 3 and -2.5 rounds to -3.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.5">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.9">BigDecimal</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.9">public BigDecimal(double val) throws NumberFormatException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>double</tt> has any of the 
+special values: <tt CLASS=literal>Double.NEGATIVE_INFINITY</tt>, 
+<tt CLASS=literal>Double.POSITIVE_INFINITY</tt>, or 
+<tt CLASS=literal>Double.NaN</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This constructor creates a <tt CLASS=literal>BigDecimal</tt> with the
+given initial value. The scale of the <tt CLASS=literal>BigDecimal</tt>
+that is created is the smallest value such that
+(<tt CLASS=literal>10^scale x val</tt>) is
+an integer.
+</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.10">public BigDecimal(String val) throws NumberFormatException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the string cannot be parsed into a valid <tt CLASS=literal>BigDecimal</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BigDecimal</tt> 
+with the initial value specified by the <tt CLASS=literal>String</tt>. 
+The string can contain an optional minus sign, followed by zero or more 
+decimal digits, followed by an optional fraction. The fraction must contain 
+a decimal point and zero or more decimal digits. The string must contain 
+as least one digit in the integer or fractional part. The scale of the 
+<tt CLASS=literal>BigDecimal</tt> that is created 
+is equal to the number of digits to the right of the decimal point or 
+0 if there is no decimal point. The mapping from characters to digits is 
+provided by the <tt CLASS=literal>Character.digit()</tt> 
+method. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.11">public BigDecimal(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BigDecimal</tt> 
+whose initial value comes from the given <tt CLASS=literal>BigInteger</tt>. 
+The scale of the <tt CLASS=literal>BigDecimal</tt> 
+that is created is 0. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.12"><DIV CLASS=screen> <P> <PRE> public BigDecimal(BigInteger val, int scale) throws NumberFormatException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>scale</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial scale. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>scale</tt> is negative. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BigDecimal</tt> 
+from the given parameters. The <tt CLASS=literal>scale</tt> 
+parameter specifies how many digits of the supplied <tt CLASS=literal>BigInteger</tt> 
+fall to the right of the decimal point. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.6">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.10">valueOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.13">public static BigDecimal valueOf(long val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BigDecimal</tt> that represents 
+the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BigDecimal</tt> 
+from the given <tt CLASS=literal>long</tt> value. 
+The scale of the <tt CLASS=literal>BigDecimal</tt> 
+that is created is 0. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.14"><DIV CLASS=screen> <P> <PRE> public static BigDecimal valueOf(long val, int scale) throws NumberFormatException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>scale</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial scale. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BigDecimal</tt> that represents 
+the given value and scale. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>scale</tt> is negative. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BigDecimal</tt> 
+from the given parameters. The <tt CLASS=literal>scale</tt> 
+parameter specifies how many digits of the supplied <tt CLASS=literal>long</tt> 
+fall to the right of the decimal point. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.7">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.11">abs</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.15">public BigDecimal abs()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BigDecimal</tt> that contains 
+the absolute value of this number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the absolute value of this <tt CLASS=literal>BigDecimal</tt>. 
+If this <tt CLASS=literal>BigDecimal</tt> is nonnegative, 
+it is returned. Otherwise, a new <tt CLASS=literal>BigDecimal</tt> 
+that contains the absolute value of this <tt CLASS=literal>BigDecimal</tt> 
+is returned. The scale of the new <tt CLASS=literal>BigDecimal</tt> 
+is the same as that of this <tt CLASS=literal>BigDecimal</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.12">add</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.16">public BigDecimal add(BigDecimal val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be added. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the sum of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the sum of this <tt CLASS=literal>BigDecimal</tt> 
+and the given <tt CLASS=literal>BigDecimal</tt> as 
+a new <tt CLASS=literal>BigDecimal</tt>. The value 
+of the new <tt CLASS=literal>BigDecimal</tt> is the 
+sum of the values of the two <tt CLASS=literal>BigDecimal</tt> 
+objects being added; the scale is the maximum of their two scales. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.13">compareTo</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.17">public int compareTo(BigDecimal val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be compared. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>-1</tt> if this number is less than <tt CLASS=literal>val</tt>, 
+<tt CLASS=literal>0</tt> if this number is equal to <tt CLASS=literal>val</tt>, 
+or <tt CLASS=literal>1</tt> if this number is greater than <tt CLASS=literal>val</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method compares this <tt CLASS=literal>BigDecimal</tt> 
+to the given<tt CLASS=literal> BigDecimal</tt> and 
+returns a value that indicates the result of the comparison. The method 
+considers two <tt CLASS=literal>BigDecimal</tt> objects 
+that have the same values but different scales to be equal. This method 
+can be used to implement all six of the standard boolean comparison operators: 
+<tt CLASS=literal>==</tt>, <tt CLASS=literal>!=</tt>, 
+<tt CLASS=literal>&lt;=</tt>, <tt CLASS=literal>&lt;</tt>, 
+<tt CLASS=literal>&gt;=</tt>, and <tt CLASS=literal>&gt;</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.14">divide</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.18"><DIV CLASS=screen> <P> <PRE> public BigDecimal divide(BigDecimal val, int roundingMode) throws ArithmeticException, IllegalArgumentException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The divisor.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>roundingMode</tt><br>
+<DD>
+
+<P CLASS=para>
+The rounding 
+mode. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the result (quotient) of dividing this number by the supplied value. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>val</tt> is <tt CLASS=literal>0</tt>, or if <tt CLASS=literal>ROUND_UNNECESSARY</tt> 
+is specified for the rounding mode but rounding is necessary.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>roundingMode</tt> is not a valid value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the quotient that results from dividing this <tt CLASS=literal>BigDecimal</tt> 
+by the given <tt CLASS=literal>BigDecimal</tt> and 
+applying the specified rounding mode. The quotient is returned as a new 
+<tt CLASS=literal>BigDecimal</tt> that has the same 
+scale as the scale of this <tt CLASS=literal>BigDecimal</tt> 
+scale. One of the rounding constants must be specified for the rounding 
+mode. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.19"><DIV CLASS=screen> <P> <PRE> public BigDecimal divide(BigDecimal val, int scale, int roundingMode) throws ArithmeticException, IllegalArgumentException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The divisor.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>scale</tt><br>
+<DD>
+
+<P CLASS=para>
+The scale for the 
+result.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>roundingMode</tt><br>
+<DD>
+
+<P CLASS=para>
+The rounding 
+mode. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the result (quotient) of dividing this number by the supplied value. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>val</tt> is <tt CLASS=literal>0</tt>, if <tt CLASS=literal>scale</tt> 
+is less than zero, or if <tt CLASS=literal>ROUND_UNNECESSARY</tt> 
+is specified for the rounding mode but rounding is necessary.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>roundingMode</tt> is not a valid value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the quotient that results from dividing dividing this 
+<tt CLASS=literal>BigDecimal</tt> by the given <tt CLASS=literal>BigDecimal</tt> 
+and applying the specified rounding mode. The quotient is returned as a 
+new <tt CLASS=literal>BigDecimal</tt> that has the 
+given scale. One of the rounding constants must be specified for the rounding 
+mode. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.15">doubleValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.20">public double doubleValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigDecimal</tt> 
+as a <tt CLASS=literal>double</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Number.doubleValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigDecimal</tt> 
+as a <tt CLASS=literal>double</tt>. If the value exceeds 
+the limits of a <tt CLASS=literal>double</tt>, <tt CLASS=literal>Double.POSITIVE_INFINITY</tt> 
+or <tt CLASS=literal>Double.NEGATIVE_INFINITY</tt> 
+is returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.16">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.21">public boolean equals(Object x)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>x</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be compared 
+with this object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; 
+<tt CLASS=literal>false</tt> if they are not. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt><tt CLASS=literal>.equals()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>x</tt> is an instance of <tt CLASS=literal>BigDecimal</tt>, 
+and it represents the same value as this <tt CLASS=literal>BigDecimal</tt>. 
+In order to be considered equal using this method, two <tt CLASS=literal>BigDecimal</tt> 
+objects must have the same values and scales. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.17">floatValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.22">public float floatValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigDecimal</tt> 
+as a <tt CLASS=literal>float</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Number.floatValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigDecimal</tt> 
+as a <tt CLASS=literal>float</tt>. If the value exceeds 
+the limits of a <tt CLASS=literal>float</tt>, <tt CLASS=literal>Float.POSITIVE_INFINITY</tt> 
+or <tt CLASS=literal>Float.NEGATIVE_INFINITY</tt> 
+is returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.18">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.23">public int hashCode()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode for this object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt><tt CLASS=literal>.hashCode()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a hashcode for this <tt CLASS=literal>BigDecimal</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.19">intValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.24">public int intValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigDecimal</tt> 
+as an <tt CLASS=literal>int</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Number.intValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigDecimal</tt> 
+as an <tt CLASS=literal>int</tt>. If the value exceeds 
+the limits of an <tt CLASS=literal>int</tt>, the excessive high-order
+bits are discarded. Any fractional part of this <tt CLASS=literal>BigDecimal</tt> 
+is truncated. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.20">longValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.25">public long longValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigDecimal</tt> 
+as a <tt CLASS=literal>long</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Number.longValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigDecimal</tt> 
+as a <tt CLASS=literal>long</tt>. If the value exceeds 
+the limits of a <tt CLASS=literal>long</tt>, the excessive high-order bits
+are discarded. Any fractional part of this <tt CLASS=literal>BigDecimal</tt> 
+is also truncated. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.21">max</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.26">public BigDecimal max(BigDecimal val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be compared. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>BigDecimal</tt> that represents 
+the greater of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the greater of this <tt CLASS=literal>BigDecimal</tt> 
+and the given <tt CLASS=literal>BigDecimal</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.22">min</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.27">public BigDecimal min(BigDecimal val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be compared. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>BigDecimal</tt> that represents 
+the lesser of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the lesser of this <tt CLASS=literal>BigDecimal</tt> 
+and the given <tt CLASS=literal>BigDecimal</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.23">movePointLeft</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.28">public BigDecimal movePointLeft(int n)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of digits 
+to move the decimal point to the left. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the adjusted number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>BigDecimal</tt> 
+that is computed by shifting the decimal point of this <tt CLASS=literal>BigDecimal</tt> 
+left by the given number of digits. If <tt CLASS=literal>n</tt> 
+is nonnegative, the value of the new <tt CLASS=literal>BigDecimal</tt> 
+is the same as the current value, and the scale is increased by <tt CLASS=literal>n</tt>. 
+If <tt CLASS=literal>n</tt> is negative, the method 
+call is equivalent to <tt CLASS=literal>movePointRight(-n)</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.24">movePointRight</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.29">public BigDecimal movePointRight(int n)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of digits 
+to move the decimal point to the right. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the adjusted number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>BigDecimal</tt> 
+that is computed by shifting the decimal point of this <tt CLASS=literal>BigDecimal</tt> 
+right by the given number of digits. If <tt CLASS=literal>n</tt> 
+is nonnegative, the value of the new <tt CLASS=literal>BigDecimal</tt> 
+is the same as the current value, and the scale is decreased by <tt CLASS=literal>n</tt>. 
+If <tt CLASS=literal>n</tt> is negative, the method 
+call is equivalent to <tt CLASS=literal>movePointLeft(-n)</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.25">multiply</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.30">public BigDecimal multiply(BigDecimal val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be multiplied. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the product of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method multiplies this <tt CLASS=literal>BigDecimal</tt> 
+and the given <tt CLASS=literal>BigDecimal</tt>, and 
+returns the result as a new <tt CLASS=literal>BigDecimal</tt>. 
+The value of the new <tt CLASS=literal>BigDecimal</tt> 
+is the product of the values of the two <tt CLASS=literal>BigDecimal</tt> 
+objects being added; the scale is the sum of their two scales. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.26">negate</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.31">public BigDecimal negate()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the negative of this number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigDecimal</tt> 
+that is identical to this <tt CLASS=literal>BigDecimal</tt> 
+except that its sign is reversed. The scale of the new <tt CLASS=literal>BigDecimal</tt> 
+is the same as the scale of this <tt CLASS=literal>BigDecimal</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.27">scale</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.32">public int scale()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The scale of this number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the scale of this<tt CLASS=literal> BigDecimal</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.28">setScale</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.33"><DIV CLASS=screen> <P> <PRE> public BigDecimal setScale(int scale) throws ArithmeticException, IllegalArgumentException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>scale</tt><br>
+<DD>
+
+<P CLASS=para>
+a
+The new scale. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that is identical 
+to this number, except that is has the given scale. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the new number cannot be calculated without rounding.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is never thrown. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a new <tt CLASS=literal>BigDecimal</tt> 
+that has the given scale and a value that is calculated by multiplying 
+or dividing the value of this <tt CLASS=literal>BigDecimal</tt> 
+by the appropriate power of 10 to maintain the overall value. The method 
+is typically used to increase the scale of a number, not decrease it. It 
+can decrease the scale, however, if there are enough zeros in 
+the fractional part of the value to allow for rescaling without loss of 
+precision.
+
+<P CLASS=para>
+Calling this method is equivalent to calling <tt CLASS=literal>setScale(scale,</tt> 
+<tt CLASS=literal>BigDecimal.ROUND_UNNECESSARY)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.34"><DIV CLASS=screen> <P> <PRE> public BigDecimal setScale(int scale, int roundingMode) throws ArithmeticException, IllegalArgumentException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>scale</tt><br>
+<DD>
+
+<P CLASS=para>
+The new scale.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>roundingMode</tt><br>
+<DD>
+
+<P CLASS=para>
+The rounding mode. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+this number adjusted to the given scale. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>scale</tt> is less than zero, or 
+if <tt CLASS=literal>ROUND_UNNECESSARY</tt> is specified 
+for the rounding mode but rounding is necessary.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>roundingMode</tt> is not a valid value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a new <tt CLASS=literal>BigDecimal</tt> 
+that has the given scale and a value that is calculated by multiplying 
+or dividing the value of this <tt CLASS=literal>BigDecimal</tt> 
+by the appropriate power of 10 to maintain the overall value. When the 
+scale is reduced, the value must be divided, so precision may be lost. 
+In this case, the specified rounding mode is used. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.29">signum</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.35">public int signum()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>-1</tt> if this number is negative, <tt CLASS=literal>0</tt> if this number is zero, 
+or <tt CLASS=literal>1</tt> if this number is positive. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a value that indicates the sign of this <tt CLASS=literal>BigDecimal</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.30">subtract</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.36">public BigDecimal subtract(BigDecimal val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be subtracted. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the result of subtracting the given number from this number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method subtracts the given <tt CLASS=literal>BigDecimal</tt> 
+from this <tt CLASS=literal>BigDecimal</tt> and returns 
+the result as a new <tt CLASS=literal>BigDecimal</tt>. 
+The value of the new <tt CLASS=literal>BigDecimal</tt> 
+is the result of subtracting the value of the given <tt CLASS=literal>BigDecimal</tt> 
+from this <tt CLASS=literal>BigDecimal</tt>; the scale 
+is the maximum of their two scales. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.31">toBigInteger</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.37">public BigInteger toBigInteger()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigDecimal</tt> 
+as a <tt CLASS=literal>BigInteger</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigDecimal</tt> 
+as a <tt CLASS=literal>BigInteger</tt>. The fractional 
+part of this number is truncated. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.32">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.38">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of this object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This method returns a string representation of this
+<tt CLASS=literal>BigDecimal</tt>.  A minus sign represents the sign, and
+a decimal point is used to represent the scale. The mapping from
+digits to characters is provided by the
+<tt CLASS=literal>Character.forDigit()</tt> method.
+</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.8">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>byteValue()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Number</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>shortValue()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Number</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.9">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ArithmeticException</tt>, 
+<tt CLASS=literal>BigInteger</tt>, 
+<tt CLASS=literal>Character</tt>, 
+<tt CLASS=literal>Double</tt>, 
+<tt CLASS=literal>Float</tt>, 
+<tt CLASS=literal>IllegalArgumentException</tt>, 
+<tt CLASS=literal>Integer</tt>, 
+<tt CLASS=literal>Long</tt>, 
+<tt CLASS=literal>Number</tt>, 
+<tt CLASS=literal>NumberFormatException</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Modifier</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>BigInteger</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

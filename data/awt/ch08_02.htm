@@ -1,0 +1,653 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] 8.2 TextField</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:41:44 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8<br>Input Fields</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-2">8.2 TextField</A></h2>
+
+<P CLASS=para>
+<A NAME="CH08.FIELD1"></A><tt CLASS=literal>TextField</tt> is the <tt CLASS=literal>TextComponent</tt> 
+for single-line input. Some constructors permit you to set the width of 
+the <tt CLASS=literal>TextField</tt> on the screen, 
+but the current <tt CLASS=literal>LayoutManager</tt> 
+may change it. The text in the <tt CLASS=literal>TextField</tt> 
+is left justified, and the justification is not customizable. To change the font and size of text within the <tt CLASS=literal>TextField</tt>, 
+call <tt CLASS=literal>setFont()</tt> as shown in <A HREF="ch03_01.htm">Chapter 3, <i>Fonts and Colors</i></A>. 
+
+<P CLASS=para>
+The width of the field does not limit the number of characters that the 
+user can type into the field. It merely suggests how wide the field should 
+be. To limit the number of characters, it is necessary to override the 
+<tt CLASS=literal>keyDown()</tt> method for the <tt CLASS=literal>Component</tt>. 
+<A HREF="ch08_04.htm#JAWT-CH-8-SECT-4">Extending TextField</A> contains an example showing how to do 
+this. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-2.1">TextField Methods</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextField () </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>TextField</tt>. 
+The width of the <tt CLASS=literal>TextField</tt> 
+is zero columns, but it will be made wide enough to display just about 
+one character, depending on the current font and size. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextField (int columns)</I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>TextField</tt>. 
+The <tt CLASS=literal>TextField</tt> width is <tt CLASS=literal>columns</tt>. 
+The <tt CLASS=literal>TextField</tt> will try to be 
+wide enough to display <tt CLASS=literal>columns</tt> 
+characters in the current font and size. As I mentioned previously, the layout 
+manager may change the size. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextField (String text) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>TextField</tt> 
+with <tt CLASS=literal>text</tt> as its content. In 
+Java 1.0 systems, the <tt CLASS=literal>TextField</tt> 
+is 0 columns wide (the <tt CLASS=literal>getColumns()</tt> 
+result), but the system will size it to fit the length of text. With Java 
+1.1, <tt CLASS=literal>getColumns()</tt> actually 
+returns <tt CLASS=literal>text.length</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextField (String text, int columns) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>TextField</tt> 
+with <tt CLASS=literal>text</tt> as its content and 
+a width of <tt CLASS=literal>columns</tt>. </DL>
+<P CLASS=para>
+The following example uses all four constructors; the results are shown 
+in <A HREF="ch08_02.htm#JAWT-CH-8-FIG-2">Figure 8.2</A>. With the third constructor, you see 
+that the <tt CLASS=literal>TextField</tt> is not quite wide enough for our text. The system uses 
+an average width per character to try to determine how wide the field should 
+be. If you want to be on the safe side, specify the field's length 
+explicitly, and add a few extra characters to ensure that there is enough 
+room on the screen for the entire text. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.TextField;
+public class texts extends java.applet.Applet {
+   public void init () {
+        add (new TextField ());                   // A
+        add (new TextField (15));                 // B
+        add (new TextField ("Empty String"));     // C
+        add (new TextField ("Empty String", 20)); // D
+   }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-8-FIG-2">Figure 8.2: Using the TextField constructors</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0802.gif" alt="[Graphic: Figure 8-2]" width=193 height=205 border=0>
+
+</DIV>
+
+Sizing<A NAME="CH08.SIZE1"></A>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getColumns () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getColumns()</tt> method returns 
+the number of columns set with the constructor or a later call to <tt CLASS=literal>setColumns()</tt>. 
+This could be different from the displayed width of the <tt CLASS=literal>TextField</tt>, 
+depending upon the current <tt CLASS=literal>LayoutManager</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setColumns (int columns) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setColumns()</tt> method changes 
+the preferred number of columns for the <tt CLASS=literal>TextField</tt> 
+to display to <tt CLASS=literal>columns</tt>. Because 
+the current <tt CLASS=literal>LayoutManager</tt> will 
+do what it wants, the new setting may be completely ignored. If <tt CLASS=literal>columns</tt> 
+&lt; 0, <tt CLASS=literal>setColumns()</tt> throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getPreferredSize (int columns) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension preferredSize (int columns) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPreferredSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (width 
+and height) for the preferred size of a <tt CLASS=literal>TextField</tt> 
+with a width of <tt CLASS=literal>columns</tt>. The 
+<tt CLASS=literal>columns</tt> specified may be different 
+from the number of columns designated in the constructor. 
+
+<P CLASS=para>
+<tt CLASS=literal>preferredSize()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getPreferredSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension preferredSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPreferredSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (width 
+and height) for the preferred size of the <tt CLASS=literal>TextField</tt>. 
+Without the <tt CLASS=literal>columns</tt> parameter, 
+this <tt CLASS=literal>getPreferredSize()</tt> uses 
+the constructor's number of columns (or the value from a subsequent 
+call to <tt CLASS=literal>setColumns()</tt>) to calculate 
+the <tt CLASS=literal>TextField</tt>'s preferred 
+size. 
+
+<P CLASS=para>
+<tt CLASS=literal>preferredSize()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMinimumSize (int columns) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension minimumSize (int columns) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0>  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimumSize</tt>() method 
+returns the minimum <tt CLASS=literal>Dimension</tt> 
+(width and height) for the size of a <tt CLASS=literal>TextField</tt> 
+with a width of <tt CLASS=literal>columns</tt>. The 
+<tt CLASS=literal>columns</tt> specified may be different 
+from the columns designated in the constructor. 
+
+<P CLASS=para>
+<tt CLASS=literal>minimumSize()</tt> is the Java 1.0 
+name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMinimumSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension minimumSize () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimumSize()</tt> method 
+returns the minimum <tt CLASS=literal>Dimension</tt> 
+(width and height) for the size of the <tt CLASS=literal>TextField</tt>. 
+Without the columns parameter, this <tt CLASS=literal>getMinimumSize()</tt> 
+uses the constructor's number of columns (or the value from a subsequent 
+call to <tt CLASS=literal>setColumns()</tt>) to calculate 
+the <tt CLASS=literal>TextField</tt>'s minimum 
+size. 
+
+<P CLASS=para>
+<tt CLASS=literal>minimumSize()</tt> is the Java 1.0 
+name for this method. </DL>
+Echoing character
+
+<P CLASS=para>
+It is possible to change the character echoed back to the user when he 
+or she types. This is extremely useful for implementing password entry 
+fields. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public char getEchoChar () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getEchoChar()</tt> method returns 
+the currently echoed character. If the <tt CLASS=literal>TextField</tt> 
+is echoing normally, <tt CLASS=literal>getEchoChar()</tt> 
+returns zero. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setEchoChar (char c) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void setEchoCharacter (char c) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setEchoChar()</tt> method changes 
+the character that is displayed to the user to <tt CLASS=literal>c</tt> 
+for every character in the <tt CLASS=literal>TextField</tt>. 
+It is possible to change the echo character on the fly so that existing 
+characters will be replaced. A <tt CLASS=literal>c</tt> 
+of zero, <tt CLASS=literal>(char)0</tt>, effectively 
+turns off any change and makes the <tt CLASS=literal>TextField</tt> 
+behave normally. 
+
+<P CLASS=para>
+<tt CLASS=literal>setEchoCharacter()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean echoCharIsSet () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>echoCharIsSet()</tt> method 
+returns <tt CLASS=literal>true</tt> if the echo character 
+is set to a nonzero value. If the <tt CLASS=literal>TextField</tt> 
+is displaying input normally, this method returns <tt CLASS=literal>false</tt>. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>TextField</tt> peer. 
+If you override this method, first call <tt CLASS=literal>super.addNotify()</tt>, 
+then add your customizations for the new class. Then you will be able to 
+do everything you need with the information about the newly created peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString ()  </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>TextField</tt>, the default 
+<tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Component</tt> 
+is called. This in turn calls <tt CLASS=literal>paramString()</tt>, 
+which builds up the string to display. The <tt CLASS=literal>TextField</tt> 
+level can add only one item. If the echo character is nonzero, the current 
+echo character is added (the method <tt CLASS=literal>getEchoChar()</tt>). 
+Using <tt CLASS=literal>new TextField (`Empty String`, 20)</tt>, 
+the results displayed could be: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.TextField[0,0,0x0,invalid,text="Empty String",editable,selection=0-0]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-2.2">TextField Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH08.EVENT3"></A>With the 1.0 event model, <tt CLASS=literal>TextField</tt> 
+components can generate <tt CLASS=literal>KEY_PRESS</tt> 
+and <tt CLASS=literal>KEY_ACTION</tt> (which calls 
+<tt CLASS=literal>keyDown()</tt>), <tt CLASS=literal>KEY_RELEASE</tt> 
+and <tt CLASS=literal>KEY_ACTION_RELEASE</tt> (which 
+calls <tt CLASS=literal>keyUp()</tt>), and <tt CLASS=literal>ACTION_EVENT</tt> 
+(which calls <tt CLASS=literal>action()</tt>). 
+
+<P CLASS=para>
+With the 1.1 event model, you register an <tt CLASS=literal>ActionListener</tt> 
+with the method <tt CLASS=literal>addActionListener()</tt>. Then when the user presses 
+Return within the <tt CLASS=literal>TextField</tt> 
+the <tt CLASS=literal>ActionListener.actionPerformed()</tt> 
+method is called through the protected <tt CLASS=literal>TextField.processActionEvent()</tt> 
+method. Key, mouse, and focus listeners are registered through the three <tt CLASS=literal>Component</tt> 
+methods of <tt CLASS=literal>addKeyListener()</tt>, 
+<tt CLASS=literal>addMouseListener()</tt>, and <tt CLASS=literal>addFocusListener()</tt>, 
+respectively. Action
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean action (Event e, Object o)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>action()</tt> method for a <tt CLASS=literal>TextField</tt> 
+is called when the input focus is in the <tt CLASS=literal>TextField</tt> 
+and the user presses the Return key. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>o</tt> is 
+a <tt CLASS=literal>String</tt> representing the current contents (the <tt CLASS=literal>getText()</tt> method). </DL>
+Keyboard
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyDown (Event e, int key)   </I><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="CH08.KEY1"></A>The <tt CLASS=literal>keyDown()</tt> method is called 
+whenever the user presses a key. <tt CLASS=literal>keyDown()</tt> 
+may be called many times in succession if the key remains 
+pressed. <tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) for <tt CLASS=literal>keyDown()</tt> 
+could be either <tt CLASS=literal>Event.KEY_PRESS</tt> 
+for a regular key or <tt CLASS=literal>Event.KEY_ACTION</tt> 
+for an action-oriented key (i.e., an arrow or function key). Some of the 
+things you can do through this method are validate input, convert each 
+character to uppercase, and limit the number or type of characters entered. 
+The technique is simple: you just need to remember that the user's 
+keystroke is actually displayed by the <tt CLASS=literal>TextField</tt> 
+peer, which receives the event after the <tt CLASS=literal>TextField</tt> 
+itself. Therefore, a <tt CLASS=literal>TextField</tt> 
+subclass can modify the character displayed by modifying the <tt CLASS=literal>key</tt> 
+field (<tt CLASS=literal>e.key</tt>) of the <tt CLASS=literal>Event</tt> 
+and returning <tt CLASS=literal>false</tt>, which 
+passes the <tt CLASS=literal>Event</tt> on down the 
+chain; remember that returning <tt CLASS=literal>false</tt> 
+indicates that the <tt CLASS=literal>Event</tt> has 
+not been completely processed. The following method uses this technique 
+to convert all input to uppercase. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean keyDown (Event e, int key) {
+    e.key = Character.toUppercase (char(key));
+    return false;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If <tt CLASS=literal>keyDown()</tt> returns <tt CLASS=literal>true</tt>, 
+it indicates that the <tt CLASS=literal>Event</tt> 
+has been completely processed. In this case, the <tt CLASS=literal>Event</tt> 
+never propagates to the peer, and the keystroke is never displayed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyUp (Event e, int key) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyUp()</tt> method is called 
+whenever the user releases a key. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) for <tt CLASS=literal>keyUp()</tt> 
+could be either <tt CLASS=literal>Event.KEY_RELEASE</tt> 
+for a regular key or <tt CLASS=literal>Event.KEY_ACTION_RELEASE</tt> 
+for an action-oriented key (i.e., an arrow or function key). Among other 
+things, <tt CLASS=literal>keyUp()</tt> may be used 
+to determine how long the key has been pressed. </DL>
+Mouse
+
+<P CLASS=para>
+Ordinarily, the <tt CLASS=literal>TextField</tt> component 
+does not trigger any mouse events. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Mouse events are not generated for <tt CLASS=literal>TextField</tt> 
+with JDK 1.0.2. Your run-time environment may behave differently. See Appendix 
+C for more information about platform dependencies. 
+</blockquote><P>
+</DIV>
+
+Focus
+
+<P CLASS=para>
+The <tt CLASS=literal>TextField</tt> component does 
+not reliably generate focus events. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>GOT_FOCUS</tt> and <tt CLASS=literal>LOST_FOCUS</tt> 
+events can be generated by <tt CLASS=literal>TextField</tt>s, 
+but these events are not reliable across platforms. With Java 1.0, they 
+are generated on most UNIX platforms but not on Windows NT/95 platforms. They 
+are generated on all platforms under Java 1.1. See Appendix C for more 
+information about platform dependencies. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean gotFocus (Event e, Object o)   </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>gotFocus()</tt> method is triggered 
+when the <tt CLASS=literal>TextField</tt> gets the 
+input focus. <tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>o</tt> 
+is a <tt CLASS=literal>String</tt> representation 
+of the current contents (<tt CLASS=literal>getText()</tt>). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean lostFocus (Event e, Object o)   </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>lostFocus()</tt> method is 
+triggered when the input focus leaves the <tt CLASS=literal>TextField</tt>. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>o</tt> 
+is a <tt CLASS=literal>String</tt> representation 
+of the current contents (<tt CLASS=literal>getText()</tt>). </DL>
+Listeners and 1.1 event handling
+
+<P CLASS=para>
+<A NAME="CH08.EVENT4"></A>With the 1.1 event model, you register event listeners that are told when 
+an event occurs. You can register text event listeners by calling the method <tt CLASS=literal>TextComponent.addTextListener()</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addActionListener(ActionListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addActionListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in receiving notifications when an <tt CLASS=literal>ActionEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>TextField</tt> as its 
+target. The <tt CLASS=literal>listener.actionPerformed()</tt> 
+method is called when these events occur. Multiple listeners can be registered. 
+The following code demonstrates how to use an <tt CLASS=literal>ActionListener</tt> 
+to reverse the text in the <tt CLASS=literal>TextField</tt>. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only 
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+class MyAL implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+        System.out.println ("The current text is: " +
+            e.getActionCommand());
+        if (e.getSource() instanceof TextField) {
+            TextField tf = (TextField)e.getSource();
+            StringBuffer sb = new StringBuffer (e.getActionCommand());
+            tf.setText (sb.reverse().toString());
+        }
+    }
+}
+public class text11 extends Applet {
+    public void init () {
+        TextField tf = new TextField ("Help Text", 20);
+        add (tf);
+        tf.addActionListener (new MyAL());
+   }
+}
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeActionListener(ActionListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeActionListener()</tt> 
+method removes <tt CLASS=literal>listener</tt> as 
+a interested listener. If <tt CLASS=literal>listener</tt> 
+is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+all <tt CLASS=literal>AWTEvent</tt>s with this <tt CLASS=literal>TextField</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>TextField</tt>, overriding <tt CLASS=literal>processEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding <tt CLASS=literal>processEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processEvent()</tt>, 
+remember to call <tt CLASS=literal>super.processEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processActionEvent(ActionEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processActionEvent()</tt> method 
+receives all <tt CLASS=literal>ActionEvent</tt>s with 
+this <tt CLASS=literal>TextField</tt> as its target. 
+<tt CLASS=literal>processActionEvent()</tt> then passes 
+them along to any listeners for processing. When you subclass <tt CLASS=literal>TextField</tt>, 
+overriding the method <tt CLASS=literal>processActionEvent()</tt> 
+allows you to process all action events yourself, before sending them to 
+any listeners. In a way, overriding <tt CLASS=literal>processActionEvent()</tt> 
+is like overriding <tt CLASS=literal>action() </tt>using 
+the 1.0 event model. 
+
+<P CLASS=para>
+If you override the <tt CLASS=literal>processActionEvent()</tt> method, 
+remember to call <tt CLASS=literal>super.processActionEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. </DL>
+<P CLASS=para>
+The following applet is equivalent to the previous example, except that it 
+overrides <tt CLASS=literal>processActionEvent()</tt> 
+to receive events, eliminating the need for an <tt CLASS=literal>ActionListener</tt>. 
+The constructor calls <tt CLASS=literal>enableEvents()</tt> 
+to make sure that events are delivered, even if no listeners are registered. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+class MyTextField extends TextField {
+    public MyTextField (String s, int len) {
+        super (s, len);
+        enableEvents (AWTEvent.ACTION_EVENT_MASK);
+    }
+    protected void processActionEvent(ActionEvent e) {
+        System.out.println ("The current text is: " +
+            e.getActionCommand());
+        TextField tf = (TextField)e.getSource();
+        StringBuffer sb = new StringBuffer (e.getActionCommand());
+        tf.setText (sb.reverse().toString());
+        super.processActionEvent(e)
+    }
+}
+public class text12 extends Applet {
+   public void init () {
+        TextField tf = new MyTextField ("Help Text", 20);
+        add (tf);
+   }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Text Component</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>TextArea</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

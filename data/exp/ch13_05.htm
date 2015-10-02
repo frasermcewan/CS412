@@ -1,0 +1,652 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 13] 13.5 Drawing Techniques</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:03:07 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 13<br>Drawing With the AWT</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-13-SECT-4">13.5 Drawing Techniques</A></h2>
+
+<P CLASS=para>
+Having learned to walk, let's try a jog. In this 
+section, we'll look at some techniques for doing fast and flicker-free 
+drawing and painting. If you're interested in animation or smooth 
+updating, you should read on.[4]
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+At this point, you still have to build your own animation software.
+JavaSoft will be releasing an animation package as part of the Java
+Media APIs.
+</blockquote>
+<P CLASS=para>
+Drawing operations take time, and time spent drawing leads to delays
+and imperfect results. Our goal is to minimize the amount of drawing
+work we do and, as much as possible, to do that work away from the
+eyes of the user. You'll remember that our
+<tt CLASS=literal>TestPattern</tt> applet had a blinking problem. It
+blinked because <tt CLASS=literal>TestPattern</tt> performs several,
+large, area-filling operations each time its
+<tt CLASS=literal>paint()</tt> method is called. On a very slow system,
+you might even be able to see each shape being drawn in
+succession. <tt CLASS=literal>TestPattern</tt> could be easily fixed by
+drawing into an off-screen buffer and then copying the completed
+buffer to the display. To see how to eliminate flicker and blinking
+problems, we'll look at an applet that needs even more help.
+
+<P CLASS=para>
+<tt CLASS=literal>TerribleFlicker</tt> illustrates some of the
+problems of updating a display. Like many animations, it has two
+parts: a constant background and a changing object in the
+foreground. In this case, the background is a checkerboard pattern and
+the object is a small, scaled image we can drag around on top of
+it, as shown in <A HREF="ch13_05.htm#EXJ-CH-13-FIG-6">Figure 13.6</A>. Our first version of
+<tt CLASS=literal>TerribleFlicker</tt> lives up to its name and does a
+very poor job of updating.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-6">Figure 13.6: The TerribleFlicker applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1306.gif" alt="[Graphic: Figure 13-6]" width=503 height=223 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class TerribleFlicker extends java.applet.Applet 
+                                    implements MouseMotionListener { 
+    int grid = 10;
+    int currentX, currentY;
+    Image img;
+    int imgWidth = 60, imgHeight = 60;
+    public void init() {
+        img = getImage( getClass().getResource(getParameter("img")) );
+        addMouseMotionListener( this );
+    }
+    public void mouseDragged( MouseEvent e ) {
+        currentX = e.getX(); currentY = e.getY();
+        repaint();
+    }
+    public void mouseMoved( MouseEvent e ) { }; // complete MouseMotionListener
+    public void paint( Graphics g ) {
+        int w = getSize().width/grid;
+        int h = getSize().height/grid;
+        boolean black = false;
+        for ( int y = 0; y &lt;= grid; y++ ) 
+            for ( int x = 0; x &lt;= grid; x++ ) {
+                g.setColor(  (black = !black) ? Color.black : Color.white );
+                g.fillRect( x * w, y * h, w, h );
+            }
+        g.drawImage( img, currentX, currentY, imgWidth, imgHeight, this );
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Try dragging the image; you'll notice both the background
+and foreground flicker as they are repeatedly redrawn. What is
+<tt CLASS=literal>TerribleFlicker</tt> doing, and what is it doing wrong?
+
+<P CLASS=para>
+As the mouse is dragged, <tt CLASS=literal>TerribleFlicker</tt> keeps
+track of its position in two instance variables,
+<tt CLASS=literal>currentX</tt> and <tt CLASS=literal>currentY</tt>. On each
+call to <tt CLASS=literal>mouseDragged()</tt>, the coordinates are
+updated, and <tt CLASS=literal>repaint()</tt> is called to ask that the
+display be updated. When <tt CLASS=literal>paint()</tt> is called, it
+looks at some parameters, draws the checkerboard pattern to fill the
+applet's area, and finally paints a small version of the image at the
+latest coordinates.
+
+<P CLASS=para>
+<A NAME="CH11.UP"></A>Our first, and biggest, problem is that we are updating,
+but we have neglected to implement the applet's
+<tt CLASS=literal>update()</tt> method with a good strategy. Because we
+haven't overridden <tt CLASS=literal>update()</tt>, we are getting
+the default implementation of the <tt CLASS=literal>Component</tt>
+<tt CLASS=literal>update()</tt> method, which looks something like this:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// Default implementation of applet update 
+public void update( Graphics g ) { 
+    setColor ( backgroundColor ); 
+    fillRect( 0, 0, getSize().width, getSize().height ); 
+    paint ( g ); 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This method simply clears the display to the background color and
+calls our <tt CLASS=literal>paint()</tt> method. This is almost never the
+best strategy, but is the only appropriate default for
+<tt CLASS=literal>update()</tt>, which doesn't know how much of the
+screen we're really going to paint.
+
+<P CLASS=para>
+Our applet paints its own background, in its entirety, so we can 
+provide a simpler version of <tt CLASS=literal>update()</tt> that doesn't
+bother to clear the display:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// add to TerribleFlicker
+public void update( Graphics g ) { 
+    paint( g ); 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This applet works better because we have eliminated one large,
+unnecessary, and (in fact) annoying graphics operation. However,
+although we have eliminated a <tt CLASS=literal>fillRect()</tt> call,
+we're still doing a lot of wasted drawing. Most of the background
+stays the same each time it's drawn. You might think of trying to make
+<tt CLASS=literal>paint()</tt> smarter, so that it wouldn't redraw
+these areas, but remember that <tt CLASS=literal>paint()</tt> has to be
+able to draw the entire scene because it might be called in situations
+when the display isn't intact. The solution is to have
+<tt CLASS=literal>update()</tt> help out by restricting the area
+<tt CLASS=literal>paint()</tt> can draw.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-13-SECT-4.1">Clipping</A></h3>
+
+<P CLASS=para>
+<A NAME="CH11.CLIP1"></A>The <tt CLASS=literal>setClip()</tt> method of the <tt CLASS=literal>Graphics</tt> 
+class restricts the drawing area of a graphics context to a smaller region. 
+A graphics context normally has an effective clipping region that limits 
+drawing to the entire display area of the component. We can specify a smaller 
+clipping region with <tt CLASS=literal>setClip()</tt>. 
+
+<P CLASS=para>
+How is the drawing area restricted? Well, foremost, drawing
+operations that fall outside of the clipping region are not
+displayed. If a drawing operation overlaps the clipping region, we see
+only the part that's inside. A second effect is that, in a good
+implementation, the graphics context can recognize drawing operations
+that fall completely outside the clipping region and ignore them
+altogether. Eliminating unnecessary operations can save time if we're
+doing something complex, like filling a bunch of polygons. This
+doesn't save the time our application spends calling the drawing
+methods, but the overhead of calling these kinds of drawing methods is
+usually negligible compared to the time it takes to execute them. (If
+we were generating an image pixel by pixel, this would not be the
+case, as the calculations would be the major time sink, not the
+drawing.)
+
+<P CLASS=para>
+So we can save time in our applet by having our update method
+set a clipping region that results in only the affected portion of the
+display being redrawn. We can pick the smallest rectangular area that
+includes both the old image position and the new image position, as
+shown in <A HREF="ch13_05.htm#EXJ-CH-13-FIG-7">Figure 13.7</A>. This is the only portion of
+the display that really needs to change; everything else stays the
+same.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-7">Figure 13.7: Determining the clipping region</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1307.gif" alt="[Graphic: Figure 13-7]" width=503 height=223 border=0>
+
+</DIV>
+
+<P CLASS=para>
+An arbitrarily smart <tt CLASS=literal>update()</tt> could save
+even more time by redrawing only those regions that have
+changed. However, the simple clipping strategy we've implemented
+here can be applied to many kinds of drawing, and gives quite good
+performance, particularly if the area being changed is small.
+
+<P CLASS=para>
+One important thing to note is that, in addition to looking at
+the new position, our updating operation now has to remember the last
+position at which the image was drawn. Let's fix our applet so
+it will use a clipping region. To keep this short and emphasize the
+changes, we'll take some liberties with design and make our next
+example a subclass of <tt CLASS=literal>TerribleFlicker</tt>. Let's
+call it <tt CLASS=literal>ClippedFlicker</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public class ClippedFlicker extends TerribleFlicker { 
+    int nextX, nextY;
+    
+    public void mouseDragged( MouseEvent e ) {
+        nextX = e.getX(); nextY = e.getY();
+        repaint();
+    }
+    void clipToAffectedArea( Graphics g, int oldx, int oldy, int newx, 
+                                        int newy, int width, int height) {
+        int x = Math.min( oldx, newx );
+        int y = Math.min( oldy, newy );
+        int w = ( Math.max( oldx, newx ) + width ) - x;
+        int h = ( Math.max( oldy, newy ) + height ) - y;
+        g.setClip( x, y, w, h );
+    }
+    public void update( Graphics g ) {
+        int lastX = currentX, lastY = currentY;
+        currentX = nextX; currentY = nextY;
+        clipToAffectedArea( g, lastX, lastY, currentX, currentY, imgWidth, imgHeight );
+        paint( g );
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You should find that <tt CLASS=literal>ClippedFlicker</tt> is
+significantly faster, though it still flickers. We'll make one
+more change in the next section to eliminate that.
+
+<P CLASS=para>
+So, what have we changed? First, we've overridden
+<tt CLASS=literal>mouseDragged()</tt> so that instead of setting the
+current coordinates of the image, it sets another pair of coordinates
+called <tt CLASS=literal>nextX</tt> and <tt CLASS=literal>nextY</tt>. These
+are the coordinates at which we'll display the image the next time we
+draw it.
+
+<P CLASS=para>
+<tt CLASS=literal>update()</tt> now has the added responsibility of taking
+the next position and making it the current position, by setting the
+<tt CLASS=literal>currentX</tt> and <tt CLASS=literal>currentY</tt>
+variables. This effectively decouples
+<tt CLASS=literal>mouseDragged()</tt> from our painting routines. We'll
+discuss why this is advantageous in a bit. <tt CLASS=literal>update()</tt>
+then uses the current and next coordinates to set a clipping region on
+the <tt CLASS=literal>Graphics</tt> object before handing it off to
+<tt CLASS=literal>paint()</tt>.
+
+<P CLASS=para>
+We have created a new, <tt CLASS=literal>private</tt> method to help it do
+this. <tt CLASS=literal>clipToAffectedArea()</tt> takes as arguments the
+new and old coordinates and the width and height of the image. It
+determines the bounding rectangle as shown in 
+<A HREF="ch13_05.htm#EXJ-CH-13-FIG-6">Figure 13.6</A>, then calls <tt CLASS=literal>setClip()</tt> to
+set the clipping region. As a result, when <tt CLASS=literal>paint()</tt>
+is called, it draws only the affected area of the screen.
+
+<P CLASS=para>
+So, what's the deal with <tt CLASS=literal>nextX</tt> and
+<tt CLASS=literal>nextY</tt>?  By making <tt CLASS=literal>update()</tt> keep
+track of the next, current, and last coordinates separately, we
+accomplish two things. First, we always have an accurate view of where
+the last image was drawn and second, we have decoupled where the next
+image will be drawn from <tt CLASS=literal>mouseDragged()</tt>.
+
+<P CLASS=para>
+It's important to decouple painting from
+<tt CLASS=literal>mouseDragged()</tt> because there isn't necessarily a
+one-to-one correspondence between calls to
+<tt CLASS=literal>repaint()</tt> and subsequent calls by
+AWT to our <tt CLASS=literal>update()</tt> method. This
+isn't a defect; it's a feature that allows AWT to
+schedule and consolidate painting requests.  Our concern is that our
+<tt CLASS=literal>paint()</tt> method may be called at arbitrary times
+while the mouse coordinates are changing. This is not necessarily
+bad. If we are trying to position our object, we probably don't want
+the display to be redrawn for every intermediate position of the
+mouse. It would slow down the dragging unnecessarily.
+
+<P CLASS=para>
+If we were concerned about getting every single change in the mouse's
+position, we would have two options. We could either do some work in
+the <tt CLASS=literal>mouseDragged()</tt> method itself, or put our events
+into some kind of queue. We'll see an example of the first solution in
+our <tt CLASS=literal>DoodlePad</tt> example a bit later. The latter
+solution would mean circumventing AWT's own
+event-scheduling capabilities and replacing them with our own, and we
+don't want to take on that responsibility.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-13-SECT-4.2">Double Buffering</A></h3>
+
+<P CLASS=para>
+<A NAME="CH11.DB"></A><A NAME="CH11.DB2"></A>Now let's get to the most powerful technique in our toolbox:
+<I CLASS=emphasis>double buffering</I>. Double buffering is a technique
+that fixes our flickering problems completely. It's easy to do and
+gives us almost flawless updates. We'll combine it with our
+clipping technique for better performance, but in general you can use
+double buffering with or without clipping.
+
+<P CLASS=para>
+Double buffering our display means drawing into an off-screen
+buffer and then copying our completed work to the display in a single
+painting operation, as shown in <A HREF="ch13_05.htm#EXJ-CH-13-FIG-8">Figure 13.8</A>. It
+takes the same amount of time to draw a frame, but double buffering
+instantaneously updates our display when it's ready.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-8">Figure 13.8: Double buffering</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1308.gif" alt="[Graphic: Figure 13-8]" width=503 height=182 border=0>
+
+</DIV>
+
+<P CLASS=para>
+We can get this effect by changing just a few lines of our
+<tt CLASS=literal>ClippedFlicker</tt> applet. Modify
+<tt CLASS=literal>update()</tt> to look like the following and add the
+new <tt CLASS=literal>offScreenImage</tt> instance variable as shown:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+... 
+public class DoubleBufferedClipped extends ClippedFlicker { 
+    Image offScreenImage;
+    Graphics offScreenGC;
+    public void update( Graphics g ) {
+        if ( offScreenImage == null ) {
+            offScreenImage = createImage( getSize().width, getSize().height );
+            offScreenGC = img.getGraphics();
+        }
+        int lastX = currentX, lastY = currentY;
+        currentX = nextX; currentY = nextY;
+        clipToAffectedArea( offScreenGC, lastX, lastY, currentX, currentY, imgWidth, imgHeight );
+        clipToAffectedArea( g, lastX, lastY, currentX, currentY, imgWidth, imgHeight );
+        paint( offScreenGC );
+        g.drawImage(offScreenImage, 0, 0, this);
+    }
+}
+... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now, when you drag the image, you shouldn't see any
+flickering. The update rate should be about the same as in the
+previous example (or marginally slower), but the image should move
+from position to position without noticeable repainting.
+
+<P CLASS=para>
+So, what have we done this time? Well, the new instance variable,
+<tt CLASS=literal>offScreenImage</tt>, is our off-screen buffer. It is a
+drawable <tt CLASS=literal>Image</tt> object. We can get an off-screen
+<tt CLASS=literal>Image</tt> for a component with the
+<tt CLASS=literal>createImage()</tt>
+method. <tt CLASS=literal>createImage()</tt> is similar to
+<tt CLASS=literal>getImage()</tt>, except that it produces an empty image
+area of the specified size. We can then use the off-screen image like
+our standard display area by asking it for a graphics context with the
+<tt CLASS=literal>Image getGraphics()</tt> method. After we've drawn into
+the off-screen image, we can copy that image back onto the screen with
+<tt CLASS=literal>drawImage()</tt>.
+
+<P CLASS=para>
+The biggest change to the code is that we now pass
+<tt CLASS=literal>paint()</tt> the graphics context of our off-screen
+buffer, rather than that of the on-screen
+display. <tt CLASS=literal>paint()</tt> is now drawing on
+<tt CLASS=literal>offScreenImage</tt>; it's our job to copy the image to
+the display when it's done. This might seem a little suspicious to
+you, as we are now using <tt CLASS=literal>paint()</tt> in two
+capacities. AWT calls <tt CLASS=literal>paint()</tt>
+whenever it's necessary to repaint our entire applet and passes it an
+on-screen graphics context. When we update ourselves, however, we call
+<tt CLASS=literal>paint()</tt> to do its work on our off-screen area and
+then copy that image onto the screen from within
+<tt CLASS=literal>update()</tt>.
+
+<P CLASS=para>
+Note that we're still clipping. In fact, we're clipping both
+the on-screen and off-screen buffers. Off-screen clipping has the same
+benefits we described earlier: AWT should be
+able to ignore wasted drawing operations. On-screen clipping
+minimizes the area of the image that gets drawn back to the
+display. If your display is fast, you might not even notice the
+savings, but it's an easy optimization, so we'll take advantage
+of it.
+
+<P CLASS=para>
+We create the off-screen buffer in <tt CLASS=literal>update()</tt>
+because it's a convenient and safe place to do so. 
+Also, note that our image observer probably won't be called, since
+<tt CLASS=literal>drawImage()</tt> isn't doing anything nasty like
+scaling, and the image itself is always available.
+
+<P CLASS=para>
+The <tt CLASS=literal>dispose()</tt> method of the
+<tt CLASS=literal>Graphics</tt> class allows us to deallocate a graphics
+context explicitly when we are through with it. This is simply an
+optimization.  If we were creating new graphics contexts frequently (say, 
+in each paint()), we could give the system help in getting rid of them.
+This might provide some performance improvement when doing
+heavy drawing. We could allow garbage collection to reclaim the unused
+objects; however, the garbage collection process might be hampered if
+we are doing intense calculations or lots of repainting.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-13-SECT-4.3">Off-Screen Drawing</A></h3>
+
+<P CLASS=para>
+<A NAME="CH11.OFF"></A><A NAME="CH11.OFF2"></A>In addition to serving as buffers for double buffering, off-screen
+images are useful for saving complex, hard-to-produce, background
+information. We'll look at a simple example: the "doodle
+pad." <tt CLASS=literal>DoodlePad</tt> is a simple drawing tool that
+lets us scribble by dragging the mouse, as shown in 
+<A HREF="ch13_05.htm#EXJ-CH-13-FIG-9">Figure 13.9</A>. It draws into an off-screen image; its
+<tt CLASS=literal>paint()</tt> method simply copies the image to the
+display area.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-9">Figure 13.9: The DoodlePad applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1309.gif" alt="[Graphic: Figure 13-9]" width=503 height=282 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class DoodlePad extends java.applet.Applet implements ActionListener { 
+    DrawPad dp;
+    public void init() {
+        setLayout( new BorderLayout() );
+        add( "Center", dp = new DrawPad() );
+        Panel p = new Panel();
+        Button clearButton = new Button("Clear");
+        clearButton.addActionListener( this );
+        p.add( clearButton );
+        add( "South", p );
+    }
+    public void actionPerformed( ActionEvent e ) {
+        dp.clear();
+    }
+}
+class DrawPad extends Canvas {
+    Image drawImg;
+    Graphics drawGr;
+    int xpos, ypos, oxpos, oypos;
+    DrawPad() {
+        setBackground( Color.white );
+        enableEvents( AWTEvent.MOUSE_EVENT_MASK 
+            | AWTEvent.MOUSE_MOTION_EVENT_MASK );
+    }
+    public void processEvent( AWTEvent e ) {
+        int x = ((MouseEvent)e).getX(), y = ((MouseEvent)e).getY();
+        if ( e.getID() == MouseEvent.MOUSE_DRAGGED ) {
+            xpos = x; ypos = y;
+            if ( drawGr != null )
+                drawGr.drawLine( oxpos, oypos, oxpos=xpos, oypos=ypos );
+            repaint();
+        } else 
+        if ( e.getID() == MouseEvent.MOUSE_PRESSED ) {
+            oxpos = x; oypos = y;
+        }
+        super.processEvent(e);
+    }
+    public void update( Graphics g ) {
+        paint(g);
+    }
+    public void paint( Graphics g ) {
+        if ( drawImg == null ) {
+            drawImg = createImage( getSize().width, getSize().height );
+            drawGr = drawImg.getGraphics();
+        }
+        g.drawImage(drawImg, 0, 0, null);
+    }
+    public void clear() {
+        drawGr.clearRect(0, 0, getSize().width, getSize().height);
+        repaint();
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Give it a try. Draw a nice moose, or a sunset. I just drew a lovely
+cartoon of Bill Gates. If you make a mistake, hit the
+<b>Clear</b> button and start over.
+
+<P CLASS=para>
+The parts should be familiar by now. We have made a type of
+<tt CLASS=literal>Canvas</tt> called <tt CLASS=literal>DrawPad</tt>. The new
+<tt CLASS=literal>DrawPad</tt> component handles mouse events by enabling
+both simple mouse events (mouse clicks) and mouse motion events (mouse
+drags), and then overriding the <tt CLASS=literal>processEvent()</tt>
+method to handle these events. By doing so, we are simulating the old
+(Java 1.0) event handling model; in this situation, it's a little more
+convenient than implementing all the methods of the
+<tt CLASS=literal>MouseListener</tt> and
+<tt CLASS=literal>MouseMotionListener</tt> interfaces. The
+<tt CLASS=literal>processEvent()</tt> method handles
+<tt CLASS=literal>MOUSE_DRAGGED</tt> movement events by drawing lines into
+an off-screen image and calling <tt CLASS=literal>repaint()</tt> to update
+the display. <tt CLASS=literal>DrawPad</tt>'s <tt CLASS=literal>paint()</tt>
+method simply does a <tt CLASS=literal>drawImage()</tt> to copy the
+off-screen drawing area to the display. In this way,
+<tt CLASS=literal>DrawPad</tt> saves our sketch information.
+
+<P CLASS=para>
+What is unusual about <tt CLASS=literal>DrawPad</tt> is that it
+does some drawing outside of <tt CLASS=literal>paint()</tt> or
+<tt CLASS=literal>update()</tt>. In our clipping example, we
+talked about decoupling <tt CLASS=literal>update()</tt> and
+<tt CLASS=literal>mouseDragged()</tt>; we were willing to discard
+some mouse movements in order to save some updates. In this case, we
+want to let the user scribble with the mouse, so we should respond to
+every mouse movement. Therefore, we do our work in
+<tt CLASS=literal>processEvent()</tt> itself. As a rule, we
+should be careful about doing heavy work in event handling methods
+because we don't want to interfere with other tasks the
+AWT thread is performing. In this case, our line
+drawing operation should not be a burden, and our primary concern is
+getting as close a coupling as possible between the mouse movement
+events and the sketch on the screen.
+
+<P CLASS=para>
+In addition to drawing a line as the user drags the mouse, the part of
+<tt CLASS=literal>processEvent()</tt> that handles
+<tt CLASS=literal>MOUSE_DRAGGED()</tt> events maintains a set of old
+coordinates, to be used as a starting point for the next line
+segment. The part of <tt CLASS=literal>processEvent()</tt> that handles
+<tt CLASS=literal>MOUSE_PRESSED</tt> events resets the old coordinates to
+the current mouse position whenever the user picks up and moves to a
+new location. Finally, <tt CLASS=literal>DrawPad</tt> provides a
+<tt CLASS=literal>clear()</tt> method that clears the off-screen buffer
+and calls <tt CLASS=literal>repaint()</tt> to update the display. The
+<tt CLASS=literal>DoodlePad</tt> applet ties the
+<tt CLASS=literal>clear()</tt> method to an appropriately labeled button
+through its <tt CLASS=literal>actionPerformed()</tt> method.
+
+<P CLASS=para>
+What if we wanted to do something with the image after the user
+has finished scribbling on it? Well, as we'll see in the next
+section, we could get the pixel data for the image from its
+<tt CLASS=literal>ImageProducer</tt> object and work with that. It
+wouldn't be hard to create a save facility that stores the pixel data
+and reproduces it later. Think about how you might go about creating a
+networked "bathroom wall" where people could scribble on
+your Web pages.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Images</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Working With Images</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

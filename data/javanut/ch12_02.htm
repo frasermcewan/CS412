@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] 12.2 Invoking a Named Method</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:59:49 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>Reflection</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch13_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-12-SECT-2">12.2 Invoking a Named Method</A></h2>
+
+<P CLASS=para>
+<A NAME="CH12.NAMED.METHOD1"></A><A NAME="CH12.METHODS-NAME1"></A><A HREF="ch12_02.htm#JNUT2-CH-12-EX-2">Example 12.2</A>
+demonstrates another use of the Reflection API. This
+<tt CLASS=literal>UniversalActionListener</tt> object uses reflection to
+invoke a named method of a specified object, passing another
+optionally specified object as an argument.  It does this in
+the framework of the <tt CLASS=literal>ActionListener</tt> interface, so
+that it can serve as an action listener within a Java 1.1
+GUI.  By using the reflection capabilities of the
+<tt CLASS=literal>UniversalActionListener</tt>, a program can avoid having
+to create a lot of trivial <tt CLASS=literal>ActionListener</tt>
+implementations to handle action events.  The <tt CLASS=literal>main()</tt>
+method at the end of this example is a simple test GUI that
+demonstrates how you could use the
+<tt CLASS=literal>UniversalActionListener</tt> object.  Contrast it with the
+anonymous class event-handling techniques demonstrated in
+<A HREF="ch07_01.htm">Chapter 7, <i>Events</i></A>.
+
+<P CLASS=para>
+Java does not allow methods to be passed directly as data
+values, but the Reflection API makes it possible for
+methods passed by name to be invoked indirectly.  Note
+that this technique is not particularly
+efficient.  For asynchronous event handling in a
+GUI, though, it is certainly efficient enough: indirect method
+invocation through the Reflection API will always be much
+faster than the response time required by the limits of
+human perception.  Invoking a method by name is not an
+appropriate technique, however, when repetitive,
+synchronous calls are required.  Thus, you should not use
+this technique for passing a comparison method to a sorting
+routine or passing a filename filter to a directory listing method.
+In cases like these, you should use the standard technique of
+implementing a class that contains the
+desired method and passing an instance of the class to
+the appropriate routine.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-12-EX-2">Example 12.2: Invoking a Named Method with Reflection</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.event.*;
+import java.lang.reflect.*;
+import java.awt.*;   // Only used for the test program below.
+public class UniversalActionListener implements ActionListener {
+  protected Object target;
+  protected Object arg;
+  protected Method m;
+  public UniversalActionListener(Object target, String methodname, Object arg)
+       throws NoSuchMethodException, SecurityException
+  {
+    this.target = target;                            // Save the target object.
+    this.arg = arg;                                  // And method argument.
+    // Now look up and save the Method to invoke on that target object.
+    Class c, parameters[];
+    c = target.getClass();                           // The Class object.
+    if (arg == null) parameters = new Class[0];      // Method parameter.
+    else parameters = new Class[] { arg.getClass() };
+    m = c.getMethod(methodname, parameters);         // Find matching method.
+  }
+  public void actionPerformed(ActionEvent event) {
+    Object[] arguments;
+    if (arg == null) arguments = new Object[0];      // Set up arguments.
+    else arguments = new Object[] { arg };
+    try { m.invoke(target, arguments); }             // And invoke the method.
+    catch (IllegalAccessException e) {               // Should never happen.
+      System.err.println("UniversalActionListener: " + e);
+    } catch (InvocationTargetException e) {          // Should never happen.
+      System.err.println("UniversalActionListener: " + e);
+    }
+  }
+  // A simple test program for the UniversalActionListener.
+  public static void main(String[] args) throws NoSuchMethodException {
+    Frame f = new Frame("UniversalActionListener Test");// Create window.
+    f.setLayout(new FlowLayout());                      // Set layout manager.
+    Button b1 = new Button("tick");                     // Create buttons.
+    Button b2 = new Button("tock");
+    Button b3 = new Button("Close Window");
+    f.add(b1); f.add(b2); f.add(b3);                    // Add them to window.
+    // Specify what the buttons do.  Invoke a named method with
+    // the UniversalActionListener object.
+    b1.addActionListener(new UniversalActionListener(b1, "setLabel", "tock"));
+    b1.addActionListener(new UniversalActionListener(b2, "setLabel", "tick"));
+    b1.addActionListener(new UniversalActionListener(b3, "hide", null));
+    b2.addActionListener(new UniversalActionListener(b1, "setLabel", "tick"));
+    b2.addActionListener(new UniversalActionListener(b2, "setLabel", "tock"));
+    b2.addActionListener(new UniversalActionListener(b3, "show", null));
+    b3.addActionListener(new UniversalActionListener(f, "dispose", null));
+    f.pack();                                             // Set window size.
+    f.show();                                             // And pop it up.
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch13_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Obtaining Class and Member Information</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Java Syntax</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

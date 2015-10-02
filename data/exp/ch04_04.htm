@@ -1,0 +1,841 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.4 Statements and Expressions</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:50:57 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>The Java Language</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4">4.4 Statements and Expressions</A></h2>
+
+<P CLASS=para>
+Although the method declaration syntax of Java is quite different from
+that of C++, Java statement and expression syntax is very much like that of
+C. Again, the design intention was to make the low-level details of
+Java easily accessible to C programmers, so that they can concentrate
+on learning the parts of the language that are really different. Java
+<I CLASS=emphasis>statements</I> appear inside of methods and 
+class and variable initializers; they describe all activities of a Java
+program. Variable declarations and initializations like those in the
+previous section are statements, as are the basic language structures
+like conditionals and loops. <I CLASS=emphasis>Expressions</I> are
+statements that produce a result that can be used as part of another
+statement. Method calls, object allocations, and, of course,
+mathematical expressions are examples of expressions.
+
+<P CLASS=para>
+One of the tenets of Java is to keep things simple and consistent. To
+that end, when there are no other constraints, evaluations and
+initializations in Java always occur in the order in which they appear
+in the code--from left to right. We'll see this rule used
+in the evaluation of assignment expressions, method calls, and array
+indexes, to name a few cases. In some other languages, the order of
+evaluation is more complicated or even implementation dependent. Java
+removes this element of danger by precisely and simply defining how
+the code is evaluated. This doesn't, however, mean you should start
+writing obscure and convoluted statements. Relying on the order of
+evaluation of expressions is a bad programming habit, even when
+it works. It produces code that is hard to read and harder to
+modify. Real programmers, however, are not made of stone, and you may
+catch me doing this once or twice when I can't resist the urge to
+write terse code.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.1">Statements</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.STATE1"></A>As in C or C++, statements and expressions in Java appear within a
+<I CLASS=emphasis>code block</I>. A code block is syntactically just a
+number of statements surrounded by an open curly brace
+(<tt CLASS=literal>{</tt>) and a close curly brace (<tt CLASS=literal>}</tt>). The
+statements in a code block can contain variable declarations:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+{ 
+    int size = 5; 
+    setName("Max"); 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Methods, which look like C functions, are in a sense code blocks that
+take parameters and can be called by name.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+setupDog( String name ) { 
+    int size = 5; 
+    setName( name ); 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Variable declarations are limited in scope to their enclosing code block. 
+That is, they can't be seen outside of the nearest set of braces: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+{ 
+    int i = 5; 
+} 
+ 
+i = 6;           // compile time error, no such variable i 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this way, code blocks can be used to arbitrarily group other
+statements and variables. The most common use of code blocks, however,
+is to define a group of statements for use in a conditional or
+iterative statement.
+
+<P CLASS=para>
+Since a code block is itself collectively treated as a
+statement, we define a conditional like an
+<tt CLASS=literal>if/else</tt> clause as follows:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+if ( <tt CLASS=replaceable><i>condition</i></tt> ) 
+    <tt CLASS=replaceable><i>statement</i></tt>; 
+[ else 
+    <tt CLASS=replaceable><i>statement;</i></tt> ] 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Thus, <tt CLASS=literal>if/else</tt> in Java has the familiar
+functionality of taking either of the forms:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+if ( <tt CLASS=replaceable><i>condition</i></tt> ) 
+    <tt CLASS=replaceable><i>statement</i></tt>; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+or: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+if ( <tt CLASS=replaceable><i>condition</i></tt> )  { 
+    [ <tt CLASS=replaceable><i>statement;</i></tt> ] 
+    [ <tt CLASS=replaceable><i>statement;</i></tt> ] 
+    [ ... ] 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here the <tt CLASS=replaceable><i>condition</i></tt> is a
+<tt CLASS=literal>boolean</tt> expression. In the second form, the
+statement is a code block, and all of its enclosed statements are
+executed if the conditional succeeds. Any variables declared within
+that block are visible only to the statements within the successful
+branch of the condition. Like the <tt CLASS=literal>if/else</tt>
+conditional, most of the remaining Java statements are concerned with
+controlling the flow of execution. They act for the most part like
+their namesakes in C or C++.
+
+<P CLASS=para>
+ The
+<tt CLASS=literal>do</tt> and <tt CLASS=literal>while</tt> iterative
+statements have the familiar functionality, except that their
+conditional test is also a <tt CLASS=literal>boolean</tt> expression.  You
+can't use an integer expression or a reference type; in other words
+you must explicitly test your value. In other words, while
+<tt CLASS=literal>i==0</tt> is legitimate, <tt CLASS=literal>i</tt> is not,
+unless <tt CLASS=literal>i</tt> is <tt CLASS=literal>boolean</tt>. Here are
+the forms of these two statements:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+while ( <tt CLASS=replaceable><i>conditional</i></tt> ) 
+    <tt CLASS=replaceable><i>statement</i></tt>; 
+ 
+do 
+    <tt CLASS=replaceable><i>statement</i></tt>; 
+while ( <tt CLASS=replaceable><i>conditional</i></tt> ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>for</tt> statement also looks like it does in 
+C: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+for ( <tt CLASS=replaceable><i>initialization</i></tt>; <tt CLASS=replaceable><i>conditional</i></tt>; <tt CLASS=replaceable><i>incrementor</i></tt> ) 
+    <tt CLASS=replaceable><i>statement</i></tt>; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The variable initialization expression can declare a new variable; this 
+variable is limited to the scope of the <tt CLASS=literal>for</tt> statement: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+for (int i = 0; i &lt; 100; i++ ) { 
+    System.out.println( i ) 
+    int j = i; 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java doesn't support the C comma operator, which groups multiple
+expressions into a single expression. However, you can use multiple,
+comma-separated expressions in the initialization and increment
+sections of the <tt CLASS=literal>for</tt> loop. For example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+for (int i = 0, j = 10; i &lt; j; i++, j-- ) { 
+   ... } 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The Java <tt CLASS=literal>switch</tt> statement takes an integer type 
+(or an argument that can be promoted to an integer type) and selects among 
+a number of alternative <tt CLASS=literal>case</tt> branches[2]
+: 
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+An object-based <tt CLASS=literal>switch</tt> statement is desirable
+and could find its way into the language someday.
+</blockquote>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+switch ( int <tt CLASS=replaceable><i>expression</i></tt> ) { 
+    case int <tt CLASS=replaceable><i>expression</i></tt> : 
+        <tt CLASS=replaceable><i>statement</i></tt>; 
+    [ case int <tt CLASS=replaceable><i>expression</i></tt> 
+        <tt CLASS=replaceable><i>statement</i></tt>; 
+    ... 
+    default : 
+        <tt CLASS=replaceable><i>statement</i></tt>;  ] 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+No two of the <tt CLASS=literal>case</tt> expressions can evaluate to the
+same value. As in C, an optional <tt CLASS=literal>default</tt> case can
+be specified to catch unmatched conditions. Normally, the special
+statement <tt CLASS=literal>break</tt> is used to terminate a branch of
+the <tt CLASS=literal>switch</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+switch ( retVal ) { 
+    case myClass.GOOD : 
+        // something good 
+        break; 
+    case myClass.BAD : 
+        // something bad 
+        break; 
+    default :
+        // neither one 
+        break; 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The Java <tt CLASS=literal>break</tt> statement and its friend
+<tt CLASS=literal>continue</tt> perform unconditional jumps out of a
+loop or conditional statement. They differ from the corresponding
+statements in C by taking an optional label as an argument. Enclosing
+statements, like code blocks and iterators, can be labeled with
+identifier statements:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+one: 
+    while ( <tt CLASS=replaceable><i>condition</i></tt> ) { 
+        ... 
+        two: 
+            while ( <tt CLASS=replaceable><i>condition</i></tt> ) { 
+                ... 
+                // break or continue point 
+            } 
+        // after two 
+    } 
+// after one 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above example, a <tt CLASS=literal>break</tt> or
+<tt CLASS=literal>continue</tt> without argument at the indicated position
+would have the normal, C-style effect.  A <tt CLASS=literal>break</tt>
+would cause processing to resume at the point labeled "after
+two"; a <tt CLASS=literal>continue</tt> would immediately cause the
+<tt CLASS=literal>two</tt> loop to return to its condition test.
+
+<P CLASS=para>
+The statement <tt CLASS=literal>break</tt> <tt CLASS=literal>two</tt>
+at the indicated point would have the same effect as an ordinary
+<tt CLASS=literal>break</tt>, but <tt CLASS=literal>break</tt>
+<tt CLASS=literal>one</tt> would break two levels and resume at the point
+labeled "after one." Similarly,
+<tt CLASS=literal>continue</tt> <tt CLASS=literal>two</tt> would serve as a
+normal <tt CLASS=literal>continue</tt>, but <tt CLASS=literal>continue</tt>
+<tt CLASS=literal>one</tt> would return to the test of the
+<tt CLASS=literal>one</tt> loop. Multilevel <tt CLASS=literal>break</tt> and
+<tt CLASS=literal>continue</tt> statements remove much of the need for the
+evil <tt CLASS=literal>goto</tt> statement in C and C++.
+
+<P CLASS=para>
+There are a few Java statements we aren't going to discuss right
+now. The <tt CLASS=literal>try</tt>, <tt CLASS=literal>catch</tt>, and
+<tt CLASS=literal>finally</tt> statements are used in exception handling,
+as we'll discuss later in this chapter. The
+<tt CLASS=literal>synchronized</tt> statement in Java is used to
+coordinate access to statements among multiple threads of execution;
+see <A HREF="ch06_01.htm">Chapter 6, <i>Threads</i></A> for a discussion of thread
+synchronization.
+
+<P CLASS=para>
+On a final note, I should mention that the Java compiler flags
+"unreachable" statements as compile-time errors. Of
+course, when I say unreachable, I mean those statements the
+compiler determines won't be called by a static look at
+compile-time.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.3">Expressions</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.STATE2"></A>As I said earlier, expressions are statements that produce a result
+when they are evaluated. The value of an expression can be a numeric
+type, as in an arithmetic expression; a reference type, as in an
+object allocation; or the special type <tt CLASS=literal>void</tt>, which
+results from a call to a method that doesn't return a value. In the
+last case, the expression is evaluated only for its side effects
+(i.e., the work it does aside from producing a value). The type of an
+expression is known at compile-time.  The value produced at run-time
+is either of this type or, in the case of a reference type, a
+compatible (assignable) type.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.3.1">Operators</A></h4>
+
+<P CLASS=para>
+<A NAME="CH04.OPERATORS"></A>Java supports almost all standard C operators. These operators
+also have the same precedence in Java as they do in C, as you can see
+in <A HREF="ch04_04.htm#EXJ-CH-4-TAB-3">Table 4.3</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-4-TAB-3">Table 4.3: Java Operators</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Precedence</TH>
+<TH ALIGN="left">Operator</TH>
+<TH ALIGN="left">Operand Type</TH>
+<TH ALIGN="left">Description</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left"><tt CLASS=literal>++, --</tt></TD>
+<TD ALIGN="left">Arithmetic</TD>
+<TD ALIGN="left">Increment and decrement</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left"><tt CLASS=literal>+, -</tt></TD>
+<TD ALIGN="left">Arithmetic</TD>
+<TD ALIGN="left">Unary plus and minus</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left"><tt CLASS=literal>~</tt></TD>
+<TD ALIGN="left">Integral</TD>
+<TD ALIGN="left">Bitwise complement<A NAME="CH04.BIT"></A></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left"><tt CLASS=literal>!</tt></TD>
+<TD ALIGN="left">Boolean<A NAME="CH04.BOOL"></A></TD>
+<TD ALIGN="left">Logical complement</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">1</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>(</tt> <tt CLASS=replaceable><i>type</i></tt> <tt CLASS=literal>)</tt></TD>
+<TD ALIGN="left">Any</TD>
+<TD ALIGN="left">Cast</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2</TD>
+<TD ALIGN="left"><tt CLASS=literal>*, /, %</tt></TD>
+<TD ALIGN="left">Arithmetic</TD>
+<TD ALIGN="left">Multiplication, division, remainder</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3</TD>
+<TD ALIGN="left"><tt CLASS=literal>+, -</tt></TD>
+<TD ALIGN="left">Arithmetic</TD>
+<TD ALIGN="left">Addition and subtraction</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3</TD>
+<TD ALIGN="left"><tt CLASS=literal>+</tt></TD>
+<TD ALIGN="left">String</TD>
+<TD ALIGN="left">String concatenation</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">4</TD>
+<TD ALIGN="left"><tt CLASS=literal>&lt;&lt;</tt></TD>
+<TD ALIGN="left">Integral</TD>
+<TD ALIGN="left">Left shift</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">4</TD>
+<TD ALIGN="left"><tt CLASS=literal>&gt;&gt;</tt></TD>
+<TD ALIGN="left">Integral</TD>
+<TD ALIGN="left">Right shift with sign extension</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">4</TD>
+<TD ALIGN="left"><tt CLASS=literal>&gt;&gt;&gt;</tt></TD>
+<TD ALIGN="left">Integral</TD>
+<TD ALIGN="left">Right shift with no extension</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">5</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;, &lt;=, &gt;, &gt;=</tt></TD>
+<TD ALIGN="left">Arithmetic</TD>
+<TD ALIGN="left">Numeric comparison</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">5</TD>
+<TD ALIGN="left"><tt CLASS=literal>instanceof</tt></TD>
+<TD ALIGN="left">Object</TD>
+<TD ALIGN="left">Type comparison</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">6</TD>
+<TD ALIGN="left"><tt CLASS=literal>==, !=</tt></TD>
+<TD ALIGN="left">Primitive</TD>
+<TD ALIGN="left">Equality and inequality of value</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">6</TD>
+<TD ALIGN="left"><tt CLASS=literal>==, !=</tt></TD>
+<TD ALIGN="left">Object</TD>
+<TD ALIGN="left">Equality and inequality of reference</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">7</TD>
+<TD ALIGN="left"><tt CLASS=literal>&amp;</tt></TD>
+<TD ALIGN="left">Integral</TD>
+<TD ALIGN="left">Bitwise AND</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">7</TD>
+<TD ALIGN="left"><tt CLASS=literal>&amp;</tt></TD>
+<TD ALIGN="left">Boolean</TD>
+<TD ALIGN="left">Boolean AND</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">8</TD>
+<TD ALIGN="left"><tt CLASS=literal>^</tt></TD>
+<TD ALIGN="left">Integral</TD>
+<TD ALIGN="left">Bitwise XOR</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">8</TD>
+<TD ALIGN="left"><tt CLASS=literal>^</tt></TD>
+<TD ALIGN="left">Boolean</TD>
+<TD ALIGN="left">Boolean XOR</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">9</TD>
+<TD ALIGN="left"><tt CLASS=literal>|</tt></TD>
+<TD ALIGN="left">Integral</TD>
+<TD ALIGN="left">Bitwise OR</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">9</TD>
+<TD ALIGN="left"><tt CLASS=literal>|</tt></TD>
+<TD ALIGN="left">Boolean</TD>
+<TD ALIGN="left">Boolean OR</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">10</TD>
+<TD ALIGN="left"><tt CLASS=literal>&amp;&amp;</tt></TD>
+<TD ALIGN="left">Boolean</TD>
+<TD ALIGN="left">Conditional AND</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">11</TD>
+<TD ALIGN="left"><tt CLASS=literal>||</tt></TD>
+<TD ALIGN="left">Boolean</TD>
+<TD ALIGN="left">Conditional OR</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">12</TD>
+<TD ALIGN="left"><tt CLASS=literal>?:</tt></TD>
+<TD ALIGN="left">NA</TD>
+<TD ALIGN="left">Conditional ternary operator</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">13</TD>
+<TD ALIGN="left"><tt CLASS=literal>=</tt></TD>
+<TD ALIGN="left">Any</TD>
+<TD ALIGN="left">Assignment</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">13</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>*=, /=, %=, +=, -=, &lt;&lt;=, &gt;&gt;=, 
+&gt;&gt;&gt;=, &amp;=, ^=, |=</tt></TD>
+<TD ALIGN="left">Any</TD>
+<TD ALIGN="left">Assignment with operation</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+There are a few operators missing from the standard C
+collection. For example, Java doesn't support the comma operator for
+combining expressions, although the <tt CLASS=literal>for</tt> statement
+allows you to use it in the initialization and increment
+sections. Java doesn't allow direct pointer manipulation, so it does
+not support the reference (<tt CLASS=literal>*</tt>), dereference
+(<tt CLASS=literal>&amp;</tt>), and <tt CLASS=literal>sizeof</tt> operators.
+
+<P CLASS=para>
+Java also adds some new operators. As we've seen,
+the <tt CLASS=literal>+</tt> operator can be used with
+<tt CLASS=literal>String</tt> values to perform string
+concatenation. Because all integral types in Java are signed values,
+the <tt CLASS=literal>&gt;&gt;</tt> operator performs a right-shift operation
+with sign extension. The <tt CLASS=literal>&gt;&gt;&gt;</tt> operator treats
+the operand as an unsigned number and performs a right shift with no
+extension. The <tt CLASS=literal>new</tt> operator is used to create objects; we will discuss
+it in detail shortly.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.3.2">Assignment</A></h4>
+
+<P CLASS=para>
+While variable initialization (i.e., declaration and assignment together) 
+is considered a statement, variable assignment alone is an expression: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i, j; 
+i = 5;                           // expression 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Normally, we rely on assignment for its side effects alone, but, as in 
+C, an assignment can be used as a value in another part of an expression: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+j = ( i = 5 ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Again, relying on order of evaluation extensively (in this case, using
+compound assignments in complex expressions) can make code very
+obscure and hard to read. Do so at your own peril.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.3.3">null</A></h4>
+
+<P CLASS=para>
+The expression <tt CLASS=literal>null</tt> can be assigned to any
+reference type. It has the meaning of "no reference." A
+<tt CLASS=literal>null</tt> reference can't be used to select a method or
+variable and attempting to do so generates a
+<tt CLASS=literal>NullPointerException</tt> at run-time.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.3.4">Variable access</A></h4>
+
+<P CLASS=para>
+Using the dot (<tt CLASS=literal>.</tt>) to access a variable in an object
+is a type of expression that results in the value of the variable
+accessed. This can be either a numeric type or a reference type:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i; 
+String s; 
+i = myObject.length; 
+s = myObject.name; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A reference type expression can be used in further evaluations, by
+selecting variables or calling methods within it:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int len = myObject.name.length(); 
+int initialLen = myObject.name.substring(5, 10).length(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we have found the length of our <tt CLASS=literal>name</tt> variable
+by invoking the <tt CLASS=literal>length()</tt> method of the
+<tt CLASS=literal>String</tt> object.  In the second case, we took an
+intermediate step and asked for a substring of the
+<tt CLASS=literal>name</tt> string. The <tt CLASS=literal>substring</tt>
+method of the <tt CLASS=literal>String</tt> class also returns a
+<tt CLASS=literal>String</tt> reference, for which we ask the
+length. (<A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A> describes all of these
+<tt CLASS=literal>String</tt> methods in detail.)
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.3.5">Method invocation</A></h4>
+
+<P CLASS=para>
+A method invocation is basically a function call, or in other words, an 
+expression that results in a value, the type of which is the return type 
+of the method. Thus far, we have seen methods invoked via their name in 
+simple cases: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+System.out.println( "Hello World..." ); 
+int myLength = myString.length();  
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When we talk about Java's object-oriented features in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>, we'll look at some rules that govern the
+selection of methods.
+
+<P CLASS=para>
+Like the result of any expression, the result of a method
+invocation can be used in further evaluations, as we saw
+above. Whether to allocate intermediate variables and make it
+absolutely clear what your code is doing or to opt for brevity where
+it's appropriate is a matter of coding style.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.3.6">Object creation</A></h4>
+
+<P CLASS=para>
+Objects in Java are allocated with the <tt CLASS=literal>new</tt> operator: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Object o = new Object(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The argument to <tt CLASS=literal>new</tt> is a
+<I CLASS=emphasis>constructor</I> that specifies the type of object and
+any required parameters to create it. The return type of the
+expression is a reference type for the created object.
+
+<P CLASS=para>
+We'll look at object creation in detail in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>.  For now, I just want to point out that object
+creation is a type of expression, and that the resulting object
+reference can be used in general expressions.  In fact, because the
+binding of <tt CLASS=literal>new</tt> is "tighter" than that
+of the dot-field selector, you can easily allocate a new object and
+invoke a method in it for the resulting expression:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int hours = new Date().getHours(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>Date</tt> class is a utility class that represents
+the current time. Here we create a new instance of
+<tt CLASS=literal>Date</tt> with the <tt CLASS=literal>new</tt> operator and
+call its <tt CLASS=literal>getHours()</tt> method to retrieve the current
+hour as an integer value. The <tt CLASS=literal>Date</tt> object reference
+lives long enough to service the method call and is then cut loose and
+garbage collected at some point in the future.
+
+<P CLASS=para>
+Calling methods in object references in this way is, again, a matter of 
+style. It would certainly be clearer to allocate an intermediate variable 
+of type <tt CLASS=literal>Date</tt> to hold the new object and then 
+call its <tt CLASS=literal>getHours()</tt> method. However, some of 
+us still find the need to be terse in our code. 
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-4.3.7">instanceof</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>instanceof</tt> operator can be used to
+determine the type of an object at
+run-time. <tt CLASS=literal>instanceof</tt> returns a
+<tt CLASS=literal>boolean</tt> value that indicates whether an object is
+an instance of a particular class or a subclass of that class:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Boolean b; 
+String str = "foo"; 
+b = ( str instanceof String );     // true 
+b = ( str instanceof Object );     // also true 
+b = ( str instanceof Date );       // false--not a Date or subclass 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>instanceof</tt> also correctly reports if an object 
+is of the type of an arry or a specified interface.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+        if ( foo instanceof byte[] )
+            ...
+</PRE>
+</DIV>
+
+<P CLASS=para>
+(See <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A> for a full discussion of interfaces.)
+
+<P CLASS=para>
+It is also important to note that the value <I CLASS=emphasis>null</I> is not considered
+an instance of any object.  So the following test will return false,
+no matter what the declared type of the variable:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String s = null;
+if ( s istanceof String )
+    // won't happen
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Types</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Exceptions</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

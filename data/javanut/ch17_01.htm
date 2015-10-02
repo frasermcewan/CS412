@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 17] The java.applet Package</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:05:50 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16a_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 17</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch17_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-17">17. The java.applet Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+java.applet.Applet (JDK 1.0)<br>
+<A HREF="ch17_02.htm">java.applet.AppletContext (JDK 1.0)</A><BR>
+<A HREF="ch17_03.htm">java.applet.AppletStub (JDK 1.0)</A><BR>
+<A HREF="ch17_04.htm">java.applet.AudioClip (JDK 1.0)</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH17.JAVA.APPLET.1"></A><A NAME="CH17.APPLETS-JAVA1"></A>An <I CLASS=emphasis>applet</I> is a
+small, embeddable Java program.
+The <tt CLASS=literal>java.applet</tt> package is a small one.  It contains
+the <tt CLASS=literal>Applet</tt> class, which is the superclass of all
+applets, and three related interfaces. 
+<A HREF="ch17_01.htm#JNUT2-CH-17-FIG-1">Figure 17.1</A>
+shows the class hierarchy of this package.  See <A HREF="ch06_01.htm">Chapter 6, <i>Applets</i></A>,
+for more information about this package.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-17-FIG-1">Figure 17.1: The java.applet package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_1701.gif" alt="[Graphic: Figure 17-1]" width=464 height=198 border=0>
+
+</DIV>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-17-SECT-1">17.1 java.applet.Applet (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-17-SECT-1.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class implements an applet.  To create your own applet,
+you should create a subclass of this class and override some
+or all of the following methods.  Note that you never need
+to call these methods--they are called when appropriate
+by a Web browser or other applet viewer.
+
+<P CLASS=para>
+<tt CLASS=literal>init()</tt> should perform any initialization for the
+applet; it is called when the applet first starts.
+<tt CLASS=literal>destroy()</tt> should free up any resources that the
+applet is holding; it is called when the applet is about to be
+permanently stopped. <tt CLASS=literal>start()</tt> is called to make the applet start doing
+whatever it is that it does.  Often, it starts a thread to
+perform an animation or similar task.  <tt CLASS=literal>stop()</tt> should
+temporarily stop the applet from executing.  It is called
+when the applet temporarily becomes hidden or non-visible.
+
+<P CLASS=para>
+<tt CLASS=literal>getAppletInfo()</tt>
+should return text suitable for display in an <b>About</b>
+dialog posted by the Web browser or applet viewer.
+<tt CLASS=literal>getParameterInfo()</tt>
+should return an arbitrary-length array of three-element arrays
+of strings where each element
+describes one of the parameters that this applet
+understands.  The three elements of each parameter
+description are strings that specify, respectively, the
+parameter's name, type, and description.
+
+<P CLASS=para>
+In addition to these methods, an applet also typically
+overrides several of the methods of
+<tt CLASS=literal>java.awt.Component</tt>, notably the <tt CLASS=literal>paint()</tt>
+method to draw the applet on the screen.  There are also
+several <tt CLASS=literal>Applet</tt> methods that you do not override but
+may call from applet code: <tt CLASS=literal>showStatus()</tt>
+displays text in the Web browser or applet viewer's status
+line.  <tt CLASS=literal>getImage()</tt>
+and <tt CLASS=literal>getAudioClip()</tt>
+read image (GIF and JPEG formats) and audio files (AU
+format) over the network and return corresponding Java
+objects.  <tt CLASS=literal>getParameter()</tt>
+looks up the value of a parameter specified with a
+<tt CLASS=literal>&lt;PARAM&gt;</tt> tag within an <tt CLASS=literal>&lt;APPLET&gt;...&lt;/APPLET&gt;</tt>
+pair.  <tt CLASS=literal>getCodeBase()</tt>
+returns the base URL from which the applet's code was
+loaded, and <tt CLASS=literal>getDocumentBase()</tt>
+returns the base URL from which the HTML document containing
+the applet was loaded.  <tt CLASS=literal>getAppletContext()</tt>
+returns an <tt CLASS=literal>AppletContext</tt> object, which also has
+useful methods.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>Applet</tt> extends Panel {
+    // <tt CLASS=literal>Default Constructor: public Applet()</tt>
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public void <tt CLASS=literal>destroy</tt>();
+            public AppletContext <tt CLASS=literal>getAppletContext</tt>();
+            public String <tt CLASS=literal>getAppletInfo</tt>();
+            public AudioClip <tt CLASS=literal>getAudioClip</tt>(URL <tt CLASS=literal>url</tt>);
+            public AudioClip <tt CLASS=literal>getAudioClip</tt>(URL <tt CLASS=literal>url</tt>, String <tt CLASS=literal>name</tt>);
+            public URL <tt CLASS=literal>getCodeBase</tt>();
+            public URL <tt CLASS=literal>getDocumentBase</tt>();
+            public Image <tt CLASS=literal>getImage</tt>(URL <tt CLASS=literal>url</tt>);
+            public Image <tt CLASS=literal>getImage</tt>(URL <tt CLASS=literal>url</tt>, String <tt CLASS=literal>name</tt>);
+            public Locale <tt CLASS=literal>getLocale</tt>();  //<tt CLASS=literal> Overrides Component</tt>
+            public String <tt CLASS=literal>getParameter</tt>(String <tt CLASS=literal>name</tt>);
+            public String[][] <tt CLASS=literal>getParameterInfo</tt>();
+            public void <tt CLASS=literal>init</tt>();
+            public boolean <tt CLASS=literal>isActive</tt>();
+            public void <tt CLASS=literal>play</tt>(URL <tt CLASS=literal>url</tt>);
+            public void <tt CLASS=literal>play</tt>(URL <tt CLASS=literal>url</tt>, String <tt CLASS=literal>name</tt>);
+            public void <tt CLASS=literal>resize</tt>(int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);  //<tt CLASS=literal> Overrides Component</tt>
+            public void <tt CLASS=literal>resize</tt>(Dimension <tt CLASS=literal>d</tt>);  //<tt CLASS=literal> Overrides Component</tt>
+            public final void <tt CLASS=literal>setStub</tt>(AppletStub <tt CLASS=literal>stub</tt>);
+            public void <tt CLASS=literal>showStatus</tt>(String <tt CLASS=literal>msg</tt>);
+            public void <tt CLASS=literal>start</tt>();
+            public void <tt CLASS=literal>stop</tt>();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-17-SECT-1.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Object->Component(ImageObserver, MenuContainer, Serializable)->Container->Panel->Applet</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-17-SECT-1.3">Returned By:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>AppletContext.getApplet()</tt>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16a_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch17_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Reading a Quick Reference Entry</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.applet.AppletContext (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

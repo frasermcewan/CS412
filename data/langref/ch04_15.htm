@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.15 Data Type of an Expression</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:10:49 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_14.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>Expressions</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_16.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-15">4.15 Data Type of an Expression</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.DTE1"></A><A NAME="CH04.DTE2"></A>If an expression
+produces a value, that value is of some particular data type.
+In some cases, it is possible to determine the exact type that is
+produced by an expression, based on the types of the literals, variables,
+and methods that an expression references. For
+those expressions that produce object references, it is typically
+only possible to determine the type of the referenced object when
+the expression is evaluated at runtime.
+
+<P CLASS=para>
+The types of
+many expressions are ambiguous because of the way Java data types
+are defined. There is no ambiguity for variables, array elements,
+and method return values of primitive types, however. These expressions
+always produce the exact types specified in their declarations.
+
+<P CLASS=para>
+There can be ambiguity when a variable, array element,
+or method return value is declared to have a class or interface
+reference type. The ambiguity exists because a class reference may
+actually refer to an object of the intended class or a subclass
+of that class. For example, consider a variable that is declared
+to contain a reference to a <tt CLASS=literal>Number</tt> object:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+double square(Number n){
+    return n.doubleValue()*n.doubleValue();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When the Java compiler sees the variable <tt CLASS=literal>n</tt> used in
+an expression, it knows that the object that is referenced could
+be an <tt CLASS=literal>Integer</tt>, <tt CLASS=literal>Long</tt>, <tt CLASS=literal>Float</tt>,
+or <tt CLASS=literal>Double</tt> object because the <tt CLASS=literal>java.lang</tt>
+package defines those subclasses of <tt CLASS=literal>Number</tt>. It
+is also possible, however, that the variable refers to some other
+subclass of <tt CLASS=literal>Number</tt> defined elsewhere. All that
+the compiler can be certain of is that at runtime <tt CLASS=literal>n</tt>
+will refer to an object of a subclass of <tt CLASS=literal>Number</tt>.
+The variable <tt CLASS=literal>n</tt> cannot refer to a <tt CLASS=literal>Number</tt>
+object because <tt CLASS=literal>Number</tt> is an <tt CLASS=literal>abstract</tt>
+class, so there are no <tt CLASS=literal>Number</tt> objects.
+
+<P CLASS=para>
+The
+one exception to the ambiguity of class-type object references occurs
+when the class used to declare a variable, array element, or method
+return type is a <tt CLASS=literal>final</tt> class. If a class is declared
+to be <tt CLASS=literal>final</tt>,
+it cannot be subclassed, so there is no ambiguity.
+
+<P CLASS=para>
+Ambiguity also exists if the type of a reference is an interface type, since
+the reference can refer to an object of any class that implements
+the interface. The actual class is not usually known until runtime.
+
+<P CLASS=para>
+The fact that the type of value produced by an object reference
+expression cannot be determined until it is evaluated at runtime
+can affect the evaluation of other expressions in the following
+ways:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If a method is called through an object reference
+expression, the actual method to be called may depend on the type
+of the object. The selection of the appropriate method in the object
+is made at compile-time. For example, <tt CLASS=literal>f.read()</tt>
+causes the selection of a method named <tt CLASS=literal>read()</tt>
+that takes no arguments.
+
+<P CLASS=para>
+However, if the compiler cannot
+determine the actual class of the object, the actual method to be
+called is determined at runtime, when the class is known. The compiler
+generates code to handle a runtime selection process called dynamic
+method lookup. The process begins by searching the actual class
+for an appropriate method. If there is no such method, the superclass
+of the class is searched, followed by its superclass and on up the
+inheritance hierarchy, until an appropriate method is found. This
+process ensures that the appropriate method gets called, even if
+the actual class of the object is a subclass of the type used for
+the object reference.
+
+<P CLASS=para>
+Even if the compiler cannot determine
+the actual class of the object, there is one case in which it does
+not need to generate code to handle dynamic method lookup. When
+the compiler selects the appropriate method in the object, if it
+finds that the method is declared <tt CLASS=literal>final</tt>, 
+it can be sure that it
+is the method to be called.
+
+<P>
+<li CLASS=listitem>The success of a cast operation
+may need to be determined at runtime. When a class-type object reference
+is cast to another class, the operation can only succeed if the
+actual class of the object is the same class or a subclass of the
+class being cast to. If the compiler cannot determine the actual
+class of the object, it generates runtime code that can verify that
+the cast is permitted. If the actual class of the object at runtime
+makes the cast illegal, a <tt CLASS=literal>ClassCastException</tt>
+is thrown.
+
+<P>
+<li CLASS=listitem>The value produced by the <tt CLASS=literal>instanceof</tt>
+operator may need to be determined at runtime. If the compiler cannot
+determine the type of the left operand in an <tt CLASS=literal>instanceof</tt>
+expression, it generates runtime code to decide whether the expression
+produces <tt CLASS=literal>true</tt> or <tt CLASS=literal>false</tt>.
+
+<P>
+<li CLASS=listitem>The legality of an assignment to an array element may need
+to be determined at runtime. If a variable contains a reference
+to an array and the type of elements in the array is specified with
+a class or an interface name, it may not be possible to determine
+the actual type of the array elements until runtime. Consider the
+following example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+void foo (InputStream a[]) {
+    a[0] = new FileInputStream("/dev/null");
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Any array with elements that contain references to objects
+of class <tt CLASS=literal>InputStream</tt> or any of its subclasses
+can be passed to the method <tt CLASS=literal>foo()</tt> shown above.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream f[] = new FileInputStream[3];
+foo(f);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Since <tt CLASS=literal>FileInputStream</tt> is a subclass of
+<tt CLASS=literal>InputStream</tt>, the call to <tt CLASS=literal>foo()</tt>
+does not cause any type-related problems at runtime. However, the
+following call to <tt CLASS=literal>foo()</tt> does cause problems:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+DataInputStream f[] = new DataInputStream[3];
+foo(f);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This call causes an <tt CLASS=literal>ArrayStoreException</tt>
+to be thrown at runtime. Although <tt CLASS=literal>DataInputStream</tt>
+is a subclass of <tt CLASS=literal>InputStream</tt>, it is not a superclass
+of <tt CLASS=literal>FileInputStream</tt>, so the assignment is not
+legal.
+
+<P>
+<li CLASS=listitem>The type of object thrown by a <tt CLASS=literal>throw</tt>
+statement may need to be determined at runtime. If the object thrown
+by a <tt CLASS=literal>throw</tt> statement is obtained through a reference
+that comes from a variable, an array element, or a method return
+value, the compiler generates runtime code that determines the type
+of the object that is thrown. In addition, this runtime code determines
+whether or not the object is caught.
+
+<P>
+</UL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch04_13.htm#JLR2-CH-4-SECT-13">Assignment Operators</A>;
+<A HREF="ch04_04.htm#JLR2-CH-4-SECT-4.5">Casts</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.1">Class Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.2">Interface Types</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.8">Method Call Expression</A>;
+<A HREF="ch04_08.htm#JLR2-CH-4-SECT-8.5">The instanceof Operator</A>;
+<A HREF="ch06_11.htm#JLR2-CH-6-SECT-11">The throw Statement</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_14.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_16.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Order of Operations</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Constant Expressions</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

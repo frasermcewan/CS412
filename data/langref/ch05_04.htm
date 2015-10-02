@@ -1,0 +1,2533 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.4 Class Declarations</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:12:45 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Declarations</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4">5.4 Class Declarations</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.DEC6"></A>A class declaration creates a reference type in Java. The class
+declaration also specifies the implementation of the class, including
+its variables, constructors, and methods. The formal definition of a
+class declaration is:
+
+
+<p>
+<img align=middle src="./figs/jlr0501.gif" alt="[Graphic: Figure from the text]" width=424 height=316 border=0>
+
+
+<p>
+<img align=middle src="./figs/jlr0502.gif" alt="[Graphic: Figure from the text]" width=424 height=98 border=0>
+
+
+<p>
+<img align=middle src="./figs/jlr0503.gif" alt="[Graphic: Figure from the text]" width=424 height=324 border=0>
+
+<P CLASS=para>
+While the above diagram may seem complicated, a class declaration is
+really made up of six distinct things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Optional modifiers that
+specify attributes of the class
+
+<P>
+<li CLASS=listitem>The keyword <tt CLASS=literal>class</tt>
+
+<P>
+<li CLASS=listitem>An identifier that names the class
+
+<P>
+<li CLASS=listitem>An optional
+<tt CLASS=literal>extends</tt> clause that specifies the superclass
+of the declared class
+
+<P>
+<li CLASS=listitem>An optional <tt CLASS=literal>implements</tt>
+clause that specifies the interfaces implemented by the declared
+class
+
+<P>
+<li CLASS=listitem>Any number of member declarations, which can
+include variables, methods, constructors, static initializers, 
+instance initializers, nested top-level classes and interfaces,
+and member classes
+
+<P>
+</UL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.1">Classes</A>;
+<I CLASS=emphasis>ClassOrInterfaceName</I> 4.1.6;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4">Class Members</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.1">Class Modifiers</A></h3>
+
+<P CLASS=para>
+The keywords <tt CLASS=literal>public</tt>, <tt CLASS=literal>abstract</tt>,
+and <tt CLASS=literal>final</tt> can appear as modifiers at the beginning
+of a class declaration. In this situation, these modifiers have the
+following meanings:[3]
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+Version 1.0 of Java included a <tt CLASS=literal>private protected</tt>
+access specification; this specification has been removed as of version
+1.0.2 of the language.
+</blockquote>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>public</tt><br>
+<DD>
+
+<P CLASS=para>
+If a class is declared <tt CLASS=literal>public</tt>, it can be referenced
+by any other class. If the <tt CLASS=literal>public</tt> modifier is not
+used, however, the class can only be referenced by other classes in
+the same package. A single source file, or compilation unit, can only
+declare one <tt CLASS=literal>public</tt> class or interface (see
+<A HREF="ch07_01.htm#JLR2-CH-7-SECT-1">Compilation Units</A> for an exception
+to this rule).
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>abstract</tt><br>
+<DD>
+
+<P CLASS=para>
+If a class is declared <tt CLASS=literal>abstract</tt>, no instances of
+the class may be created. A class declared <tt CLASS=literal>abstract</tt>
+may contain <tt CLASS=literal>abstract</tt> methods. Classes not declared
+<tt CLASS=literal>abstract</tt> may not contain abstract methods and must
+override any <tt CLASS=literal>abstract</tt> methods they inherit with
+methods that are not <tt CLASS=literal>abstract</tt>. Furthermore, classes
+that implement an interface and are not declared
+<tt CLASS=literal>abstract</tt> must contain or inherit methods that are
+not <tt CLASS=literal>abstract</tt> that have the same name, number of
+parameters, and corresponding parameter types as the methods declared
+in the interfaces that the class implements.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>final</tt><br>
+<DD>
+
+<P CLASS=para>
+If a class is declared <tt CLASS=literal>final</tt>, it cannot be
+subclassed. In other words, it cannot appear in the
+<tt CLASS=literal>extends</tt> clause of another class.
+
+<P CLASS=para>
+You want to declare a class <tt CLASS=literal>final</tt>
+if it is important to ensure the exact properties and behavior of
+that class. Many of the classes in the <tt CLASS=literal>java.lang</tt>
+package are declared <tt CLASS=literal>final</tt> for that reason. In
+addition, the compiler can often optimize operations
+on <tt CLASS=literal>final</tt>
+classes. For example, the compiler can optimize operations involving
+the <tt CLASS=literal>String</tt> class because it can safely assume
+the exact logic of <tt CLASS=literal>String</tt> methods. The compiler
+does not have to account for the possibility of methods of a
+<tt CLASS=literal>final</tt> class being overridden in a subclass.</DL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch07_01.htm#JLR2-CH-7-SECT-1">Compilation Units</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2.1">Local class modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.1">Method modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.1">Variable modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.2">Class Name</A></h3>
+
+<P CLASS=para>
+The identifier that follows the keyword <tt CLASS=literal>class</tt> is
+the name of the class. This identifier can be used as a reference type
+wherever the class is accessible.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.1">Class Types</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.3">Class Inheritance</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>extends</tt> clause specifies the superclass of the
+class being declared. If a class is declared without an
+<tt CLASS=literal>extends</tt> clause, the class <tt CLASS=literal>Object</tt>
+is its implicit superclass.  The class inherits all of the accessible
+methods and variables of its superclass.
+
+<P CLASS=para>
+If a class is declared <tt CLASS=literal>final</tt>, it cannot appear in
+an <tt CLASS=literal>extends</tt> clause for any other class.
+
+<P CLASS=para>
+The <tt CLASS=literal>implements</tt> clause specifies any interfaces
+implemented by the class being declared.  Unless it is an
+<tt CLASS=literal>abstract</tt> class, the class (or one of its
+superclasses) must define implementations for all of the methods
+declared in the interfaces.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.5">Inheritance</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.6">Interfaces</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5">Interface Declarations</A>;
+<A HREF="ch10_14.htm">Object</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4">Class Members</A></h3>
+
+<P CLASS=para>
+Fields are the variables,
+methods, constructors, static (load-time) initializers,
+instance initializers, nested top-level classes and interfaces,
+and member classes that are
+declared as part of a class:
+
+
+<p>
+<img align=middle src="./figs/jlr0504.gif" alt="[Graphic: Figure from the text]" width=425 height=74 border=0>
+
+<P CLASS=para>
+A member declaration causes the member to be defined throughout the
+entire class and all of its subclasses. This means that it is not a
+problem to have forward references
+to members, or in other words, you can use members in a class before
+you have defined them. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class foo {
+    void doIt() {
+        countIt();
+    }
+    void countIt() {
+        i++;
+    }
+    int i;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6">Nested Top-Level and Member Classes</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.3">Nested Top-Level Interfaces</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.4">Static Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.1">Variables</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.VAR1"></A><A NAME="CH05.VAR2"></A><A NAME="CH05.VAR3"></A>A variable that is declared as a member in a class is called a
+<I CLASS=emphasis>field variable</I>. A field variable is different
+from a local variable, which is declared within a method or a block.
+The formal definition of a variable declaration is:
+
+
+<p>
+<img align=middle src="./figs/jlr0505.gif" alt="[Graphic: Figure from the text]" width=450 height=421 border=0>
+
+<P CLASS=para>
+While the above diagram may seem complicated, a variable declaration
+is really made up of four distinct things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Optional modifiers that specify attributes of the variable.
+
+<P>
+<li CLASS=listitem>A type, which can be either a primitive type or a reference type.
+
+<P>
+<li CLASS=listitem>Any number of identifiers that name variables. Each name can be
+followed by pairs of square brackets to indicate an array variable.
+
+<P>
+<li CLASS=listitem>An optional initializer for each variable declared.
+
+<P>
+</UL>
+<P CLASS=para>
+Here are some examples of variable declarations:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int x;
+public static final double[] k, m[];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>;
+<I CLASS=emphasis>Expression</I> 4;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.1">Local Variables</A>;
+<I CLASS=emphasis>Type</I> 3
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.1.1">Variable modifiers</A></h4>
+
+<P CLASS=para>
+<A NAME="CH05.VARMOD"></A>The modifiers <tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>,
+and <tt CLASS=literal>private</tt> can be used in the declaration of a
+field variable to specify the accessibility of the variable. In this
+situation, the modifiers have the following meanings:[4]
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+Version
+1.0 of Java included a <tt CLASS=literal>private protected</tt>
+access specification; this specification has been removed as of version
+1.0.2 of the language.
+</blockquote>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>public</tt><br>
+<DD>
+
+<P CLASS=para>
+A field variable that is declared <tt CLASS=literal>public</tt> is
+accessible from any class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>protected</tt><br>
+<DD>
+
+<P CLASS=para>
+A field variable that is declared <tt CLASS=literal>protected</tt> is
+accessible to any class that is part of the same package as the class
+in which the variable is declared. Such a field variable is also
+accessible to any subclass of the class in which it is declared;
+this occurs regardless of whether or not the subclass is part of
+the same package.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>private</tt><br>
+<DD>
+
+<P CLASS=para>
+A field variable that is declared <tt CLASS=literal>private</tt>
+is only accessible in the class in which it is declared. Such a
+field variable is not accessible to other classes. In particular,
+a field variable that is declared <tt CLASS=literal>private</tt> is
+not accessible in subclasses of the class in which it is declared.</DL>
+<P CLASS=para>
+If a field variable is not declared with any of the access modifiers,
+the variable has the default accessibility. Default access is often
+called "friendly" access because it is similar to
+<tt CLASS=literal>friendly</tt> access in C++. A variable with default
+access is accessible in any class that is part of the same package as
+the class in which the variable is declared. However, a friendly
+variable is not accessible to classes outside of the package in which
+it is declared, even if the desired classes are subclasses of the class
+in which it is declared.
+
+<P CLASS=para>
+The keywords <tt CLASS=literal>static</tt>, <tt CLASS=literal>final</tt>,
+<tt CLASS=literal>transient</tt>, and <tt CLASS=literal>volatile</tt> can also
+be used in the declaration of a field variable. These modifiers have
+the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>static</tt><br>
+<DD>
+
+<P CLASS=para>
+A field variable that is declared with the <tt CLASS=literal>static</tt>
+modifier is called a <I CLASS=emphasis>class variable</I>.
+There is exactly one copy of each class variable associated with
+the class; every instance of the class shares the single copy of
+the class's <tt CLASS=literal>static</tt> variables. Thus, setting the
+value of a class variable changes the value of the variable for
+all objects that are instances of that class or any of its subclasses.
+
+<P CLASS=para>
+For example, if you want to count how many instances of a class
+have been instantiated, you can write:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Foo {
+    ...
+    static int fooCount = 0;
+    Foo() {
+        fooCount++;
+    }
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A field variable that is not declared with the
+<tt CLASS=literal>static</tt> modifier is called an <I CLASS=emphasis>instance
+variable</I>.  There is a distinct copy of each instance
+variable associated with every instance of the class. Thus, setting
+the value of an instance variable in one object does not affect the
+value of that instance variable in any other object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>final</tt><br>
+<DD>
+
+<P CLASS=para>
+If a field variable is declared with the <tt CLASS=literal>final</tt>
+modifier, the variable is a named constant value. As such, it must
+be assigned an initial value.  Any assignment to a
+<tt CLASS=literal>final</tt> variable, other than the one that
+provides its initial value, is a compile-time error. The initial value
+for a <tt CLASS=literal>final</tt> variable is typically 
+provided by an initializer that is part of the variable's declaration.
+For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+final int X = 4;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>final</tt> field variable that is not initialized 
+in its declaration is called a <I CLASS=emphasis>blank final</I>. 
+Blank finals are not supported prior to Java 1.1.
+A blank final that is declared <tt CLASS=literal>static</tt> must
+be assigned a value exactly once in a static initializer. A 
+blank final that is not declared <tt CLASS=literal>static</tt>
+must be assigned a value exactly once in an instance initializer or
+exactly once in each constructor. The compiler
+uses flow analysis that takes <tt CLASS=literal>if</tt> statements
+and iteration statements into account to ensure that
+a blank final is assigned a value
+exactly once. Thus, it is possible to have multiple assignments to a blank
+final, so long as exactly one of them can be executed. For example,
+here is an instance initializer that sets the value of a blank final:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+{
+    final int DAYS_IN_YEAR;
+    if (isLeapYear(new Date()))
+        DAYS_IN_YEAR = 366;
+    else
+        DAYS_IN_YEAR = 365;
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that the meaning of <tt CLASS=literal>final</tt>
+in a variable declaration is very different from the meaning of
+<tt CLASS=literal>final</tt> in a method or class declaration. In particular,
+if a class contains a <tt CLASS=literal>final</tt> variable, you can
+declare a variable with the same name in a subclass of that class
+without causing an error.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>transient</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>transient</tt> modifier is used to indicate that a
+field variable is not part of the persistent state of an object. The
+<tt CLASS=literal>java.io.ObjectOutputStream</tt> class defines
+<tt CLASS=literal>write()</tt> methods that output a representation of an
+object that can be read later to create a copy of the object.  These
+<tt CLASS=literal>write()</tt> methods do not include field variables that
+are declared <tt CLASS=literal>transient</tt> in the representation of an
+object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>volatile</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>volatile</tt> modifier is used to tell the compiler
+that a field variable will be modified asynchronously by methods that
+are running in different threads. Each time the variable is accessed
+or set, it is fetched from or stored into global memory in a way that
+avoids the assumption that a version of the variable in a cache or a
+register is consistent with the version in global memory.</DL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.1">Class Modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2.1">Local class modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.1">Method modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.1.2">Variable type</A></h4>
+
+<P CLASS=para>
+A field variable declaration must always specify the type of the
+variable. If the declaration of a field variable uses a primitive
+type, the variable contains a value of the specified primitive
+type. If the declaration uses a reference type, the variable contains
+a reference to the specified type of object.
+
+<P CLASS=para>
+The presence of square brackets in a
+variable declaration, after either the type or variable name, indicates
+that the variable contains a reference to an array. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int a[];        // a is an array of int
+int[] b;        // b is also an array of int
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It is also possible to declare a variable to contain an array of
+arrays, or more generally, arrays nested to any level. Each pair of
+square brackets in the declaration corresponds to a dimension of the
+array; it makes no difference whether the brackets appear after the
+type or the variable name. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int[][][] d3;      // Each of these is an array of
+int[][] f3[];      // arrays of arrays of integers
+int[] g3[][];
+int h3[][][];
+int[] j3, k3[];    // An array and an array of arrays
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1">Primitive Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2">Reference Types</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.1.3">Variable name</A></h4>
+
+<P CLASS=para>
+The identifier that follows
+the variable type is the name of the variable. This identifier can
+be used anywhere that the variable is accessible.
+
+<P CLASS=para>
+It is an error to declare two field variables with the same name in
+the same class. It is also an error to declare a field variable
+with the same name as a method declared in the same class or any
+of its superclasses.
+
+<P CLASS=para>
+If a field variable is declared with the same name as a variable
+declared in a superclass, the variable in the superclass is considered
+to be <I CLASS=emphasis>shadowed</I>. If a variable is shadowed in a
+class, it cannot be accessed as a field of that class. However, a
+shadowed variable can be accessed by casting a reference to an object
+of that class to a reference to the appropriate superclass in which
+the variable is not shadowed. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class A {
+    int x = 4;
+}
+class B extends A {
+    int x = 7;
+    B () {
+        int i = x;              // i gets the value of B's x
+        int h = ((A)this).x;    // h gets the value of A's x
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Alternatively, if a variable is shadowed in a class but not
+in its immediate superclass, the methods of the class can access
+the shadowed variable using the keyword <tt CLASS=literal>super</tt>.
+In the above example, this would look as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int h = super.x;        // h gets the value of A's x
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a method is declared with the same name
+and parameters as a method in a superclass, the method in the superclass
+is considered to be overridden. Note that variable shadowing is
+different than method overriding. The most important difference
+is that using a reference to an instance of an object's superclass
+does not provide access to overridden methods. Overriding is described
+in detail in <A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.3">Method name</A>.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.6">Field Expressions</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.5">Inheritance</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.3">Method name</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A></h4>
+
+<P CLASS=para>
+<A NAME="CH05.INIT"></A>A variable declaration
+can contain an initializer. However, if a variable is declared to
+be <tt CLASS=literal>final</tt>, it must either have an initializer
+or be initialized exactly once in a static initializer, instance
+initializer, or constructor. If the
+variable is of a non-array type, the expression in the initializer
+is evaluated and the variable is set to the result of the expression,
+as long as the result is assignment-compatible with the variable.
+If the variable is of an array type, the initializer must be an
+array initializer:
+
+
+<p>
+<img align=middle src="./figs/jlr0506.gif" alt="[Graphic: Figure from the text]" width=424 height=124 border=0>
+
+<P CLASS=para>
+Each expression or array initializer in an array initializer is evaluated
+and becomes an element of the array produced by the initializer.
+The variable is set to the array produced by the initializer, as
+long as the assignment is assignment-compatible. Here are some examples
+of actual array initializers:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+short a[] = {2,5,8,2,11};    // array of 5 shorts
+int s[][] = { {3,45,8},      // array of 4 arrays
+              {12,9,33},     // of 3 ints
+              {7,22,53},
+              {33,1,2} };
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that a trailing comma is allowed within an array initializer.
+For example, the following is legal:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int x[] = {2,23,4,};
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Any initializers for class variables (i.e., <tt CLASS=literal>static</tt>
+variables) are evaluated when the class is loaded. The initializer for
+a class variable cannot refer to any instance variables in the
+class. An initializer for a <tt CLASS=literal>static</tt> variable cannot
+refer to any <tt CLASS=literal>static</tt> variables that are declared
+after its own declaration. The initial value of a class variable can
+also be set in a static initializer for the class; static initializers
+are described in <A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.4">Static Initializers</A>.
+
+<P CLASS=para>
+Any initializers for instance variables are evaluated when a
+constructor for the class is called to create an instance of the
+class. Every class has at least one constructor that explicitly or
+implicitly calls one of the constructors of its immediate superclass
+before it does anything else. When the superclass's constructor
+returns, any instance variable initializers (and
+instance initializers) are evaluated before the
+constructor does anything else. 
+The initial value of an instance variable can also be set in
+an instance initializer; instance initializers are described in
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>.
+Of course, it is also possible to set
+the initial values of instance variables explicitly in a
+constructor. Constructors are described
+in <A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>.
+
+<P CLASS=para>
+If a variable declaration does not contain an initializer, the
+variable is set to a default value. The actual value is determined by
+the variable's type.  Table 5-1 shows the default values used for the
+various types in Java.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="ch05-TABLE-AUTOID.1">Table 5.1: Default Values for Field Variables</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Type</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Default Value</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>byte</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>char</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>'\u0000'</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>short</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>int</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>long</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0L</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>float</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0.0F</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0.0</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>false</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Object reference</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>null</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+For an array, every element
+of the array is set to the appropriate default value, based on the
+type of elements in the array.
+
+<P CLASS=para>
+Here are some examples of variable declarations, with and without initializers:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int i,j;                 // initialized to zero
+long k = 243L;
+double d = k*1.414;
+String s;                // initialized to null
+char c[] = new char[123];
+float f[] = { 3.2f, 4.7f, 9.12f, 345.9f};
+Double dbl = new Double(382.3748);
+java.io.File fl = new File("/dev/null");
+Object o = fl;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch04_13.htm#JLR2-CH-4-SECT-13">Assignment Operators</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<I CLASS=emphasis>Expression</I> 4;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.4">Static Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.1">Variable modifiers</A>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.2">Methods</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.METH1"></A><A NAME="CH05.METH2"></A><A NAME="CH05.METH3"></A>A method is a piece of executable code that can be called as a
+subroutine or a function. A method can be passed parameters by its
+caller; the method can also return a result to its caller. In Java, a
+method can only be declared as a field in a class. The formal
+definition of a method declaration is:
+
+
+<p>
+<img align=middle src="./figs/jlr0507.gif" alt="[Graphic: Figure from the text]" width=424 height=181 border=0>
+
+<P CLASS=para>
+While the above diagram may seem complicated, a method declaration is
+really made up of six distinct things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Optional modifiers that specify attributes of the method
+
+<P>
+<li CLASS=listitem>A type that specifies the type of value returned by the method
+
+<P>
+<li CLASS=listitem>An identifier that names the method
+
+<P>
+<li CLASS=listitem>A list of formal parameters that specifies the values that are passed
+to the method
+
+<P>
+<li CLASS=listitem>An optional <tt CLASS=literal>throws</tt> clause that specifies any
+exceptions that can be thrown by the method
+
+<P>
+<li CLASS=listitem>A block that defines the functionality of the method
+
+<P>
+</UL>
+<P CLASS=para>
+Here are some examples of method declarations:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public static void main(String[] argv) {
+    System.out.println( argv[0] );
+}
+int readSquare(DataInputStream d) throws IOException {
+    int i = d.readInt();
+    return i*i;
+}
+int filledArray(int length, int value) [] {
+    int [] array = new int [length];
+    for (int i = 0; i &lt; length; i++ ) {
+        array[i] = value;
+    }
+    return array;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Unlike C/C++, Java only allows method declarations that fully
+specify the type and number of parameters that the method can be
+called with.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<I CLASS=emphasis>ClassOrInterfaceName</I> 4.1.6;
+Exception Handling 9;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.4">Method formal parameters</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<I CLASS=emphasis>Type</I> 3
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.2.1">Method modifiers</A></h4>
+
+<P CLASS=para>
+<A NAME="CH05.MODMETH"></A>The modifiers <tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>,
+and <tt CLASS=literal>private</tt> can be used in the declaration of
+a method to specify the accessibility of the method. In this situation,
+the modifiers have the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>public</tt><br>
+<DD>
+
+<P CLASS=para>
+A method that is declared <tt CLASS=literal>public</tt> is accessible from
+any class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>protected</tt><br>
+<DD>
+
+<P CLASS=para>
+A method that is declared <tt CLASS=literal>protected</tt> is accessible
+in any class that is part of the same package as the class in which
+the method is declared. Such a method is also accessible to any
+subclass of the class in which it is declared, regardless of whether
+or not the subclass is part of the same package.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>private</tt><br>
+<DD>
+
+<P CLASS=para>
+A method that is declared <tt CLASS=literal>private</tt> is only
+accessible in the class in which it is declared. Such a method is not
+accessible in other classes. In particular, a method that is declared
+<tt CLASS=literal>private</tt> is not accessible in subclasses of the
+class in which it is declared. A method cannot be declared both
+<tt CLASS=literal>private</tt> and <tt CLASS=literal>abstract</tt>.</DL>
+<P CLASS=para>
+If a method is not declared with any of the access modifiers, it
+has the default accessibility. Default access is often called
+"friendly" access because it is similar to <tt CLASS=literal>friendly</tt>
+access in C++. A method with default access is accessible in any class
+that is part of the same package as the class in which the method is
+declared. However, a friendly method is not accessible to classes
+outside of the package in which it is declared, even if the classes
+are subclasses of the class in which it is declared.
+
+<P CLASS=para>
+The keywords <tt CLASS=literal>static</tt>, <tt CLASS=literal>final</tt>,
+<tt CLASS=literal>abstract</tt>, <tt CLASS=literal>native</tt>, and
+<tt CLASS=literal>synchronized</tt> can also be used in the declaration of
+a method. These modifiers have the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>static</tt><br>
+<DD>
+
+<P CLASS=para>
+A method that is declared with the <tt CLASS=literal>static</tt> modifier
+is called a <I CLASS=emphasis>class method</I>.  Class methods are not
+associated with an instance of a class. This means that a class method
+cannot directly refer to other, non-<tt CLASS=literal>static</tt> methods
+or variables in its class, unless the method or variable is accessed
+through an explicit object reference. In addition, the keywords
+<tt CLASS=literal>this</tt> and <tt CLASS=literal>super</tt> are treated as
+undefined variables within <tt CLASS=literal>static</tt> methods. A method
+that is declared <tt CLASS=literal>static</tt> is also implicitly
+<tt CLASS=literal>final</tt>, or in other words, <tt CLASS=literal>static</tt>
+methods cannot be overridden. A method that is declared
+<tt CLASS=literal>static</tt> cannot also be declared
+<tt CLASS=literal>abstract</tt>.
+
+<P CLASS=para>
+Because <tt CLASS=literal>static</tt> methods are not
+associated with a class instance, you do not need an instance of
+a class to invoke such a method. For example, the <tt CLASS=literal>Math</tt>
+class contains a collection of mathematical methods that can be
+called using the class name:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Math.tan(x)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A method that is not declared with the <tt CLASS=literal>static</tt>
+modifier is called an <I CLASS=emphasis>instance method</I>. Instance
+methods are associated with an instance of a class, so an instance
+method may contain direct references to any other methods or variables
+in its class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>final</tt><br>
+<DD>
+
+<P CLASS=para>
+A method that is declared with the <tt CLASS=literal>final</tt> modifier
+cannot be overridden. In other words, if a method in a class is
+declared <tt CLASS=literal>final</tt>, no subclass of that class can
+declare a method with the same name, number of parameters, and
+parameter types as the <tt CLASS=literal>final</tt> method. Although
+<tt CLASS=literal>final</tt> methods cannot be overridden, declaring a
+method to be <tt CLASS=literal>final</tt> in no way prevents it from being
+overloaded.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>abstract</tt><br>
+<DD>
+
+<P CLASS=para>
+If a method is declared with the <tt CLASS=literal>abstract</tt> modifier,
+the declaration must end with a semicolon rather than a block. An
+<tt CLASS=literal>abstract</tt> method declaration specifies the name,
+number and type of parameters, and return type of the method; it does
+not specify the implementation of the method. If a class contains an
+<tt CLASS=literal>abstract</tt> method, the class must also be declared
+<tt CLASS=literal>abstract</tt>.  If a non-<tt CLASS=literal>abstract</tt>
+class inherits an <tt CLASS=literal>abstract</tt> method, the class must
+override the method and provide an implementation.
+
+<P CLASS=para>
+An <tt CLASS=literal>abstract</tt> method cannot also be declared either
+<tt CLASS=literal>private</tt> or <tt CLASS=literal>static</tt> because
+neither <tt CLASS=literal>private</tt> nor <tt CLASS=literal>static</tt>
+methods can be overridden. A <tt CLASS=literal>private</tt> method cannot
+be overridden because it is not inherited by its subclasses; a
+<tt CLASS=literal>static</tt> method cannot be overridden because it is
+implicitly <tt CLASS=literal>final</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>native</tt><br>
+<DD>
+
+<P CLASS=para>
+If a method is declared with the <tt CLASS=literal>native</tt> modifier,
+the declaration must end with a semicolon rather than a block. A
+<tt CLASS=literal>native</tt> method is implemented in a platform-specific
+way using a language other than Java, such as C++. Because the
+implementation of a <tt CLASS=literal>native</tt> method is not done in
+Java, Java requires the semicolon in place of an implementation.
+
+<P CLASS=para>
+Because the implementation of a <tt CLASS=literal>native</tt> method is
+platform-specific, you should avoid using native methods in classes
+that are expected to run on different kinds of clients. Native methods
+also require an installation process, which is another reason to avoid
+them for use on clients.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>synchronized</tt><br>
+<DD>
+
+<P CLASS=para>
+If a method is declared with the <tt CLASS=literal>synchronized</tt>
+modifier, a thread must obtain a lock before it can invoke the
+method. If the method is not declared <tt CLASS=literal>static</tt>, the
+thread must obtain a lock associated with the object used to access
+the method. If the method is declared <tt CLASS=literal>static</tt>, the
+thread must obtain a lock associated with the class in which the
+method is declared.
+
+<P CLASS=para>
+A synchronized method is one of two mechanisms for providing
+single-threaded access to the contents of a class or object. The other
+mechanism is the <tt CLASS=literal>synchronized</tt> statement.  Of the
+two, a synchronized method is usually the preferred mechanism.  If all
+access to instance data that is shared by multiple threads is through
+<tt CLASS=literal>synchronized</tt> methods, the integrity of the instance
+data is guaranteed, no matter what the callers of the methods do.  On
+the other hand, if instance data shared by multiple threads is
+directly accessible outside of the class that defines it or its
+subclasses, providing single-threaded access to the data requires the
+use of <tt CLASS=literal>synchronized</tt> statements.</DL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.1">Class Modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2.1">Local class modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.1">Variable modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.2.2">Method return type</A></h4>
+
+<P CLASS=para>
+A method declaration must always specify the type of value returned by
+the method. The return value can be of a primitive type or of a
+reference type.  If the method does not return a value, it should be
+declared with its return type specified as <tt CLASS=literal>void</tt>.
+The return type comes before the name of the method in the method declaration.
+
+<P CLASS=para>
+The presence of square brackets in a method declaration, after either
+the return type or the formal parameters, indicates that the method
+returns a reference to the specified type of array.
+
+<P CLASS=para>
+For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int a()[] {...};        // a returns an array of int
+int[] b() {...};        // b also returns an array of int
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It is also possible to declare that a method returns a reference to an
+array of arrays, or more generally, arrays nested to any level. Each
+pair of square brackets in the declaration corresponds to a dimension
+of the array; it makes no difference whether the brackets appear after
+the return type or the formal parameters. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int[][][] d3() {...};    // Each of these returns an array of
+int[][] f3()[] {...};    // arrays of arrays of integers
+int[] g3()[][] {...};
+int h3()[][][] {...};
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a method is declared
+with the <tt CLASS=literal>void</tt> return type, any <tt CLASS=literal>return</tt>
+statement that appears within the method must not contain a return
+value. Because a method with a <tt CLASS=literal>void</tt> return type
+does not return a value, such a method can only be called from an
+expression statement that consists of a method call expression.
+
+<P CLASS=para>
+On the other hand, if a method is declared with a return type other
+than <tt CLASS=literal>void</tt>, it must return through an explicit
+<tt CLASS=literal>return</tt> statement that contains a return value that
+is assignment-compatible with the return type of the method.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch06_04.htm#JLR2-CH-6-SECT-4">Expression Statements</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1">Primitive Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2">Reference Types</A>;
+<A HREF="ch06_10.htm#JLR2-CH-6-SECT-10">The return Statement</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.2.3">Method name</A></h4>
+
+<P CLASS=para>
+<A NAME="CH05.METH30"></A>The identifier that follows
+the return type is the name of the method. This identifier can be
+used anywhere that the method is accessible.
+
+<P CLASS=para>
+It is an
+error to declare two methods that have the same name, the same number
+of parameters, and the same type for each corresponding parameter
+in the same class. It is also an error to declare a method with
+the same name as a variable declared in the same class or any of
+its superclasses.
+
+<P CLASS=para>
+A method is said to be <I CLASS=emphasis>overloaded</I>
+if there is more than one accessible method in a class with the
+same name, but with parameters that differ in number
+or type.[5] This situation can arise
+if two or more such methods are declared in the same class. It can
+also occur when at least one of the methods is defined in a superclass
+and the rest are in a subclass.
+
+<blockquote class=footnote>
+<P CLASS=para>[5] 
+Although
+Java supports overloaded methods, it does not allow
+programs to define overloaded operators. While it is true that the
+<tt CLASS=literal>+</tt> operator is defined in an overloaded way, that
+operator is part of the language specification and it is the only
+overloaded operator.
+</blockquote>
+<P CLASS=para>
+Overloaded methods aren't required
+to have the same return type. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int max(int x, int y){return x&gt;y ? x : y;}
+double max(double x, double y){return x&gt;y ? x : y;}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A method that is inherited from a superclass is said to be
+<I CLASS=emphasis>overridden</I> if a method in the inheriting class
+has the same name, number of parameters, and types of parameters as
+the inherited method. If the overridden method returns
+<tt CLASS=literal>void</tt>, the overriding method must also return
+<tt CLASS=literal>void</tt>. Otherwise, the return type of the overriding
+method must be the same as the type of the overridden method.
+
+<P CLASS=para>
+An overriding method can be more accessible than the overridden
+method, but it cannot be less accessible. In other words, a subclass
+cannot hide things that are visible in its superclass, but it can make
+visible things that are hidden. An object is considered to be an
+instance of its own class, as well as an instance of each of its
+superclasses.  As a result, you can use an object reference to call a
+method in an object and not worry about whether the object is actually
+an instance of a subclass of the type of the reference. If a subclass
+were allowed to override methods of its superclass with methods that
+were less accessible, you would no longer be able to use a reference
+without regard to the actual type of the object being referenced.
+
+<P CLASS=para>
+For example, <tt CLASS=literal>Object</tt> is the superclass of
+<tt CLASS=literal>String</tt>. This means that a variable declared to
+contain a reference to an <tt CLASS=literal>Object</tt> may actually refer
+to a <tt CLASS=literal>String</tt>. The <tt CLASS=literal>Object</tt> class
+defines a <tt CLASS=literal>public</tt> method called
+<tt CLASS=literal>hashCode()</tt>, so a reference to
+the <tt CLASS=literal>Object</tt> class can be used to call the
+<tt CLASS=literal>hashCode()</tt> method of whatever subclass of
+<tt CLASS=literal>Object</tt> it refers to. Allowing a subclass of
+<tt CLASS=literal>Object</tt> to declare a <tt CLASS=literal>private
+hashcode()</tt> method would be inconsistent with this usage.
+
+<P CLASS=para>
+Table 5-2 shows the access modifiers that are permitted for an
+overriding method, based on the access allowed for the overridden
+method.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="ch05-TABLE-AUTOID.2">Table 5.2: Permitted Access Modifiers for Overriding Methods</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">&nbsp;</TH>
+<TH ALIGN="left">&nbsp;</TH>
+<TH COLSPAN=3 ALIGN="center">
+
+<P CLASS=para>
+Access declared for overridden method</TH>
+</TR>
+<TR CLASS=row>
+<TH ALIGN="left">&nbsp;</TH>
+<TH ALIGN="left">&nbsp;</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>no modifier</I></TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>protected</tt></TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>public</tt></TH>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=4 ALIGN="left">
+
+<P CLASS=para>
+<b>Access for overriding method</b></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>private</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+not allowed</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+not allowed</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+not allowed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>no modifier</I></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+allowed</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+not allowed</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+not allowed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>protected</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+allowed</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+allowed</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+not allowed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>public</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+allowed</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+allowed</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+allowed</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+If a method in the superclass is declared <tt CLASS=literal>private</tt>,
+it is not inherited by the subclass.  This means that a method in the
+subclass that has the same name, number of parameters, and types of
+parameters does not override the <tt CLASS=literal>private</tt> method in
+the superclass. As a result, the method in the subclass can have any
+return type and there are no restrictions on its accessibility.
+
+<P CLASS=para>
+Non-<tt CLASS=literal>static</tt> methods must be called through an object
+reference. If a non-<tt CLASS=literal>static</tt> method is called with no
+explicit object reference, it is implicitly called using the object
+reference <tt CLASS=literal>this</tt>. At compile-time, the type of the
+object reference is used to determine the combinations of method names
+and parameters that are accessible to the calling expression (see
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.8">Method Call Expression</A>).
+At runtime, however, the
+actual type of the object determines which of the methods is
+called. If the actual object is an instance of a subclass of the
+referenced class and the subclass overrides the method being called,
+the overriding method in the subclass is invoked.
+
+<P CLASS=para>
+In other words, the actual type of the object is used to determine
+which method to call, not the type of the reference to that
+object. This means that you cannot simply cast an object reference to
+a superclass of the class of the actual object to call to an
+overridden method. Instead, you use the keyword
+<tt CLASS=literal>super</tt> to access an overridden method in the
+superclass. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class A {
+    void doit() {
+        ...
+    }
+}
+class B extends A {
+    void doit() {
+        super.doit();      // calls overridden A.doit()
+    }
+    public static void main(String argv[]) {
+        B b = new B();
+        ((A)b).doit();     // calls B.doit()
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>doit()</tt> method in class <tt CLASS=literal>B</tt>
+calls the overridden <tt CLASS=literal>doit()</tt> method in class
+<tt CLASS=literal>A</tt> using the <tt CLASS=literal>super</tt>
+construct. But, in <tt CLASS=literal>main()</tt>, the
+<tt CLASS=literal>doit()</tt> method in class <tt CLASS=literal>B</tt> is
+invoked because casting a reference does not provide access to
+overridden methods.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.5">Inheritance</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.8">Method Call Expression</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.3">Variable name</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.2.4">Method formal parameters</A></h4>
+
+<P CLASS=para>
+The formal parameters in a method declaration specify a list of
+variables to which values are assigned when the method is called:
+
+
+<p>
+<img align=middle src="./figs/jlr0508.gif" alt="[Graphic: Figure from the text]" width=424 height=50 border=0>
+
+<P CLASS=para>
+Within the block that contains the implementation of the method, the
+method's formal parameters are treated as local variables; the name of
+each formal parameter is available as an identifier in the method's
+implementation.  Formal parameters differ from local variables only in
+that their declaration and value come from outside the method's block.
+
+<P CLASS=para>
+If a formal parameter is declared <tt CLASS=literal>final</tt>, 
+any assignment to that parameter generates an error. 
+The syntax for declaring <tt CLASS=literal>final</tt> 
+parameters is not supported prior to Java 1.1.
+
+<P CLASS=para>
+If a method has no formal parameters, the parentheses must
+still appear in the method declaration.
+
+<P CLASS=para>
+Here's an example of a method declaration with formal parameters:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+abstract int foo(DataInputStream d, Double[] values, int weights[]) ;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The presence of square brackets
+in a formal parameter declaration, either as part of a reference
+type or after the name of a formal parameter, indicates that the
+formal parameter is an array type. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+foo(int a[],    // a is an array of int
+    int[] b)    // b is also an array of int
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It is also possible to declare that a formal parameter is an array of
+arrays, or more generally, arrays nested to any level. Each pair of
+square brackets in the declaration corresponds to a dimension of the
+array; it makes no difference whether the brackets appear with the
+type or after the name of the formal parameter. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int[][][] d3        // Each of these is an array of
+int[][] f3[]        // arrays of arrays of integers
+int[] g3[][]
+int h3[][][]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.1">Local Variables</A>;
+<I CLASS=emphasis>Type</I> 3
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.2.5">Method throws clause</A></h4>
+
+<P CLASS=para>
+<A NAME="CH05.THROWS1"></A><A NAME="CH05.THROWS2"></A>If a method is expected to throw any exceptions, the method
+declaration must declare that fact in a <tt CLASS=literal>throws</tt>
+clause. Java requires that most types of exceptions either be caught
+or declared, so bugs caused by programmers forgetting to handle
+particular types of exceptions are uncommon in Java programs.
+
+<P CLASS=para>
+If a method implementation contains a <tt CLASS=literal>throw</tt>
+statement, or if the method calls another method declared with a
+<tt CLASS=literal>throws</tt> clause, there is the possibility that an
+exception will be thrown from within the method. If the exception is
+not caught, it will be thrown out of the method to its caller. Any
+exception that can be thrown out of a method in this way must be
+listed in a <tt CLASS=literal>throws</tt> clause in the method
+declaration, unless the exception is an instance of
+<tt CLASS=literal>Error</tt>, <tt CLASS=literal>RuntimeException</tt>, or a
+subclass of one of those classes. Subclasses of the
+<tt CLASS=literal>Error</tt> class correspond to situations that are not
+easily predicted, such as the system running out of memory. Subclasses
+of <tt CLASS=literal>RuntimeException</tt> correspond to many common
+runtime problems, such as illegal casts and array index problems. The
+classes listed in a <tt CLASS=literal>throws</tt> clause must be
+<tt CLASS=literal>Throwable</tt> or any of its subclasses; the
+<tt CLASS=literal>Throwable</tt> class is the superclass of all objects
+that can be thrown in Java.
+
+<P CLASS=para>
+Consider the following example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.io.IOException;
+class throwsExample {
+    char[] a;
+    int position;
+    ...
+    // Method explicitly throws an exception
+    int read() throws IOException {
+        if (position &gt;= a.length)
+            throw new IOException();
+        return a[position++];
+    }
+    // Method implicitly throws an exception
+    String readUpTo(char terminator) throws IOException {
+        StringBuffer s = new StringBuffer();
+        while (true) {
+            int c = read(); // Can throw IOException
+            if (c == -1 || c == terminator) {
+                return s.toString();
+            }
+            s.append((char)c);
+        }
+        return s.toString():
+    }
+    // Method catches an exception internally
+    int getLength() {
+        String s;
+        try {
+            s = readUpTo(':');
+        } catch (IOException e) {
+            return 0;
+        }
+        return s.length();
+    }
+    // Method can throw a RuntimeException
+    int getAvgLength() {
+        int count = 0;
+        int total = 0;
+        int len;
+        while (true){
+            len = getLength();
+            if (len == 0)
+                break;
+            count++;
+            total += len;
+        }
+        return total/count; // Can throw ArithmeticException
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The method <tt CLASS=literal>read()</tt> can throw an
+<tt CLASS=literal>IOException</tt>, so it declares that fact in its
+<tt CLASS=literal>throws</tt> clause.  Without that
+<tt CLASS=literal>throws</tt> clause, the compiler would complain that the
+method must either declare <tt CLASS=literal>IOException</tt> in its
+<tt CLASS=literal>throws</tt> clause or catch it. Although the
+<tt CLASS=literal>readUpTo()</tt> method does not explicitly throw any
+exceptions, it calls the <tt CLASS=literal>read()</tt> method that does
+throw an <tt CLASS=literal>IOException</tt>, so it declares that fact in
+its <tt CLASS=literal>throws</tt> clause. Whether explicitly or implicitly
+thrown, the requirement to catch or declare an exception is the
+same. The <tt CLASS=literal>getLength()</tt> method catches the
+<tt CLASS=literal>IOException</tt> thrown by
+<tt CLASS=literal>readUpTo()</tt>, so it does not have to declare the
+exception. The final method, <tt CLASS=literal>getAvgLength()</tt>, can
+throw an <tt CLASS=literal>ArithmeticException</tt> if
+<tt CLASS=literal>count</tt> is zero. Because
+<tt CLASS=literal>ArithmeticException</tt> is a subclass of
+<tt CLASS=literal>RuntimeException</tt>, the fact that it can be thrown
+out of <tt CLASS=literal>getAvgLength()</tt> does not need to be declared.
+
+<P CLASS=para>
+If a method overrides another method, the overriding method cannot
+throw anything that the overridden method does not throw.
+Specifically, if the declaration of a method contains a
+<tt CLASS=literal>throws</tt> clause, any method that overrides that
+method cannot include any classes in its <tt CLASS=literal>throws</tt>
+clause that are not declared in the overridden method. This
+restriction avoids surprises. When a method is called, the Java
+compiler requires that all of the objects listed the method's
+<tt CLASS=literal>throws</tt> clause are either caught by the calling
+method or declared in the calling method's <tt CLASS=literal>throws</tt>
+clause. The requirement that an overriding method cannot include any
+class in its <tt CLASS=literal>throws</tt> clause that is not in the
+overridden method's <tt CLASS=literal>throws</tt> clause ensures that the
+guarantee made by the compiler is respected by the runtime
+environment.
+
+<P CLASS=para>
+<b>References</b>
+Exception Handling 9;
+<A HREF="ch06_11.htm#JLR2-CH-6-SECT-11">The throw Statement</A>;
+<A HREF="ch06_12.htm#JLR2-CH-6-SECT-12">The try Statement</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.2.6">Method implementation</A></h4>
+
+<P CLASS=para>
+A method declaration must end with either a block or a semicolon. If
+either the <tt CLASS=literal>abstract</tt> or <tt CLASS=literal>native</tt>
+modifier is used in the declaration, the declaration must end with a
+semicolon. All other method declarations must end with a block that
+defines the implementation of the method.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.1">Method modifiers</A>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3">Constructors</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.CONST"></A><A NAME="CH05.CONST10"></A>A constructor is a special kind of method that is designed to set the
+initial values of an object's instance variables and do anything else
+that is necessary to create an object. Constructors are only called as
+part of the object creation process. The declaration of a constructor
+does not include a return type. The name of a constructor is always the same as the name
+of the class:
+
+
+<p>
+<img align=middle src="./figs/jlr0509.gif" alt="[Graphic: Figure from the text]" width=424 height=28 border=0>
+
+<P CLASS=para>
+A constructor declaration is really made up of five distinct things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Optional modifiers that specify attributes of the constructor
+
+<P>
+<li CLASS=listitem>An identifier that names the constructor; this identifier
+must be the same as the name of the class
+
+<P>
+<li CLASS=listitem>A list of formal parameters that specifies the values that are passed
+to the constructor
+
+<P>
+<li CLASS=listitem>An optional <tt CLASS=literal>throws</tt> clause that specifies any
+exceptions that can be thrown by the constructor
+
+<P>
+<li CLASS=listitem>A block that defines the functionality of the constructor
+
+<P>
+</UL>
+<P CLASS=para>
+Here is an example that shows a class with some constructors:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Construct {
+    private Construct(Double[] values, int weights[]) {
+    }
+    public Construct(OutputStream o, Double[] values, int weights[]) 
+                    throws IOException {
+        this(values, weights);
+        o.write(weights[0]);
+    }
+    public Construct() {
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<I CLASS=emphasis>ClassOrInterfaceName</I> 4.1.6;
+Exception Handling 9;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.4">Method formal parameters</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.3">Object Creation</A>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3.1">Constructor modifiers</A></h4>
+
+<P CLASS=para>
+The modifiers <tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>,
+and <tt CLASS=literal>private</tt> can be used in the declaration of
+a constructor to specify the accessibility of the constructor. In
+this situation, the modifiers have the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>public</tt><br>
+<DD>
+
+<P CLASS=para>
+A constructor that is declared <tt CLASS=literal>public</tt> is accessible
+from any class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>protected</tt><br>
+<DD>
+
+<P CLASS=para>
+A constructor that is declared <tt CLASS=literal>protected</tt> is
+accessible in any class that is part of the same package as the class
+in which the constructor is declared. Such a constructor is also
+accessible to any subclass of the class in which it is declared,
+regardless of whether or not the subclass is part of the same package.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>private</tt><br>
+<DD>
+
+<P CLASS=para>
+A constructor that is declared <tt CLASS=literal>private</tt>
+is accessible in the class in which it is declared. Such a constructor
+is not accessible in other classes. In particular, a constructor
+that is declared <tt CLASS=literal>private</tt> is not accessible in
+subclasses of the class in which it is declared.
+
+<P CLASS=para>
+If a class is declared with at least one constructor, to prevent Java
+from providing a default <tt CLASS=literal>public</tt> constructor, and
+all of the constructors are declared <tt CLASS=literal>private</tt>, no
+other class can create an instance of the class. It makes sense to
+prevent the instantiation of a class if the class exists only to
+provide a collection of <tt CLASS=literal>static</tt> methods. An example
+of this type of class is <tt CLASS=literal>java.lang.Math</tt>.
+
+<P CLASS=para>
+<tt CLASS=literal>private</tt> constructors
+can be used by <tt CLASS=literal>static</tt> methods in the same class.</DL>
+<P CLASS=para>
+If a constructor is not declared with any of the access modifiers, the
+constructor has the default accessibility. Default access is often
+called "friendly" access because it is similar to
+<tt CLASS=literal>friendly</tt> access in C++. A constructor with default
+access is accessible in any class that is part of the same package as
+the class in which the constructor is declared. However, a friendly
+constructor is not accessible in subclasses of the class in which it
+is declared.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.1">Class Modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2.1">Local class modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3.2">Constructor name</A></h4>
+
+<P CLASS=para>
+A constructor has no name of its own. The identifier that appears in a
+constructor declaration must be the same as the name of the class in
+which the constructor is declared. This identifier can be used
+anywhere that the constructor is accessible.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.1">Class Types</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3.3">Constructor return type</A></h4>
+
+<P CLASS=para>
+A constructor has no declared return type; it always returns an object
+that is an instance of its class. A <tt CLASS=literal>return</tt>
+statement in a constructor is treated the same as it is in a method
+declared to return <tt CLASS=literal>void</tt>; the
+<tt CLASS=literal>return</tt> statement must not contain a return
+value. Note that it is not possible to explicitly declare a
+constructor to have the return type <tt CLASS=literal>void</tt>.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_10.htm#JLR2-CH-6-SECT-10">The return Statement</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3.4">Constructor formal parameters</A></h4>
+
+<P CLASS=para>
+The formal parameters in a constructor declaration specify a list of
+variables to which values are assigned when the constructor is
+called. Within the block that contains the implementation of the
+constructor, the constructor's formal parameters are treated as local
+variables; the name of each formal parameter is available as an
+identifier in the constructor's implementation.  Formal parameters
+differ from local variables only in that their declaration and value
+come from outside the constructor's block.
+
+<P CLASS=para>
+If a formal parameter is declared <tt CLASS=literal>final</tt>, 
+any assignment to that parameter generates an error. 
+The syntax for declaring <tt CLASS=literal>final</tt> 
+parameters is not supported prior to Java 1.1.
+
+<P CLASS=para>
+If a constructor has no formal parameters, the parentheses
+must still appear in the constructor declaration.
+
+<P CLASS=para>
+The presence of square brackets in a formal parameter declaration, either
+as part of a reference type or after the name of a formal parameter,
+indicates that the formal parameter is an array type. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Foo(int a[],    // a is an array of int
+    int[] b)    // b is also an array of int
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It is also possible to declare that a formal parameter is an array of
+arrays, or more generally, arrays nested to any level. Each pair of
+square brackets in the declaration corresponds to a dimension of the
+array; it makes no difference whether the brackets appear with the
+type or after the name of the formal parameter. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int[][][] d3        // Each of these is an array of
+int[][] f3[]        // arrays of arrays of integers
+int[] g3[][]
+int h3[][][]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.4">Method formal parameters</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.1">Local Variables</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3.5">Constructor throws clause</A></h4>
+
+<P CLASS=para>
+<A NAME="CH05.THROWS3"></A><A NAME="CH05.THROWS4"></A>If a constructor is expected to throw any exceptions, the constructor
+declaration must declare that fact in a <tt CLASS=literal>throws</tt>
+clause. If a constructor implementation contains a
+<tt CLASS=literal>throw</tt> statement, or if the constructor calls
+another constructor or method declared with a
+<tt CLASS=literal>throws</tt> clause, there is the possibility that an
+exception will be thrown from within the constructor.
+
+<P CLASS=para>
+If the exception is not caught, it will be thrown out of the constructor to its
+caller. Any exception that can be thrown out of a constructor in this
+way must be listed in a <tt CLASS=literal>throws</tt> clause in the
+constructor declaration, unless the exception is an instance of
+<tt CLASS=literal>Error</tt>, <tt CLASS=literal>RuntimeException</tt>, or a
+subclass of one of those classes.
+
+<P CLASS=para>
+Subclasses of the <tt CLASS=literal>Error</tt> class correspond to situations that are not
+easily predicted, such as the system running out of memory. Subclasses
+of <tt CLASS=literal>RuntimeException</tt> correspond to many common
+runtime problems, such as illegal casts and array index problems. The
+classes listed in a <tt CLASS=literal>throws</tt> clause must be
+<tt CLASS=literal>Throwable</tt> or any of its subclasses; the
+<tt CLASS=literal>Throwable</tt> class is the superclass of all objects
+that can be thrown in Java.
+
+<P CLASS=para>
+<b>References</b>
+Exception Handling 9;
+<A HREF="ch06_11.htm#JLR2-CH-6-SECT-11">The throw Statement</A>;
+<A HREF="ch06_12.htm#JLR2-CH-6-SECT-12">The try Statement</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3.6">Constructor implementation</A></h4>
+
+<P CLASS=para>
+The block at the end of a constructor declaration contains the
+implementation of the constructor. The block is called the constructor
+body.  The first statement in a constructor body is special; it is
+the only place that Java allows an explicit call to a constructor
+outside of an allocation expression. An explicit call to a constructor
+has a special form:
+
+
+<p>
+<img align=middle src="./figs/jlr0510.gif" alt="[Graphic: Figure from the text]" width=424 height=241 border=0>
+
+<P CLASS=para>
+In an explicit constructor call, the keyword <tt CLASS=literal>this</tt>
+can be used to specify a call to a constructor in the same class.  The
+keyword <tt CLASS=literal>super</tt> can be used to specify a call to a
+constructor in the immediate superclass.
+
+<P CLASS=para>
+For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Square extends RegularPolygon {
+    // Construct a square without specifying the length of the sides
+    Square() {
+        this(5);
+    }
+    // Construct a square with sides of a specified length
+    Square(int len) {
+        super(4,len);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first constructor simply calls the second constructor with the
+argument 5. The second constructor calls a constructor in the
+immediate superclass to create a four-sided regular polygon with sides
+of the given length.
+
+<P CLASS=para>
+Except for the constructors in the class <tt CLASS=literal>Object</tt>, a
+constructor always begins by calling another constructor in the same
+class or in its immediate superclass. If the first statement in a
+constructor is not an explicit call to another constructor using
+<tt CLASS=literal>this</tt> or <tt CLASS=literal>super</tt> and the class is
+not <tt CLASS=literal>Object</tt>, the compiler inserts a call to
+<tt CLASS=literal>super()</tt> before the first statement in the
+constructor. 
+
+<P CLASS=para>
+In other words, if a constructor does not begin with an
+explicit call to another constructor, it begins with an implicit call
+to the constructor of its immediate superclass that takes no argument.
+The result is
+constructor chaining: a constructor for each superclass of a class is
+called before the constructor of the class executes any of its own
+code.  After all of the calls to the superclasses' constructors
+(explicit or implicit) have returned, any instance variables that have
+initializers are initialized, and finally the constructor executes its
+own code.
+
+<P CLASS=para>
+Constructor chaining places a restriction on the arguments that can be
+passed to a constructor in an explicit constructor call. The
+expressions provided as arguments must not refer to any instance
+variables of the object being created because these instance variables
+are not initialized until the superclass's constructor returns.
+
+<P CLASS=para>
+<b>References</b>
+<I CLASS=emphasis>ArgumentList</I> 4.1.8;
+<A HREF="ch04_02.htm#JLR2-CH-4-SECT-2.1">Object Allocation Expressions</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.1">this</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.2">super</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3.7">The default constructor</A></h4>
+
+<P CLASS=para>
+If a class declaration does not contain any constructor declarations,
+Java supplies a default constructor for the class. The default
+constructor is <tt CLASS=literal>public</tt>, it takes no arguments, and
+it simply calls the constructor of its class's superclass that takes no
+arguments. The default constructor is approximately equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public MyClass() {
+    super();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Because Java creates a default constructor only for a class that does
+not have any explicitly declared constructors, it is possible for the
+superclass of that class not to have a constructor that takes no
+arguments. If a class declaration does not contain a constructor
+declaration and its immediate superclass does not have a constructor
+that takes no arguments, the compiler issues an error message because
+the default constructor references a non-existent constructor in the
+superclass. The default constructor for the class
+<tt CLASS=literal>Object</tt> does not contain a call to another
+constructor because class <tt CLASS=literal>Object</tt> has no superclass.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch10_14.htm">Object</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.3.8">Constructor inheritance</A></h4>
+
+<P CLASS=para>
+A subclass does not inherit constructors from its superclass, as it
+does normal methods. This is one important difference between regular
+methods and constructors: constructors are not inherited. However, a
+subclass can access a constructor in its superclass, as long as the
+constructor is accessible, based on any access modifiers used in its
+declaration.
+
+<P CLASS=para>
+This example illustrates the difference between inheritance and accessibility:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class A {
+    public A (int q) {
+    }
+}
+public class B extends A {
+    public B () {
+        super(5);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Although class <tt CLASS=literal>B</tt> is a subclass of class
+<tt CLASS=literal>A</tt>, <tt CLASS=literal>B</tt> does not inherit the public
+constructor in <tt CLASS=literal>A</tt> that takes a single argument.
+This means that if you try to create a new instance of
+<tt CLASS=literal>B</tt> using an allocation expression with a single
+argument, you'll get an error message from the compiler. Here's an
+erroneous call:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+B b1 = new B(9);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+However, as shown in the example, the constructor in
+<tt CLASS=literal>B</tt> can access the constructor in
+<tt CLASS=literal>A</tt> using the keyword <tt CLASS=literal>super</tt>.
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.2.7">The finalize method</A></h3>
+
+<P CLASS=para>
+A class declaration can include a special method that is called before
+an instance of the class is destroyed by the garbage collector. This
+method is called a <I CLASS=emphasis>finalizer</I> ; it has the name
+<tt CLASS=literal>finalize()</tt>.  The <tt CLASS=literal>finalize()</tt>
+method for a class must be declared with no parameters, a
+<tt CLASS=literal>void</tt> return type, and no modifiers:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+void finalize() {...}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a class has a <tt CLASS=literal>finalize()</tt> method, it is normally
+called by the garbage collector before an object of that class type is
+destroyed. A program can also explicitly call an object's
+<tt CLASS=literal>finalize()</tt> method, but in this case, the garbage
+collector does not call the method during the object destruction
+process. If the garbage collector does call an object's
+<tt CLASS=literal>finalize()</tt> method, the garbage collector does not
+immediately destroy the object because the
+<tt CLASS=literal>finalize()</tt> method might do something that results
+in a reference to the object. Thus the garbage collector waits to
+destroy the object until it can again prove it is safe to do so. The
+next time the garbage collector decides it is safe to destroy the
+object, it does so without calling the finalizer again. In any case, a
+<tt CLASS=literal>finalize()</tt> method is never called more than once
+by the garbage collector for a particular object.
+
+<P CLASS=para>
+A superclass of the class may also define a
+<tt CLASS=literal>finalize()</tt> method, but Java does not provide a
+mechanism that automatically calls the superclass's
+<tt CLASS=literal>finalize()</tt> method. If a class contains a
+<tt CLASS=literal>finalize()</tt> method, it is a good idea for that
+method to call <tt CLASS=literal>super.finalize()</tt> as the very last
+thing that it does. This technique ensures that the
+<tt CLASS=literal>finalize()</tt> method of the superclass gets
+called. The technique even works if the superclass does not explicitly
+define a <tt CLASS=literal>finalize()</tt> method, since every class
+inherits a default <tt CLASS=literal>finalize()</tt> method from the
+<tt CLASS=literal>Object</tt> class. This default
+<tt CLASS=literal>finalize</tt> method does not do anything.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.4">Object Destruction</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.4">Static Initializers</A></h3>
+
+<P CLASS=para>
+A <I CLASS=emphasis>static initializer</I> 
+is a piece of code that is executed when a class
+is loaded. A static initializer is simply a block of code in a class
+declaration that is preceded by the keyword <tt CLASS=literal>static</tt>:
+
+
+<p>
+<img align=middle src="./figs/jlr0511.gif" alt="[Graphic: Figure from the text]" width=450 height=59 border=0>
+
+<P CLASS=para>
+A class is loaded when its definition is needed by another class. You
+can specifically request that a class be loaded by calling the
+<tt CLASS=literal>forName()</tt> method of the <tt CLASS=literal>Class</tt>
+class on the class you want to load. Alternatively, you can use the
+<tt CLASS=literal>loadClass()</tt> method of a
+<tt CLASS=literal>ClassLoader</tt> object to load a class directly.
+
+<P CLASS=para>
+When a class is loaded, a <tt CLASS=literal>Class</tt> object is created
+to represent it and storage for the class's <tt CLASS=literal>static</tt>
+variables is allocated.  When a class is initialized, its static
+initializers and <tt CLASS=literal>static</tt> variable initializers are
+evaluated in the order in which they appear in the class
+declaration. For example, here is a class that contains both static
+initializers and <tt CLASS=literal>static</tt> variable initializers:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class foo {
+    static int i = 4;
+    static {
+        i += 2;
+        j = 5 * i;
+    }
+    static int j = 7;
+    static double d;
+    static frame f = new Frame();
+    static { d = Math.tan(Math.PI/j); }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When the <tt CLASS=literal>foo</tt> class is loaded, here is what
+happens. First, the variable <tt CLASS=literal>i</tt> is set to 4. Then
+the first static initializer is executed. It increments
+<tt CLASS=literal>i</tt> by 2, which makes it 6, and sets
+<tt CLASS=literal>j</tt> to <tt CLASS=literal>5*i</tt>, which is 30. Next, the
+variable <tt CLASS=literal>j</tt> is set to 7 by its initializer; this
+overwrites the value that was set in the static initializer. The
+variable <tt CLASS=literal>f</tt> is then set to the new
+<tt CLASS=literal>Frame</tt> object created by its initializer. Finally,
+the second static initializer is executed.  It sets the variable
+<tt CLASS=literal>d</tt> to <img src='figs/eq5_1.gif' border=0>, which is <img src='figs/eq5_2.gif' border=0>.
+
+<P CLASS=para>
+Notice that the first static initializer uses the variable
+<tt CLASS=literal>j</tt>, even though the variable is not declared until
+after the static initializer. A static initializer can refer to a
+<tt CLASS=literal>static</tt> variable that is declared after the static
+initializer. However, the same is not true for
+<tt CLASS=literal>static</tt> variable initializers. A
+<tt CLASS=literal>static</tt> variable initializer cannot refer to any
+variables that are declared after its own declaration, or the compiler
+generates an error message. The following class declaration is
+erroneous:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class foo {
+    static int x = y*3;    // error because y defined after x
+    static int y;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If an exception is thrown out of a static initializer, the method that
+caused the class to be defined throws an
+<tt CLASS=literal>ExceptionInInitializerError</tt>. 
+This <tt CLASS=literal>ExceptionInInitializerError</tt> 
+contains a reference to the original exception that can be fetched by
+calling its <tt CLASS=literal>getException()</tt> method.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<A HREF="ch10_04.htm">Class</A>;
+<A HREF="ch09_04.htm#JLR2-CH-9-SECT-4.2">Errors</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.5">Instance Initializers</A></h3>
+
+<P CLASS=para>
+An <I CLASS=emphasis>instance initializer</I> is a piece of code that
+is executed when an instance of a class is created. Specifically, 
+it is executed after the object's immediate superclass constructor 
+returns, but before the constructor of the class itself runs.
+An instance initializer is simply a block of code in a class that
+is not in any method. Here is the formal syntax:
+
+
+<p>
+<img align=middle src="./figs/jlr0512.gif" alt="[Graphic: Figure from the text]" width=424 height=224 border=0>
+
+<P CLASS=para>
+Every class has at least one constructor that explicitly or
+implicitly calls one of the constructors of its immediate superclass
+before it does anything else. When the superclass's constructor
+returns, any instance initializers and instance variable
+initializers are evaluated before the constructor does anything else.
+The instance initializers and instance variable initializers are
+evaluated in the order in which they appear in the class
+declaration. If an instance
+initializer throws an exception, the exception appears to have
+come from the constructor that called the superclass's constructor.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.6">Nested Top-Level and Member Classes</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.NESTED1"></A><A NAME="CH05.NESTED2"></A><A NAME="CH05.NESTED3"></A><A NAME="CH05.NESTED4"></A>Nested top-level classes and member classes are classes that
+are declared inside of another class. Just as with a top-level
+class declaration, the declaration of a nested top-level class or member
+class creates a reference type in Java. Here's the formal definition of
+a nested top-level or member class declaration:
+
+
+<p>
+<img align=middle src="./figs/jlr0513.gif" alt="[Graphic: Figure from the text]" width=450 height=267 border=0>
+
+<P CLASS=para>
+A class declared inside of another class has access to all of the
+variables, methods, and other inner classes of the enclosing class. 
+If a nested top-level or member class is not <tt CLASS=literal>private</tt>, 
+it can also be accessed outside of its enclosing class by
+qualifying its name with the name of its enclosing class, as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>EnclosingClass</I>.<I CLASS=emphasis>InnerClass</I>
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The syntax for declaring nested top-level classes and member classes
+is not supported prior to Java 1.1.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.7.1">Nested top-level classes and interfaces</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.7.2">Member classes</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A></h4>
+
+<P CLASS=para>
+The keywords <tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>, 
+and <tt CLASS=literal>private</tt> can be used in the declaration of a
+nested top-level or member class to specify the accessibility of the 
+inner class. In this situation, the modifiers have the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>public</tt><br>
+<DD>
+
+<P CLASS=para>
+A nested top-level or member class that is declared <tt CLASS=literal>public</tt> 
+is accessible from any class that can access the enclosing class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>protected</tt><br>
+<DD>
+
+<P CLASS=para>
+A nested top-level or member class that is declared
+<tt CLASS=literal>protected</tt> is accessible from any class that is part
+of the same package as the enclosing class. Such an inner class is
+also accessible to any subclass of the enclosing class, regardless of
+whether or not the subclass is part of the same package.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>private</tt><br>
+<DD>
+
+<P CLASS=para>
+A nested top-level or member class that is declared
+<tt CLASS=literal>private</tt> is only accessible from its enclosing class
+and other classes declared within the enclosing class.  In particular,
+an inner class that is declared <tt CLASS=literal>private</tt> is not
+accessible in subclasses of its enclosing class.</DL>
+<P CLASS=para>
+If a nested top-level or member class is not declared with any of the
+access modifiers, the class has the default accessability. Default
+access is often called "friendly" access because it is similar to
+<tt CLASS=literal>friendly</tt> access in C++. An inner class with default
+access is accessible in any class that is part of the same package 
+as the enclosing class. However, a friendly
+inner class is not accessible to classes outside of the package of the
+enclosing class, even if the desired classes are subclasses of the 
+enclosing class.
+
+<P CLASS=para>
+The keywords <tt CLASS=literal>abstract</tt>, <tt CLASS=literal>final</tt>,
+and <tt CLASS=literal>static</tt> can also be used in the 
+declaration of a nested top-level or member class.  These modifiers
+have the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>abstract</tt><br>
+<DD>
+
+<P CLASS=para>
+If a nested top-level or member class is declared
+<tt CLASS=literal>abstract</tt>, no instances of the class may be
+created. An inner class declared <tt CLASS=literal>abstract</tt> may
+contain <tt CLASS=literal>abstract</tt> methods; classes not declared
+<tt CLASS=literal>abstract</tt> may not contain
+<tt CLASS=literal>abstract</tt> methods and must override any
+<tt CLASS=literal>abstract</tt> methods they inherit with methods that are
+not <tt CLASS=literal>abstract</tt>. Furthermore, classes that implement
+an interface and are not declared <tt CLASS=literal>abstract</tt> must
+contain or inherit methods that are not <tt CLASS=literal>abstract</tt>,
+that have the same name, have the same number of parameters,
+and have corresponding
+parameter types as the methods declared in the interfaces that the
+class implements.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>final</tt><br>
+<DD>
+
+<P CLASS=para>
+If a nested top-level or member class is declared
+<tt CLASS=literal>final</tt>, it cannot be subclassed. In other words, it
+connot appear in the <tt CLASS=literal>extends</tt> clause of another
+class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>static</tt><br>
+<DD>
+
+<P CLASS=para>
+An inner class that is declared with the <tt CLASS=literal>static</tt> modifier
+is called a nested top-level class. A class can only be declared with
+the <tt CLASS=literal>static</tt> modifier if its enclosing class is a
+top-level class (i.e., it is not declared within another class). The
+code within a nested top-level class cannot directly access
+non-<tt CLASS=literal>static</tt> variables and methods of its enclosing
+class.
+
+<P CLASS=para>
+An inner class that is not declared with the <tt CLASS=literal>static</tt>
+modifier is called a member class. The code within a member class can 
+access all of the variables and methods of its
+enclosing class, including <tt CLASS=literal>private</tt> variables and
+methods.</DL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.1">Class Modifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2.1">Local class modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-4.4.6.2">Inner class members</A></h4>
+
+<P CLASS=para>
+The body of a nested top-level or member class
+cannot declare any <tt CLASS=literal>static</tt> variables, 
+<tt CLASS=literal>static</tt> methods, <tt CLASS=literal>static</tt> classes,
+or static initializers. Beyond those restrictions, 
+the remainder of the declaration is the same as that for a top-level 
+class declaration, which is described in
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6">Nested Top-Level and Member Classes</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.4">Static Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Object-Orientation Java Style</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Interface Declarations</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

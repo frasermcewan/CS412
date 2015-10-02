@@ -1,0 +1,475 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.4 SystemColor</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:27:37 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Fonts and Colors</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-3-SECT-4">3.4 SystemColor</A></h2>
+
+<P CLASS=para>
+<A NAME="CH03.THEME1"></A><A NAME="CH03.THEME2"></A><A NAME="CH03.THEME3"></A>In Java 1.1, AWT provides access to desktop color schemes, or <I CLASS=emphasis>themes</I>. 
+To give you an idea of how these themes work, with the Windows Standard 
+scheme for the Windows 95 desktop, buttons have a gray background with black 
+text. If you use the control panel to change to a High Contrast 
+Black scheme, the button's background becomes black and the 
+text white. Prior to 1.1, Java didn't know anything about desktop 
+colors: all color values were hard coded. If you asked for a particular 
+shade of gray, you got that shade, and that was it; applets and applications 
+had no knowledge of the desktop color scheme in effect, and therefore, 
+wouldn't change in response to changes in the color scheme. 
+
+<P CLASS=para>
+<A NAME="CH03.CONST2"></A> <A NAME="CH03.CONST3"></A><A NAME="CH03.CONST4"></A>
+ Starting with
+Java 1.1, you can write programs that react to changes in the color
+scheme: for example, a button's color will change automatically
+when you use the control panel to change the color scheme. To do so,
+you use a large number of constants that are defined in the
+<tt CLASS=literal>SystemColor</tt> class. Although these constants are
+<tt CLASS=literal>public</tt> <tt CLASS=literal>static</tt>
+<tt CLASS=literal>final</tt>, they actually have a very strange
+behavior. Your program is not allowed to modify them (like any other
+constant). However, their initial values are loaded at run-time, and
+their values may change, corresponding to changes in
+the color scheme. This has one important consequence for programmers:
+you should not use <tt CLASS=literal>equals()</tt>to compare a
+<tt CLASS=literal>SystemColor</tt> with a "regular"
+<tt CLASS=literal>Color</tt>; use the <tt CLASS=literal>getRGB()</tt>
+methods of the colors you are comparing to ensure that you compare the
+current color value.[1] <A HREF="ch03_06.htm#JAWT-CH-3-SECT-6">Using Desktop Colors</A>
+contains a usage example.
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+The omission of an
+<tt CLASS=literal>equals()</tt> method that can properly compare a
+<tt CLASS=literal>SystemColor</tt> with a <tt CLASS=literal>Color</tt> is
+unfortunate.
+</blockquote>
+<P CLASS=para>
+Because <tt CLASS=literal>SystemColor</tt> is a subclass 
+of <tt CLASS=literal>Color</tt>, you can use a <tt CLASS=literal>SystemColor</tt> 
+anywhere you can use a <tt CLASS=literal>Color</tt> 
+object. You will never create your own <tt CLASS=literal>SystemColor</tt> 
+objects; there is no public constructor. The only objects in this class 
+are the twenty or so <tt CLASS=literal>SystemColor</tt> 
+constants. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-3-SECT-4.1">SystemColor Methods</A></h3>Constants
+
+<P CLASS=para>
+There are two sets of constants within <tt CLASS=literal>SystemColor</tt>. 
+The first set provides names for indices into the internal system color 
+lookup table; you will probably never need to use these. All of them have 
+corresponding constants in the second set, except <tt CLASS=literal>SystemColor.NUM_COLORS</tt>, 
+which tells you how many <tt CLASS=literal>SystemColor</tt> 
+constants are in the second set. 
+
+<DIV CLASS=simplelist>
+
+<P>
+<I CLASS=emphasis>public final static int ACTIVE_CAPTION</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int ACTIVE_CAPTION_BORDER</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int ACTIVE_CAPTION_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int CONTROL</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int CONTROL_DK_SHADOW</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int CONTROL_HIGHLIGHT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int CONTROL_LT_HIGHLIGHT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int CONTROL_SHADOW</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int CONTROL_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int DESKTOP</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int INACTIVE_CAPTION</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int INACTIVE_CAPTION_BORDER</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int INACTIVE_CAPTION_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int INFO</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int INFO_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int MENU</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int MENU_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int NUM_COLORS</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int SCROLLBAR</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int TEXT_HIGHLIGHT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int TEXT_HIGHLIGHT_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int TEXT_INACTIVE_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int TEXT_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int WINDOW</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int WINDOW_BORDER</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+<I CLASS=emphasis>public final static int WINDOW_TEXT</I> <img src="gifs/bstar.gif" alt="(New)" border=0><br>
+</DIV>
+
+<P CLASS=para>
+The second set of constants is the set of <tt CLASS=literal>SystemColor</tt>s 
+you use when creating <tt CLASS=literal>Component</tt> 
+objects, to ensure they appear similar to other objects in the user's 
+desktop environment. By using these symbolic constants, you can create 
+new objects that are well integrated into the user's desktop environment, 
+making it easier for the user to work with your program. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor activeCaption <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>activeCaption</tt> color represents 
+the background color for the active window's title area. This is 
+automatically set for you when you use <tt CLASS=literal>Frame</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor activeCaptionBorder  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>activeCaptionBorder</tt> color 
+represents the border color for the active window. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor activeCaptionText <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>activeCaptionText</tt> color 
+represents the text color to use for the active window's title. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor control <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>control</tt> color represents 
+the background color for the different components. If you are creating 
+your own <tt CLASS=literal>Component</tt> by subclassing 
+<tt CLASS=literal>Canvas</tt>, this should be the 
+background color of the new object. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor controlDkShadow  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>controlDkShadow</tt> color represents 
+a dark shadow color to be used with <tt CLASS=literal>control</tt> 
+and <tt CLASS=literal>controlShadow</tt> to simulate 
+a three-dimensional appearance. Ordinarily, when not depressed, the <tt CLASS=literal>controlDkShadow</tt> 
+should be used for the object's bottom and right edges. When depressed, 
+<tt CLASS=literal>controlDkShadow</tt> should be used 
+for the top and left edges. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor controlHighlight  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>controlHighlight</tt> color 
+represents an emphasis color for use in an area or an item of a custom 
+component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor controlLtHighlight <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>controlLtHighlight</tt> color 
+represents a lighter emphasis color for use in an area or an item of a 
+custom component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor controlShadow  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>controlShadow</tt> color represents 
+a light shadow color to be used with <tt CLASS=literal>control</tt> 
+and <tt CLASS=literal>controlDkShadow</tt> to simulate 
+a three-dimensional appearance. Ordinarily, when not depressed, the <tt CLASS=literal>controlShadow</tt> 
+should be used for the top and left edges. When depressed, <tt CLASS=literal>controlShadow</tt> 
+should be used for the bottom and right edges. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor controlText  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>controlText</tt> color represents 
+the text color of a component. Before drawing any text in your own components, 
+you should change the color to <tt CLASS=literal>controlText</tt> 
+with a statement like this: </DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+g.setColor(SystemColor.controlText);
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor desktop <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>desktop</tt> color represents 
+the background color of the desktop workspace. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor inactiveCaption <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>inactiveCaption</tt> color represents 
+the background color for an inactive window's title area. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor inactiveCaptionBorder <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>inactiveCaptionBorder</tt> color 
+represents the border color for an inactive window. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor inactiveCaptionText <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>inactiveCaptionText</tt> color 
+represents the text color to use for each inactive window's title. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor info <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>info</tt> color represents the 
+background color for mouse-over help text. When a mouse dwells over an 
+object, any pop-up help text should be displayed in an area of this color. 
+In the Microsoft Windows world, these are also called "tool tips." 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor infoText <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>infoText</tt> color represents 
+the text color for mouse-over help text. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor menu <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>menu</tt> color represents the 
+background color of deselected <tt CLASS=literal>MenuItem</tt>-like 
+objects. When the menu is selected, the <tt CLASS=literal>textHighlight</tt> 
+color is normally the background color. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor menuText <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>menuText</tt> color represents 
+the color of the text on deselected <tt CLASS=literal>MenuItem</tt>-like objects. When a menu 
+is selected, the <tt CLASS=literal>textHighlightText</tt> 
+color is normally the text color. If the menu happens to be inactive, <tt CLASS=literal>textInactiveText</tt> 
+would be used. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor scrollbar <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>scrollbar</tt> color represents 
+the background color for scrollbars. This color is used by default with 
+<tt CLASS=literal>Scrollbar</tt>, <tt CLASS=literal>ScrollPane</tt>, 
+<tt CLASS=literal>TextArea</tt>, and <tt CLASS=literal>List</tt> 
+objects. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor textHighlight <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>textHighlight</tt> color represents 
+the background color of highlighted text; for example, it is used for the 
+selected area of a <tt CLASS=literal>TextField</tt> 
+or a selected <tt CLASS=literal>MenuItem</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor textHighlightText <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>textHighlightText</tt> color 
+represents the text color of highlighted text. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor textInactiveText <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>textInactiveText</tt> color 
+represents the text color of an inactive component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor textText <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>textText</tt> color represents 
+the color of text in <tt CLASS=literal>TextComponent</tt> 
+objects. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor window <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>window</tt> color represents 
+the background color of the window's display area. For an applet, 
+this would be the display area specified by the <tt CLASS=literal>WIDTH </tt>and <tt CLASS=literal>HEIGHT</tt> 
+values of the <tt CLASS=literal>&lt;APPLET&gt;</tt> 
+tag (<tt CLASS=literal>setBackground(SystemColor.window)</tt>), 
+although you would probably use it more for the background of a <tt CLASS=literal>Frame</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor windowBorder <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>windowBorder</tt> color represents 
+the color of the borders around a window. With AWT, instances of <tt CLASS=literal>Window</tt> 
+do not have borders, but instances of <tt CLASS=literal>Frame</tt> 
+and <tt CLASS=literal>Dialog</tt> do. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static SystemColor windowText <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>windowText</tt> color represents 
+the color of the text drawn within the window. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Every platform does not fully support every system color. However, 
+on platforms that do not provide natural values for some constants, Java 
+selects reasonable alternate colors. 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+If you are going to be working only with Java's prefabricated components 
+(<tt CLASS=literal>Button</tt>, <tt CLASS=literal>List</tt>, 
+etc.), you don't have to worry about system colors; the component's 
+default colors will be set appropriately. You are most likely to use system 
+colors if you are creating your own components. In this case, you will 
+use system colors to make your component emulate the behavior of other 
+components; for example, you will use <tt CLASS=literal>controlText</tt> 
+as the color for drawing text, <tt CLASS=literal>activeCaption</tt> 
+as the background for the caption of an active window, and so on. Constructors
+
+<P CLASS=para>
+There are no public constructors for <tt CLASS=literal>SystemColor</tt>. 
+If you need to create a new color, use the <tt CLASS=literal>Color</tt> 
+class described previously. Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getRGB () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRGB()</tt> method retrieves 
+the current settings for red, green, and blue in one combined value, like 
+<tt CLASS=literal>Color</tt>. However, since the color 
+value is dynamic, <tt CLASS=literal>getRGB()</tt> 
+needs to look up the value in an internal table. Therefore, <tt CLASS=literal>SystemColor</tt> 
+overrides <tt CLASS=literal>Color.getRGB()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>SystemColor</tt> 
+returns a string showing the system color's index into its internal 
+table. For example, the following string is returned by <tt CLASS=literal>SystemColor.text.toString()</tt>: </DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.SystemColor[i=12]
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Color</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Displaying Colors</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

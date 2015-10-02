@@ -1,0 +1,1101 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 19] GridBagLayout</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:13:29 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_28.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 19<br>java.awt Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch19_30.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>GridBagLayout</H1>
+
+<H2>Name</H2>
+
+GridBagLayout
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch19-REFSECT1-AUTOID.29"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/gridba2.gif" alt="[Graphic: Figure from the text]" width=502 height=111 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-1">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>GridBagLayout</tt> <tt CLASS=literal>LayoutManager</tt> 
+provides the means to layout components in a flexible grid-based display 
+model. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-2">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.awt.GridBagLayout
+    extends java.lang.Object
+    implements java.awt.LayoutManager2, java.io.Serializable {
+  
+  // Protected Constants
+  protected static final MAXGRIDSIZE;
+  protected static final MINSIZE;
+  protected static final PREFERREDSIZE;
+  
+  // Variables
+  public double columnWeights[];
+  public int columnWidths[];
+  public int rowHeights[];
+  public double rowWeights[];
+  
+  // Protected Variables
+  protected Hashtable comptable;
+  protected GridBagConstraints defaultConstraints;
+  protected GridBagLayoutInfo layoutInfo;
+  
+  // Constructors
+  public GridBagLayout();
+  
+  // Instance Methods
+  public void addLayoutComponent (Component comp, Object constraints); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public void addLayoutComponent (String name, Component component);
+  public GridBagConstraints getConstraints (Component component);
+  public abstract float getLayoutAlignmentX(Container target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract float getLayoutAlignmentY(Container target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public int[][] getLayoutDimensions();
+  public Point getLayoutOrigin();
+  public double[][] getLayoutWeights();
+  public abstract void invalidateLayout(Container target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public void layoutContainer (Container target);
+  public Point location (int x, int y);
+  public abstract Dimension maximumLayoutSize(Container target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public Dimension minimumLayoutSize (Container target);
+  public Dimension preferredLayoutSize (Container target);
+  public void removeLayoutComponent (Component component);
+  public void setConstraints (Component component, 
+      GridBagConstraints constraints);
+  public String toString();
+  
+  // Protected Instance Methods
+  protected void AdjustForGravity (GridBagConstraints constraints, 
+      Rectangle r);
+  protected void ArrangeGrid (Container target);
+  protected GridBagLayoutInfo GetLayoutInfo (Container target, 
+      int sizeFlag);
+  protected Dimension GetMinSize (Container target, 
+      GridBagLayoutInfo info);
+  protected GridBagConstraints lookupConstraints (Component comp); 
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-3">Protected Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-3.1">MAXGRIDSIZE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-3.1.1">protected static final MAXGRIDSIZE</A></h4>
+
+<P CLASS=para>
+Maximum number of rows and columns within container managed by <tt CLASS=literal>GridBagLayout</tt>. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-3.2">MINSIZE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-3.2.1">protected static final MINSIZE</A></h4>
+
+<P CLASS=para>
+Used for internal sizing purposes. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-3.3">PREFERREDSIZE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-3.3.1">protected static final PREFERREDSIZE</A></h4>
+
+<P CLASS=para>
+Used for internal sizing purposes. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4.1">columnWeights</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4.1.1">public double[] columnWeights</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>weightx</tt> values of the components 
+in the row with the most elements. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4.2">columnWidths</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4.2.1">public int[] columnWidths</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>width</tt> values of the components 
+in the row with the most elements. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4.3">rowHeights</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4.3.1">public int[] rowHeights</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>height</tt> values of the components 
+in the column with the most elements. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4.4">rowWeights</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-4.4.1">public double[] rowWeights</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>weighty</tt> values of the components 
+in the column with the most elements. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-5">Protected Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-5.1">comptable</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-5.1.1">protected Hashtable comptable</A></h4>
+
+<P CLASS=para>
+Internal table to manage components. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-5.2">defaultConstraints</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-5.2.1">protected GridBagConstraints defaultConstraints</A></h4>
+
+<P CLASS=para>
+Constraints to use for <tt CLASS=literal>Component</tt>s 
+that have none. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-5.3">layoutInfo</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-5.3.1">protected GridBagLayoutInfo layoutInfo</A></h4>
+
+<P CLASS=para>
+Internal information about the <tt CLASS=literal>GridBagLayout</tt>. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-6">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-6.1">GridBagLayout</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-6.1.1">public GridBagLayout()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>GridBagLayout</tt> 
+object. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.1">addLayoutComponent</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.1.1">public void addLayoutComponent (Component comp, Object constraints) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>comp</I><br>
+<DD>
+
+<P CLASS=para>
+The component being 
+added. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>constraints</I><br>
+<DD>
+
+<P CLASS=para>
+An object describing 
+the constraints on this component. </DL>
+<p>
+<DT CLASS=varlistentry>Implements <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager2.addLayoutComponent()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Adds the component <tt CLASS=literal>comp</tt> to 
+container subject to the given <tt CLASS=literal>constraints</tt>. 
+This is a more generalized version of <tt CLASS=literal>addLayoutComponent(String, 
+Component)</tt>. It corresponds to <tt CLASS=literal>java.awt.Container's 
+add(Component, Object)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.1.2">public void addLayoutComponent (String name, Component component)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>name</I><br>
+<DD>
+
+<P CLASS=para>
+Name of component to 
+add. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>component</I><br>
+<DD>
+
+<P CLASS=para>
+Actual component 
+being added. </DL>
+<p>
+<DT CLASS=varlistentry>Implements <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.addLayoutComponent()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.2">getConstraints</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.2.1">public GridBagConstraints getConstraints (Component component)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>component</I><br>
+<DD>
+
+<P CLASS=para>
+Component whose 
+constraints are desired </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>GridBagConstraints</tt> for component 
+requested. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.3">getLayoutAlignmentX</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.3.1">public abstract float getLayoutAlignmentX (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container to inspect. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value .5 for all containers. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the preferred alignment of the given container <tt CLASS=literal>target</tt>. 
+A return value of 0 is left aligned, .5 is centered, and 1 is right aligned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.4">getLayoutAlignmentY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.4.1">public abstract float getLayoutAlignmentY (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container to inspect. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value .5 for all containers. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the preferred alignment of the given container <tt CLASS=literal>target</tt>. 
+A return value of 0 is top aligned, .5 is centered, and 1 is bottom aligned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.5">getLayoutDimensions</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.5.1">public int[][] getLayoutDimensions()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Returns two single dimension arrays as a multi-dimensional array. Index 
+0 is an array of widths (<tt CLASS=literal>columnWidths</tt> 
+instance variable), while index 1 is an array of heights (<tt CLASS=literal>rowHeights</tt> 
+instance variable). </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.6">getLayoutOrigin</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.6.1">public Point getLayoutOrigin()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Returns the origin of the components within the <tt CLASS=literal>Container</tt> 
+whose <tt CLASS=literal>LayoutManager</tt> is <tt CLASS=literal>GridBagLayout</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.7">getLayoutWeights</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.7.1">public double[][] getLayoutWeights()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Returns two single dimension arrays as a multi-dimensional array. Index 
+0 is an array of columns weights (<tt CLASS=literal>columnWeights</tt> 
+instance variable), while index 1 is an array of row weights (<tt CLASS=literal>rowWeights</tt> 
+instance variable). </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.8">invalidateLayout</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.8.1">public abstract void invalidateLayout (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container to invalidate. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.9">layoutContainer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.9.1">public void layoutContainer (Container target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container that needs to be redrawn. </DL>
+<p>
+<DT CLASS=varlistentry>Implements <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.layoutContainer()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Draws components contained within <tt CLASS=literal>target</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.10">location</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.10.1">public Point location (int x, int y)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+The x coordinate of the 
+grid position to find. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+The y coordinate of the 
+grid position to find. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Returns the grid element under the location provided at position (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) in pixels. Note that the 
+returned Point uses the <tt CLASS=literal>GridBagLayout</tt>'s 
+grid for its coordinate space. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Locates the grid position in the <tt CLASS=literal>Container</tt> 
+under the given location. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.11">maximumLayoutSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.11.1">public abstract Dimension maximumLayoutSize (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container to inspect. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Dimension</tt> whose horizontal 
+and vertical components are <tt CLASS=literal>Integer.MAX_VALUE</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+For <tt CLASS=literal>GridBagLayout</tt>, a maximal 
+<tt CLASS=literal>Dimension</tt> is always returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.12">minimumLayoutSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.12.1">public Dimension minimumLayoutSize (Container target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose 
+size needs to be calculated. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Minimum <tt CLASS=literal>Dimension</tt> of container 
+target. 
+
+<p>
+<DT CLASS=varlistentry>Implements <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.minimumLayoutSize()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Calculates minimum size of <tt CLASS=literal>target</tt> 
+container. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.13">preferredLayoutSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.13.1">public Dimension preferredLayoutSize (Container target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose 
+size needs to be calculated. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Preferred <tt CLASS=literal>Dimension</tt> of container 
+target 
+
+<p>
+<DT CLASS=varlistentry>Implements <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.preferredLayoutSize()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Calculates preferred size of <tt CLASS=literal>target</tt> 
+container. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.14">removeLayoutComponent</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.14.1">public void removeLayoutComponent (Component component)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>component</I><br>
+<DD>
+
+<P CLASS=para>
+Component to stop tracking. </DL>
+<p>
+<DT CLASS=varlistentry>Implements <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.removeLayoutComponent()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.15">setConstraints</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.15.1">public void setConstraints (Component component, GridBagConstraints constraints)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>component</I><br>
+<DD>
+
+<P CLASS=para>
+Component to set constraints for 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>constraints</I><br>
+<DD>
+
+<P CLASS=para>
+Constraints for component </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Changes the <tt CLASS=literal>GridBagConstraints</tt> 
+on <tt CLASS=literal>component</tt> to those provided. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.16">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-7.16.1">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of the <tt CLASS=literal>GridBagLayout</tt> 
+object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.1">AdjustForGravity</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.1.1">protected void AdjustForGravity (GridBagConstraints constraints, Rectangle r)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>constraints</I><br>
+<DD>
+
+<P CLASS=para>
+Constraints to 
+use for adjustment of Rectangle. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>r</I><br>
+<DD>
+
+<P CLASS=para>
+Rectangular area that needs 
+to be adjusted. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Helper routine for laying out a cell of the grid. The routine adjusts the 
+values for <tt CLASS=literal>r</tt> based upon the 
+<tt CLASS=literal>constraints</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.2">ArrangeGrid</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.2.1">protected void ArrangeGrid (Container target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Container</tt> 
+to layout. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Helper routine that does the actual arrangement of components in <tt CLASS=literal>target</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.3">GetLayoutInfo</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.3.1">protected GridBagLayoutInfo GetLayoutInfo (Container target, int sizeFlag)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Container</tt> 
+to get information about. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>sizeFlag</I><br>
+<DD>
+
+<P CLASS=para>
+One of the constants 
+<tt CLASS=literal>MINSIZE</tt> or <tt CLASS=literal>PREFERREDSIZE</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Returns an internal class used to help size the container. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.4">GetMinSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.4.1">protected Dimension GetMinSize (Container target, GridBagLayoutInfo info)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Container</tt> 
+to calculate size. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>info</I><br>
+<DD>
+
+<P CLASS=para>
+Specifics about the 
+container's constraints. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Minimum <tt CLASS=literal>Dimension</tt> of container 
+target based on info. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Helper routine for calculating size of container. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.5">lookupConstraints</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-8.5.1">protected GridBagConstraints lookupConstraints (Component comp)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>comp</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+in question. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A reference to the <tt CLASS=literal>GridBagConstraints</tt> 
+object for this component. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Helper routine for calculating size of container. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-GRIDBAGLAYOUT-SECT-9">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt>, <tt CLASS=literal>Container</tt>, 
+<tt CLASS=literal>Dimension</tt>, <tt CLASS=literal>GridBagConstraints</tt>, 
+<tt CLASS=literal>Hashtable</tt>, <tt CLASS=literal>LayoutManager</tt>, 
+<tt CLASS=literal>LayoutManager2</tt>, <tt CLASS=literal>Object</tt>, 
+<tt CLASS=literal>Point</tt>, <tt CLASS=literal>Rectangle</tt>, 
+<tt CLASS=literal>String</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_28.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch19_30.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>GridBagConstraints</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>GridLayout</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

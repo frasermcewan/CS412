@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] 8.2 Popup Menus and Menu Shortcuts</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:55:58 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8<br>New AWT Features</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-8-SECT-2">8.2 Popup Menus and Menu Shortcuts</A></h2>
+
+<P CLASS=para>
+In Java 1.1, the AWT has some welcome new menuing features.
+As you can see from
+<A HREF="ch08_01.htm#JNUT2-CH-8-FIG-1">Figure 8.1</A>,
+popup menus (and submenus) are now supported by the AWT.
+Not shown in the figure, but also supported, are keyboard
+menu shortcuts, which in this example are attached to the
+menu items in the pulldown menu.
+
+<P CLASS=para>
+<A NAME="CH8.MENUS-POPUPM1"></A><A NAME="CH8.POPUPMENU.CL1"></A>Popup menus are represented by the <tt CLASS=literal>PopupMenu</tt> class.
+<tt CLASS=literal>PopupMenu</tt> is a subclass of <tt CLASS=literal>Menu</tt> and is used
+very much like a <tt CLASS=literal>Menu</tt> pane is.  To create a popup
+menu, create a <tt CLASS=literal>PopupMenu</tt>, and add <tt CLASS=literal>MenuItem</tt>
+objects to it, just as you would do with a regular menu
+pane.  Instead of adding a popup menu to a menubar, however,
+you must add it to the component over which it pops up.
+You do this with the <tt CLASS=literal>add()</tt> method of the target
+component.  As part of the addition of popup menus in Java
+1.1, a new <tt CLASS=literal>add()</tt> method has been added to the
+<tt CLASS=literal>Component</tt> class.  This new version of <tt CLASS=literal>add()</tt>
+accepts a single <tt CLASS=literal>PopupMenu</tt> argument.  
+
+<P CLASS=para>
+Here's a fragment of the <tt CLASS=literal>Scribble()</tt> constructor in
+<A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A>
+that creates a popup menu and adds it to a
+component:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Create the popup menu using a loop.  Note the separation of menu
+// "action command" string from menu label.  Good for internationalization.
+String[] labels = new String[] {
+  "Clear", "Print", "Save", "Load", "Cut", "Copy", "Paste" };
+String[] commands = new String[] {
+  "clear", "print", "save", "load", "cut", "copy", "paste" };
+popup = new PopupMenu();                   // Create the menu.
+for(int i = 0; i &lt; labels.length; i++) {
+  MenuItem mi = new MenuItem(labels[i]);   // Create a menu item.
+  mi.setActionCommand(commands[i]);        // Set its action command.
+  mi.addActionListener(this);              // And its action listener.
+  popup.add(mi);                           // Add item to the popup menu.
+}
+Menu colors = new Menu("Color");           // Create a submenu.
+popup.add(colors);                         // And add it to the popup.
+String[] colornames = new String[] { "Black", "Red", "Green", "Blue"};
+for(int i = 0; i &lt; colornames.length; i++) {
+  MenuItem mi = new MenuItem(colornames[i]);  // Create the submenu items
+  mi.setActionCommand(colornames[i]);         // in the same way.
+  mi.addActionListener(this);
+  colors.add(mi);
+}
+// Finally, register the popup menu with the component it appears over.
+this.add(popup);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In addition to creating and registering a popup menu, you
+must also arrange for it to pop up at the appropriate time.
+Popup menus are always triggered by mouse events, but the
+particular "popup trigger" event varies from platform to
+platform.  To hide this platform dependency, the
+<tt CLASS=literal>MouseEvent</tt> class defines a <tt CLASS=literal>isPopupTrigger()</tt>
+method that you can use to determine whether a popup menu
+should be "posted" (i.e., popped up) in response to a given
+event.  To post a menu, call its <tt CLASS=literal>show()</tt> method,
+specifying the component it should appear over and also the
+coordinates (from the mouse event) that it should appear at.
+The <tt CLASS=literal>processMouseEvent()</tt> method of
+<A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A>
+handles posting the popup menu:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void processMouseEvent(MouseEvent e) {
+  if (e.isPopupTrigger())                               // If popup trigger,
+    popup.show(this, e.getX(), e.getY());               // pop up the menu.
+  else if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+    last_x = (short)e.getX(); last_y = (short)e.getY(); // Save position.
+  }
+  else super.processMouseEvent(e);  // Pass other event types on.
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Event handling for the menu items in a <tt CLASS=literal>PopupMenu</tt> is
+the same as it is for pulldown menu items.  The simplest
+technique is to specify the same action listener object for
+each menu item, but specify a different string as the
+"action command" for each item.  Then, the
+<tt CLASS=literal>actionPerformed()</tt> method of the listener can
+dispatch the <tt CLASS=literal>ActionEvent</tt> based on the command string
+it contains.  The <tt CLASS=literal>actionPerformed()</tt> method of the
+<tt CLASS=literal>Scribble</tt> class in <A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A>
+shows this technique:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void actionPerformed(ActionEvent event) {
+  // Get the "action command" of the event, and dispatch based on that.
+  // This method calls a lot of the interesting methods in this class.
+  String command = event.getActionCommand();
+  if (command.equals("clear")) clear();
+  else if (command.equals("print")) print();
+  else if (command.equals("save")) save();
+  else if (command.equals("load")) load();
+  else if (command.equals("cut")) cut();
+  else if (command.equals("copy")) copy();
+  else if (command.equals("paste")) paste();
+  else if (command.equals("Black")) current_color = Color.black;
+  else if (command.equals("Red")) current_color = Color.red;
+  else if (command.equals("Green")) current_color = Color.green;
+  else if (command.equals("Blue")) current_color = Color.blue;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH8.MENUS-MENUSH1"></A><A NAME="CH8.SHORTCUTS.ME1"></A><A NAME="CH8.KEYBOARD-MEN1"></A>The <tt CLASS=literal>MenuShortcut</tt> class is another important addition
+to the menu functionality of Java.  Any <tt CLASS=literal>MenuItem</tt>
+object may have a <tt CLASS=literal>MenuShortcut</tt> object specified that
+allows the user to invoke the menu item with a keyboard
+command.  You create a <tt CLASS=literal>MenuShortcut</tt> object by
+specifying the key code of the key to act as the shortcut,
+and, optionally, whether the <b>Shift</b> modifier is
+required to invoke the shortcut.  The key should be
+specified as one of the <tt CLASS=literal>VK_</tt> virtual key constants
+defined by the <tt CLASS=literal>KeyEvent</tt> class.  Note that you do not
+specify any <b>Ctrl</b>, <b>Alt</b>, or <b>Meta</b> modifier for
+a shortcut.  Like the "popup trigger" event, the standard
+keyboard modifier for menu shortcuts is platform-dependent,
+so Java hides this from you.  Consider the following menu
+shortcut, for example:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+MenuShortcut s = new MenuShortcut(KeyEvent.VK_C);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This shortcut is invoked as <b>Ctrl-C</b> on a Windows
+platform or by using the special "Command" modifier on a
+Mac.
+
+<P CLASS=para>
+The following fragment of the <tt CLASS=literal>ScribbleFrame()</tt> constructor of
+<A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A> creates menu shortcuts and associates
+them with menu items:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Create three menu items, with menu shortcuts, and add to the menu.
+MenuItem n, c, q;
+file.add(n = new MenuItem("New Window", new MenuShortcut(KeyEvent.VK_N)));
+file.add(c = new MenuItem("Close Window",new MenuShortcut(KeyEvent.VK_W)));
+file.addSeparator();                     // Put a separator in the menu.
+file.add(q = new MenuItem("Quit", new MenuShortcut(KeyEvent.VK_Q)));
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The ScrollPane Container</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Printing</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

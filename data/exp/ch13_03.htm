@@ -1,0 +1,429 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 13] 13.3 Fonts</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:03:00 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 13<br>Drawing With the AWT</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch13_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-13-SECT-2">13.3 Fonts</A></h2>
+
+<P CLASS=para>
+<A NAME="CH11.FONTS1"></A><A NAME="CH11.FONTS2"></A><A NAME="CH11.FONTS3"></A>
+
+<P CLASS=para>
+Text fonts in Java are represented by instances of the
+<tt CLASS=literal>java.awt.Font</tt> class. A <tt CLASS=literal>Font</tt>
+object is constructed from a font name, style identifier, and a point
+size. We can create a <tt CLASS=literal>Font</tt> at any time, but it's
+meaningful only when applied to a particular component on a given
+display device. Here are a couple of fonts:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Font smallFont = new Font("Monospaced", Font.PLAIN, 10); 
+Font bigFont = new Font("Serif", Font.BOLD, 18); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The font name is a symbolic name for the font family. The following 
+font names should be available on all platforms; <A HREF="ch13_03.htm#EXJ-CH-13-FIG-4">Figure 13.4</A> shows what
+these fonts look like on a typical platform:[2]
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+The names <tt CLASS=literal>Helvetica</tt>, <tt CLASS=literal>TimesRoman</tt>,
+<tt CLASS=literal>Courier</tt>, <tt CLASS=literal>Symbol</tt>, and
+<tt CLASS=literal>ZapfDingbats</tt> are supported in Java 1.1 for
+backwards compatibility, but shouldn't be used; they may be removed in
+a future version.  <tt CLASS=literal>Symbol</tt>s and
+<tt CLASS=literal>ZapfDingbats</tt>, which used to be available as
+<tt CLASS=literal>Font</tt> names have now taken their proper place as
+ranges in the Unicode character table: 2200-22ff and 2700-27ff
+respectively.
+</blockquote>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-4">Figure 13.4: Font examples</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1304.gif" alt="[Graphic: Figure 13-4]" width=182 height=185 border=0>
+
+</DIV>
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Serif (generic name for TimesRoman)
+
+<P>
+<li CLASS=listitem>SansSerif (generic name for Helvetica)
+
+<P>
+<li CLASS=listitem>Monospaced (generic name for Courier)
+
+<P>
+<li CLASS=listitem>Dialog
+
+<P>
+<li CLASS=listitem>DialogInput
+
+<P>
+</UL>
+<P CLASS=para>
+The font you specify is mapped to an actual font on the local
+platform.  Java's <i CLASS=filename>fonts.properties</i> files map the
+font names to the available fonts, covering as much of the Unicode
+character set as possible.  If you request a font that doesn't exist,
+you get the default font.
+
+<P CLASS=para>
+You can also use the <tt CLASS=literal>static</tt> method
+<tt CLASS=literal>Font.getFont()</tt> to look up a font name in the system
+properties list. <tt CLASS=literal>getFont()</tt> takes a
+<tt CLASS=literal>String</tt> font property name, retrieves the font name
+from the <tt CLASS=literal>Properties</tt> table, and returns the
+<tt CLASS=literal>Font</tt> object that corresponds to that font.  You
+can use this mechanism, as with Colors, to define fonts with properties from
+outside your application.
+
+<P CLASS=para>
+The <tt CLASS=literal>Font</tt> class defines three
+<tt CLASS=literal>static</tt> style identifiers: <tt CLASS=literal>PLAIN</tt>,
+<tt CLASS=literal>BOLD</tt>, and <tt CLASS=literal>ITALIC</tt>. You can use
+these values on all fonts. The point size determines the size of the
+font on a display. If a given point size isn't available,
+<tt CLASS=literal>Font</tt> substitutes a default size.[3]
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+There is no straightforward way to determine if a given
+<tt CLASS=literal>Font</tt> is available at a given point size in the
+current release of Java. Fonts are one of Java's weak points.
+Sun has promised better <tt CLASS=literal>Font</tt> handling 
+(and perhaps true, portable <tt CLASS=literal>Fonts</tt>) 
+in a future release.
+</blockquote>
+<P CLASS=para>
+You can retrieve information about an existing <tt CLASS=literal>Font</tt>
+with a number of routines.  The <tt CLASS=literal>getName()</tt>,
+<tt CLASS=literal>getSize()</tt> and <tt CLASS=literal>getStyle()</tt> methods
+retrieve the symbolic name, point size and style, respectively.  You
+can use the getFamily() method to find out the platform specific font
+family to which the font actually maps.
+
+<P CLASS=para>
+Finally, to actually use a <tt CLASS=literal>Font</tt> object you can
+simply specify it as an argument to the <tt CLASS=literal>setFont()</tt>
+method of a <tt CLASS=literal>Component</tt> or
+<tt CLASS=literal>Graphics</tt> object. Subsequent text-drawing commands
+like <tt CLASS=literal>drawString()</tt> for that component or in that
+graphics context use the specified font.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-13-SECT-2.1">Font Metrics</A></h3>
+
+<P CLASS=para>
+<A NAME="CH11.FONTS4"></A><A NAME="CH11.FONTS5"></A>To get detailed size and spacing information for text rendered in a
+font, we can ask for a <tt CLASS=literal>java.awt.FontMetrics</tt> object.
+Different systems will have different real fonts available; the
+available fonts may not match the font you request. Thus, a
+<tt CLASS=literal>FontMetrics</tt> object presents information about a
+particular font on a particular system, not general information about
+a font. For example, if you ask for the metrics of a nine-point
+Monospaced font, what you get isn't some abstract truth about
+Monospaced fonts; you get the metrics of the font that the particular
+system uses for nine-point Monospaced--which may not be exactly nine
+point or even Monospaced.
+
+<P CLASS=para>
+Use the <tt CLASS=literal>getFontMetrics()</tt> method for a
+<tt CLASS=literal>Component</tt> to retrieve the
+<tt CLASS=literal>FontMetrics</tt> for a <tt CLASS=literal>Font</tt> as it
+would appear for that component:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public void init() { 
+    ... 
+    // Get the metrics for a particular font on this component 
+    FontMetrics smallFont = myLabel.getFontMetrics( smallFont ); 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>Graphics</tt> object also has a
+<tt CLASS=literal>getFontMetrics()</tt> method that gets the
+<tt CLASS=literal>FontMetrics</tt> information for the current font in the
+graphics context.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public void paint( Graphics g ) { 
+    // Get the metrics for the current font 
+    FontMetrics fm = g.getFontMetrics(); 
+   ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The following applet, <tt CLASS=literal>FontShow</tt>, displays a word and
+draws reference lines showing certain characteristics of its font, as
+shown in <A HREF="ch13_03.htm#EXJ-CH-13-FIG-5">Figure 13.5</A>. Clicking in the applet
+toggles the point size between a small and a large value.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-5">Figure 13.5: The FontShow applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1305.gif" alt="[Graphic: Figure 13-5]" width=503 height=243 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class FontShow extends java.applet.Applet { 
+    static final int LPAD=25;   // Frilly line padding
+    boolean bigFont = true;
+    public void init() {
+        addMouseListener( new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                bigFont = !bigFont;
+                repaint();
+            }
+        } );
+    }
+    public void paint( Graphics g ) {
+        String message = getParameter( "word" );
+        g.drawRect(0, 0, getSize().width-1, getSize().height-1);
+        if ( bigFont )
+            g.setFont( new Font("Dialog",Font.PLAIN,24) );
+        else
+            g.setFont( new Font("Dialog",Font.PLAIN,12) );
+        FontMetrics metrics = g.getFontMetrics();
+        int fontAscent = metrics.getMaxAscent ();
+        int fontDescent = metrics.getMaxDescent();
+        int messWidth = metrics.stringWidth ( message );
+        // Center text
+        int startX = getSize().width/2 - messWidth/2;
+        int startY = getSize().height/2 - fontDescent/2 + fontAscent/2;
+        g.drawString(message, startX, startY);
+        g.setColor( Color.white );  // Base lines
+        g.drawLine( startX-LPAD, startY, startX+messWidth+LPAD, startY );
+        g.drawLine( startX, startY+ LPAD, startX, startY-fontAscent-LPAD );
+        g.setColor( Color.green );  // Ascent line
+        g.drawLine( startX-LPAD, startY-fontAscent, startX+messWidth+LPAD, startY-fontAscent );
+        g.setColor( Color.red );    // Descent line
+        g.drawLine( startX-LPAD, startY+fontDescent, startX+messWidth+LPAD, startY+fontDescent );
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Compile <tt CLASS=literal>FontShow</tt> and run it with an applet tag 
+like the following: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet height=200 width=250 code=FontShow&gt; 
+    &lt;param name="word" value="Lemming"&gt; 
+&lt;/applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>word</tt> parameter specifies the text to be
+displayed.
+
+<P CLASS=para>
+<tt CLASS=literal>FontShow</tt> may look a bit complicated, but there's
+really not much to it. The bulk of the code is in
+<tt CLASS=literal>paint()</tt>, which simply sets the font, draws our
+word, and adds a few lines to illustrate some of the font's
+characteristics (metrics). For fun we also catch mouse clicks (in the
+<tt CLASS=literal>mouseClicked()</tt> method) and alternate the font size
+by setting the <tt CLASS=literal>bigFont</tt> variable and repainting.
+
+<P CLASS=para>
+ 
+By default, text is rendered above and to the right of the coordinates
+specified in the <tt CLASS=literal>drawString()</tt> method. If you think
+of that starting point as the origin of a coordinate system, we'll
+call the axes the "baselines" of the font. <tt CLASS=literal>FontShow</tt>
+draws these lines in white. The greatest height the characters stretch
+above the baseline is called the <I CLASS=emphasis>ascent</I> and is
+shown by a green line. Some fonts also have parts of letters that fall
+below the baseline. The farthest distance any character reaches below
+the baseline is called the <I CLASS=emphasis>descent</I>. 
+<tt CLASS=literal>FontShow</tt> illustrates this with a red line.
+
+<P CLASS=para>
+We ask for the ascent and descent of our font with the
+<tt CLASS=literal>FontMetrics</tt> <tt CLASS=literal>getMaxAscent()</tt> and
+<tt CLASS=literal>getMaxDescent()</tt> methods. We also ask for the width
+of our string (when rendered in this font) with the
+<tt CLASS=literal>stringWidth()</tt> method. We use this information to
+center the word in the display area. To center the word vertically, we
+average the influence of the ascent and descent.
+
+<P CLASS=para>
+<A HREF="ch13_03.htm#EXJ-CH-13-TAB-2">Table 13.2</A> provides a short list of
+methods that return useful font metrics.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-13-TAB-2">Table 13.2: Font Metric Methods</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Description</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getFont()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Font</tt> object these metrics describe</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getAscent()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Height above baseline</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getDescent()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Depth below baseline</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getLeading()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Standard vertical spacing between lines</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getHeight()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Total line height (ascent + descent + leading)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>charWidth(char ch)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Width of a character</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>stringWidth(String str)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Width of a string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getWidths()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+The widths of the first 256 characters in this font; returns 
+<tt CLASS=literal>int[]</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getMaxAdvance()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Maximum character width of any character</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Leading space is the padding between lines of text. The
+<tt CLASS=literal>getHeight()</tt> method reports the total height of a
+line of text, including the leading space.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch13_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Colors</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Images</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] 10.7 Defining a Complex Property Editor</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:57:53 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>Java Beans</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-10-SECT-7">10.7 Defining a Complex Property Editor</A></h2>
+
+<P CLASS=para>
+There is another <tt CLASS=literal>YesNoDialog</tt> property value that
+requires a property editor.
+The <tt CLASS=literal>message</tt> property of <tt CLASS=literal>YesNoDialog</tt>
+can specify a multi-line message to be displayed in the
+dialog.  This property requires a property editor because
+the <I CLASS=emphasis>beanbox</I> program does not distinguish
+between single-line and multi-line string types and
+the <tt CLASS=literal>TextField</tt> objects it uses for text input do
+not allow the user to enter multiple lines of text.  For
+this reason, we define the <tt CLASS=literal>YesNoDialogMessageEditor</tt>
+class and register it with the <tt CLASS=literal>PropertyDescriptor</tt>
+for the message property, as shown in
+<A HREF="ch10_05.htm#JNUT2-CH-10-EX-5">Example 10.5</A>.
+
+<P CLASS=para>
+<A HREF="ch10_07.htm#JNUT2-CH-10-EX-7">Example 10.7</A>
+shows the definition of this property editor.  This is a
+more complex editor that supports the creation of a custom
+editor component and graphical display of the value.
+Note that this example implements <tt CLASS=literal>PropertyEditor</tt>
+directly.
+<tt CLASS=literal>getCustomEditor()</tt> returns an editor component for
+multi-line strings.
+<A HREF="ch10_07.htm#JNUT2-CH-10-FIG-2">Figure 10.2</A>
+shows this custom editor placed within a dialog box created
+by the <I CLASS=emphasis>beanbox</I> program.  Note that the <b>Done</b>
+button in this figure is part of the <I CLASS=emphasis>beanbox</I> dialog,
+not part of the property editor itself.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-10-FIG-2">Figure 10.2: A custom property editor dialog</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_1002.gif" alt="[Graphic: Figure 10-2]" width=464 height=203 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>paintValue()</tt> method is responsible for
+displaying the value of the <tt CLASS=literal>message</tt> property.
+This multi-line value does not typically fit in the
+small rectangle of screen space allowed for the property,
+so <tt CLASS=literal>paintValue()</tt> displays instructions for
+popping up the custom editor, which allows the user to
+inspect and edit the property value.  (This example relies
+on the click-to-edit behavior of the <I CLASS=emphasis>beanbox</I> program;
+this <tt CLASS=literal>paintValue()</tt> method may not make sense when the
+bean is used in other beanbox tools.)
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-10-EX-7">Example 10.7: The YesNoDialogMessageEditor Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package oreilly.beans.yesno;
+import java.beans.*;
+import java.awt.*;
+import java.awt.event.*;
+/**
+ * This class is a custom editor for the message property of the
+ * YesNoDialog bean.  It is necessary because the default editor for
+ * properties of type String does not allow multi-line strings to be entered.
+ */
+public class YesNoDialogMessageEditor implements PropertyEditor {
+  protected String value;  // The value we will be editing.
+  public void setValue(Object o) {  value = (String) o; }
+  public Object getValue() { return value; }
+  public void setAsText(String s) { value = s; }
+  public String getAsText() { return value; }
+  public String[] getTags() { return null; }  // not enumerated; no tags
+  // Say that we allow custom editing.
+  public boolean supportsCustomEditor() { return true; }
+  // Return the custom editor.  This just creates and returns a TextArea
+  // to edit the multi-line text.  But it also registers a listener on the
+  // text area to update the value as the user types and to fire the
+  // property change events that property editors are required to fire.
+  public Component getCustomEditor() {
+    final TextArea t = new TextArea(value);
+    t.setSize(300, 150); // TextArea doesn't have a preferred size, so set one.
+    t.addTextListener(new TextListener() {
+      public void textValueChanged(TextEvent e) {
+        value = t.getText();
+        listeners.firePropertyChange(null, null, null);
+      }
+    });
+    return t;
+  }
+  // Visual display of the value, for use with the custom editor.
+  // Just print some instructions and hope they fit in the box.
+  // This could be more sophisticated.
+  public boolean isPaintable() { return true; }
+  public void paintValue(Graphics g, Rectangle r) {
+    g.setClip(r);
+    g.drawString("Click to edit...", r.x+5, r.y+15);
+  }
+  // Important method for code generators.  Note that it
+  // ought to add any necessary escape sequences.
+  public String getJavaInitializationString() { return "\"" + value + "\""; }
+  // This code uses the PropertyChangeSupport class to maintain a list of
+  // listeners interested in the edits we make to the value.
+  protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
+  public void addPropertyChangeListener(PropertyChangeListener l) {
+    listeners.addPropertyChangeListener(l);
+  }
+  public void removePropertyChangeListener(PropertyChangeListener l) {
+    listeners.removePropertyChangeListener(l);
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Defining a Simple Property Editor</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Defining a Bean Customizer</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

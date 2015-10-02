@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] 16.4 Clipboard</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:57:01 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>Data Transfer</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-16-SECT-4">16.4 Clipboard</A></h2>
+
+<P CLASS=para>
+<A NAME="CH16.CLIP"></A>The <tt CLASS=literal>Clipboard</tt> class is a repository 
+for a <tt CLASS=literal>Transferable</tt> object and 
+can be used for cut, copy, and paste operations. You can work with a private 
+clipboard by creating your own instance of <tt CLASS=literal>Clipboard</tt>, 
+or you can work with the system clipboard by asking the <tt CLASS=literal>Toolkit</tt> 
+for it: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Toolkit.getDefaultToolkit().getSystemClipboard()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When working with the system clipboard, native applications have access 
+to information created within Java programs and vice 
+versa. Access to the system clipboard 
+is controlled by the <tt CLASS=literal>SecurityManager</tt> 
+and is restricted within applets. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-16-SECT-4.1">Clipboard Methods</A></h3>Variables
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected ClipboardOwner owner <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>owner</tt> instance variable 
+represents the current owner of <tt CLASS=literal>contents</tt>. 
+When something new is placed on the clipboard, the previous owner is notified 
+by a call to the <tt CLASS=literal>lostOwnership()</tt> 
+method. The owner usually ignores this notification. However, the clipboard's 
+<tt CLASS=literal>contents</tt> are passed back to 
+<tt CLASS=literal>owner</tt> in case some special 
+processing or comparison needs to be done. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected Transferable contents <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>contents</tt> instance variable 
+is the object currently on the clipboard; it was placed on the clipboard 
+by <tt CLASS=literal>owner</tt>. To retrieve the current 
+contents, use the <tt CLASS=literal>getContents()</tt> 
+method. </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Clipboard(String name) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>Clipboard</tt> 
+allows you to create a private clipboard named <tt CLASS=literal>name</tt>. 
+This clipboard is not accessible outside of your program and has no security 
+constraints placed upon it. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getName() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getName()</tt> method fetches 
+the clipboard's name. For private clipboards, this is the name given 
+in the constructor. The name of the system clipboard is "System". 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized Transferable getContents(Object requester) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getContents()</tt> method allows 
+you to retrieve the current contents of the clipboard. This is the method 
+you would call when the user selects Paste from a menu. 
+
+<P CLASS=para>
+Once you have the <tt CLASS=literal>Transferable</tt> 
+data, you try to get the data in whatever flavor you want by calling the 
+<tt CLASS=literal>Transferable.getTransferData()</tt> 
+method, possibly after calling <tt CLASS=literal>Transferable.isDataFlavorSupported()</tt>. 
+The <tt CLASS=literal>requester</tt> represents the 
+object that is requesting the clipboard's contents; it is usually 
+just <tt CLASS=literal>this</tt>, since the current 
+object is making the request. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setContents(Transferable contents, ClipboardOwner 
+owner) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setContents()</tt> method changes 
+the contents of the clipboard to <tt CLASS=literal>contents</tt> 
+and changes the clipboard's owner to <tt CLASS=literal>owner</tt>. 
+You would call this method when the user selects Cut or Copy from a menu. The <tt CLASS=literal>owner</tt> parameter 
+represents the object that owns <tt CLASS=literal>contents</tt>. 
+This object must implement the <tt CLASS=literal>ClipboardOwner</tt> 
+interface; it will be notified by a call to <tt CLASS=literal>lostOwnership()</tt> 
+when something else is placed on the clipboard. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ClipboardOwner Interface</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>StringSelection</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

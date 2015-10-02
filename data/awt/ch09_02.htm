@@ -1,0 +1,914 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.2 Lists</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:44:11 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Pick Me</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-9-SECT-2">9.2 Lists</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.LIST1"></A><A NAME="CH09.LIST2"></A>Like the <tt CLASS=literal>Choice</tt> component, 
+the <tt CLASS=literal>List</tt> provides a way to 
+present your user with a fixed sequence of choices to select. However, 
+with <tt CLASS=literal>List</tt>, several items can 
+be displayed at a time on the screen. A <tt CLASS=literal>List</tt> 
+can also allow multiple selection, so that more than one choice can be 
+selected. 
+
+<P CLASS=para>
+Normally, a scrollbar is associated with the <tt CLASS=literal>List</tt> 
+to enable the user to move to the items that do not fit on the screen. 
+On some platforms, the <tt CLASS=literal>List</tt> 
+may not display the scrollbar if there is enough room to display all choices. 
+A <tt CLASS=literal>List</tt> can be resized by the 
+<tt CLASS=literal>LayoutManager</tt> according to 
+the space available. <A HREF="ch09_02.htm#JAWT-CH-9-FIG-2">Figure 9.2</A> shows two lists, one of which has no items to display.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-9-SECT-2.1">List Methods</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public List () </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>List</tt> 
+with four visible lines. You must rely on the current <tt CLASS=literal>LayoutManager</tt> 
+to resize the <tt CLASS=literal>List</tt> or override 
+the <tt CLASS=literal>preferredSize()</tt> (version 
+1.0) or <tt CLASS=literal>getPreferredSize()</tt> 
+(version 1.1) method to affect the size of the displayed <tt CLASS=literal>List</tt>. 
+A <tt CLASS=literal>List</tt> created with this constructor 
+is in single-selection mode, so the user can select only one item at a 
+time. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public List (int rows) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>List</tt> 
+that has <tt CLASS=literal>rows</tt> visible lines. 
+This is just a request; the <tt CLASS=literal>LayoutManager</tt> 
+is free to adjust the height of the <tt CLASS=literal>List</tt> 
+to some other amount based upon available space. A <tt CLASS=literal>List</tt> 
+created with this constructor is in single-selection mode, so the user 
+will be able to select only one item at a time. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public List (int rows, boolean multipleSelections) </I><br>
+<DD>
+
+<P CLASS=para>
+The final constructor for <tt CLASS=literal>List</tt> 
+creates a <tt CLASS=literal>List</tt> that has <tt CLASS=literal>rows</tt> 
+visible lines. This is just a request; the <tt CLASS=literal>LayoutManager</tt> 
+is free to adjust the height of the <tt CLASS=literal>List</tt> 
+to some other amount based upon available space. If <tt CLASS=literal>multipleSelections</tt> 
+is <tt CLASS=literal>true</tt>, this <tt CLASS=literal>List</tt> 
+permits multiple items to be selected. If <tt CLASS=literal>false</tt>, 
+this is a single-selection list. </DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-9-FIG-2">Figure 9.2: Two lists; the list on the right is empty</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0902.gif" alt="[Graphic: Figure 9-2]" width=328 height=160 border=0>
+
+</DIV>
+
+Content control
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getItemCount () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public int countItems () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getItemCount()</tt> method returns 
+the length of the list. The length of the list is the number of items in 
+the list, not the number of visible rows. 
+
+<P CLASS=para>
+<tt CLASS=literal>countItems()</tt> is the Java 1.0 
+name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getItem (int index) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getItem()</tt> method returns 
+the <tt CLASS=literal>String</tt> representation for 
+the item at position <tt CLASS=literal>index</tt>. 
+The <tt CLASS=literal>String</tt> is the parameter 
+passed to the <tt CLASS=literal>addItem()</tt> or 
+<tt CLASS=literal>add() </tt> method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String[] getItems () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getItems()</tt> method returns 
+a <tt CLASS=literal>String</tt> array that contains 
+all the elements in the <tt CLASS=literal>List</tt>. 
+This method does not care if an item is selected or not. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void add (String item) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public synchronized void addItem (String item) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>add()</tt> method adds <tt CLASS=literal>item</tt> 
+as the last entry in the <tt CLASS=literal>List</tt>. If <tt CLASS=literal>item</tt> 
+already exists in the list, this method adds it again. 
+
+<P CLASS=para>
+<tt CLASS=literal>addItem()</tt> is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void add (String item, int index) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public synchronized void addItem (String item, int index) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+This version of the <tt CLASS=literal>add()</tt> method has an 
+additional parameter, <tt CLASS=literal>index</tt>, 
+which specifies where to add <tt CLASS=literal>item</tt> 
+to the <tt CLASS=literal>List</tt>. If <tt CLASS=literal>index</tt> 
+<tt CLASS=literal>&lt; 0</tt> or <tt CLASS=literal>index 
+&gt;=</tt> <tt CLASS=literal>getItemCount()</tt>, 
+<tt CLASS=literal>item</tt> is added to the end 
+of the <tt CLASS=literal>List</tt>. The position count 
+is zero based, so if <tt CLASS=literal>index</tt> 
+is 0, it will be added as the first item. 
+
+<P CLASS=para>
+<tt CLASS=literal>addItem()</tt> is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void replaceItem (String newItem, int index) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>replaceItem()</tt> method replaces 
+the contents at position <tt CLASS=literal>index</tt> 
+with <tt CLASS=literal>newItem</tt>. If the item at 
+<tt CLASS=literal>index</tt> has been selected, <tt CLASS=literal>newItem</tt> 
+will not be selected. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void removeAll () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public synchronized void clear () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeAll()</tt> method clears 
+out all the items in the list. 
+
+<P CLASS=para>
+<tt CLASS=literal>clear()</tt> is the Java 1.0 name 
+for this method. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Early versions (&nbsp;&nbsp;Java1.0) of the <tt CLASS=literal>clear()</tt> 
+method did not work reliably across platforms. You were better off calling the method 
+<tt CLASS=literal>listVar.delItems(0, listVar.countItems()-1)</tt>, 
+where <tt CLASS=literal>listVar</tt> is your <tt CLASS=literal>List</tt> 
+instance. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void remove (String item) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>remove()</tt> method removes 
+<tt CLASS=literal>item</tt> from the list of available 
+choices. If <tt CLASS=literal>item</tt> appears in 
+the <tt CLASS=literal>List</tt> several times, only 
+the first instance is removed. If <tt CLASS=literal>item</tt> 
+is <tt CLASS=literal>null</tt>, <tt CLASS=literal>remove()</tt> 
+throws the run-time exception <tt CLASS=literal>NullPointerException</tt>. 
+If <tt CLASS=literal>item</tt> is not found in the 
+<tt CLASS=literal>List</tt>, <tt CLASS=literal>remove()</tt> 
+throws the <tt CLASS=literal>IllegalArgumentException</tt> run-time exception. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void remove (int position) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public synchronized void delItem (int position) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>remove()</tt> method removes 
+the entry at <tt CLASS=literal>position</tt> from 
+the <tt CLASS=literal>List</tt>. If <tt CLASS=literal>position</tt> 
+is invalid--either <tt CLASS=literal>position</tt> 
+&lt; 0 or <tt CLASS=literal>position</tt> &gt;= <tt CLASS=literal>getItemCount()</tt>--<tt CLASS=literal>remove()</tt> 
+throws the <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+run-time exception with a message indicating that <tt CLASS=literal>position</tt> 
+was invalid. 
+
+<P CLASS=para>
+<tt CLASS=literal>delItem()</tt> is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void delItems (int start, int end) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>delItems()</tt> method removes 
+entries from position <tt CLASS=literal>start</tt> 
+to position <tt CLASS=literal>end</tt> from the <tt CLASS=literal>List</tt>. 
+If either parameter is invalid--either <tt CLASS=literal>start</tt> 
+&lt; 0 or <tt CLASS=literal>end</tt> &gt;= <tt CLASS=literal>getItemCount()</tt>--<tt CLASS=literal>delItems()</tt> 
+throws the <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+run-time exception with a message indicating which position was invalid. If <tt CLASS=literal>start</tt> 
+is greater than <tt CLASS=literal>end</tt>, nothing 
+happens.</DL>
+Selection and positioning
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized int getSelectedIndex () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedIndex()</tt> method 
+returns the position of the selected item. If nothing is selected in the 
+<tt CLASS=literal>List</tt>, <tt CLASS=literal>getSelectedIndex()</tt> 
+returns -1. The value -1 is also returned if the <tt CLASS=literal>List</tt> 
+is in multiselect mode and multiple items are selected. For multiselection 
+lists, use <tt CLASS=literal>getSelectedIndexes() </tt>instead. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized int[] getSelectedIndexes () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedIndexes()</tt> method 
+returns an integer array of the selected items. If nothing is selected, 
+the array will be empty. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized String getSelectedItem () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedItem()</tt> method 
+returns the label of the selected item. The label is the string used in 
+the <tt CLASS=literal>add()</tt> or <tt CLASS=literal>addItem()</tt> 
+call. If nothing is selected in the <tt CLASS=literal>List</tt>, 
+<tt CLASS=literal>getSelectedItem()</tt> returns <tt CLASS=literal>null</tt>. 
+The return value is also <tt CLASS=literal>null</tt> 
+if <tt CLASS=literal>List</tt> is in multiselect 
+mode and multiple items are selected. For multiselection lists, use <tt CLASS=literal>getSelectedItems() </tt>instead. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized String[] getSelectedItems () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedItems()</tt> method 
+returns a <tt CLASS=literal>String</tt> array of the 
+selected items. If nothing is selected, the array is empty. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized Object[] getSelectedObjects () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedObjects()</tt> method 
+returns the results of the method <tt CLASS=literal>getSelectedItems()</tt> 
+as an <tt CLASS=literal>Object</tt> array instead 
+of a <tt CLASS=literal>String</tt> array, to conform 
+to the <tt CLASS=literal>ItemSelectable</tt> interface. 
+If nothing is selected, the returned array is empty. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void select (int index) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>select()</tt> method selects 
+the item at position <tt CLASS=literal>index</tt>, 
+which is zero based. If the <tt CLASS=literal>List</tt> 
+is in single-selection mode, any other selected item is deselected. If 
+the <tt CLASS=literal>List</tt> is in multiple-selection 
+mode, calling this method has no effect on the other selections. The item 
+at position <tt CLASS=literal>index</tt> is made visible. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+A negative index seems to select everything within the <tt CLASS=literal>List</tt>. 
+This seems more like an irregularity than a feature to rely upon. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void deselect (int index) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>deselect()</tt> method deselects 
+the item at position <tt CLASS=literal>index</tt>, which is zero based. <tt CLASS=literal>deselect()</tt> 
+does not reposition the visible elements. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isIndexSelected (int index) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public boolean isSelected (int index) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isIndexSelected()</tt> method 
+checks whether <tt CLASS=literal>index</tt> is currently 
+selected. If it is, <tt CLASS=literal>isIndexSelected()</tt> 
+returns <tt CLASS=literal>true</tt>; otherwise, it 
+returns <tt CLASS=literal>false</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>isSelected()</tt> is the Java 1.0 
+name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isMultipleMode () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public boolean allowsMultipleSelections () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isMultipleMode()</tt> method 
+returns the current state of the <tt CLASS=literal>List</tt>. 
+If the <tt CLASS=literal>List</tt> is in multiselection 
+mode, <tt CLASS=literal>isMultipleMode()</tt> returns 
+<tt CLASS=literal>true</tt>; otherwise, it returns 
+<tt CLASS=literal>false</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>allowsMultipleSelections()</tt> 
+is the Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setMultipleMode (boolean value) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void setMultipleSelections (boolean value) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setMultipleMode()</tt> method 
+allows you to change the current state of a <tt CLASS=literal>List</tt> 
+from one selection mode to the other. The currently selected items change 
+when this happens. If <tt CLASS=literal>value</tt> 
+is <tt CLASS=literal>true</tt> and the <tt CLASS=literal>List</tt> 
+is going from single- to multiple-selection mode, the selected item gets 
+deselected. If <tt CLASS=literal>value</tt> is <tt CLASS=literal>false</tt> 
+and the <tt CLASS=literal>List</tt> is going from 
+multiple to single, the last item physically selected remains selected 
+(the last item clicked on in the list, not the item with the highest index). 
+If there was no selected item, the first item in the list becomes selected, 
+or the last item that was deselected 
+becomes selected. If staying within 
+the same mode, <tt CLASS=literal>setMultipleMode()</tt> 
+has no effect on the selected items. 
+
+<P CLASS=para>
+<tt CLASS=literal>setMultipleSelections()</tt> is 
+the Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void makeVisible (int index) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>makeVisible()</tt> method ensures 
+that the item at position <tt CLASS=literal>index</tt> 
+is displayed on the screen. This is useful if you want to make sure a certain 
+entry is displayed when another action happens on the screen. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getVisibleIndex () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getVisibleIndex()</tt> method 
+returns the last index from a call to the method <tt CLASS=literal>makeVisible()</tt>. 
+If <tt CLASS=literal>makeVisible()</tt> was never 
+called, -1 is returned. </DL>
+Sizing
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getRows () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRows()</tt> method returns 
+the number of rows passed to the constructor of the <tt CLASS=literal>List</tt>. 
+It does not return the number of visible rows. To get a rough idea of the 
+number of visible rows, compare the <tt CLASS=literal>getSize()</tt> 
+of the component with the results of <tt CLASS=literal>getPreferredSize(getRows())</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getPreferredSize (int rows) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension preferredSize (int rows) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPreferredSize()</tt> method 
+returns the preferable <tt CLASS=literal>Dimension</tt> 
+(width and height) for the size of a <tt CLASS=literal>List</tt> 
+with a height of <tt CLASS=literal>rows</tt>. The 
+<tt CLASS=literal>rows</tt> specified may be different 
+from the rows designated in the constructor. 
+
+<P CLASS=para>
+<tt CLASS=literal>preferredSize()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getPreferredSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension preferredSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPreferredSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (width 
+and height) for the preferred size of the <tt CLASS=literal>List</tt>. 
+Without the rows parameter, this version of <tt CLASS=literal>getPreferredSize()</tt> 
+uses the constructor's number of rows to calculate the <tt CLASS=literal>List</tt>'s 
+preferred size. 
+
+<P CLASS=para>
+<tt CLASS=literal>preferredSize()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMiminumSize (int rows) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension minimumSize (int rows) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimumSize()</tt> method 
+returns the minimum <tt CLASS=literal>Dimension</tt> 
+(width and height) for the size of a <tt CLASS=literal>List</tt> 
+with a height of <tt CLASS=literal>rows</tt>. The 
+<tt CLASS=literal>rows</tt> specified may be different 
+from the rows designated in the constructor. For a <tt CLASS=literal>List</tt>, 
+<tt CLASS=literal>getMinimumSize()</tt> and <tt CLASS=literal>getPreferredSize()</tt> 
+should return the same dimensions. 
+
+<P CLASS=para>
+<tt CLASS=literal>minimumSize()</tt> is the Java 1.0 
+name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMiminumSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension minimumSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimumSize()</tt> method 
+returns the minimum <tt CLASS=literal>Dimension</tt> 
+(width and height) for the size of the <tt CLASS=literal>List</tt>. 
+Without the rows parameter, this <tt CLASS=literal>getMinimumSize()</tt> 
+uses the constructor's number of rows to calculate the <tt CLASS=literal>List</tt>'s 
+minimum size. 
+
+<P CLASS=para>
+<tt CLASS=literal>minimumSize()</tt> is the Java 1.0 
+name for this method. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>List</tt> peer. If you 
+override this method, call <tt CLASS=literal>super.addNotify()</tt> 
+first, then add your customizations for the new class. You will then be able 
+to do everything you need with the information about the newly created 
+peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void removeNotify () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeNotify()</tt> method destroys 
+the peer of the <tt CLASS=literal>List</tt> and removes 
+it from the screen. Prior to the <tt CLASS=literal>List</tt> 
+peer's destruction, the last selected entry is saved. If you override 
+this method for a specific <tt CLASS=literal>List</tt>, 
+issue the particular commands that you need for your new object, then call 
+<tt CLASS=literal>super.removeNotify()</tt> last. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString ()  </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>List</tt>, the default 
+<tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Component</tt> 
+is called. This in turn calls <tt CLASS=literal>paramString()</tt>, 
+which builds up the string to display. At the <tt CLASS=literal>List</tt> 
+level, the currently selected item (<tt CLASS=literal>getSelectedItem()</tt>) 
+is appended to the output. Using <A HREF="ch09_02.htm#JAWT-CH-9-FIG-2">Figure 9.2</A> as an 
+example, the results would be the following: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.List[0,34,107x54,selected=null]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-9-SECT-2.2">List Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH09.EVENT2"></A><A NAME="CH09.EVENT2A"></A>The primary event for a <tt CLASS=literal>List</tt> 
+occurs when the user selects an item in the list. With the 1.0 event model, 
+double-clicking a selection causes an <tt CLASS=literal>ACTION_EVENT</tt> 
+and triggers the <tt CLASS=literal>action()</tt> method, 
+while single-clicking causes a <tt CLASS=literal>LIST_SELECT</tt> or <tt CLASS=literal>LIST_DESELECT</tt> event. Once 
+the <tt CLASS=literal>List</tt> has the input focus, 
+it is possible to change the selection by using the arrow or keyboard keys. 
+The arrow keys scroll through the list of choices, triggering the <tt CLASS=literal>KEY_ACTION</tt>, 
+<tt CLASS=literal>LIST_SELECT</tt>, <tt CLASS=literal>LIST_DESELECT</tt>, 
+and <tt CLASS=literal>KEY_ACTION_RELEASE</tt> events, 
+and thus the <tt CLASS=literal>keyDown()</tt>, <tt CLASS=literal>handleEvent()</tt>, 
+and <tt CLASS=literal>keyUp()</tt> methods (no specific 
+method gets called for <tt CLASS=literal>LIST_SELECT</tt> 
+and <tt CLASS=literal>LIST_DESELECT</tt>). <tt CLASS=literal>action()</tt> 
+is called only when the user double-clicks on an item with the mouse. If 
+the mouse is used to scroll through the list, no mouse events are triggered; 
+<tt CLASS=literal>ACTION_EVENT</tt> is generated 
+only when the user double-clicks on an item. 
+
+<P CLASS=para>
+With the 1.1 event model, you register an <tt CLASS=literal>ItemListener</tt> 
+with <tt CLASS=literal>addItemListener()</tt> 
+or an <tt CLASS=literal>ActionListener</tt> 
+with the <tt CLASS=literal>addActionListener()</tt> 
+method. When the user selects the <tt CLASS=literal>List</tt>, 
+either the <tt CLASS=literal>ItemListener.itemStateChanged()</tt> 
+method or the <tt CLASS=literal>ActionListener.actionPerformed()</tt> 
+method is called through the protected <tt CLASS=literal>List.processItemEvent()</tt> 
+method or <tt CLASS=literal>List.processActionEvent()</tt> 
+method. Key, mouse, and focus listeners are registered through the three <tt CLASS=literal>Component</tt> 
+methods of <tt CLASS=literal>addKeyListener()</tt>, 
+<tt CLASS=literal>addMouseListener()</tt>, and <tt CLASS=literal>addFocusListener()</tt>, 
+respectively. Action
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean action (Event e, Object o)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>action()</tt> method for a <tt CLASS=literal>List</tt> 
+is called when the user double-clicks on any item in the <tt CLASS=literal>List</tt>. 
+<tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>o</tt> 
+is the label for the item selected, from the <tt CLASS=literal>add()</tt> 
+or <tt CLASS=literal>addItem()</tt> call. If <tt CLASS=literal>List</tt> 
+is in multiple-selection mode, you might not wish to catch this event because 
+it's not clear whether the user wanted to choose the item just selected 
+or all of the items selected. You can solve this problem by putting a multi-selecting 
+list next to a <tt CLASS=literal>Button</tt> that 
+the user presses when the selection process is finished. Capture the event 
+generated by the <tt CLASS=literal>Button</tt>. The 
+following example shows how to set up and handle a list in this manner, 
+with the display shown in <A HREF="ch09_02.htm#JAWT-CH-9-FIG-3">Figure 9.3</A>. In this example, 
+I just print out the selections to prove that I captured them. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+public class list3 extends Applet {
+   List l;
+   public void init () {
+        String fonts[];
+        fonts = Toolkit.getDefaultToolkit().getFontList();
+        l = new List(4, true);
+        for (int i = 0; i &lt; fonts.length; i++) {
+            l.addItem (fonts[i]);
+        }
+        setLayout (new BorderLayout (10, 10));
+        add ("North", new Label ("Pick Font Set"));
+        add ("Center", l);
+        add ("South", new Button ("Submit"));
+        resize (preferredSize());
+        validate();
+   }
+   public boolean action (Event e, Object o) {
+        if (e.target instanceof Button) {
+             String chosen[] = l.getSelectedItems();
+             for (int i=0;i&lt;chosen.length;i++)
+                System.out.println (chosen[i]);
+        }
+        return false;
+   }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-9-FIG-3">Figure 9.3: Multiselect List</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0903.gif" alt="[Graphic: Figure 9-3]" width=188 height=175 border=0>
+
+</DIV>
+
+Keyboard
+
+<P CLASS=para>
+Ordinarily, <tt CLASS=literal>List</tt> generates all 
+the <tt CLASS=literal>KEY</tt> events once it has 
+the input focus. But the way it handles keyboard input differs slightly 
+depending upon the selection mode of the list. Furthermore, each platform 
+offers slightly different behavior, so code that depends on keyboard events 
+in <tt CLASS=literal>List</tt> is not portable. One 
+strategy is to take advantage of the keyboard events when they are available 
+but allow for another way of managing the list in case they are not. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyDown (Event e, int key)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyDown()</tt> method is called 
+whenever the user presses a key while the <tt CLASS=literal>List</tt> 
+has the input focus. <tt CLASS=literal>e</tt> is the 
+<tt CLASS=literal>Event</tt> instance for the specific 
+event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) for <tt CLASS=literal>keyDown()</tt> 
+could be either <tt CLASS=literal>KEY_PRESS</tt> for 
+a regular key or <tt CLASS=literal>KEY_ACTION</tt> 
+for an action-oriented key (i.e., arrow or function key). If you check 
+the current selection in this method through <tt CLASS=literal>getSelectedItem()</tt> 
+or <tt CLASS=literal>getSelectedIndex()</tt>, you 
+will actually be told the previously selected item because the <tt CLASS=literal>List</tt>'s 
+selection has not changed yet. <tt CLASS=literal>keyDown()</tt> 
+is not called when the user selects items with the mouse. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyUp (Event e, int key)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyUp()</tt> method is called 
+whenever the user releases a key while the <tt CLASS=literal>List</tt> 
+has the input focus. <tt CLASS=literal>e</tt> is the 
+<tt CLASS=literal>Event</tt> instance for the specific 
+event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) for <tt CLASS=literal>keyUp()</tt> 
+could be either <tt CLASS=literal>KEY_RELEASE</tt> 
+for a regular key or <tt CLASS=literal>KEY_ACTION_RELEASE</tt> 
+for an action-oriented key (i.e., arrow or function key). </DL>
+Mouse
+
+<P CLASS=para>
+Ordinarily, the <tt CLASS=literal>List</tt> component 
+does not trigger any mouse events. Double-clicking the mouse over any element 
+in the list generates an <tt CLASS=literal>ACTION_EVENT</tt>. 
+Single-clicking could result in either a <tt CLASS=literal>LIST_SELECT</tt> 
+or <tt CLASS=literal>LIST_DESELECT</tt>, depending 
+on the mode of the <tt CLASS=literal>List</tt> and 
+the current state of the item chosen. When the user changes the selection 
+with the mouse, the <tt CLASS=literal>ACTION_EVENT</tt> 
+is posted only when an item is double-clicked. List
+
+<P CLASS=para>
+There is a special pair of events for lists: <tt CLASS=literal>LIST_SELECT</tt> 
+and <tt CLASS=literal>LIST_DESELECT</tt>. No special 
+method is called when these events are triggered. However, you can catch 
+them in the <tt CLASS=literal>handleEvent()</tt> method. 
+If the <tt CLASS=literal>List</tt> is in single-selection 
+mode, a <tt CLASS=literal>LIST_SELECT</tt> event is 
+generated whenever the user selects one of the items in the <tt CLASS=literal>List</tt>. 
+In multiple-selection mode, you will get a <tt CLASS=literal>LIST_SELECT</tt> 
+event when an element gets selected and a <tt CLASS=literal>LIST_DESELECT</tt> 
+event when it is deselected. The following code shows how to use this event 
+type. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean handleEvent (Event e) {
+    if (e.id == Event.LIST_SELECT) {
+        System.out.println ("Selected item: " + e.arg);
+        return true;
+    } else {
+        return super.handleEvent (e);
+    }
+}
+</PRE>
+</DIV>
+
+Focus
+
+<P CLASS=para>
+Normally, the <tt CLASS=literal>List</tt> component 
+does not reliably trigger any focus events. Listeners and 1.1 event handling
+
+<P CLASS=para>
+With the 1.1 event model, you register listeners, and they are told when 
+the event happens. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addItemListener(ItemListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addItemListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in being notified when an <tt CLASS=literal>ItemEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>List</tt> as its target. 
+The <tt CLASS=literal>listener.itemStateChanged()</tt> 
+method is called when these events occur. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeItemListener(ItemListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeItemListener()</tt> method 
+removes <tt CLASS=literal>listener</tt> as an interested 
+listener. If <tt CLASS=literal>listener</tt> is not 
+registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addActionListener(ActionListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addActionListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in being notified when an <tt CLASS=literal>ActionEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>List</tt> as its target. 
+The <tt CLASS=literal>listener.actionPerformed()</tt> 
+method is called when these events occur. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeActionListener(ActionListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeActionListener()</tt> 
+method removes <tt CLASS=literal>listener</tt> as 
+a interested listener. If <tt CLASS=literal>listener</tt> 
+is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+all <tt CLASS=literal>AWTEvent</tt>s with this <tt CLASS=literal>List</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>List</tt>, overriding <tt CLASS=literal>processEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding the method <tt CLASS=literal>processEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processEvent()</tt>, 
+remember to call <tt CLASS=literal>super.processEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processItemEvent(ItemEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processItemEvent()</tt> method 
+receives all <tt CLASS=literal>ItemEvent</tt>s with 
+this <tt CLASS=literal>List</tt> as its target. <tt CLASS=literal>processItemEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>List</tt>, overriding <tt CLASS=literal>processItemEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding <tt CLASS=literal>processItemEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent() </tt>to 
+deal with <tt CLASS=literal>LIST_SELECT</tt> and <tt CLASS=literal>LIST_DESELECT</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processItemEvent()</tt>, 
+remember to call the method <tt CLASS=literal>super.processItemEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processActionEvent(ActionEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processActionEvent()</tt> method 
+receives all <tt CLASS=literal>ActionEvent</tt>s with 
+this <tt CLASS=literal>List</tt> as its target. <tt CLASS=literal>processActionEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>List</tt>, overriding <tt CLASS=literal>processActionEvent()</tt> 
+allows you to process all action events yourself, before sending them to 
+any listeners. In a way, overriding <tt CLASS=literal>processActionEvent()</tt> 
+is like overriding <tt CLASS=literal>action() </tt>using 
+the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processActionEvent()</tt>, 
+remember to call the method <tt CLASS=literal>super.processActionEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Choice</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Checkbox</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

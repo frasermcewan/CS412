@@ -1,0 +1,573 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.2 FontMetrics</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:27:20 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Fonts and Colors</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-3-SECT-2">3.2 FontMetrics</A></h2>
+
+<P CLASS=para>
+<A NAME="CH03.FONTMET"></A>The abstract <tt CLASS=literal>FontMetrics</tt> class 
+provides the tools for calculating the actual width and height of text 
+when displayed on the screen. You can use the results to position objects 
+around text or to provide special effects like shadows and underlining. 
+
+<P CLASS=para>
+Like the <tt CLASS=literal>Graphics</tt> class, <tt CLASS=literal>FontMetrics</tt> 
+is abstract. The run-time Java platform provides a concrete implementation 
+of <tt CLASS=literal>FontMetrics</tt>. You don't 
+have to worry about the actual class; it is guaranteed to implement all 
+the methods of <tt CLASS=literal>FontMetrics</tt>. 
+In case you're curious, on a Windows 95 platform, either the class <tt CLASS=literal>sun.awt.win32.Win32FontMetrics</tt> 
+ (&nbsp;&nbsp;JDK1.0) or the class <tt CLASS=literal>sun.awt.windows.WFontMetrics</tt> 
+(&nbsp;&nbsp;JDK1.1) extends <tt CLASS=literal>FontMetrics</tt>. 
+On a UNIX/Motif platform, the class is <tt CLASS=literal>sun.awt.motif.X11FontMetrics</tt>. 
+With the Macintosh, the class is <tt CLASS=literal>sun.awt.macos.MacFontMetrics</tt>. 
+If you're not using the JDK, the class names may be different, but the 
+principle still applies: you don't have to worry about the concrete 
+class. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-3-SECT-2.1">The FontMetrics Class</A></h3>Variables
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected Font font </I><br>
+<DD>
+
+<P CLASS=para>
+The font whose metrics are contained in this <tt CLASS=literal>FontMetrics</tt> object; use the <tt CLASS=literal>getFont()</tt> method 
+to get the value. </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected FontMetrics (Font font) </I><br>
+<DD>
+
+<P CLASS=para>
+There is no visible constructor for <tt CLASS=literal>FontMetrics</tt>. 
+Since the class is abstract, you cannot create a <tt CLASS=literal>FontMetrics</tt> 
+object. The way to get the <tt CLASS=literal>FontMetrics</tt> 
+for a font is to ask for it. Through the current graphics context, call 
+the method <tt CLASS=literal>getGraphics().getFontMetrics()</tt> 
+to retrieve the <tt CLASS=literal>FontMetrics</tt> 
+for the current font. If a graphics context isn't available, you 
+can get a <tt CLASS=literal>FontMetrics</tt> object 
+from the default <tt CLASS=literal>Toolkit</tt> by 
+calling the method <tt CLASS=literal>Toolkit.getDefaultToolkit().getFontMetrics (aFontObject)</tt>. </DL>
+Font height
+
+<P CLASS=para>
+<A NAME="CH03.HEIGHT1"></A><A NAME="CH03.HEIGHT2"></A><A NAME="CH03.HEIGHT7"></A>Four variables describe the height of a font: leading (pronounced like 
+the metal), ascent, descent, and height. Leading is the amount of space 
+required between lines of the same font. Ascent is the space above the 
+baseline required by the tallest character in the font. Descent is the 
+space required below the baseline by the lowest descender (the "tail" 
+of a character like "y"). Height is the total of the three: 
+ascent, baseline, and descent. <A HREF="ch03_02.htm#JAWT-CH-3-FIG-1">Figure 3.1</A> shows these 
+values graphically. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-3-FIG-1">Figure 3.1: Font height metrics</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0301.gif" alt="[Graphic: Figure 3-1]" width=209 height=163 border=0>
+
+</DIV>
+
+<P CLASS=para>
+If that were the entire story, it would be simple. Unfortunately, it isn't. 
+Some special characters (for example, capitals with umlauts or accents) 
+are taller than the "tallest" character in the font; so Java 
+defines a value called <tt CLASS=literal>maxAscent</tt> to account for these. Similarly, some 
+characters descend below the "greatest" descent, so Java defines 
+a <tt CLASS=literal>maxDescent</tt> to handle these cases. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+It seems that on Windows and Macintosh platforms there is no difference 
+between the return values of <tt CLASS=literal>getMaxAscent()</tt> 
+and <tt CLASS=literal>getAscent()</tt>, or between 
+<tt CLASS=literal>getMaxDescent()</tt> and <tt CLASS=literal>getDescent()</tt>. 
+On UNIX platforms, they sometimes differ. For developing truly portable 
+applications, the <tt CLASS=literal>max</tt> methods should be used where necessary. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getLeading () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLeading()</tt>method retrieves the leading required for the <tt CLASS=literal>FontMetrics</tt> of the font. The units for 
+this measurement are pixels. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getAscent () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAscent()</tt>method retrieves the space above the baseline required 
+for the tallest character in the font. The units for this measurement are 
+pixels. You cannot get the ascent value for a specific character. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getMaxAscent () </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>getMaxAscent()</tt> retrieves the 
+height above the baseline for the character that's really the tallest 
+character in the font, taking into account accents, umlauts, tildes, and 
+other special marks. The units for this measurement are pixels. If you 
+are using only ordinary ASCII characters below 128 (i.e., the English language 
+character set), <tt CLASS=literal>getMaxAscent()</tt> 
+is not necessary. 
+
+<P CLASS=para>
+If you're using <tt CLASS=literal>getMaxAscent()</tt>, 
+avoid <tt CLASS=literal>getHeight()</tt>; <tt CLASS=literal>getHeight()</tt> 
+is based on <tt CLASS=literal>getAscent()</tt> and 
+doesn't account for extra space. 
+
+<P CLASS=para>
+For some fonts and platforms, <tt CLASS=literal>getAscent()</tt> 
+may include the space for the diacritical marks. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getDescent () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getDescent()</tt> method retrieves 
+the space below the baseline required for the deepest character for the 
+font. The units for this measurement are pixels. You cannot get the descent 
+value for a specific character. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getMaxDescent () </I><br><I CLASS=emphasis>public int getMaxDecent () </I><br>
+<DD>
+
+<P CLASS=para>
+Some fonts may have special characters that extend farther below the baseline 
+than the value returned by <tt CLASS=literal>getDescent()</tt>. 
+<tt CLASS=literal>getMaxDescent()</tt> returns the 
+real maximum descent for the font, in pixels. In most cases, you can still 
+use the <tt CLASS=literal>getDescent()</tt> method; visually, 
+it is okay for an occasional character to extend into the space between 
+lines. However, if it is absolutely, positively necessary that the descent 
+space does not overlap with the next line's ascent requirements, 
+use <tt CLASS=literal>getMaxDescent()</tt> and avoid 
+<tt CLASS=literal>getDescent()</tt> and <tt CLASS=literal>getHeight()</tt>. 
+
+<P CLASS=para>
+An early beta release of the AWT API included the method <tt CLASS=literal>getMaxDecent()</tt>. 
+It is left for compatibility with early beta code. Avoid using it; it is 
+identical to <tt CLASS=literal>getMaxDescent()</tt> 
+in every way except spelling. Unfortunately, it is not flagged as deprecated. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getHeight () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getHeight()</tt> method returns 
+the sum of <tt CLASS=literal>getDescent()</tt>, <tt CLASS=literal>getAscent()</tt>, 
+and <tt CLASS=literal>getLeading()</tt>. In most cases, 
+this will be the distance between successive baselines when you are displaying 
+multiple lines of text. The height of a font in pixels is not necessarily 
+the size of a font in points. 
+
+<P CLASS=para>
+Don't use <tt CLASS=literal>getHeight()</tt> 
+if you are displaying characters with accents, umlauts, and other marks 
+that increase the character's height. In this case, compute the height 
+yourself using the <tt CLASS=literal>getMaxAscent()</tt> method. 
+Likewise, you shouldn't use the method <tt CLASS=literal>getHeight()</tt> 
+if you are using <tt CLASS=literal>getMaxDescent()</tt> 
+instead of <tt CLASS=literal>getDescent()</tt>. </DL>
+Character width
+
+<P CLASS=para>
+<A NAME="CH03.HEIGHT4"></A><A NAME="CH03.HEIGHT3"></A><A NAME="CH03.HEIGHT5"></A><A NAME="CH03.HEIGHT6"></A>In the horizontal dimension, positioning characters is relatively simple: 
+you don't have to worry about ascenders and descenders, you only 
+have to worry about how far ahead to draw the next character after you 
+have drawn the current one. The "how far" is called the <I CLASS=emphasis>advance 
+width</I> of a character. For most cases, the advance width is the actual width 
+plus the intercharacter space. However, it's not a good idea to 
+think in these terms; in many cases, the intercharacter 
+space is actually negative (i.e., the bounding boxes for two adjacent characters 
+overlap). For example, consider an italic font. The top right corner of 
+one character probably extends beyond the character's advance width, 
+overlapping the next character's bounding box. (To see this, look 
+back at <A HREF="ch03_02.htm#JAWT-CH-3-FIG-1">Figure 3.1</A>; in particular, look at the <I CLASS=emphasis>ll</I> 
+in <I CLASS=emphasis>O'Reilly</I>.) If you think purely in terms of the advance width (the 
+amount to move horizontally after drawing a character), you won't 
+run into trouble. Obviously, the advance width depends on the character, 
+unless you're using a fixed width font. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int charWidth (char character) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the <tt CLASS=literal>charWidth()</tt> 
+method returns the advance width of the given <tt CLASS=literal>character</tt> 
+in pixels. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int charWidth (int character) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>charWidth()</tt> method returns 
+the advance width of the given <tt CLASS=literal>character</tt> 
+in pixels. Note that the argument has type <tt CLASS=literal>int</tt> rather than <tt CLASS=literal>char</tt>. This version 
+is useful when overriding the <tt CLASS=literal>Component.keyDown()</tt> 
+method, which gets the integer value of the character pressed as a parameter. 
+With the <tt CLASS=literal>KeyEvent</tt> class, you 
+should use the previous version with its <tt CLASS=literal>getKeyChar()</tt> 
+method.
+
+<DT CLASS=varlistentry><I CLASS=emphasis>public int stringWidth (String string) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>stringWidth()</tt> method calculates 
+the advance width of the entire <tt CLASS=literal>string</tt> 
+in pixels. Among other things, you can use the results to underline or 
+center text within an area of the screen. <A HREF="ch03_02.htm#JAWT-CH-3-EX-1">Example 3.1</A> 
+and <A HREF="ch03_02.htm#JAWT-CH-3-FIG-2">Figure 3.2</A> show an example that centers several 
+text strings (taken from the command-line arguments) in a <tt CLASS=literal>Frame</tt>. </DL>
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-3-EX-1">Example 3.1: Centering Text in a Frame</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class Center extends Frame {
+    static String text[];
+    private Dimension dim;
+    static public void main (String args[]) {
+        if (args.length == 0) {
+            System.err.println ("Usage: java Center &lt;some text&gt;");
+            return;
+        }
+        text = args;
+        Center f = new Center();
+        f.show();
+    }
+    public void addNotify() {
+        super.addNotify();
+        int maxWidth = 0;
+        FontMetrics fm = getToolkit().getFontMetrics(getFont());
+        for (int i=0;i&lt;text.length;i++) {
+            maxWidth = Math.max (maxWidth, fm.stringWidth(text[i]));
+        }
+        Insets inset = insets();
+        dim = new Dimension (maxWidth + inset.left + inset.right,
+            text.length*fm.getHeight() + inset.top + inset.bottom);
+        resize (dim);
+    }
+    public void paint (Graphics g) {
+        g.translate(insets().left, insets().top);
+        FontMetrics fm = g.getFontMetrics();
+        for (int i=0;i&lt;text.length;i++) {
+            int x,y;
+            x = (size().width - fm.stringWidth(text[i]))/2;
+            y = (i+1)*fm.getHeight()-1;
+            g.drawString (text[i], x, y);
+        }
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-3-FIG-2">Figure 3.2: Centering text in a frame</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0302.gif" alt="[Graphic: Figure 3-2]" width=177 height=78 border=0>
+
+</DIV>
+
+<P CLASS=para>
+This application extends the <tt CLASS=literal>Frame</tt> 
+class. It stores its command-line arguments in the <tt CLASS=literal>String</tt> 
+array <tt CLASS=literal>text[]</tt>. The <tt CLASS=literal>addNotify()</tt> 
+method sizes the frame appropriately. It computes the size needed to display 
+the arguments and resizes the <tt CLASS=literal>Frame</tt> 
+accordingly. To compute the width, it takes the longest <tt CLASS=literal>stringWidth()</tt> 
+and adds the left and right insets. To compute the height, it takes the 
+current font's height, multiplies it by the number of lines to display, 
+and adds insets. Then it is up to the <tt CLASS=literal>paint()</tt> 
+method to use <tt CLASS=literal>stringWidth()</tt> 
+and <tt CLASS=literal>getHeight()</tt> to figure out 
+where to put each string. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int charsWidth (char data[], int offset, int length) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>charsWidth()</tt> method allows 
+you to calculate the advance width of the char array <tt CLASS=literal>data</tt>, 
+without first converting <tt CLASS=literal>data</tt> 
+to a <tt CLASS=literal>String</tt> and calling the <tt CLASS=literal>stringWidth()</tt> method. 
+The <tt CLASS=literal>offset</tt> specifies the element 
+of <tt CLASS=literal>data</tt> to start with; <tt CLASS=literal>length</tt> specifies the number of elements to use. The first element of the array 
+has an <tt CLASS=literal>offset</tt> of zero. If <tt CLASS=literal>offset</tt> 
+or <tt CLASS=literal>length</tt> is invalid, <tt CLASS=literal>charsWidth()</tt> 
+throws the run-time exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int bytesWidth (byte data[], int offset, int length) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>bytesWidth()</tt> method allows 
+you to calculate the advance width of the byte array <tt CLASS=literal>data</tt>, 
+without first converting <tt CLASS=literal>data</tt> 
+to a <tt CLASS=literal>String</tt> and calling the <tt CLASS=literal>stringWidth()</tt>method. 
+The <tt CLASS=literal>offset</tt> specifies the element 
+of <tt CLASS=literal>data</tt> to start with; <tt CLASS=literal>length</tt> 
+specifies the number of elements to use. The first element of the array 
+has an <tt CLASS=literal>offset</tt> of zero. If <tt CLASS=literal>offset</tt> 
+or <tt CLASS=literal>length</tt> is invalid, <tt CLASS=literal>bytesWidth()</tt> 
+throws the run-time exception 
+<tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int[] getWidths () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getWidths()</tt> method returns 
+an integer array of the advance widths of the first 255 characters in the 
+<tt CLASS=literal>FontMetrics</tt> font. <tt CLASS=literal>getWidths()</tt> 
+is very useful if you are continually looking up the widths of ASCII characters. 
+Obtaining the widths as an array and looking up individual character widths 
+yourself results in less method invocation overhead than making many calls 
+to <tt CLASS=literal>charWidth()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getMaxAdvance () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMaxAdvance()</tt> method 
+returns the advance pixel width of the widest character in the font. This 
+allows you to reserve enough space for characters before you know what 
+they are. If you know you are going to display only ASCII characters, you 
+are better off calculating the maximum value returned from <tt CLASS=literal>getWidths()</tt>. 
+When unable to determine the width in advance, the method <tt CLASS=literal>getMaxAdvance()</tt> 
+returns -1. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Font getFont () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFont()</tt> method returns 
+the specific font for this <tt CLASS=literal>FontMetrics</tt> 
+instance. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>FontMetrics</tt> 
+returns a string displaying the current font, ascent, descent, and height. 
+For example: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+sun.awt.win32.Win32FontMetrics[font=java.awt.Font[family=TimesRoman,
+name=TimesRoman,style=bolditalic,size=20]ascent=17, descent=6, height=24]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Because this is an abstract class, the concrete implementation could return 
+something different. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-3-SECT-2.2">Font Display Example</A></h3>
+
+<P CLASS=para>
+<A HREF="ch03_02.htm#JAWT-CH-3-EX-2">Example 3.2</A> displays all the available fonts in the different styles 
+at 12 points. The code uses the <tt CLASS=literal>FontMetrics</tt> 
+methods to ensure that there is enough space for each line. <A HREF="ch03_02.htm#JAWT-CH-3-FIG-3">Figure 3.3</A> 
+shows the results, using the Java 1.0 font names, on several platforms.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-3-EX-2">Example 3.2: Font Display</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class Display extends Frame {
+    static String[] fonts;
+    private Dimension dim;
+    Display () {
+        super ("Font Display");
+        fonts = Toolkit.getDefaultToolkit().getFontList();
+    }
+    public void addNotify() {
+        Font f;
+        super.addNotify();
+        int height   = 0;
+        int maxWidth = 0;
+        final int vMargin  = 5, hMargin = 5;
+        for (int i=0;i&lt;fonts.length;i++) {
+            f = new Font (fonts[i], Font.PLAIN, 12);
+            height += getHeight (f);
+            f = new Font (fonts[i], Font.BOLD, 12);
+            height += getHeight (f);
+            f = new Font (fonts[i], Font.ITALIC, 12);
+            height += getHeight (f);
+            f = new Font (fonts[i], Font.BOLD | Font.ITALIC, 12);
+            height += getHeight (f);
+            maxWidth = Math.max (maxWidth, getWidth (f, fonts[i] + " BOLDITALIC"));
+        }
+        Insets inset = insets();
+        dim = new Dimension (maxWidth + inset.left + inset.right + hMargin,
+                        height + inset.top + inset.bottom + vMargin);
+        resize (dim);
+    }
+    static public void main (String args[]) {
+        Display f = new Display();
+        f.show();
+    }
+    private int getHeight (Font f) {
+        FontMetrics fm = Toolkit.getDefaultToolkit().getFontMetrics(f);
+        return fm.getHeight();
+    }
+    private int getWidth (Font f, String s) {
+        FontMetrics fm = Toolkit.getDefaultToolkit().getFontMetrics(f);
+        return fm.stringWidth(s);
+    }
+    public void paint (Graphics g) {
+        int x = 0;
+        int y = 0;
+        g.translate(insets().left, insets().top);
+        for (int i=0;i&lt;fonts.length;i++) {
+            Font plain = new Font (fonts[i], Font.PLAIN, 12);
+            Font bold = new Font (fonts[i], Font.BOLD, 12);
+            Font italic = new Font (fonts[i], Font.ITALIC, 12);
+            Font bolditalic = new Font (fonts[i], Font.BOLD | Font.ITALIC, 12);
+            g.setFont (plain);
+            y += getHeight (plain);
+            g.drawString (fonts[i] + " PLAIN", x, y);
+            g.setFont (bold);
+            y += getHeight (bold);
+            g.drawString (fonts[i] + " BOLD", x, y);
+            g.setFont (italic);
+            y += getHeight (italic);
+            g.drawString (fonts[i] + " ITALIC", x, y);
+            g.setFont (bolditalic);
+            y += getHeight (bolditalic);
+            g.drawString (fonts[i] + " BOLDITALIC", x, y);
+        }
+        resize (dim);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-3-FIG-3">Figure 3.3: Fonts available with the Netscape Navigator 3.0 and Internet Explorer 3.0</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0303.gif" alt="[Graphic: Figure 3-3]" width=503 height=271 border=0>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Fonts</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Color</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

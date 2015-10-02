@@ -1,0 +1,644 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.2 Hello Web! II: The Sequel</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:48:32 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>A First Applet</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-2-SECT-2">2.2 Hello Web! II: The Sequel</A></h2>
+
+<P CLASS=para>
+Let's make our applet a little more interactive, shall we?  The
+following improvement, <tt CLASS=literal>HelloWeb2</tt>, allows us to drag
+the message around with the mouse. <tt CLASS=literal>HelloWeb2</tt> is
+also customizable. It takes the text of its message from a parameter
+of the <tt CLASS=literal>&lt;applet&gt;</tt> tag of the HTML document.
+
+<P CLASS=para>
+<tt CLASS=literal>HelloWeb2</tt> is a new applet--another subclass
+of the <tt CLASS=literal>Applet</tt> class. In that sense, it's a
+sibling of <tt CLASS=literal>HelloWeb</tt>. Having just seen inheritance
+at work, you might wonder why we aren't creating a subclass of
+<tt CLASS=literal>HelloWeb</tt> and exploiting inheritance to build upon
+our previous example and extend its functionality. Well, in this
+case, that would not necessarily be an advantage, and for clarity we
+simply start over.[2]
+Here is <tt CLASS=literal>HelloWeb2</tt>:
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+You are left to consider whether such a subclassing would even make
+sense. Should <tt CLASS=literal>HelloWeb2</tt> really be a kind of
+<tt CLASS=literal>HelloWeb</tt>?  Are we looking for refinement or just
+code reuse?
+</blockquote>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class HelloWeb2 extends Applet implements MouseMotionListener {
+    int messageX = 125, messageY = 95;  
+    String theMessage;
+    
+    public void init() {
+        theMessage = getParameter("message");
+        addMouseMotionListener(this);
+    }
+    
+    public void paint( Graphics graphics ) {
+        graphics.drawString( theMessage, messageX, messageY );
+    }
+    public void mouseDragged( MouseEvent e ) {
+        messageX = e.getX(); 
+        messageY = e.getY();
+        repaint();
+    }
+    public void mouseMoved( MouseEvent e ) { }
+}   
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Place the text of this example in a file called
+<i CLASS=filename>HelloWeb2.java</i> and compile it as before. You
+should get a new class file, <i CLASS=filename>HelloWeb2.class</i>, as
+a result. We need to create a new <tt CLASS=literal>&lt;applet&gt;</tt> tag for
+<tt CLASS=literal>HelloWeb2</tt>. You can either create another
+HTML document (copy
+<i CLASS=filename>HelloWeb.html</i> and modify it) or simply add a
+second <tt CLASS=literal>&lt;applet&gt;</tt> tag to the existing
+<i CLASS=filename>HelloWeb.html</i> file. The <tt CLASS=literal>&lt;applet&gt;</tt>
+tag for <tt CLASS=literal>HelloWeb2</tt> has to use a parameter; it should
+look like:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet code=HelloWeb2 width=300 height=200&gt; 
+&lt;param name="message" value="Hello Web!" &gt; 
+&lt;/applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Feel free to substitute your own salacious comment for the value of
+<tt CLASS=literal>message</tt>.
+
+<P CLASS=para>
+Run this applet in your Java-enabled Web browser, and enjoy many hours
+of fun, dragging the text around with your mouse.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-2-SECT-2.1">Import</A></h3>
+
+<P CLASS=para>
+So, what have we added?  First you may notice that a few lines
+are now hovering above our class:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.applet.Applet; 
+import java.awt.*; 
+import java.awt.event.*;
+public class HelloWeb2 extends Applet implements MouseMotionListener { 
+... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>import</tt> statement lists external classes to use
+in this file and tells the compiler where to look for them. In our
+first <tt CLASS=literal>HellowWeb</tt> example, we designated the <tt CLASS=literal>Applet</tt>
+class as the superclass of
+<tt CLASS=literal>HelloWeb</tt>. <tt CLASS=literal>Applet</tt> was not defined
+by us and the compiler therefore had to look elsewhere for it. In
+that case, we referred to <tt CLASS=literal>Applet</tt> by its fully
+qualified name, <tt CLASS=literal>java.applet.Applet</tt>, which told the
+compiler that <tt CLASS=literal>Applet</tt> belongs to the
+<tt CLASS=literal>java.applet</tt> package so it knew where to find it.
+
+<P CLASS=para>
+The <tt CLASS=literal>import</tt> statement is really just a convenience; by
+importing <tt CLASS=literal>java.applet.Applet</tt> in our newer example,
+we tell the compiler up front we are using this class and,
+thereafter in this file, we can simply refer to it as
+<tt CLASS=literal>Applet</tt>. The second import statement makes use of
+the wildcard "*" to tell the compiler to import all of
+the classes in the <tt CLASS=literal>java.awt</tt> package. But
+don't worry, the compiled code doesn't contain any excess
+baggage. Java doesn't do things like that. In fact, compiled
+Java classes don't contain other classes at all; they simply
+note their relationships. Our current example uses only the
+<tt CLASS=literal>java.awt.Graphics</tt> class. However, we are
+anticipating using several more classes from this package in the
+upcoming examples. We also import all the classes from the package
+<tt CLASS=literal>java.awt.event</tt>; these classes provide the
+<tt CLASS=literal>Event</tt> objects that we use to communicate
+with the user. By listening for events, we find out when the user
+moved the mouse, clicked a button, and so on. Notice that importing
+<tt CLASS=literal>java.awt.*</tt> doesn't automatically import
+the event package. The star only imports the classes in a particular
+package, not other packages. 
+
+<P CLASS=para>
+ 
+The <tt CLASS=literal>import</tt> statement may seem a bit like the C or C++
+preprocessor <tt CLASS=literal>#include</tt> statement, which injects
+header files into programs at the appropriate places. This is not
+true; there are no header files in Java. Unlike compiled C or C++
+libraries, Java binary class files contain all necessary type
+information about the classes, methods, and variables they
+contain, obviating the need for prototyping.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-2-SECT-2.2">Instance Variables</A></h3>
+
+<P CLASS=para>
+We have added some variables to our example: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public class HelloWeb2 extends Applet { 
+    int messageX = 125, messageY = 95; 
+    String theMessage; 
+... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>messageX</tt> and <tt CLASS=literal>messageY</tt> are
+integers that hold the current coordinates of our movable message.
+They are initialized to default values, which should place a message
+of our length somewhere near the center of the applet. Java integers
+are always 32-bit signed numbers. There is no fretting about what
+architecture your code is running on; numeric types in Java are
+precisely defined. The variable <tt CLASS=literal>theMessage</tt> is of
+type <tt CLASS=literal>String</tt> and can hold instances of the
+<tt CLASS=literal>String</tt> class.
+
+<P CLASS=para>
+You should note that these three variables are declared inside the
+braces of the class definition, but not inside any particular method
+in that class. These variables are called <I CLASS=emphasis>instance
+variables</I> because they belong to the entire class, and
+copies of them appear in each separate instance of the class.
+Instance variables are always visible (usable) in any of the methods
+inside their class. Depending on their modifiers, they may also be
+accessible from outside the class.
+
+<P CLASS=para>
+Unless otherwise initialized, instance variables are set to a default
+value of <tt CLASS=literal>0</tt> (zero), <tt CLASS=literal>false</tt>, or
+<tt CLASS=literal>null</tt>. Numeric types are set to zero,
+<tt CLASS=literal>boolean</tt> variables are set to
+<tt CLASS=literal>false</tt>, and class type variables always have their
+value set to <tt CLASS=literal>null</tt>, which means "no
+value." Attempting to use an object with a
+<tt CLASS=literal>null</tt> value results in a run-time error.
+
+<P CLASS=para>
+Instance variables differ from method arguments and other variables
+that are declared inside of a single method. The latter are
+called <I CLASS=emphasis>local variables</I>. They are effectively
+private variables that can be seen only by code inside the method.
+Java doesn't initialize local variables, so you must assign values
+yourself. If you try to use a local variable that has not yet been
+assigned a value, your code will generate a compile-time error. Local
+variables live only as long as the method is executing and then
+disappear (which is fine since nothing outside of the method can see
+them anyway). Each time the method is invoked, its local variables
+are recreated and must be assigned values.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-2-SECT-2.3">Methods</A></h3>
+
+<P CLASS=para>
+We have made some changes to our previously stodgy
+<tt CLASS=literal>paint()</tt> method. All of the arguments in the call
+to <tt CLASS=literal>drawString()</tt> are now variables.
+
+<P CLASS=para>
+Several new methods have appeared in our class. Like
+<tt CLASS=literal>paint()</tt>, these are methods of the base
+<tt CLASS=literal>Applet</tt> class we override to add our own
+functionality. 
+<tt CLASS=literal>init()</tt> is an important method of the
+<tt CLASS=literal>Applet</tt> class. It's called once, when our applet is
+created, to give us an opportunity to do any work needed to set up
+shop. <tt CLASS=literal>init()</tt> is a good place to allocate resources
+and perform other activities that need happen only once in the
+lifetime of the applet. A Java-enabled Web browser calls
+<tt CLASS=literal>init()</tt> when it prepares to place the
+<tt CLASS=literal>Applet</tt> on a page.
+
+<P CLASS=para>
+Our overridden <tt CLASS=literal>init()</tt> method does two things;
+it sets the text of the <tt CLASS=literal>theMessage</tt> instance
+variable, and it tells the system "Hey, I'm interested in anything
+that happens involving the mouse":
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public void init() { 
+    theMessage = getParameter("message"); 
+    addMouseMotionListener(this);
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When an applet is instantiated, the parameters given in the
+<tt CLASS=literal>&lt;applet&gt;</tt> tag of the HTML document
+are stored in a table and made available through the
+<tt CLASS=literal>getParameter()</tt> method. Given the name of a
+parameter, this method returns the value as a
+<tt CLASS=literal>String</tt> object. If the name is not found, it
+returns a <tt CLASS=literal>null</tt> value.
+
+<P CLASS=para>
+So what, you may ask, is the type of the argument to the
+<tt CLASS=literal>getParameter()</tt> method?  It, too, is a
+<tt CLASS=literal>String</tt>. With a little magic from the Java
+compiler, quoted strings in Java source code are turned into
+<tt CLASS=literal>String</tt> objects. A bit of funny-business is going
+on here, but it's simply for convenience. (See <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A> for a complete discussion of the
+<tt CLASS=literal>String</tt> class.)
+
+<P CLASS=para>
+<tt CLASS=literal>getParameter()</tt> is a public method we inherited
+from the <tt CLASS=literal>Applet</tt> class. We can use it from any of
+our methods. Note that the <tt CLASS=literal>getParameter()</tt> method
+is invoked directly by name; there is no object name prepended to it
+with a dot. If a method exists in our class, or is inherited from a
+superclass, we can call it directly by name.
+
+<P CLASS=para>
+In addition, we can use a special read-only variable, called
+<tt CLASS=literal>this</tt>, to explicitly refer to our object. A method
+can use <tt CLASS=literal>this</tt> to refer to the instance of the object
+that holds it. The following two statements are therefore equivalent:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+theMessage = getParameter("message"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+or 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+theMessage = this.getParameter("message"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+I'll always use the shorter form. We will need the
+<tt CLASS=literal>this</tt> variable later when we have to pass a
+reference to our object to a method in another class. We often do
+this so that methods in another class can give us a call back later or can watch our public variables.
+
+<P CLASS=para>
+The other method that we call in <tt CLASS=literal>init()</tt> is
+<tt CLASS=literal>addMouseMotionListener()</tt>. This method is
+part of the event mechanism, which we discuss next.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-2-SECT-2.4">Events</A></h3>
+
+<P CLASS=para>
+The last two methods of <tt CLASS=literal>HelloWeb2</tt> let us
+get information from the mouse. Each time the user performs an action,
+such as hitting a
+key on the keyboard, moving the mouse, or perhaps banging his or her
+head against a touch-sensitive screen, Java generates an
+<I CLASS=emphasis>event</I>. An event represents an action that has
+occurred; it contains information about the action, such as its time
+and location. Most events are associated with a particular
+ 
+graphical user interface
+(GUI) component in an application. A keystroke, for
+instance, could correspond to a character being typed into a
+particular text entry field. Pressing a mouse button could cause a
+certain graphical button on the screen to activate. Even just moving
+the mouse within a certain area of the screen could be intended to
+trigger effects such as highlighting or changing the cursor to a
+special mouse cursor. 
+
+<P CLASS=para>
+The way events work is one of the biggest changes between Java 1.0 and
+Java 1.1. We're going to talk about the Java 1.1 events only; they're
+a big improvement, and there's no sense in learning yesterday's news.
+In Java 1.1, there are many different event classes:
+<tt CLASS=literal>MouseEvent</tt>,
+<tt CLASS=literal>KeyEvent</tt>,
+<tt CLASS=literal>ActionEvent</tt>, and many others. For the most
+part, the meaning of these events is fairly intuitive. A
+<tt CLASS=literal>MouseEvent</tt> occurs when the user does
+something with the mouse, a <tt CLASS=literal>KeyEvent</tt>
+occurs when the user types a key, and so on.
+<tt CLASS=literal>ActionEvent</tt> is a little special; we'll see
+it at work in our third applet. For now, we'll focus on dealing with a
+<tt CLASS=literal>MouseEvent</tt>.
+
+<P CLASS=para>
+The various GUI components in Java generate events. For example, if
+you click the mouse inside an applet, the applet generates a mouse
+event. (In the future, we will probably see events as a general
+purpose way to communicate between Java objects; for the moment, let's
+limit ourselves to the simplest case.) 
+In Java 1.1, any object can ask to receive the events generated by
+some other
+component. We call the object that wants to receive events a
+"listener." To declare that it wants to receive some component's 
+mouse motion events, you call that component's
+<tt CLASS=literal>addMouseMotionListener()</tt> method. That's what our
+applet is doing in <tt CLASS=literal>init()</tt>. In this case,
+the applet is calling its own
+<tt CLASS=literal>addMouseMotionListener()</tt> method, with the
+argument <tt CLASS=literal>this</tt>, meaning "I want to receive
+my own mouse motion events." (For the time being, we're ignoring a
+minor distinction between "mouse events" and "mouse motion events."
+Suffice it to say that in this example, we only care about mouse
+motions.) 
+
+<P CLASS=para>
+That's how we register to receive events. But how do we actually get
+them? That's what the two remaining methods in our applet are for.
+The <tt CLASS=literal>mouseDragged()</tt> method is called
+automatically whenever the user drags the mouse--that is, moves the
+mouse with any button pressed. The
+<tt CLASS=literal>mouseMoved()</tt> method is called whenever the
+user moves the mouse without pressing a button. Our
+<tt CLASS=literal>mouseMoved()</tt> method is simple: it doesn't
+do anything. We're ignoring simple mouse motions. 
+
+<P CLASS=para>
+<tt CLASS=literal>mouseDragged()</tt> has a bit more meat to it.
+It is called repeatedly to give us updates on the position of the
+mouse. Here it is:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    public void mouseDragged( MouseEvent e ) {
+        messageX = e.getX(); 
+        messageY = e.getY();
+        repaint();
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first argument to <tt CLASS=literal>mouseDragged()</tt> is a
+<tt CLASS=literal>MouseEvent</tt> object,
+<tt CLASS=literal>e</tt>, that contains all the information we
+need to know about this event. We ask the
+<tt CLASS=literal>MouseEvent</tt> to tell us the
+<tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt>
+coordinates of the mouse's current position by calling its
+<tt CLASS=literal>getX()</tt> and
+<tt CLASS=literal>getY()</tt> methods. These are saved in the
+<tt CLASS=literal>messageX</tt> and
+<tt CLASS=literal>messageY</tt> instance variables. Now, having
+changed the coordinates for the message, we would like
+<tt CLASS=literal>HelloWeb2</tt> to redraw itself. We do this by
+calling <tt CLASS=literal>repaint()</tt>, which asks the system
+to redraw the screen at a later time. We can't call
+<tt CLASS=literal>paint()</tt> directly because we don't have a
+graphics context to pass to it.
+
+<P CLASS=para>
+The real beauty of this event model is that you only have to handle
+the kinds of events you want. If you don't care about keyboard events,
+you just don't register a listener for them; the user can type all he
+or she wants, and you won't be bothered. Java doesn't go around asking
+potential recipients whether they might be interested in some event,
+as it did in older versions. If there are no
+listeners for a particular kind of event, Java won't even generate it.
+The result is that event handling in Java 1.1 is quite efficient.
+
+<P CLASS=para>
+I've danced around one question that should be bothering you by now:
+how does the system know to call
+<tt CLASS=literal>mouseDragged()</tt> and
+<tt CLASS=literal>mouseMoved()</tt>? And why 
+do we have to supply a <tt CLASS=literal>mouseMoved()</tt> method
+that doesn't do anything? The 
+answer to these questions has to do with "interfaces." We'll discuss
+interfaces after clearing up some unfinished business with
+<tt CLASS=literal>repaint()</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-2-SECT-2.5">The repaint() Method</A></h3>
+
+<P CLASS=para>
+We can use the <tt CLASS=literal>repaint()</tt> method of the
+<tt CLASS=literal>Applet</tt> class to request our applet be
+redrawn. <tt CLASS=literal>repaint()</tt> causes the Java windowing system
+to schedule a call to our <tt CLASS=literal>paint()</tt> method at the
+next possible time; Java supplies the necessary
+<tt CLASS=literal>Graphics</tt> object, as shown in <A HREF="ch02_02.htm#EXJ-CH-2-FIG-5">Figure 2.5</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-2-FIG-5">Figure 2.5: Invoking the repaint() method</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0205.gif" alt="[Graphic: Figure 2-5]" width=503 height=113 border=0>
+
+</DIV>
+
+<P CLASS=para>
+This mode of operation isn't just an inconvenience brought about
+by not having the right graphics context handy at the moment. The
+foremost advantage to this mode of operation is that the repainting is
+handled by someone else, while we are free to go about our business.
+The Java system has a separate, dedicated thread of execution that
+handles all <tt CLASS=literal>repaint()</tt> requests. It can schedule
+and consolidate <tt CLASS=literal>repaint()</tt> requests as necessary,
+which helps to prevent the windowing system from being overwhelmed
+during painting-intensive situations like scrolling. Another
+advantage is that all of the painting functionality can be kept in our
+<tt CLASS=literal>paint()</tt> method; we aren't tempted to spread
+it throughout the application.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch02-SECT2-AUTOID.1">Interfaces</A></h3>
+
+<P CLASS=para>
+Now it's time to face up to the question I avoided earlier: how does
+the system know to call <tt CLASS=literal>mouseDragged()</tt>
+when a mouse event occurs? Is it simply a matter of knowing that
+<tt CLASS=literal>mouseDragged()</tt> is some magic name that our
+event handling method must have? No; the answer to the question lies
+in the discussion of interfaces, which are one of the most important
+features of the Java language.
+
+<P CLASS=para>
+The first sign of an interface comes on the line of code that
+introduces the <tt CLASS=literal>HelloWeb2</tt> applet: we say
+that the applet implements
+<tt CLASS=literal>MouseMotionListener</tt>.
+<tt CLASS=literal>MouseMotionListener</tt> 
+is an interface that the applet implements. Essentially, it's a list
+of methods that the applet must have; this particular interface
+requires our applet to have methods called
+<tt CLASS=literal>mouseDragged()</tt> and
+<tt CLASS=literal>mouseMoved()</tt>. The interface doesn't say
+what these methods have to do--and indeed,
+<tt CLASS=literal>mouseMoved()</tt> doesn't do anything. It does
+say that the methods must take a
+<tt CLASS=literal>MouseEvent</tt> as an argument and return
+<tt CLASS=literal>void</tt> (i.e., no return value).
+
+<P CLASS=para>
+
+Another way of looking at an interface is as a contract between you,
+the code developer, and the compiler. By saying that your applet
+implements the <tt CLASS=literal>MouseMotionListener</tt>
+interface, you're saying that these methods will be available for
+other parts of the system to call. If you don't provide them, the
+compiler will notice and give you an error message.
+<P CLASS=para>
+But that's not the only impact interfaces have on this program. An
+interface also acts like a class. For example, a method could return a
+<tt CLASS=literal>MouseMotionListener</tt>, or take a
+<tt CLASS=literal>MouseMotionListener</tt> as an argument.  This
+means that you don't care about the object's class; the only
+requirement is that the object implement the given interface. In fact,
+that's exactly what the method
+<tt CLASS=literal>addMouseMotionListener()</tt> does. If you look
+up the documentation for this method, you'll find that it takes a
+<tt CLASS=literal>MouseMotionListener</tt> as an argument. The
+argument we pass is <tt CLASS=literal>this</tt>, the applet
+itself. The fact that it's an applet is irrelevant, it could be a
+<tt CLASS=literal>Cookie</tt>, an
+<tt CLASS=literal>Aardvark</tt>, or any other class we dream
+up. What is important is that it implements
+<tt CLASS=literal>MouseMotionListener</tt>, and thus declares
+that it will have the two named methods. That's why we need a
+<tt CLASS=literal>mouseMoved()</tt> method, even though the one
+we supplied doesn't do anything: the
+<tt CLASS=literal>MouseMotionListener</tt> interface says we have
+to have one.
+<P CLASS=para>
+In other languages, you'd handle this problem by passing a function
+pointer; for example, in C, the argument to
+<tt CLASS=literal>addMouseMotionListener()</tt> might be a
+pointer to the function you want to have called when an event
+occurs. This technique is called a "callback." For security reasons,
+the Java language has eliminated function pointers. Instead, we use
+interfaces to make contracts between classes and the compiler.  (Some
+new features of the language make it easier to do something similar to
+a callback, but that's beyond the present discussion.)
+<P CLASS=para>
+The Java distribution comes with many interfaces that define what
+classes have to do in various situations. Furthermore, 
+in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>, you'll see how to define your own interfaces. It turns
+out that this idea of a contract between the compiler and a class is
+very important. There are many situations like the one we just saw,
+where you don't care what class something is, you just care that it
+has some capability, like listening for mouse events. Interfaces give
+you a way of acting on objects based on their capabilities, without
+knowing or caring about their actual type. 
+<P CLASS=para>
+Furthermore, interfaces provide an important escape clause to the rule
+that any new class can only extend a single class (formally called
+"single inheritance"). They provide most of the advantages of multiple
+inheritance (a feature of languages like C++) without the confusion.
+A class in Java can only extend one class, but can implement as many
+interfaces as it wants; our next applet will implement two interfaces,
+and the final example in this chapter will implement three. In many
+ways, interfaces are almost like classes, but not quite. They can be
+used as data types, they can even extend other interfaces (but not
+classes), and can be inherited by classes (if class A implements
+interface B, subclasses of A also implement B). The crucial
+difference is that applets don't actually inherit methods from
+interfaces; the interfaces only specify the methods the applet must
+have. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Hello Web!</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Hello Web! III: The Button Strikes!</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

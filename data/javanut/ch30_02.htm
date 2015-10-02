@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 30] 30.2 java.util.Calendar (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:34:44 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch30_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 30<br>The java.util Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch30_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-30-SECT-2">30.2 java.util.Calendar (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-30-SECT-2.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This abstract class defines methods used to perform date and
+time arithmetic. It also includes methods that
+convert dates and times to and from
+the machine-usable millisecond format used by the
+<tt CLASS=literal>Date</tt> class and units like minutes, hours, days,
+weeks, months, and years that are more useful to humans.
+
+<P CLASS=para>
+As an abstract class, <tt CLASS=literal>Calendar</tt> cannot be directly
+instantiated.  Instead, it provides static
+<tt CLASS=literal>getInstance()</tt> methods that return instances of a
+<tt CLASS=literal>Calendar</tt> subclass suitable for use in a specified or default
+locale with a specified or default time zone.  
+
+<P CLASS=para>
+<tt CLASS=literal>Calendar</tt> defines a number of useful constants.  Some
+of these are values that represent days of the week and
+months of the year.  Other constants, such as
+<tt CLASS=literal>HOUR</tt> and <tt CLASS=literal>DAY_OF_WEEK</tt>, represent various
+fields of date and time information.  These field constants
+are passed to a number of <tt CLASS=literal>Calendar</tt> methods, such as
+<tt CLASS=literal>get()</tt> and <tt CLASS=literal>set()</tt>, in order to indicate what
+particular date or time field is of interest.
+
+<P CLASS=para>
+<tt CLASS=literal>setTime()</tt> and the various <tt CLASS=literal>set()</tt> methods set
+the date represented by a <tt CLASS=literal>Calendar</tt> object.
+The <tt CLASS=literal>add()</tt> method adds (or subtracts) values to a
+calendar field, incrementing the next larger field when the
+field "rolls over."  <tt CLASS=literal>roll()</tt> does the same, without
+modifying any but the specified field.  <tt CLASS=literal>before()</tt> and
+<tt CLASS=literal>after()</tt> compare two <tt CLASS=literal>Calendar</tt> objects.
+
+<P CLASS=para>
+Many of the methods of the <tt CLASS=literal>Calendar</tt> class are
+replacements for methods of Date that have been deprecated
+in Java 1.1.  While the <tt CLASS=literal>Calendar</tt> class is used to
+convert a time value into its various hour, day, month, and
+other fields, it is not intended to present those fields
+into a form suitable for display to the end user.  That
+function is performed by the <tt CLASS=literal>DateFormat</tt> class in the
+<tt CLASS=literal>java.text</tt> package, which handles
+internationalization issues.
+
+<P CLASS=para>
+See also <tt CLASS=literal>Date</tt>, <tt CLASS=literal>DateFormat</tt>, and <tt CLASS=literal>TimeZone</tt>.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class <tt CLASS=literal>Calendar</tt> extends Object implements Serializable, Cloneable {
+    // <tt CLASS=literal>Protected Constructors</tt>
+            protected <tt CLASS=literal>Calendar</tt>();
+            protected <tt CLASS=literal>Calendar</tt>(TimeZone <tt CLASS=literal>zone</tt>, Locale <tt CLASS=literal>aLocale</tt>);
+    // <tt CLASS=literal>Constants</tt>
+            public static final int <tt CLASS=literal>FIELD_COUNT</tt>;
+    // <tt CLASS=literal>Date and Time Field Constants</tt>
+            public static final int <tt CLASS=literal>ERA</tt>;
+            public static final int <tt CLASS=literal>YEAR</tt>;
+            public static final int <tt CLASS=literal>MONTH</tt>;
+            public static final int <tt CLASS=literal>WEEK_OF_YEAR</tt>, <tt CLASS=literal>WEEK_OF_MONTH</tt>;
+            public static final int <tt CLASS=literal>DATE</tt>, <tt CLASS=literal>DAY_OF_MONTH</tt>;
+            public static final int <tt CLASS=literal>DAY_OF_YEAR</tt>, <tt CLASS=literal>DAY_OF_WEEK</tt>, <tt CLASS=literal>DAY_OF_WEEK_IN_MONTH</tt>;
+            public static final int <tt CLASS=literal>ZONE_OFFSET</tt>, <tt CLASS=literal>DST_OFFSET</tt>;
+            public static final int <tt CLASS=literal>AM_PM</tt>;
+            public static final int <tt CLASS=literal>HOUR</tt>, <tt CLASS=literal>HOUR_OF_DAY</tt>;
+            public static final int <tt CLASS=literal>MINUTE</tt>;
+            public static final int <tt CLASS=literal>SECOND</tt>;
+            public static final int <tt CLASS=literal>MILLISECOND</tt>;
+    // <tt CLASS=literal>Field Value Constants</tt>
+            public static final int <tt CLASS=literal>JANUARY</tt>, <tt CLASS=literal>FEBRUARY</tt>, <tt CLASS=literal>MARCH</tt>, <tt CLASS=literal>APRIL</tt>;
+            public static final int <tt CLASS=literal>MAY</tt>, <tt CLASS=literal>JUNE</tt>, <tt CLASS=literal>JULY</tt>, <tt CLASS=literal>AUGUST</tt>;
+            public static final int <tt CLASS=literal>SEPTEMBER</tt>, <tt CLASS=literal>OCTOBER</tt>, <tt CLASS=literal>NOVEMBER</tt>, <tt CLASS=literal>DECEMBER</tt>;
+            public static final int <tt CLASS=literal>UNDECIMBER</tt>;
+            public static final int <tt CLASS=literal>SUNDAY</tt>, <tt CLASS=literal>MONDAY</tt>, <tt CLASS=literal>TUESDAY</tt>, <tt CLASS=literal>WEDNESDAY</tt>;
+            public static final int <tt CLASS=literal>THURSDAY</tt>, <tt CLASS=literal>FRIDAY</tt>, <tt CLASS=literal>SATURDAY</tt>;
+            public static final int <tt CLASS=literal>AM</tt>, <tt CLASS=literal>PM</tt>;
+    // <tt CLASS=literal>Protected Instance Variables</tt>
+            protected boolean <tt CLASS=literal>areFieldsSet</tt>;
+            protected int[] <tt CLASS=literal>fields</tt>;
+            protected boolean[] <tt CLASS=literal>isSet</tt>;
+            protected boolean <tt CLASS=literal>isTimeSet</tt>;
+            protected long <tt CLASS=literal>time</tt>;
+    // <tt CLASS=literal>Class Methods</tt>
+            public static synchronized Locale[] <tt CLASS=literal>getAvailableLocales</tt>();
+            public static synchronized Calendar <tt CLASS=literal>getInstance</tt>();
+            public static synchronized Calendar <tt CLASS=literal>getInstance</tt>(TimeZone <tt CLASS=literal>zone</tt>);
+            public static synchronized Calendar <tt CLASS=literal>getInstance</tt>(Locale <tt CLASS=literal>aLocale</tt>);
+            public static synchronized Calendar <tt CLASS=literal>getInstance</tt>(TimeZone <tt CLASS=literal>zone</tt>, Locale <tt CLASS=literal>aLocale</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public abstract void <tt CLASS=literal>add</tt>(int <tt CLASS=literal>field</tt>, int <tt CLASS=literal>amount</tt>);
+            public abstract boolean <tt CLASS=literal>after</tt>(Object <tt CLASS=literal>when</tt>);
+            public abstract boolean <tt CLASS=literal>before</tt>(Object <tt CLASS=literal>when</tt>);
+            public final void <tt CLASS=literal>clear</tt>();
+            public final void <tt CLASS=literal>clear</tt>(int <tt CLASS=literal>field</tt>);
+            public Object <tt CLASS=literal>clone</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public abstract boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>when</tt>);  //<tt CLASS=literal> Overrides Object</tt>
+            public final int <tt CLASS=literal>get</tt>(int <tt CLASS=literal>field</tt>);
+            public int <tt CLASS=literal>getFirstDayOfWeek</tt>();
+            public abstract int <tt CLASS=literal>getGreatestMinimum</tt>(int <tt CLASS=literal>field</tt>);
+            public abstract int <tt CLASS=literal>getLeastMaximum</tt>(int <tt CLASS=literal>field</tt>);
+            public abstract int <tt CLASS=literal>getMaximum</tt>(int <tt CLASS=literal>field</tt>);
+            public int <tt CLASS=literal>getMinimalDaysInFirstWeek</tt>();
+            public abstract int <tt CLASS=literal>getMinimum</tt>(int <tt CLASS=literal>field</tt>);
+            public final Date <tt CLASS=literal>getTime</tt>();
+            public TimeZone <tt CLASS=literal>getTimeZone</tt>();
+            public boolean <tt CLASS=literal>isLenient</tt>();
+            public final boolean <tt CLASS=literal>isSet</tt>(int <tt CLASS=literal>field</tt>);
+            public abstract void <tt CLASS=literal>roll</tt>(int <tt CLASS=literal>field</tt>, boolean <tt CLASS=literal>up</tt>);
+            public final void <tt CLASS=literal>set</tt>(int <tt CLASS=literal>field</tt>, int <tt CLASS=literal>value</tt>);
+            public final void <tt CLASS=literal>set</tt>(int <tt CLASS=literal>year</tt>, int <tt CLASS=literal>month</tt>, int <tt CLASS=literal>date</tt>);
+            public final void <tt CLASS=literal>set</tt>(int <tt CLASS=literal>year</tt>, int <tt CLASS=literal>month</tt>, int <tt CLASS=literal>date</tt>, int <tt CLASS=literal>hour</tt>, int <tt CLASS=literal>minute</tt>);
+            public final void <tt CLASS=literal>set</tt>(int <tt CLASS=literal>year</tt>, int <tt CLASS=literal>month</tt>, int <tt CLASS=literal>date</tt>, int <tt CLASS=literal>hour</tt>, int <tt CLASS=literal>minute</tt>, int <tt CLASS=literal>second</tt>);
+            public void <tt CLASS=literal>setFirstDayOfWeek</tt>(int <tt CLASS=literal>value</tt>);
+            public void <tt CLASS=literal>setLenient</tt>(boolean <tt CLASS=literal>lenient</tt>);
+            public void <tt CLASS=literal>setMinimalDaysInFirstWeek</tt>(int <tt CLASS=literal>value</tt>);
+            public final void <tt CLASS=literal>setTime</tt>(Date <tt CLASS=literal>date</tt>);
+            public void <tt CLASS=literal>setTimeZone</tt>(TimeZone <tt CLASS=literal>value</tt>);
+    // <tt CLASS=literal>Protected Instance Methods</tt>
+            protected void <tt CLASS=literal>complete</tt>();
+            protected abstract void <tt CLASS=literal>computeFields</tt>();
+            protected abstract void <tt CLASS=literal>computeTime</tt>();
+            protected long <tt CLASS=literal>getTimeInMillis</tt>();
+            protected final int <tt CLASS=literal>internalGet</tt>(int <tt CLASS=literal>field</tt>);
+            protected void <tt CLASS=literal>setTimeInMillis</tt>(long <tt CLASS=literal>millis</tt>);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-30-SECT-2.2">Extended By:</A></h3>
+
+<P CLASS=para>
+GregorianCalendar
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-30-SECT-2.3">Passed To:</A></h3>
+
+<P CLASS=para>
+DateFormat.setCalendar()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-30-SECT-2.4">Returned By:</A></h3>
+
+<P CLASS=para>
+Calendar.getInstance(), 
+DateFormat.getCalendar()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-30-SECT-2.5">Type Of:</A></h3>
+
+<P CLASS=para>
+DateFormat.calendar
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch30_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch30_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.util.BitSet (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.util.Date (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

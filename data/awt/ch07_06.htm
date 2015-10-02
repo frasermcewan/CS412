@@ -1,0 +1,502 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.6 GridBagLayout</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:39:39 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Layouts</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-6">7.6 GridBagLayout</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.BAG1"></A><A NAME="CH07.BAG2"></A><A NAME="CH07.BAG3"></A>The <tt CLASS=literal>GridBagLayout</tt> is the most 
+complex and flexible of the standard layout managers. Although it sounds 
+like it should be a subclass of <tt CLASS=literal>GridLayout</tt>, 
+it's a different animal entirely. With <tt CLASS=literal>GridLayout</tt>, 
+elements are arranged in a rectangular grid, and each element in the container 
+is sized identically (where possible). With <tt CLASS=literal>GridBagLayout</tt>, 
+elements can have different sizes and can occupy multiple rows or columns. 
+The position and behavior of each element is specified by an instance of 
+the <tt CLASS=literal>GridBagConstraints</tt> class. 
+By properly constraining the elements, you can specify the number of rows 
+and columns an element occupies, which element grows when additional screen 
+real estate is available, and various other restrictions. The actual grid 
+size is based upon the number of components within the <tt CLASS=literal>GridBagLayout</tt> 
+and the <tt CLASS=literal>GridBagConstraints</tt> 
+of those objects. For example, <A HREF="ch07_06.htm#JAWT-CH-7-FIG-8">Figure 7.8</A> shows a 
+<tt CLASS=literal>GridBagLayout</tt> with seven components, 
+arranged on a 3x3 grid. The maximum capacity of a screen using 
+<tt CLASS=literal>GridBagLayout</tt> in Java 1.0 is 
+128 x 128 cells; in Java 1.1, the maximum size is 512 x 512 cells. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-8">Figure 7.8: GridBagLayout with seven components on a 3x3 grid</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0708.gif" alt="[Graphic: Figure 7-8]" width=135 height=121 border=0>
+
+</DIV>
+
+<P CLASS=para>
+With the other layout managers, adding a component to the container 
+requires only a call to <tt CLASS=literal>add()</tt>. In 
+Java 1.0, the <tt CLASS=literal>GridBagLayout</tt> 
+also requires you to call <tt CLASS=literal>setConstraints()</tt> 
+to tell the layout manager how to position the component. With Java 1.1, 
+you use the new <tt CLASS=literal>add()</tt> method 
+that permits you to pass the component and its constraints in a single 
+method call (<tt CLASS=literal>add(Component, Object)</tt>). 
+If no components are added with constraints (thus all using the defaults), 
+the <tt CLASS=literal>GridBagLayout</tt> places the 
+components in a single row at the center of the screen and sizes them 
+to their <tt CLASS=literal>getPreferredSize()</tt>. 
+This is a nice way to place a single object in the center of the screen 
+without stretching it to take up the available space, as <tt CLASS=literal>BorderLayout</tt> 
+does. <A HREF="ch07_06.htm#JAWT-CH-7-FIG-9">Figure 7.9</A> compares the default <tt CLASS=literal>GridBagLayout</tt> 
+with a <tt CLASS=literal>BorderLayout</tt> displaying 
+the same object in the center region. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-9">Figure 7.9: Centering a component: GridBagLayout vs. BorderLayout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0709.gif" alt="[Graphic: Figure 7-9]" width=503 height=142 border=0>
+
+</DIV>
+
+<P CLASS=para>
+When designing a container that will use <tt CLASS=literal>GridBagLayout</tt>, 
+it is easiest to plan what you want on graph paper, and then determine 
+how the constraints should be set. The alternative, adding the components 
+to the layout and then tweaking the constraints until you have something 
+you like, could lead to premature baldness. Seriously, a trial-and-error approach to getting the constraints right will certainly be 
+frustrating and will probably fail. <A HREF="ch07_06.htm#JAWT-CH-7-FIG-10">Figure 7.10</A>, 
+using the same <tt CLASS=literal>GridBagLayout</tt> used in <A HREF="ch07_06.htm#JAWT-CH-7-FIG-8">Figure 7.8</A>, indicates 
+how the layout manager counts cells. The partial code used to create the 
+screen follows in <A HREF="ch07_06.htm#JAWT-CH-7-EX-2">Example 7.2</A>. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-7-EX-2">Example 7.2: Creating a GridBagLayout</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void init() {
+    Button b;
+    GridBagLayout gb = new GridBagLayout();
+    GridBagConstraints gbc = new GridBagConstraints();
+    setLayout(gb);
+    try {
+/* Row One - Three button */
+        b = new Button ("One");
+        addComponent (this, b, 0, 0, 1, 1, 
+                GridBagConstraints.NONE, GridBagConstraints.CENTER);
+        b = new Button ("Two");
+        addComponent (this, b, 1, 0, 1, 1, 
+                GridBagConstraints.NONE, GridBagConstraints.CENTER);
+        b = new Button ("Three");
+        addComponent (this, b, 2, 0, 1, 1, 
+                GridBagConstraints.NONE, GridBagConstraints.CENTER);
+/* Row Two - Two buttons */
+        b = new Button ("Four");
+        addComponent (this, b, 0, 1, 2, 1, 
+                GridBagConstraints.NONE, GridBagConstraints.CENTER);
+        b = new Button ("Five");
+        addComponent (this, b, 2, 1, 1, 2,
+                GridBagConstraints.NONE, GridBagConstraints.CENTER);
+/* Row Three - Two buttons */
+        b = new Button ("Six");
+        addComponent (this, b, 0, 2, 1, 1, 
+                GridBagConstraints.NONE, GridBagConstraints.CENTER);
+        b = new Button ("Seven");
+        addComponent (this, b, 1, 2, 1, 1, 
+                GridBagConstraints.NONE, GridBagConstraints.CENTER);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-10">Figure 7.10: How GridBagLayout counts rows and columns</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0710.gif" alt="[Graphic: Figure 7-10]" width=503 height=167 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Most of the work in <A HREF="ch07_06.htm#JAWT-CH-7-EX-2">Example 7.2</A> is done by the helper method <tt CLASS=literal>addComponent()</tt>, 
+which creates a set of constraints, applies them to a component, and adds 
+the component to a container. The code for <tt CLASS=literal>addComponent()</tt> 
+appears in <A HREF="ch07_07.htm#JAWT-CH-7-SECT-7">GridBagConstraints</A>; its signature is: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public static void addComponent (Container container, Component component,
+        int gridx, int gridy, int gridwidth, int gridheight, int fill,
+        int anchor) throws AWTException ;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The top left cell in the layout has location (<tt CLASS=literal>0,0</tt>). There's nothing 
+very surprising about buttons one, two, three, six, and seven. They occupy 
+a 1x1 area on the layout's 3x3 grid. Button four occupies a 2x1 area; 
+it is placed at location (0,1), and thus occupies this cell plus the cell 
+at (<tt CLASS=literal>1,1</tt>). Likewise, button five occupies a 1x2 area, and takes up the cells 
+at (<tt CLASS=literal>2,1</tt>) and (<tt CLASS=literal>2,2</tt>). The total size of the layout is determined entirely 
+by the components that are placed in it and their constraints. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-6.1">GridBagLayout Methods</A></h3>Variables
+
+<P CLASS=para>
+There are a handful of instance variables for <tt CLASS=literal>GridBagLayout</tt>. 
+They are not initialized until the container whose layout is <tt CLASS=literal>GridBagLayout</tt> 
+has been validated. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int columnWidths[] </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>columnWidths[]</tt> array contains 
+the widths of the components in the row with the most elements. The values 
+of this array are returned by the <tt CLASS=literal>getLayoutDimensions()</tt> 
+method. You can access the array directly, but it is not recommended. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int rowHeights[] </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>rowHeights[]</tt> array contains 
+the heights of the components in the column with the most elements. The 
+values of this array are returned by the <tt CLASS=literal>getLayoutDimensions()</tt> 
+method. You can access the array directly, but it is not recommended. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public double columnWeights[] </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>columnWeights[]</tt> array contains 
+the <tt CLASS=literal>weightx</tt> values of the components 
+in the row with the most elements. The values of this array are returned 
+by the <tt CLASS=literal>getLayoutWeights()</tt> method. 
+You can access the array directly, but it is not recommended. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public double rowWeights[] </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>row&nbsp;Weights[]</tt> array contains 
+the <tt CLASS=literal>weighty</tt> values of the components 
+in the column with the most elements. The values of this array are returned 
+by the <tt CLASS=literal>getLayoutWeights()</tt> method. 
+You can access the array directly, but it is not recommended. </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public GridBagLayout () </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>GridBagLayout</tt> 
+creates an instance of <tt CLASS=literal>GridBagLayout</tt> 
+with default <tt CLASS=literal>GridBagConstraints</tt> 
+behavior. An internal table is used to keep track of the components added 
+to the layout. </DL>
+LayoutManager methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addLayoutComponent (String name, Component component)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addLayoutComponent()</tt> method 
+of <tt CLASS=literal>GridBagLayout</tt> does nothing. 
+This method is not deprecated, unlike the similarly named methods in the 
+other layout managers that implement <tt CLASS=literal>LayoutManager2</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeLayoutComponent (Component component)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeLayoutComponent()</tt> 
+method of <tt CLASS=literal>GridBagLayout</tt> does 
+nothing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension preferredLayoutSize (Container target)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>preferredLayoutSize()</tt> method 
+calculates the preferred dimensions of the components of <tt CLASS=literal>target</tt>. 
+Sizing is based on the constraints of the various components. This task 
+is definitely better off left to the computer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension minimumLayoutSize (Container target)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>minimumLayoutSize()</tt> method 
+calculates the minimum dimensions required to position the components of 
+<tt CLASS=literal>target</tt>. Sizing is based on 
+the constraints of the various components. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void layoutContainer (Container target)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>layoutContainer()</tt> method 
+positions the components within <tt CLASS=literal>target</tt> 
+based upon the constraints of each component. If a component's anchor 
+constraints are invalid, <tt CLASS=literal>layoutContainer()</tt> 
+throws the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+The process of arranging the components is very complicated and beyond 
+the scope of this book. </DL>
+LayoutManager2 methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addLayoutComponent (Component component, Object constraints) 
+ <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>addLayoutComponent()</tt> method 
+of <tt CLASS=literal>GridBagLayout</tt> associates 
+the <tt CLASS=literal>component</tt> with the given 
+<tt CLASS=literal>constraints</tt> object. It calls 
+the <tt CLASS=literal>setConstaints()</tt> method. 
+
+<P CLASS=para>
+If <tt CLASS=literal>name</tt> is not a <tt CLASS=literal>GridBagConstraints</tt>, 
+<tt CLASS=literal>addLayoutComponent()</tt> throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Dimension maximumLayoutSize(Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>maximumLayoutSize()</tt> method 
+returns a <tt CLASS=literal>Dimension</tt> object 
+with a width and height of <tt CLASS=literal>Integer.MAX_VALUE</tt>. 
+In practice, this means that <tt CLASS=literal>GridBagLayout</tt> 
+doesn't support the concept of maximum size. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract float getLayoutAlignmentX(Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLayoutAlignmentX()</tt> method 
+says that <tt CLASS=literal>GridBagLayout</tt> containers 
+should be centered horizontally within the area available. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract float getLayoutAlignmentY(Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLayoutAlignmentY()</tt> method 
+says that <tt CLASS=literal>GridBagLayout</tt> containers 
+should be centered vertically within the area available. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void invalidateLayout(Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>invalidateLayout()</tt> method 
+of <tt CLASS=literal>GridBagLayout</tt> does nothing. </DL>
+Constraints
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public GridBagConstraints getConstraints (Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getConstraints()</tt> method 
+returns a clone of the current constraints for <tt CLASS=literal>component</tt>. 
+This makes it easier to generate constraints for a component based on another 
+component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setConstraints (Component component, GridBagConstraints constraints) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setConstraints()</tt> method 
+changes the <tt CLASS=literal>constraints</tt> on 
+<tt CLASS=literal>component</tt> to a clone of <tt CLASS=literal>constraints</tt>. 
+The system creates a <tt CLASS=literal>clone()</tt> 
+of <tt CLASS=literal>constraints</tt> so you can change 
+the original constraints without affecting <tt CLASS=literal>component</tt>. </DL>
+Layout
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Point getLayoutOrigin () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLayoutOrigin()</tt> method 
+returns the origin for the <tt CLASS=literal>GridBagLayout</tt>. 
+The origin is the top left point within the container at which the components 
+are drawn. Before the container is validated, <tt CLASS=literal>getLayoutOrigin()</tt> 
+returns the <tt CLASS=literal>Point</tt> (<tt CLASS=literal>0,0</tt>). After 
+validation, <tt CLASS=literal>getLayoutOrigin()</tt> 
+returns the actual origin of the layout. The space used by the components 
+within a <tt CLASS=literal>GridBagLayout</tt> may 
+not fill the entire container. You can use the results of <tt CLASS=literal>getLayoutOrigin()</tt> 
+and <tt CLASS=literal>getLayoutDimensions()</tt> to 
+find the layout's actual size and draw a <tt CLASS=literal>Rectangle</tt> 
+around the objects. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int[][] getLayoutDimensions () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLayoutDimensions()</tt> method 
+returns two one-dimensional arrays as a single two-dimensional array. Index 
+0 is an array of widths (<tt CLASS=literal>columnWidths</tt> 
+instance variable), while index 1 is an array of heights (<tt CLASS=literal>rowHeights</tt> 
+instance variable). Until the layout is validated, these will be empty. 
+After validation, the first array contains the widths of the components 
+in the row with the most elements. The second contains the heights of the 
+components in the column with the most elements. For <A HREF="ch07_06.htm#JAWT-CH-7-FIG-10">Figure 7.10</A>, the results would be (38, 51, 48) for widths since the first row 
+has three elements and (21, 21, 21) for the heights since the first (and 
+second) column has three elements in it. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public double[][] getLayoutWeights () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLayoutWeights()</tt> method 
+returns two one-dimensional arrays as a single two-dimensional array. Index 
+0 is an array of column weights (<tt CLASS=literal>columnWeights</tt> 
+instance variable), while index 1 is an array of row weights (<tt CLASS=literal>rowWeights</tt> 
+instance variable). Until the layout is validated, these will be empty. 
+After validation, the first dimension contains all the <tt CLASS=literal>weightx</tt> values of 
+the components in the row with the most elements. The second dimension 
+contains all the <tt CLASS=literal>weighty</tt> values 
+of the components in the column with the most elements. For <A HREF="ch07_06.htm#JAWT-CH-7-FIG-10">Figure 7.10</A>, the results would be (0, 0, 0) for <tt CLASS=literal>weightx</tt> 
+since the first row has three elements and (0, 0, 0) for <tt CLASS=literal>weighty</tt> 
+since the first column has three elements in it. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Point location (int x, int y) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>location()</tt> method returns 
+the <tt CLASS=literal>Point</tt> (<tt CLASS=literal>0,0</tt>) until the container 
+is validated. After validation, this method returns the grid element under 
+the location (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>), 
+where <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> 
+are in pixels. The results could be used as the <tt CLASS=literal>gridx</tt> 
+and <tt CLASS=literal>gridy</tt> constraints when 
+adding another component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>GridBagLayout</tt> 
+returns the name of the class: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.GridBagLayout
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>CardLayout</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>GridBagConstraints</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

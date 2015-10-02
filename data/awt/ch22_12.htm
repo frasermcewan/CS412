@@ -1,0 +1,957 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 22] PixelGrabber</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:25:45 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 22<br>java.awt.image Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch22_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>PixelGrabber</H1>
+
+<H2>Name</H2>
+
+PixelGrabber
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.69"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/pixelgr.gif" alt="[Graphic: Figure from the text]" width=503 height=53 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.70">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>PixelGrabber</tt> class is an 
+<tt CLASS=literal>ImageConsumer</tt> that captures 
+the pixels from an image and saves them in an array. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.71">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.awt.image.PixelGrabber
+    extends java.lang.Object 
+    implements java.awt.image.ImageConsumer {
+  // Constructors
+  public PixelGrabber (Image img, int x, int y, int w, int h, 
+      boolean forceRGB); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public PixelGrabber (Image image, int x, int y, int width, 
+      int height, int[] pixels, int offset, int scansize);
+  public PixelGrabber (ImageProducer ip, int x, int y, int width, 
+      int height, int[] pixels, int offset, int scansize);
+  // Instance Methods
+  public synchronized void abortGrabbing(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized ColorModel getColorModel(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized int getHeight(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized Object getPixels(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized int getStatus(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized int getWidth(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public boolean grabPixels() throws InterruptedException;
+  public synchronized boolean grabPixels (long ms) 
+      throws InterruptedException;
+  public synchronized void imageComplete (int status);
+  public void setColorModel (ColorModel model);
+  public void setDimensions (int width, int height);
+  public void setHints (int hints);
+  public void setPixels (int x, int y, int width, int height, 
+      ColorModel model, byte[] pixels, int offset, int scansize);
+  public void setPixels (int x, int y, int width, int height, 
+      ColorModel model, int[] pixels, int offset, int scansize);
+  public void setProperties (Hashtable properties);
+  public synchronized void startGrabbing(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized int status(); <img src="gifs/wstar.gif" alt="(Deprecated)" border=0>
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.72">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.95">PixelGrabber</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.113">public PixelGrabber (Image img, int x, int y, int w, int h, boolean forceRGB) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>img</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Image</tt> to 
+use as source of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>forceRGB</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> to 
+force the use of the RGB color model; <tt CLASS=literal>false</tt> 
+otherwise. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>PixelGrabber</tt> instance 
+to grab the specified area of the image. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.114">public PixelGrabber (Image image, int x, int y, int width, int height, int[] pixels, int offset, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>image</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Image</tt> to 
+use as source of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Where to store pixel data when <tt CLASS=literal>grabPixels()</tt> 
+called.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of each line in pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>PixelGrabber</tt> instance 
+to grab the specified area of the image and store the pixel data from this 
+area in the array <tt CLASS=literal>pixels[]</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.115">public PixelGrabber (ImageProducer ip, int x, int y, int width, int height, int[] pixels, int offset, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ip</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageProducer</tt> 
+to use as source of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of pixel data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Where to store pixel data when <tt CLASS=literal>grabPixels()</tt> 
+called.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of each line in pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>PixelGrabber</tt> instance 
+to grab data from the specified area of the image generated by an <tt CLASS=literal>ImageProducer</tt> 
+and store the pixel data from this area in the array <tt CLASS=literal>pixels[]</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.73">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.96">abortGrabbing</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.116">public synchronized void abortGrabbing() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Stops the <tt CLASS=literal>PixelGrabber</tt>'s 
+image-grabbing process. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.97">getColorModel</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.117">public synchronized ColorModel getColorModel() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The color model the <tt CLASS=literal>PixelGrabber</tt> 
+is using for its array. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.98">getHeight</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.118">public synchronized int getHeight() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The height of the grabbed image, or -1 if the height is not known. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.99">getPixels</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.119">public synchronized Object getPixels() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The array of pixels. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Either a byte array or an integer array is returned, or <tt CLASS=literal>null</tt> 
+if the size and format of the image are not yet known. Because the <tt CLASS=literal>PixelGrabber</tt> 
+may change its mind about what <tt CLASS=literal>ColorModel</tt> 
+it's using, different calls to this method may return different arrays 
+until the image acquisition is complete. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.100">getStatus</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.120">public synchronized int getStatus() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A combination of <tt CLASS=literal>ImageObserver</tt> 
+flags indicating what data is available. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.101">getWidth</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.121">public synchronized int getWidth() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The width of the grabbed image, or -1 if the width is not known. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.102">grabPixels</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.122">public boolean grabPixels() throws InterruptedException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If 
+image grabbing is interrupted before completion. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the image has completed 
+loading, <tt CLASS=literal>false</tt> if the loading 
+process aborted or an error occurred. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Starts the process of grabbing the pixel data from the source and storing 
+it in the array <tt CLASS=literal>pixels[]</tt> from 
+constructor. Returns when the image is complete, loading aborts, or an 
+error occurs. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.123">public synchronized boolean grabPixels (long ms) throws InterruptedException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ms</I><br>
+<DD>
+
+<P CLASS=para>
+Milliseconds to wait for completion. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if image has completed 
+loading, <tt CLASS=literal>false</tt> if the loading 
+process aborted, or an error or a timeout occurred. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If image grabbing is interrupted before completion. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Starts the process of grabbing the pixel data from the source and storing 
+it in the array <tt CLASS=literal>pixels[]</tt> from 
+constructor. Returns when the image is complete, loading aborts, an error 
+occurs, or a timeout occurs. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.103">imageComplete</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.124">public synchronized void imageComplete (int status)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>status</I><br>
+<DD>
+
+<P CLASS=para>
+Image loading completion status flags. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.imageComplete(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Called by the <tt CLASS=literal>ImageProducer</tt> 
+to indicate that the image has been delivered. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.104">setColorModel</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.125">void setColorModel (ColorModel model)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+The color model for the image. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setColorModel(</tt><tt CLASS=literal>ColorModel</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.105">setDimensions</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.126">void setDimensions (int width, int height)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width for image.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height for image. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setDimensions(</tt><tt CLASS=literal>int, 
+int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.106">setHints</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.127">void setHints (int hints)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>hints</I><br>
+<DD>
+
+<P CLASS=para>
+Image consumption hints. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setHints(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.107">setPixels</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.128">void setPixels (int x, int y, int width, int height, ColorModel model, byte[] pixels, int offset, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+Color model of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of the pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setPixels(</tt><tt CLASS=literal>int, 
+int, int, int, ColorModel, byte[], int, int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Called by the <tt CLASS=literal>ImageProducer</tt> 
+to deliver pixel data from the image. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.129">void setPixels (int x, int y, int width, int height, ColorModel model, int[] pixels, int offset, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+Color model of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of the pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setPixels(</tt><tt CLASS=literal>int, 
+int, int, int, ColorModel, int[], int, int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Called by the <tt CLASS=literal>ImageProducer</tt> 
+to deliver pixel data from the image. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.108">setProperties</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.130">void setProperties (Hashtable properties)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>properties</I><br>
+<DD>
+
+<P CLASS=para>
+The properties for the image. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setProperties(</tt><tt CLASS=literal>Hashtable</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.109">startGrabbing</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.131">public synchronized void startGrabbing() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Starts the <tt CLASS=literal>PixelGrabber</tt>'s 
+image-grabbing process. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.110">status</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.132">public synchronized int status () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageObserver</tt> flags OR'ed 
+together representing the available information about the image. Replaced 
+by <tt CLASS=literal>getStatus()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.74">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ColorModel</tt>, <tt CLASS=literal>Hashtable</tt>, 
+<tt CLASS=literal>Image</tt>, <tt CLASS=literal>ImageConsumer</tt>, 
+<tt CLASS=literal>ImageProducer</tt>, <tt CLASS=literal>I</tt><tt CLASS=literal>nterruptedException</tt>, <tt CLASS=literal>MemoryImageSource</tt>, <tt CLASS=literal>Object</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch22_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>MemoryImageSource</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ReplicateScaleFilter <img src="gifs/bstar.gif" alt="(New)" border=0></td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

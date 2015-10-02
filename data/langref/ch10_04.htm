@@ -1,0 +1,2131 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] Class</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Fri Aug  8 15:23:20 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Class</H1>
+
+<H2>Name</H2>
+
+Class
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.28">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Class</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.Seriablizable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.29">Description</A></h2>
+
+<P CLASS=para>
+<A NAME="MAN.CLASS.1"></A> 
+As of Java 1.1, instances of the <tt CLASS=literal>Class</tt> class 
+are used as run-time descriptions of all Java data types, both reference types
+and primitive types.  The <tt CLASS=literal>Class</tt> class has also been
+greatly expanded in 1.1 to provide support for the Reflection API.
+Prior to 1.1, <tt CLASS=literal>Class</tt> just
+provided run-time descriptions of reference types.
+
+<P CLASS=para>
+A <tt CLASS=literal>Class</tt> object provides considerable
+information about the data type.  You can use the 
+<tt CLASS=literal>isPrimitive()</tt>
+method to find out if a <tt CLASS=literal>Class</tt> object describes
+a primitive type, while <tt CLASS=literal>isArray()</tt> indicates if
+the object describes an array type.  If a <tt CLASS=literal>Class</tt>
+object describes a class or interface type, there are numerous methods
+that return information about the fields, methods, and constructors
+of the type.  This information is returned as 
+<tt CLASS=literal>java.lang.reflect.Field</tt>, 
+<tt CLASS=literal>java.lang.reflect.Method</tt>, and
+<tt CLASS=literal>java.lang.reflect.Constructor</tt> objects.
+
+<P CLASS=para>
+There are a number of ways that you can get a <tt CLASS=literal>Class</tt>
+object for a particular data type:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If you have an object, you can get the 
+<tt CLASS=literal>Class</tt> object that describes
+the class of that object by calling the object's <tt CLASS=literal>getClass()</tt>method. Every class inherits this method from the
+<tt CLASS=literal>Object</tt> class. 
+
+<P>
+<li CLASS=listitem>As of Java 1.1, you can get the <tt CLASS=literal>Class</tt> object 
+that describes any Java type using the new class literal syntax.
+A class literal is simply the name of a type (a class name or
+a primitive type name) followed by a period and the <tt CLASS=literal>class</tt>
+keyword.  For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Class s = String.class;
+Class i = int.class;
+Class v = java.util.Vector.class;
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>In Java 1.0, 
+you can get the <tt CLASS=literal>Class</tt> object from the name of a
+data type using the <tt CLASS=literal>forName()</tt> class method of
+<tt CLASS=literal>Class</tt>.  For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Class v = Class.forName("java.util.Vector");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This technique still works in Java 1.1, but it is more cumbersome
+(and less efficient) than using a class literal.
+
+<P>
+</UL>
+<P CLASS=para>
+You can create an instance of a class using the 
+<tt CLASS=literal>newInstance()</tt>
+method of a <tt CLASS=literal>Class</tt> object, if the class has a
+constructor that takes no arguments.
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> class
+has no <tt CLASS=literal>public</tt> constructors; it cannot be explicitly
+instantiated. <tt CLASS=literal>Class</tt> objects are normally created
+by the <tt CLASS=literal>ClassLoader</tt> class or a <tt CLASS=literal>ClassLoader</tt>
+object.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.30">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final class java.lang.Class extends java.lang.Object 
+                                   implements java.io.Serializable {
+    // Class Methods
+    public static native Class forName(String className);
+    // Instance Methods
+    public Class[] getClasses();                           // New in 1.1
+    public native ClassLoader getClassLoader();
+    public native Class getComponentType();                // New in 1.1
+    public Constructor 
+           getConstructor(Class[] parameterTypes);         // New in 1.1
+    public Constructor[] getConstructors();                // New in 1.1
+    public Class[] getDeclaredClasses();                   // New in 1.1
+    public Constructor 
+           getDeclaredConstructor(Class[] parameterTypes); // New in 1.1
+    public Constructor[] getDeclaredConstructors();        // New in 1.1
+    public Field getDeclaredField(String name);            // New in 1.1
+    public Field[] getDeclaredFields();                    // New in 1.1
+    public Method getDeclaredMethod(String name, 
+                  Class[] parameterTypes)                  // New in 1.1
+    public Method[] getDeclaredMethods()                   // New in 1.1
+    public Class getDeclaringClass();                      // New in 1.1
+    public Field getField(String name);                    // New in 1.1
+    public Field[] getFields();                            // New in 1.1
+    public native Class[] getInterfaces();    
+    public Method getMethod(String name, 
+                  Class[] parameterTypes);                 // New in 1.1
+    public Method[] getMethods();                          // New in 1.1
+    public native int getModifiers();                      // New in 1.1
+    public native String getName();
+    public URL getResource(String name);                   // New in 1.1
+    public InputStream getResourceAsStream(String name);   // New in 1.1
+    public native Object[] getSigners();                   // New in 1.1
+    public native Class getSuperclass();
+    public native boolean isArray();                       // New in 1.1
+    public native boolean isAssignableFrom(Class cls);     // New in 1.1
+    public native boolean isInstance(Object obj);          // New in 1.1 
+    public native boolean isInterface();
+    public native boolean isPrimitive();                   // New in 1.1 
+    public native Object newInstance();
+    public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.31">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.91">forName</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.95"><DIV CLASS=screen> <P> <PRE> public static Class forName(String className) throws ClassNotFoundException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>className</tt><br>
+<DD>
+
+<P CLASS=para>
+Name of a class qualified by the name of its
+package. If the class is defined inside of another class, all dots
+(<tt CLASS=literal>.</tt>) that separate the top-level class name
+from the class to load must be changed to dollar signs 
+($) for the name to be recognized.  </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Class</tt> object that describes the named
+class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassNotFoundException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the class cannot be loaded because it cannot
+be found.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method dynamically loads a class if it has
+not already been loaded. The method returns a <tt CLASS=literal>Class</tt>
+object that describes the named class.
+
+<P CLASS=para>
+The most common use of <tt CLASS=literal>forName()</tt> is for
+loading classes on the fly when an application wants to use classes it wasn't built with. For example, a web browser uses this
+technique. When a browser needs to load an applet, the browser calls
+<tt CLASS=literal>Class.forName()</tt> for the applet. The method loads
+the class if it has not already been loaded and returns the
+<tt CLASS=literal>Class</tt> object that encapsulates the class. The
+browser then creates an instance of the applet by calling the <tt CLASS=literal>Class</tt> object's <tt CLASS=literal>newInstance()</tt> method.
+
+<P CLASS=para>
+When a class is loaded using a <tt CLASS=literal>ClassLoader</tt>
+object, any classes loaded at the instigation of that class are
+also loaded using the same <tt CLASS=literal>ClassLoader</tt> object.
+This method implements that security policy by trying to find a
+<tt CLASS=literal>ClassLoader</tt> object to load the named class.
+The method searches the stack for the most recently invoked method
+associated with a class that was loaded using a <tt CLASS=literal>ClassLoader</tt> object. If such a class is found, the <tt CLASS=literal>ClassLoader</tt>
+object associated with that class is used.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.32">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.92">getClasses</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.96"><tt CLASS=literal>public Class[] getClasses()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Class</tt> objects that contains
+the <tt CLASS=literal>public</tt> classes and interfaces that
+are members of this class.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+reference type, this method returns an array of <tt CLASS=literal>Class</tt>
+objects that lists all of the <tt CLASS=literal>public</tt> classes and
+interfaces that are members of this class or interface.  The list
+includes <tt CLASS=literal>public</tt> classes and interfaces that
+are inherited from superclasses and that are defined by this class
+or interface.  If there are no <tt CLASS=literal>public</tt> member
+classes or interfaces, or if this <tt CLASS=literal>Class</tt> represents
+a primitive type, the method returns an array of length
+<tt CLASS=literal>0</tt>.
+
+<P CLASS=para>
+As of Java 1.1.1, this method always returns an array of length
+<tt CLASS=literal>0</tt>, no matter how many <tt CLASS=literal>public</tt>
+member classes this class or interface actually declares.
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.93">getClassLoader</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.97"><tt CLASS=literal>public native ClassLoader getClassLoader()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ClassLoader</tt> object used to load this
+class or <tt CLASS=literal>null</tt> if this class was not loaded with
+a <tt CLASS=literal>ClassLoader</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the <tt CLASS=literal>ClassLoader</tt> object
+that was used to load this class. If this class was not loaded with
+a <tt CLASS=literal>ClassLoader</tt>, <tt CLASS=literal>null</tt> is returned.
+
+<P CLASS=para>
+This method is useful for making sure that a class gets loaded
+with the same class loader as was used for loading this <tt CLASS=literal>Class</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.94">getComponentType</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.98"><tt CLASS=literal>public native Class getComponentType()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Class</tt> object that describes the component
+type of this class if it is an array type.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents an array 
+type, this method returns a <tt CLASS=literal>Class</tt>
+object that describes the component type of the array.
+If this <tt CLASS=literal>Class</tt> does not represent
+an array type, the method returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.95">getConstructor</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.99"><DIV CLASS=screen> <P> <PRE> public Constructor getConstructor(Class[] parameterTypes) throws NoSuchMethodException, SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>parameterTypes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Class</tt> objects that describes the 
+parameter types, in declared order, of the constructor. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Constructor</tt> object that reflects the specified
+<tt CLASS=literal>public</tt> constructor of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchMethodException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified constructor does not exist.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class, this method returns a <tt CLASS=literal>Constructor</tt>
+object that reflects the specified <tt CLASS=literal>public</tt>
+constructor of this class.  The constructor is located by
+searching all of the constructors of the class for a 
+<tt CLASS=literal>public</tt> constructor that has exactly the
+same formal parameters as specified.  If this 
+<tt CLASS=literal>Class</tt> does not represent
+a class, the method returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.96">getConstructors</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.100"><DIV CLASS=screen> <P> <PRE> public Constructor[] getConstructors() throws SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Constructor</tt> objects that reflect the 
+<tt CLASS=literal>public</tt> constructors of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class, this method returns an array of <tt CLASS=literal>Constructor</tt>
+objects that reflect the <tt CLASS=literal>public</tt>
+constructors of this class.  If there are no <tt CLASS=literal>public</tt>
+constructors, or if this <tt CLASS=literal>Class</tt> does not represent
+a class, the method returns an array of length <tt CLASS=literal>0</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.97">getDeclaredClasses</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.101"><tt CLASS=literal>public Class[] getDeclaredClasses() throws SecurityException</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Class</tt> objects that contains
+all of the declared classes and interfaces that
+are members of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+reference type, this method returns an array of <tt CLASS=literal>Class</tt>
+objects that lists all of the classes and
+interfaces that are members of this class or interface.  The list
+includes <tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>,
+default access, and <tt CLASS=literal>private</tt> classes and interfaces that
+are defined by this class or interface, but it excludes classes and 
+interfaces inherited from superclasses.
+If there are no such member classes or interfaces, or if 
+this <tt CLASS=literal>Class</tt> represents
+a primitive type, the method returns an array of length
+<tt CLASS=literal>0</tt>.
+
+<P CLASS=para>
+As of Java 1.1.1, this method always returns an array of length
+<tt CLASS=literal>0</tt>, no matter how many member classes this class or
+interface declares.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.98">getDeclaredConstructor</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.102"><DIV CLASS=screen> <P> <PRE> public Constructor getDeclaredConstructor(Class[] parameterTypes) throws NoSuchMethodException, SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>parameterTypes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Class</tt> objects that describes the 
+parameter types, in declared order, of the constructor. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Constructor</tt> object that reflects the specified
+declared constructor of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchMethodException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified constructor does not exist.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class, this method returns a <tt CLASS=literal>Constructor</tt>
+object that reflects the specified declared
+constructor of this class.  The constructor is located by
+searching all of the constructors of the class for a 
+<tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>, default
+access, or <tt CLASS=literal>private</tt> constructor that has exactly the
+same formal parameters as specified.  If this 
+<tt CLASS=literal>Class</tt> does not represent
+a class, the method returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.99">getDeclaredConstructors</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.103"><DIV CLASS=screen> <P> <PRE> public Constructor[] getDeclaredConstructors() throws SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Constructor</tt> objects that reflect the 
+declared constructors of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class, this method returns an array of <tt CLASS=literal>Constructor</tt>
+objects that reflect the <tt CLASS=literal>public</tt>, 
+<tt CLASS=literal>protected</tt>, default access, and <tt CLASS=literal>private</tt>
+constructors of this class.  If there are no declared
+constructors, or if this <tt CLASS=literal>Class</tt> does not represent
+a class, the method returns an array of length <tt CLASS=literal>0</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.100">getDeclaredField</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.104"><DIV CLASS=screen> <P> <PRE> public Field getDeclaredField(String name) throws NoSuchFieldException, SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The simple name of the field.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Field</tt> object that reflects the specified
+declared field of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchFieldException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified field does not exist.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface, this method returns a <tt CLASS=literal>Field</tt>
+object that reflects the specified declared
+field of this class.  The field is located by
+searching all of the fields of the class (but not inherited fields) for a 
+<tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>, default
+access, or <tt CLASS=literal>private</tt> field that has the specified
+simple name.  If this 
+<tt CLASS=literal>Class</tt> does not represent
+a class or interface, the method returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.101">getDeclaredFields</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.105">public Field[] getDeclaredFields() throws SecurityException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Field</tt> objects that reflect the 
+declared fields of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface, this method returns an array of <tt CLASS=literal>Field</tt>
+objects that reflect the <tt CLASS=literal>public</tt>, 
+<tt CLASS=literal>protected</tt>, default access, and <tt CLASS=literal>private</tt>
+fields declared by this class, but excludes inherited fields.  
+If there are no declared
+fields, or if this <tt CLASS=literal>Class</tt> does not represent
+a class or interface, 
+the method returns an array of length <tt CLASS=literal>0</tt>.
+
+<P CLASS=para>
+This method does not reflect the implicit <tt CLASS=literal>length</tt>
+field for array types.  The methods of the class <tt CLASS=literal>Array</tt>
+should be used to manipulate array types.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.102">getDeclaredMethod</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.106"><DIV CLASS=screen> <P> <PRE> public Method getDeclaredMethod(String name, Class[] parameterTypes) throws NoSuchMethodException, SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The simple name of the method.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>parameterTypes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Class</tt> objects that describes the 
+parameter types, in declared order, of the method. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Method</tt> object that reflects the specified
+declared method of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchMethodException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified method does not exist.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface, this method returns a <tt CLASS=literal>Method</tt>
+object that reflects the specified declared
+method of this class.  The method is located by
+searching all of the methods of the class (but not inherited methods) for a 
+<tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>, default
+access, or <tt CLASS=literal>private</tt> method that has the specified
+simple name and exactly the same formal parameters as specified.  
+If this <tt CLASS=literal>Class</tt> does not represent
+a class or interface, the method returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.103">getDeclaredMethods</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.107">public Method[] getDeclaredMethods() throws SecurityException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Method</tt> objects that reflect the 
+declared methods of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface, this method returns an array of <tt CLASS=literal>Method</tt>
+objects that reflect the <tt CLASS=literal>public</tt>, 
+<tt CLASS=literal>protected</tt>, default access, and <tt CLASS=literal>private</tt>
+methods declared by this class, but excludes inherited methods.  
+If there are no declared
+methods, or if this <tt CLASS=literal>Class</tt> does not represent
+a class or interface, 
+the method returns an array of length <tt CLASS=literal>0</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.104">getDeclaringClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.108"><tt CLASS=literal>public Class getDeclaringClass()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Class</tt> object that represents the declaring class if
+this class is a member of another class.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface that is a member of another class
+or interface, this method returns a <tt CLASS=literal>Class</tt>
+object that describes the declaring class or interface.
+If this class or interface is not a member of another class
+or interface, or if it represents
+a primitive type, the method returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.105">getField</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.109"><DIV CLASS=screen> <P> <PRE> public Field getField(String name) throws NoSuchFieldException, SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The simple name of the field.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Field</tt> object that reflects the specified
+<tt CLASS=literal>public</tt> field of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchFieldException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified field does not exist.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface, this method returns a <tt CLASS=literal>Field</tt>
+object that reflects the specified <tt CLASS=literal>public</tt>
+field of this class.  The field is located by
+searching all of the fields of the class, including any 
+inherited fields, for a 
+<tt CLASS=literal>public</tt> field that has the specified
+simple name.  If this 
+<tt CLASS=literal>Class</tt> does not represent
+a class or interface, the method returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.106">getFields</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.110"><tt CLASS=literal>public Field[] getFields() throws SecurityException</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Field</tt> objects that reflect the 
+<tt CLASS=literal>public</tt> fields of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface, this method returns an array of <tt CLASS=literal>Field</tt>
+objects that reflect the <tt CLASS=literal>public</tt> 
+fields declared by this class and any inherited <tt CLASS=literal>public</tt>
+fields.  If there are no <tt CLASS=literal>public</tt>
+fields, or if this <tt CLASS=literal>Class</tt> does not represent
+a class or interface, 
+the method returns an array of length <tt CLASS=literal>0</tt>.
+
+<P CLASS=para>
+This method does not reflect the implicit <tt CLASS=literal>length</tt>
+field for array types.  The methods of the class <tt CLASS=literal>Array</tt>
+should be used to manipulate array types.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.107">getInterfaces</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.111"><tt CLASS=literal>public native Class[] getInterfaces()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of the interfaces implemented by this class
+or extended by this interface.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>Class</tt> object represents a class,
+this method returns an array that refers to all of the interfaces
+that the class implements. The order of the interfaces referred
+to in the array is the same as the order in the class declaration's
+<tt CLASS=literal>implements</tt> clause. If the class does not implement
+any interfaces, the length of the returned array is 0.
+
+<P CLASS=para>
+If the object represents an interface, this method returns
+an array that refers to all of the interfaces that this interface
+extends. The interfaces occur in the order they appear
+in the interface declaration's <tt CLASS=literal>extends</tt> clause.
+If the interface does not extend any interfaces, the length of the
+returned array is 0.
+
+<P CLASS=para>
+If the object represents a primitive or array type, the method
+returns an array of length 0.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.108">getMethod</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.112"><DIV CLASS=screen> <P> <PRE> public Method getMethod(String name, Class[] parameterTypes) throws NoSuchMethodException, SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The simple name of the method.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>parameterTypes</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Class</tt> objects that describes the 
+parameter types, in declared order, of the method. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Method</tt> object that reflects the specified
+<tt CLASS=literal>public</tt> method of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchMethodException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the specified method does not exist.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface, this method returns a <tt CLASS=literal>Method</tt>
+object that reflects the specified <tt CLASS=literal>public</tt>
+method of this class.  The method is located by
+searching all of the methods of the class, including any inherited methods, 
+for a <tt CLASS=literal>public</tt> method that has the specified
+simple name and exactly the same formal parameters as specified.  
+If this <tt CLASS=literal>Class</tt> does not represent
+a class or interface, the method returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.109">getMethods</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.113"><tt CLASS=literal>public Method[] getMethods() throws SecurityException</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Method</tt> objects that reflect the 
+<tt CLASS=literal>public</tt> methods of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkMemberAccess()</tt> method of the
+<tt CLASS=literal>SecurityManager</tt> throws a 
+<tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a 
+class or interface, this method returns an array of <tt CLASS=literal>Method</tt>
+objects that reflect the <tt CLASS=literal>public</tt>
+methods declared by this class and any inherited <tt CLASS=literal>public</tt>
+methods.  If there are no <tt CLASS=literal>public</tt>
+methods or if this <tt CLASS=literal>Class</tt> doesn't represent
+a class or interface, 
+the method returns an array of length <tt CLASS=literal>0</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.110">getModifiers</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.114"><tt CLASS=literal>public native int getModifiers()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An integer that represents the modifier keywords used to declare
+this class.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Class</tt> object represents a class or 
+interface, this method returns an integer value that represents
+the modifiers used to declare the class or interface.  The
+<tt CLASS=literal>Modifier</tt> class should be used to decode the
+returned value.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.111">getName</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.115"><tt CLASS=literal>public native String getName()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The fully qualified name of this class or interface.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the fully qualified name of the type
+represented by this <tt CLASS=literal>Class</tt> object.
+
+<P CLASS=para>
+If the object represents the class of an array, the method
+returns a <tt CLASS=literal>String</tt> that contains as many left square
+brackets as there are dimensions in the array, followed by a code
+that indicates the type of element contained in the base array.
+Consider the following:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+(new int [3][4][5]).getClass().getName()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This code returns "<tt CLASS=literal>[[[I</tt>". The codes used
+to indicate the element type are as follows:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Code</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Type</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>[</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+array</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>B</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>byte</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>C</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>char</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>d</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>double</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>F</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>float</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>I</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>int</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>J</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>long</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>L</tt> <I CLASS=emphasis>fully_qualified_class_name</I></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+class or interface</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>S</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>short</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Z</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>boolean</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.112">getResource</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.116"><tt CLASS=literal>public URL getResource(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A resource name.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>URL</tt> object that is connected to the specified
+resource or <tt CLASS=literal>null</tt> if the resource cannot be found.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds a resource with the given name for this
+<tt CLASS=literal>Class</tt> object and returns a
+<tt CLASS=literal>URL</tt> object that is connected to the resource.
+The rules for searching for a resource associated with a class are
+implemented by the <tt CLASS=literal>ClassLoader</tt> for the class; this 
+method simply calls the <tt CLASS=literal>getResource()</tt> method of
+the <tt CLASS=literal>ClassLoader</tt>.  If this class does not
+have a <tt CLASS=literal>ClassLoader</tt> (i.e., it is a system class),
+the method calls the <tt CLASS=literal>ClassLoader.getSystemResource()</tt>
+method.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.113">getResourceAsStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.117"><tt CLASS=literal>public InputStream getResourceAsStream(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A resource name.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>InputStream</tt> object that is connected to the specified
+resource or <tt CLASS=literal>null</tt> if the resource cannot be found.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds a resource with the given name for this
+<tt CLASS=literal>Class</tt> object and returns an
+<tt CLASS=literal>InputStream</tt> object that is connected to the resource.
+The rules for searching for a resource associated with a class are
+implemented by the <tt CLASS=literal>ClassLoader</tt> for the class; this 
+method simply calls the <tt CLASS=literal>getResourceAsStream()</tt> method of
+the <tt CLASS=literal>ClassLoader</tt>.  If this class does not
+have a <tt CLASS=literal>ClassLoader</tt> (i.e., it is a system class),
+the method calls the <tt CLASS=literal>ClassLoader.getSystemResourceAsStream()</tt>
+method.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.114">getSigners</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.118"><tt CLASS=literal>public native Object[] getSigners()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Object</tt>s that represents the signers
+of this class.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an 
+array of objects that represents the digital
+signatures for this class.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.115">getSuperclass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.119"><tt CLASS=literal>public native Class getSuperclass()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The superclass of this class or <tt CLASS=literal>null</tt> if
+there is no superclass.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>Class</tt> object represents a class
+other than <tt CLASS=literal>Object</tt>, this method returns the <tt CLASS=literal>Class</tt> object that represents its superclass. If the object represents
+an interface, the <tt CLASS=literal>Object</tt> class, or a primitive
+type, the method
+returns <tt CLASS=literal>null</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.116">isArray</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.120"><tt CLASS=literal>public native boolean isArray()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this object describes an array type;
+otherwise <tt CLASS=literal>false</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.117">isAssignableFrom</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.121"><tt CLASS=literal>public native boolean isAssignableFrom(Class cls)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>cls</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Class</tt> object to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the type represented by <tt CLASS=literal>cls</tt>
+is assignable to the type of this class:
+otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NullPointerException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>cls</tt> is <tt CLASS=literal>null</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the type 
+represented by <tt CLASS=literal>cls</tt> is assignable to the
+type of this class.  
+If this class represents a class, this class must be the same
+as <tt CLASS=literal>cls</tt> or a superclass of <tt CLASS=literal>cls</tt>.
+If this class represents an interface, this class must be the same
+as <tt CLASS=literal>cls</tt> or a superinterface of <tt CLASS=literal>cls</tt>.
+If this class represents a primitive type, this class must
+be the same as <tt CLASS=literal>cls</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.118">isInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.122"><tt CLASS=literal>public native boolean isInstance(Object obj)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>Object</tt> to be tested.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if <tt CLASS=literal>obj</tt> can be cast to
+the reference type specified by this class; 
+otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NullPointerException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>obj</tt> is <tt CLASS=literal>null</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the object represented
+by <tt CLASS=literal>obj</tt> can be cast to the type of
+this class object without causing a <tt CLASS=literal>ClassCastException</tt>.
+This method is the dynamic equivalent of the <tt CLASS=literal>instanceof</tt>
+operator.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.119">isInterface</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.123"><tt CLASS=literal>public native boolean isInterface()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this object describes an interface;
+otherwise <tt CLASS=literal>false</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.120">isPrimitive</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.124"><tt CLASS=literal>public native boolean isPrimitive()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this object describes a primitive type;
+otherwise <tt CLASS=literal>false</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.121">newInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.125"><DIV CLASS=screen> <P> <PRE> public native Object newInstance () throws InstantiationException, IllegalAccessException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A reference to a new instance of this class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InstantiationException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>Class</tt> object represents an interface or an
+<tt CLASS=literal>abstract</tt> class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the class or an initializer is not accessible.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a new instance of this class by performing
+these steps:
+
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>It creates a new object of the class
+represented by the <tt CLASS=literal>Class</tt> object.
+
+<P>
+<li CLASS=listitem>It calls the constructor for the class that takes
+no arguments.
+
+<P>
+<li CLASS=listitem>It returns a reference to the initialized object.
+
+<P>
+</OL>
+<P CLASS=para>
+The <tt CLASS=literal>newInstance()</tt> method is useful for
+creating an instance of a class that has been dynamically loaded
+using the <tt CLASS=literal>forName()</tt> method.
+
+<P CLASS=para>
+The reference returned by this method is usually cast to the
+type of object that is instantiated.
+
+<P CLASS=para>
+The <tt CLASS=literal>newInstance()</tt> method can throw objects that are not instances of the classes it is declared to throw. If the constructor invoked by <tt CLASS=literal>newInstance()</tt> throws an exception, the exception is thrown by <tt CLASS=literal>newInstance()</tt> regardless of the class of the object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch10-REFSECT2-AUTOID.122">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch10-REFSECT3-AUTOID.126"><tt CLASS=literal>public String toString()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> that contains the name of the
+class with either <tt CLASS=literal>'class'</tt> or <tt CLASS=literal>'interface'</tt> prepended as appropriate.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of the <tt CLASS=literal>Class</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.33">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch10-REFSECT1-AUTOID.34">See Also</A></h2>
+
+<P CLASS=para>
+<A HREF="ch10_05.htm">ClassLoader</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch09_04.htm#JLR2-CH-9-SECT-4.1">Exceptions</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5">Interface Declarations</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6">Nested Top-Level and Member Classes</A>;
+<A HREF="ch10_14.htm">Object</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.3">Object Creation</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2">Reference Types</A>;
+<A HREF="ch10_18.htm">SecurityManager</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Character</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ClassLoader</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] 11.4 Handling Local Customs</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:59:08 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>Internationalization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-11-SECT-4">11.4 Handling Local Customs</A></h2>
+
+<P CLASS=para>
+The second problem of internationalization is the task of
+following local customs and conventions in areas like date
+and time formatting.  The <tt CLASS=literal>java.text</tt> package defines
+classes to help with this duty.
+
+<P CLASS=para>
+The <tt CLASS=literal>NumberFormat</tt> class is used to format
+numbers, monetary amounts, and percentages in a
+locale-dependent way for display to the user.  This is
+necessary because different locales have different
+conventions for number formatting.  For example, in France,
+a comma is used as a decimal separator instead of a period, as
+used in many English speaking countries.  A
+<tt CLASS=literal>NumberFormat</tt> object can use the default locale or
+any locale you specify.
+
+<P CLASS=para>
+The <tt CLASS=literal>DateFormat</tt> class is used to format dates
+and times in a locale-dependent way for display to the user.
+Different countries have different conventions.  Should the
+month or day be displayed first?  Should periods or colons
+be used to separate fields of the time?  What are the names
+of the months in the language of the locale?  A
+<tt CLASS=literal>DateFormat</tt> object can simply use the default locale
+or it can use any locale you specify.  The
+<tt CLASS=literal>DateFormat</tt> class is used in conjunction with the
+<tt CLASS=literal>TimeZone</tt> and <tt CLASS=literal>Calendar</tt> classes of
+<tt CLASS=literal>java.util</tt>.  The <tt CLASS=literal>TimeZone</tt> object tells the
+<tt CLASS=literal>DateFormat</tt> what time zone the date should be
+interpreted in, while the <tt CLASS=literal>Calendar</tt> object specifies
+how the date itself should be broken down into days, weeks,
+months, and years.  Almost all locales use the standard
+<tt CLASS=literal>GregorianCalendar</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>Collator</tt> class is used to compare strings in a
+locale-dependent way.  This is necessary because different
+languages "alphabetize" strings in different ways (and some
+languages don't even use alphabets).  In traditional
+Spanish, for example, the letters "ch" are treated as a
+single character that comes between "c" and "d" for the purposes of
+sorting.  When you need to sort strings or search for a
+string within Unicode text, you should use a
+<tt CLASS=literal>Collator</tt> object, either one created to work with the
+default locale or one created for a specified
+locale.
+
+<P CLASS=para>
+The <tt CLASS=literal>BreakIterator</tt> class allows you to locate
+character, word, line, and sentence boundaries in a
+locale-dependent way.  This is useful when you need to
+recognize such boundaries in Unicode text, as when you are
+implementing a word-wrapping algorithm.
+
+<P CLASS=para>
+<A HREF="ch11_04.htm#JNUT2-CH-11-EX-3">Example 11.3</A>
+shows a class that uses the <tt CLASS=literal>NumberFormat</tt> and
+<tt CLASS=literal>DateFormat</tt> classes to display a hypothetical stock
+portfolio to the user following local conventions.  The
+program uses various <tt CLASS=literal>NumberFormat</tt> and
+<tt CLASS=literal>DateFormat</tt> objects to format (using the
+<tt CLASS=literal>format()</tt> method) different types of numbers and
+dates.  These <tt CLASS=literal>Format</tt> objects all operate using the
+default locale, but could have been created with an
+explicitly specified locale. <A HREF="ch11_04.htm#JNUT2-CH-11-EX-2">Example 11.2</A>
+shows the output of this program in American, Canadian, and
+French locales.  Note the different treatment of dates,
+numbers, and monetary quantities in these three locales.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-11-EX-2">Example 11.2: Dates and Numbers Formatted for Three Locales</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+# American English locale (en_US)
+Portfolio value at April 08, 1997 6:57:40 PM PDT:
+Symbol  Shares  Bought On       At      Quote   Change
+XXX     400     6/15/96         $11.90  $13.00  9%
+YYY     1,100   9/14/96         $71.09  $27.25  -61%
+ZZZ     6,000   6/27/91         $23.37  $89.12  281%
+# Canadian English locale (en_CA)
+Portfolio value at April 8, 1997 9:57:40 CDT PM:
+Symbol  Shares  Bought On       At      Quote   Change
+XXX     400     15/06/96        $11.90  $13.00  9%
+YYY     1,100   14/09/96        $71.09  $27.25  -61%
+ZZZ     6,000   27/06/91        $23.37  $89.12  281%
+# French locale (fr_FR)
+Portfolio value at 9 avril 1997 03:57:40 GMT+02:00:
+Symbol  Shares  Bought On       At      Quote   Change
+XXX     400     15/06/96        11,90 F 13,00 F 9%
+YYY     1 100   14/09/96        71,09 F 27,25 F -61%
+ZZZ     6 000   27/06/91        23,37 F 89,12 F 281%
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-11-EX-3">Example 11.3: Formatting Dates and Numbers in an Internationalized Program</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.text.*;
+import java.util.Date;
+/**
+ * A partial implementation of a hypothetical stock portfolio class.
+ * We use it only to demonstrate number and date internationalization.
+ */
+public class Portfolio {
+  EquityPosition[] positions;
+  Date lastQuoteTime = new Date();
+  public void print() {
+    // Obtain NumberFormat and DateFormat objects to format our data.
+    NumberFormat number = NumberFormat.getInstance();
+    NumberFormat price = NumberFormat.getCurrencyInstance();
+    NumberFormat percent = NumberFormat.getPercentInstance();
+    DateFormat shortdate = DateFormat.getDateInstance(DateFormat.SHORT);
+    DateFormat fulldate = DateFormat.getDateTimeInstance(DateFormat.LONG,
+                                                         DateFormat.LONG);
+    // Print some introductory data.
+    System.out.println("Portfolio value at " +
+                       fulldate.format(lastQuoteTime) + ":");
+    System.out.println("Symbol\tShares\tBought On\tAt\t" +
+                       "Quote\tChange");
+    // Then display the table using the format() methods of the Format objects.
+    for(int i = 0; i &lt; positions.length; i++) {
+      System.out.print(positions[i].name + "\t");
+      System.out.print(number.format(positions[i].shares) + "\t");
+      System.out.print(shortdate.format(positions[i].purchased) + "\t");
+      System.out.print(price.format(positions[i].bought) + "\t");
+      System.out.print(price.format(positions[i].current) + "\t");
+      double change =
+        (positions[i].current - positions[i].bought)/positions[i].bought;
+      System.out.println(percent.format(change));
+    }
+  }
+  static class EquityPosition {
+    String name;             // Name of the stock.
+    int shares;              // Number of shares held.
+    Date purchased;          // When purchased.
+    double bought, current;  // Purchase price and current price (per share).
+    EquityPosition(String n, int s, Date when, double then, double now) {
+      name = n; shares = s; purchased = when; bought = then; current = now;
+    }
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Character Encodings</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Localizing User-Visible Messages</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

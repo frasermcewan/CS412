@@ -1,0 +1,706 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] 11.2 Unicode</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:58:55 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>Internationalization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-11-SECT-2">11.2 Unicode</A></h2>
+
+<P CLASS=para>
+<A NAME="CH11.UNICODE.CHAR1"></A><A NAME="CH11.CHARACTER.EN1"></A>Java uses the Unicode character encoding.  Java 1.0 used
+Unicode version 1.1, while Java 1.1 has adopted the newer Unicode
+2.0 standard.  Unicode is a 16-bit character encoding
+established by the Unicode Consortium, which describes the
+standard as follows (see <A HREF="http://unicode.org">http://unicode.org</A>):
+
+<P CLASS=blockquote><BLOCKQUOTE><P>
+<P CLASS=para>
+The Unicode Worldwide Character Standard is a character
+coding system designed to support the interchange,
+processing, and display of the written texts of the diverse
+languages of the modern world. In addition, it supports
+classical and historical texts of many written languages.
+
+<P CLASS=para>
+In its current version (2.0), the Unicode standard contains
+38,885 distinct coded characters derived from 25 supported
+scripts.  These characters cover the principal written
+languages of the Americas, Europe, the Middle East, Africa,
+India, Asia, and Pacifica.
+</BLOCKQUOTE><P>
+<P CLASS=para>
+In the canonical form of the Unicode encoding, which is
+what Java <tt CLASS=literal>char</tt> and <tt CLASS=literal>String</tt> types use, every
+character occupies two bytes.  The Unicode characters \u0020
+to \u007E are equivalent to the ASCII and ISO8859-1
+(Latin-1) characters 0x20 through 0x7E.  The Unicode
+characters \u00A0 to \u00FF are identical to the ISO8859-1
+characters 0xA0 to 0xFF.  Thus there is a trivial mapping
+between Latin-1 and Unicode characters.  A number of other
+portions of the Unicode encoding are based on pre-existing
+standards, such as ISO8859-5 (Cyrillic) and ISO8859-8
+(Hebrew), though the mappings between these standards and
+Unicode may not be as trivial as the Latin-1 mapping.
+
+<P CLASS=para>
+Note that Unicode support is quite limited on many
+platforms. One of the difficulties with the use of Unicode
+is the poor availability of fonts to display all of the
+Unicode characters. <A HREF="ch11_02.htm#JNUT2-CH-11-FIG-1">Figure 11.1</A>
+shows the characters that are available on a typical
+configuration of the U.S. English Windows 95 platform.  Note the
+special box glyph used to indicate undefined characters.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-11-FIG-1">Figure 11.1: Some Unicode characters and their encodings</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_1101.gif" alt="[Graphic: Figure 11-1]" width=464 height=503 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Unicode is similar to, but not the same as, ISO 10646, the
+UCS (Universal Character Set) encoding.  UCS is a 2- or
+4-byte encoding originally intended to contain all national
+standard character encodings.  For example, it was to
+include the separate Chinese, Japanese, Korean, and Vietnamese encodings
+for Han ideographic characters.  Unicode, in contrast,
+"unifies" these disparate encodings into a single set of Han
+characters that work for all four countries.  Unicode
+has been so successful, however, that ISO 10646 has adopted
+it in place of non-unified encodings.  Thus, ISO 10646 is
+effectively Unicode, with the option of two extra bytes for
+expansion purposes.
+
+<P CLASS=para>
+Unicode is a trademark of the Unicode Consortium.  Version
+2.0 of the standard is defined by the book <I CLASS=emphasis>The Unicode
+Standard, Version 2.0</I> (published by Addison-Wesley,
+ISBN 0-201-48345-9). Further information about the Unicode
+standard and the Unicode Consortium can be obtained at
+<A HREF="http://unicode.org/">http://unicode.org/</A>.
+
+<P CLASS=para>
+<A HREF="ch11_02.htm#JNUT2-CH-11-TAB-1">Table 11.1</A>
+provides an overview of the Unicode 2.0 encoding.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-11-TAB-1">Table 11.1: Outline of the Unicode 2.0 Encoding</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Start</TH>
+<TH ALIGN="left">End</TH>
+<TH ALIGN="left">Description</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0000</TD>
+<TD ALIGN="left">1FFF</TD>
+<TD ALIGN="left"><b>Alphabets</b></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0000</TD>
+<TD ALIGN="left">007F</TD>
+<TD ALIGN="left">Basic Latin</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0080</TD>
+<TD ALIGN="left">00FF</TD>
+<TD ALIGN="left">Latin-1 Supplement</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0100</TD>
+<TD ALIGN="left">017F</TD>
+<TD ALIGN="left">Latin Extended-A</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0180</TD>
+<TD ALIGN="left">024F</TD>
+<TD ALIGN="left">Latin Extended-B</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0250</TD>
+<TD ALIGN="left">02AF</TD>
+<TD ALIGN="left">IPA Extensions</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">02B0</TD>
+<TD ALIGN="left">02FF</TD>
+<TD ALIGN="left">Spacing Modifier Letters</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0300</TD>
+<TD ALIGN="left">036F</TD>
+<TD ALIGN="left">Combining Diacritical Marks</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0370</TD>
+<TD ALIGN="left">03FF</TD>
+<TD ALIGN="left">Greek</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0400</TD>
+<TD ALIGN="left">04FF</TD>
+<TD ALIGN="left">Cyrillic</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0530</TD>
+<TD ALIGN="left">058F</TD>
+<TD ALIGN="left">Armenian</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0590</TD>
+<TD ALIGN="left">05FF</TD>
+<TD ALIGN="left">Hebrew</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0600</TD>
+<TD ALIGN="left">06FF</TD>
+<TD ALIGN="left">Arabic</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0900</TD>
+<TD ALIGN="left">097F</TD>
+<TD ALIGN="left">Devanagari</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0980</TD>
+<TD ALIGN="left">09FF</TD>
+<TD ALIGN="left">Bengali</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0A00</TD>
+<TD ALIGN="left">0A7F</TD>
+<TD ALIGN="left">Gurmukhi</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0A80</TD>
+<TD ALIGN="left">0AFF</TD>
+<TD ALIGN="left">Gujarati</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0B00</TD>
+<TD ALIGN="left">0B7F</TD>
+<TD ALIGN="left">Oriya</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0B80</TD>
+<TD ALIGN="left">0BFF</TD>
+<TD ALIGN="left">Tamil</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0C00</TD>
+<TD ALIGN="left">0C7F</TD>
+<TD ALIGN="left">Telugu</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0C80</TD>
+<TD ALIGN="left">0CFF</TD>
+<TD ALIGN="left">Kannada</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0D00</TD>
+<TD ALIGN="left">0D7F</TD>
+<TD ALIGN="left">Malayalam</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0E00</TD>
+<TD ALIGN="left">0E7F</TD>
+<TD ALIGN="left">Thai</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0E80</TD>
+<TD ALIGN="left">0EFF</TD>
+<TD ALIGN="left">Lao</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">0F00</TD>
+<TD ALIGN="left">0FBF</TD>
+<TD ALIGN="left">Tibetan</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">10A0</TD>
+<TD ALIGN="left">10FF</TD>
+<TD ALIGN="left">Georgian</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">1100</TD>
+<TD ALIGN="left">11FF</TD>
+<TD ALIGN="left">Hangul Jamo</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">1E00</TD>
+<TD ALIGN="left">1EFF</TD>
+<TD ALIGN="left">Latin Extended Additional</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">1F00</TD>
+<TD ALIGN="left">1FFF</TD>
+<TD ALIGN="left">Greek Extended</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2000</TD>
+<TD ALIGN="left">2FFF</TD>
+<TD ALIGN="left"><b>Symbols and Punctuation</b></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2000</TD>
+<TD ALIGN="left">206F</TD>
+<TD ALIGN="left">General Punctuation</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2070</TD>
+<TD ALIGN="left">209F</TD>
+<TD ALIGN="left">Superscripts and Subscripts</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">20A0</TD>
+<TD ALIGN="left">20CF</TD>
+<TD ALIGN="left">Currency Symbols</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">20D0</TD>
+<TD ALIGN="left">20FF</TD>
+<TD ALIGN="left">Combining Marks for Symbols</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2100</TD>
+<TD ALIGN="left">214F</TD>
+<TD ALIGN="left">Letterlike Symbols</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2150</TD>
+<TD ALIGN="left">218F</TD>
+<TD ALIGN="left">Number Forms</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2190</TD>
+<TD ALIGN="left">21FF</TD>
+<TD ALIGN="left">Arrows</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2200</TD>
+<TD ALIGN="left">22FF</TD>
+<TD ALIGN="left">Mathematical Operators</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2300</TD>
+<TD ALIGN="left">23FF</TD>
+<TD ALIGN="left">Miscellaneous Technical</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2400</TD>
+<TD ALIGN="left">243F</TD>
+<TD ALIGN="left">Control Pictures</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2440</TD>
+<TD ALIGN="left">245F</TD>
+<TD ALIGN="left">Optical Character Recognition</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2460</TD>
+<TD ALIGN="left">24FF</TD>
+<TD ALIGN="left">Enclosed Alphanumerics</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2500</TD>
+<TD ALIGN="left">257F</TD>
+<TD ALIGN="left">Box Drawing</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2580</TD>
+<TD ALIGN="left">259F</TD>
+<TD ALIGN="left">Block Elements</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">25A0</TD>
+<TD ALIGN="left">25FF</TD>
+<TD ALIGN="left">Geometric Shapes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2600</TD>
+<TD ALIGN="left">26FF</TD>
+<TD ALIGN="left">Miscellaneous Symbols</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">2700</TD>
+<TD ALIGN="left">27BF</TD>
+<TD ALIGN="left">Dingbats</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3000</TD>
+<TD ALIGN="left">33FF</TD>
+<TD ALIGN="left"><b>CJK Auxiliary</b></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3000</TD>
+<TD ALIGN="left">303F</TD>
+<TD ALIGN="left">CJK Symbols and Punctuation</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3040</TD>
+<TD ALIGN="left">309F</TD>
+<TD ALIGN="left">Hiragana</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">30A0</TD>
+<TD ALIGN="left">30FF</TD>
+<TD ALIGN="left">Katakana</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3100</TD>
+<TD ALIGN="left">312F</TD>
+<TD ALIGN="left">Bopomofo</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3130</TD>
+<TD ALIGN="left">318F</TD>
+<TD ALIGN="left">Hangul Compatibility Jamo</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3190</TD>
+<TD ALIGN="left">319F</TD>
+<TD ALIGN="left">Kanbun</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3200</TD>
+<TD ALIGN="left">32FF</TD>
+<TD ALIGN="left">Enclosed CJK Letters and Months</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">3300</TD>
+<TD ALIGN="left">33FF</TD>
+<TD ALIGN="left">CJK Compatibility</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">4E00</TD>
+<TD ALIGN="left">9FFF</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<b>CJK Unified Ideographs</b>
+Han characters used in China, Japan, Korea, Taiwan, and Vietnam</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">AC00</TD>
+<TD ALIGN="left">D7A3</TD>
+<TD ALIGN="left"><b>Hangul Syllables</b></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">D800</TD>
+<TD ALIGN="left">DFFF</TD>
+<TD ALIGN="left"><b>Surrogates</b></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">D800</TD>
+<TD ALIGN="left">DB7F</TD>
+<TD ALIGN="left">High Surrogates</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">DB80</TD>
+<TD ALIGN="left">DBFF</TD>
+<TD ALIGN="left">High Private Use Surrogates</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">DC00</TD>
+<TD ALIGN="left">DFFF</TD>
+<TD ALIGN="left">Low Surrogates</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">E000</TD>
+<TD ALIGN="left">F8FF</TD>
+<TD ALIGN="left"><b>Private Use</b></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">F900</TD>
+<TD ALIGN="left">FFFF</TD>
+<TD ALIGN="left"><b>Miscellaneous</b></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">F900</TD>
+<TD ALIGN="left">FAFF</TD>
+<TD ALIGN="left">CJK Compatibility Ideographs</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FB00</TD>
+<TD ALIGN="left">FB4F</TD>
+<TD ALIGN="left">Alphabetic Presentation Forms</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FB50</TD>
+<TD ALIGN="left">FDFF</TD>
+<TD ALIGN="left">Arabic Presentation Forms-A</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FE20</TD>
+<TD ALIGN="left">FE2F</TD>
+<TD ALIGN="left">Combining Half Marks</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FE30</TD>
+<TD ALIGN="left">FE4F</TD>
+<TD ALIGN="left">CJK Compatibility Forms</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FE50</TD>
+<TD ALIGN="left">FE6F</TD>
+<TD ALIGN="left">Small Form Variants</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FE70</TD>
+<TD ALIGN="left">FEFE</TD>
+<TD ALIGN="left">Arabic Presentation Forms-B</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FEFF</TD>
+<TD ALIGN="left">FEFF</TD>
+<TD ALIGN="left">Specials</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FF00</TD>
+<TD ALIGN="left">FFEF</TD>
+<TD ALIGN="left">Halfwidth and Fullwidth Forms</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FFF0</TD>
+<TD ALIGN="left">FFFF</TD>
+<TD ALIGN="left">Specials</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-11-SECT-2.1">Unicode and Local Encodings</A></h3>
+
+<P CLASS=para>
+While Java programs use Unicode text internally, Unicode is
+not the customary character encoding for most countries or
+locales.  Thus, an important requirement for Java programs
+is to be able to convert text from the local encoding to
+Unicode as it is read (from a file or network, for example)
+and to be able to convert text from Unicode to the local
+encoding as it is written.  In Java 1.0, this requirement is
+not well supported.  In Java 1.1, however, the conversion
+can be done with the <tt CLASS=literal>java.io.InputStreamReader</tt> and
+<tt CLASS=literal>java.io.OutputStreamWriter</tt> classes, respectively.
+These classes load an appropriate
+<tt CLASS=literal>ByteToCharConverter</tt> or <tt CLASS=literal>CharToByteConverter</tt>
+class to perform the conversion.  Note that these converter
+classes are part of the <tt CLASS=literal>sun.io</tt> package and are not
+for public use (although an explicit conversion interface may
+be defined in a later release of Java).
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-11-SECT-2.2">The UTF-8 Encoding</A></h3>
+
+<P CLASS=para>
+<A NAME="CH11.UCS.UNIVERS1"></A><A NAME="CH11.CHARACTER.EN2"></A><A NAME="CH11.UTF-8.ENCODI1"></A>The canonical two-bytes per character encoding is useful for
+the manipulation of character data and is the internal
+representation used throughout Java.  However, because a large amount
+of text used by Java programs is 8-bit text, and because
+there are so many existing computer systems that support
+only 8-bit characters, the 16-bit canonical form is usually not
+the most efficient way to store Unicode text nor the
+most portable way to transmit it.
+
+<P CLASS=para>
+Because of this, other encodings called "transformation formats"
+have been developed.  Java provides simple support for the
+UTF-8 encoding with the <tt CLASS=literal>DataInputStream.readUTF()</tt>
+and <tt CLASS=literal>DataOutputStream.writeUTF()</tt> methods.
+UTF-8 is a variable-width or "multi-byte" encoding format;
+this means that different characters require different
+numbers of bytes.  In UTF-8, the standard ASCII characters
+occupy only one byte, and remain untouched by the encoding
+(i.e., a string of ASCII characters is a legal UTF-8 string).
+As a tradeoff, however, other Unicode characters occupy two
+or three bytes.
+
+<P CLASS=para>
+In UTF-8, Unicode characters between <tt CLASS=literal>\u0000</tt> and <tt CLASS=literal>\u007F</tt>
+occupy a single byte, which has a value of between <tt CLASS=literal>0x00</tt> and
+<tt CLASS=literal>0x7F</tt>, and which always has its high-order bit set to <tt CLASS=literal>0</tt>.
+Characters between <tt CLASS=literal>\u0080</tt> and <tt CLASS=literal>\u07FF</tt> occupy
+two bytes, and characters between <tt CLASS=literal>\u0800</tt> and <tt CLASS=literal>\uFFFF</tt>
+occupy three bytes.
+The first byte of a two-byte character always has high-order
+bits <tt CLASS=literal>110</tt>, and the first byte of a three-byte character
+always has high-order bits <tt CLASS=literal>1110</tt>.  Since single-byte
+characters always have 0 as their high-order bit, the one-,
+two-, and three-byte characters can easily be distinguished
+from each other.
+
+<P CLASS=para>
+The second and third bytes of two- and three-byte characters
+always have high-order bits <tt CLASS=literal>10</tt>, which distinguishes them
+from one-byte characters, and also distinguishes them from
+the first byte of a two- or three-byte sequence.  This is
+important because it allows a program to locate the start of
+a character in a multi-byte sequence.
+
+<P CLASS=para>
+The remaining bits in each character (i.e., the bits that are
+not part of one of the required high-order bit sequences)
+are used to encode the actual Unicode character data.  In
+the single-byte form, there are seven bits available, suitable
+for encoding characters up to <tt CLASS=literal>\u007F</tt>.  In the two-byte
+form, there are 11 data bits available, which is enough to
+encode values to <tt CLASS=literal>\u07FF</tt>, and in the three-byte form there
+are 16 available data bits, which is enough to encode all
+16-bit Unicode characters. <A HREF="ch11_02.htm#JNUT2-CH-11-TAB-2">Table 11.2</A>
+summarizes the UTF-8 encoding.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-11-TAB-2">Table 11.2: The UTF-8 Encoding</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Start Character</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+End Character</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Required Data Bits</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Binary Byte Sequence (<tt CLASS=literal>x</tt> = data bits)</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">\u0000</TD>
+<TD ALIGN="left">\u007F</TD>
+<TD ALIGN="left">7</TD>
+<TD ALIGN="left">0xxxxxxx</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">\u0080</TD>
+<TD ALIGN="left">\u07FF</TD>
+<TD ALIGN="left">11</TD>
+<TD ALIGN="left">110xxxxx 10xxxxxx</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">\u0800</TD>
+<TD ALIGN="left">\uFFFF</TD>
+<TD ALIGN="left">16</TD>
+<TD ALIGN="left">1110xxxx 10xxxxxx 10xxxxxx</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+The UTF-8 has the following desirable features:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>All ASCII characters are one-byte UTF-8 characters.  A legal
+ASCII string is a legal UTF-8 string.
+
+<P>
+<li CLASS=listitem>Any non-ASCII character (i.e., any character with the high-order
+bit set) is part of a multi-byte character.
+
+<P>
+<li CLASS=listitem>The first byte of any UTF-8 character indicates the number
+of additional bytes in the character.
+
+<P>
+<li CLASS=listitem>The first byte of a multi-byte character is easily
+distinguished from the subsequent bytes.  Thus, it is easy
+to locate the start of a character from an arbitrary
+position in a data stream.
+
+<P>
+<li CLASS=listitem>It is easy to convert between UTF-8 and Unicode.
+
+<P>
+<li CLASS=listitem>The UTF-8 encoding is relatively compact.  For text with a
+large percentage of ASCII characters, it is more compact
+than Unicode.  In the worst case, a UTF-8 string is only 50%
+larger than the corresponding Unicode string.
+
+<P>
+</UL>
+<P CLASS=para>
+Java actually uses a slightly modified form of UTF-8.  The
+Unicode character <tt CLASS=literal>\u0000</tt> is encoded using a two-byte
+sequence, so that an encoded Unicode string never contains
+null characters.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>A Word About Locales</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Character Encodings</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

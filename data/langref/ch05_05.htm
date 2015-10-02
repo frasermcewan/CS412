@@ -1,0 +1,845 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.5 Interface Declarations</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:13:09 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Declarations</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5">5.5 Interface Declarations</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.INTER1"></A><A NAME="CH05.INTER2"></A>An interface declaration creates a reference type in Java. An
+interface declaration is similar to a class declaration, with the
+following two very important differences.
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>All of the methods in an interface are implicitly <tt CLASS=literal>abstract</tt>.
+Every method declaration in an interface specifies the formal parameters
+and return type of the method, but it does not include an implementation
+of the method.
+
+<P>
+<li CLASS=listitem>All of the variables in an interface
+are implicitly <tt CLASS=literal>static</tt> and <tt CLASS=literal>final</tt>.
+
+<P>
+</UL>
+<P CLASS=para>
+Interfaces are most useful for declaring that an otherwise unrelated
+set of classes have a common set of methods. For example, if you want
+to store a variety of objects in a database, you might want all of
+those objects to have fetch and store methods. The fetch and store
+methods of each object require different implementations, so it makes
+sense to declare the fetch and store methods in an interface
+declaration. Then any class that needs fetch and store methods can
+implement the interface.
+
+<P CLASS=para>
+The formal definition for an interface declaration is:
+
+
+<p>
+<img align=middle src="./figs/jlr0514.gif" alt="[Graphic: Figure from the text]" width=450 height=110 border=0>
+
+
+<p>
+<img align=middle src="./figs/jlr0515.gif" alt="[Graphic: Figure from the text]" width=450 height=213 border=0>
+
+<P CLASS=para>
+While the above diagram may seem complicated, an interface declaration
+is really made up of five distinct things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Optional modifiers that specify attributes of the class
+
+<P>
+<li CLASS=listitem> 
+The keyword <tt CLASS=literal>interface</tt>
+
+<P>
+<li CLASS=listitem> 
+An identifier that names the interface
+
+<P>
+<li CLASS=listitem>An optional <tt CLASS=literal>extends</tt>
+clause that specifies the super interfaces of the declared interface
+
+<P>
+<li CLASS=listitem>Any number of interface member declarations, which can
+include variables and methods
+
+<P>
+</UL>
+<P CLASS=para>
+Here are some sample interface declarations:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+interface Dyn {
+    double squeeze();
+}
+interface Press extends Dyn {
+    double squeeze(double theta);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here is an example of a class
+that implements <tt CLASS=literal>Press</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Clamp implements Press {
+      ...
+    double squeeze() {
+        return squeeze(0);
+    }
+    double squeeze(double theta) {
+        return force*Math.cos(theta);
+    }
+      ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Since the <tt CLASS=literal>Press</tt> interface extends the
+<tt CLASS=literal>Dyn</tt> interface, the <tt CLASS=literal>Clamp</tt> class
+must implement the methods declared in both <tt CLASS=literal>Dyn</tt> and
+<tt CLASS=literal>Press</tt>.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<I CLASS=emphasis>ClassOrInterfaceName</I> 4.1.6;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.6">Interfaces</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4">Interface Members</A>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.1">Interface Modifiers</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.INTMOD"></A><A NAME="CH05.INTMOD2"></A>The keywords <tt CLASS=literal>public</tt> and
+<tt CLASS=literal>abstract</tt> can appear
+as modifiers at the beginning of an interface declaration.  In this
+situation, these modifiers have the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>public</tt><br>
+<DD>
+
+<P CLASS=para>
+If an interface is declared <tt CLASS=literal>public</tt>, it can be
+referenced by any class or interface. If the <tt CLASS=literal>public</tt>
+modifier is not used, however, the interface can only be referenced by
+classes and interfaces in the same package. A single source file, or
+compilation unit, can only declare one <tt CLASS=literal>public</tt> class
+or interface (see <A HREF="ch07_01.htm#JLR2-CH-7-SECT-1">Compilation Units</A> for an
+exception to this rule).
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>abstract</tt><br>
+<DD>
+
+<P CLASS=para>
+An interface is implicitly <tt CLASS=literal>abstract</tt>; so
+all of the methods in an interface are implicitly
+<tt CLASS=literal>abstract</tt>. Including the <tt CLASS=literal>abstract</tt>
+modifier in an interface declaration is permitted, but it does not
+change the meaning of the interface declaration.</DL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch07_01.htm#JLR2-CH-7-SECT-1">Compilation Units</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.3.1">Inner interface modifiers</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.2.1">Interface method modifiers</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.1.1">Interface variable modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.2">Interface Name</A></h3>
+
+<P CLASS=para>
+The identifier that follows the keyword <tt CLASS=literal>interface</tt>
+is the name of the interface.  This identifier can be used as a
+reference type wherever the interface is accessible.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.2">Interface Types</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.3">Interface Inheritance</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>extends</tt> clause specifies any super-interfaces
+of the interface being declared; the <tt CLASS=literal>extends</tt>
+keyword can be followed by the names of one or more interfaces. If an
+interface has an <tt CLASS=literal>extends</tt> clause, the clause can
+only name other interfaces.
+
+<P CLASS=para>
+Including an interface in the <tt CLASS=literal>extends</tt> clause of
+another interface means that the declared interface inherits the
+variables and methods declared in the super-interface. A class that
+implements the declared interface must implement all of the methods in
+the declared interface, as well as all of the methods inherited from
+the super-interface.
+
+<P CLASS=para>
+If an interface declaration does not include an
+<tt CLASS=literal>extends</tt> clause, the interface does not extend any
+other interfaces.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4">Interface Members</A></h3>
+
+<P CLASS=para>
+The members of an interface can be variables or methods; an interface
+cannot have constructors, static initializers, instance initializers,
+nested top-level classes or interfaces, or member classes:
+
+
+<p>
+<img align=middle src="./figs/jlr0516.gif" alt="[Graphic: Figure from the text]" width=450 height=59 border=0>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.2">Interface Methods</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.1">Interface Variables</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.1">Interface Variables</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.INTVAR1"></A><A NAME="CH05.INTVAR2"></A>Any field variables declared in an interface are implicitly
+<tt CLASS=literal>static</tt> and <tt CLASS=literal>final</tt>. In other
+words, field variables in an interface are named constants. Every
+field variable declaration in an interface must contain an initializer
+that sets the value of the named constant:
+
+
+<p>
+<img align=middle src="./figs/jlr0517.gif" alt="[Graphic: Figure from the text]" width=450 height=230 border=0>
+
+<P CLASS=para>
+A variable declaration in an interface is made up of three distinct
+things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Optional modifiers that specify attributes of the variable.
+
+<P>
+<li CLASS=listitem>A type, which can be either a primitive type or a reference type.
+
+<P>
+<li CLASS=listitem>Any number of identifiers that name variables. Each name must be
+followed by an initializer that sets the value of the constant.
+
+<P>
+</UL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>;
+<I CLASS=emphasis>Expression</I> 4;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<I CLASS=emphasis>Type</I> 3
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.1.1">Interface variable modifiers</A></h4>
+
+<P CLASS=para>
+Variables in an interface are implicitly <tt CLASS=literal>static</tt> and
+<tt CLASS=literal>final</tt>.  Including these modifiers in a variable
+declaration is permitted, but it is not necessary and it does not
+change the meaning of the variable declaration. Thus, by definition,
+all variables in an interface are named constants.
+
+<P CLASS=para>
+If an interface is declared <tt CLASS=literal>public</tt>, a field
+variable declared in the interface is <tt CLASS=literal>public</tt>, even
+if it is declared with the <tt CLASS=literal>private</tt> or
+<tt CLASS=literal>protected</tt> modifier. If an interface is not declared
+<tt CLASS=literal>public</tt>, however, any field variables in the
+interface have the default accessibility, which means that they are
+only accessible in classes and interfaces in the same package.
+
+<P CLASS=para>
+It is an error to declare a field variable in an interface with the
+<tt CLASS=literal>transient</tt> or <tt CLASS=literal>volatile</tt> modifier.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.1">Interface Modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.1">Variable modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.1.2">Interface variable type</A></h4>
+
+<P CLASS=para>
+If the interface variable declaration uses a primitive type, the
+variable contains a constant value of the specified primitive type. If
+the declaration uses a reference type, the variable contains a
+constant reference to the specified type of object. The presence of
+square brackets in a variable declaration, after either the type or
+variable name, indicates that the variable contains a reference to an
+array.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1">Primitive Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2">Reference Types</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.1.3">Interface variable name</A></h4>
+
+<P CLASS=para>
+<A NAME="CH05.BOGUS"></A>The identifier that follows the variable type is the name of the
+variable. This identifier can be used anywhere that the variable is
+accessible.
+
+<P CLASS=para>
+It is an error to declare two field variables with the same name in
+the same interface. It is also an error to declare a field variable
+with the same name as a method declared in the same interface or any
+of its super-interfaces.
+
+<P CLASS=para>
+An interface that extends another interface inherits all of the
+variables in its super-interface.  Any class that implements an
+interface has access to all of the variables defined in that
+interface, as well as the variables inherited from super-interfaces.
+
+<P CLASS=para>
+If a field variable is declared with the same name as a variable
+declared in a super-interface, the variable in the super-interface is
+considered to be shadowed. If a variable is shadowed in an interface,
+it cannot be accessed as a field of that interface. However, a
+shadowed variable can be accessed by casting a reference to an object
+that implements the interface to a reference to the appropriate
+super-interface in which the variable is not shadowed. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+interface A {
+    int x = 4;
+}
+interface B extends A {
+    int x = 7;
+}
+class Z implements B {
+    Z() {
+        int i = x;              // i gets the value of B's x
+        int h = ((A)this).x;    // h gets the value of A's x
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The variable <tt CLASS=literal>x</tt> in interface <tt CLASS=literal>A</tt> is
+shadowed by the variable <tt CLASS=literal>x</tt> in interface
+<tt CLASS=literal>B</tt>. Class <tt CLASS=literal>Z</tt> implements interface
+<tt CLASS=literal>B</tt>, so a reference to <tt CLASS=literal>x</tt> produces
+the value 7, as defined in interface <tt CLASS=literal>B</tt>. However, it
+is possible to access the shadowed variable by casting
+<tt CLASS=literal>this</tt> to a reference to interface
+<tt CLASS=literal>A</tt>.
+
+<P CLASS=para>
+In some situations, an interface may inherit multiple field variables
+with the same name. This leads to a single, ambiguous variable
+name. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+interface A {
+    int x = 4;
+}
+interface B {
+    int x = 43;
+}
+interface C extends A, B {
+    int y = 22;
+}
+class Z implements C {
+    public static void main (String[] argv) {
+        System.out.println(x);        // Ambiguous
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, the interface <tt CLASS=literal>C</tt> inherits two
+variables named <tt CLASS=literal>x</tt>.  This is fine, as long as
+<tt CLASS=literal>C</tt> does not refer to the variable
+<tt CLASS=literal>x</tt> by its simple name in any of its declarations. If
+<tt CLASS=literal>C</tt> needs to use <tt CLASS=literal>x</tt>, it must
+qualify the name with the appropriate interface name (e.g.,
+<tt CLASS=literal>A.x</tt>). Class <tt CLASS=literal>Z</tt> implements
+interface <tt CLASS=literal>C</tt>, so it also has access to two variables
+named <tt CLASS=literal>x</tt>. As a result, the use of
+<tt CLASS=literal>x</tt> in <tt CLASS=literal>main()</tt> is ambiguous. This
+problem can be resolved by qualifying the variable name with the
+appropriate interface name (e.g., <tt CLASS=literal>B.x</tt>).
+
+<P CLASS=para>
+A class that implements multiple interfaces can also inherit multiple
+field variables with the same name. Again, this leads to a single,
+ambiguous variable name:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+interface A {
+    int x = 4;
+}
+interface B {
+    int x = 43;
+}
+class Z implements A, B {
+    public static void main (String[] argv) {
+        System.out.println(x);        // Ambiguous
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The class <tt CLASS=literal>Z</tt> implements both interface
+<tt CLASS=literal>A</tt> and interface <tt CLASS=literal>B</tt>, so it
+inherits two variables named <tt CLASS=literal>x</tt>. As a result, the
+use of <tt CLASS=literal>x</tt> in <tt CLASS=literal>main()</tt> is
+ambiguous. This problem can again be resolved by qualifying the
+variable name with the appropriate interface name (e.g.,
+<tt CLASS=literal>B.x</tt>).
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.6">Field Expressions</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.2.3">Interface method name</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.1.4">Interface variable initializers</A></h4>
+
+<P CLASS=para>
+Every variable declaration in an interface must include an
+initializer that sets the value of the constant. The initializer does
+not, however, have to be a constant expression. If the variable is of
+a non-array type, the expression in the initializer is evaluated and
+the variable is set to the result of the expression, as long as the
+result is assignment-compatible with the variable. If the variable is
+of an array type, the initializer must be an array initializer.
+
+<P CLASS=para>
+The initializer for a variable in an interface cannot refer to any
+variables that are declared after its own declaration.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch04_13.htm#JLR2-CH-4-SECT-13">Assignment Operators</A>;
+<A HREF="ch04_16.htm#JLR2-CH-4-SECT-16">Constant Expressions</A>;
+<I CLASS=emphasis>Expression</I> 4
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.2">Interface Methods</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.METH9"></A><A NAME="CH05.METH8"></A>Any methods declared in an interface are implicitly
+<tt CLASS=literal>abstract</tt>. In other words, methods in an interface
+do not have a specified implementation:
+
+
+<p>
+<img align=middle src="./figs/jlr0518.gif" alt="[Graphic: Figure from the text]" width=450 height=267 border=0>
+
+<P CLASS=para>
+A method declaration in an interface is made up of six distinct things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Optional modifiers that specify attributes of the method
+
+<P>
+<li CLASS=listitem>A type that specifies the type of value returned by
+the method
+
+<P>
+<li CLASS=listitem>An identifier that names the method
+
+<P>
+<li CLASS=listitem>A list of formal parameters that specifies the values that are passed
+to the method
+
+<P>
+<li CLASS=listitem>An optional <tt CLASS=literal>throws</tt> clause that specifies any exceptions that can be
+thrown by the method
+
+<P>
+<li CLASS=listitem>A semicolon, since the method declaration does not include an
+implementation
+
+<P>
+</UL>
+<P CLASS=para>
+<b>References</b>
+<I CLASS=emphasis>ClassOrInterfaceName</I> 4.1.6;
+Exception Handling 9;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.4">Method formal parameters</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<I CLASS=emphasis>Type</I> 3
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.2.1">Interface method modifiers</A></h4>
+
+<P CLASS=para>
+Methods in an interface are implicitly
+<tt CLASS=literal>abstract</tt>. Including this modifier in a method
+declaration is permitted, but it is not necessary and it does not
+change the meaning of the method declaration.  Thus, by definition,
+none of the methods in an interface has a specified implementation.
+
+<P CLASS=para>
+If an interface is declared <tt CLASS=literal>public</tt>, a method
+declared in the interface is <tt CLASS=literal>public</tt>, even if it is
+declared with the <tt CLASS=literal>private</tt> or
+<tt CLASS=literal>protected</tt> modifier. If the interface is not
+declared <tt CLASS=literal>public</tt>, however, any methods in the
+interface have the default accessibility, which means that they are
+only accessible in classes and interfaces in the same package.
+
+<P CLASS=para>
+It is an error to declare a method in an interface with the
+<tt CLASS=literal>static</tt>, <tt CLASS=literal>final</tt>,
+<tt CLASS=literal>native</tt>, or <tt CLASS=literal>synchronized</tt>
+modifier.  These modifiers are not allowed because defining a method
+in an interface is not meant to imply anything about the nature of the
+implementation, other than the return type of the method and the types
+of the formal parameters. A class that implements the interface has
+control over the implementation of the methods and can use any of
+these modifiers when they are appropriate for the implementation.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.1">Interface Modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.1">Method modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.2.2">Interface method return type</A></h4>
+
+<P CLASS=para>
+A method declaration in an interface must specify the type of value
+returned by the method. The return value can be of a primitive type or
+of a reference type. The presence of square brackets in a method
+declaration, after either the return type or the formal parameters,
+indicates that the method returns a reference to the specified type of
+array.  If the method does not return a value, the declaration uses
+<tt CLASS=literal>void</tt> to indicate that. The return type comes before
+the name of the method in the method declaration.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.2">Method return type</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1">Primitive Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2">Reference Types</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.2.3">Interface method name</A></h4>
+
+<P CLASS=para>
+The identifier that follows the return type is the name of the
+method. This identifier can be used anywhere that the method is
+accessible.
+
+<P CLASS=para>
+It is an error to declare two methods that have the same name, the
+same number of parameters, and the same type for each corresponding
+parameter in the same interface. It is also an error to declare a
+method with the same name as a variable declared in the same interface
+or any of its super-interfaces.
+
+<P CLASS=para>
+An interface that extends another interface inherits all of the
+methods in its super-interface.  Any class that implements an
+interface must provide an implementation for each of the methods
+defined in that interface, as well as each of the methods inherited
+from super-interfaces.
+
+<P CLASS=para>
+If an interface inherits methods from multiple super-interfaces that
+have the same name, formal parameters, and return type, there is no
+problem. The various super-interfaces are in agreement about the
+method. The interface can also override the inherited methods by
+declaring a method with the same name, formal parameters, and return
+type. In any case, a class that implements the interface has to
+provide a single implementation for the method.
+
+<P CLASS=para>
+However, if an interface inherits methods from multiple
+super-interfaces that have the same name and same formal parameters,
+but different return types, a compile-time error results. By the same
+token, if the interface attempts to override an inherited method with
+a method that has the same name and same formal parameters, but a
+different return type, a compile-time error results.
+
+<P CLASS=para>
+If an interface inherits methods from multiple super-interfaces that
+have the same name but different formal parameters, there is no
+problem. The methods are simply considered overloaded in the
+interface. The interface can even declare additional methods that have
+the same name but different formal parameters. A class that implements
+the interface simply has to provide an implementation for each of the
+overloaded methods.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.1.3">Interface variable name</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.8">Method Call Expression</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.2.4">Interface method formal parameters</A></h4>
+
+<P CLASS=para>
+The formal parameters in a method declaration specify a list of
+variables to which values are assigned when the method is called. If a
+method has no formal parameters, the parentheses must still appear in
+the method declaration. The presence of square brackets in a formal
+parameter declaration, either as part of a reference type or after the
+name of a formal parameter, indicates that the formal parameter is an
+array type.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.4">Method formal parameters</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.4">Method formal parameters</A>;
+<I CLASS=emphasis>Type</I> 3
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.2.5">Interface method throws clause</A></h4>
+
+<P CLASS=para>
+If a method is expected to throw any exceptions, the method
+declaration must declare that fact in a <tt CLASS=literal>throws</tt>
+clause. If the declaration of a method in an interface contains a
+<tt CLASS=literal>throws</tt> clause, any method in a sub-interface that
+overrides that method cannot include any classes in its
+<tt CLASS=literal>throws</tt> clause that are not declared in the
+overridden method.
+
+<P CLASS=para>
+<b>References</b>
+Exception Handling 9;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.5">Method throws clause</A>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.3">Nested Top-Level Interfaces</A></h3>
+
+<P CLASS=para>
+Nested top-level interfaces are interfaces that
+are declared inside of another class. Just as with a top-level
+interface declaration, the declaration of a nested top-level interface
+creates a reference type in Java. Here's the formal definition of
+a nested top-level interface:
+
+
+<p>
+<img align=middle src="./figs/jlr0519.gif" alt="[Graphic: Figure from the text]" width=450 height=132 border=0>
+
+<P CLASS=para>
+A nested top-level interface 
+can be accessed outside of its enclosing class by
+qualifying its name with the name of its enclosing class, as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>EnclosingClass</I>.<I CLASS=emphasis>InnerInterface</I>
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The syntax for declaring nested top-level interfaces 
+is not supported prior to Java 1.1.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.7.1">Nested top-level classes and interfaces</A>;
+<I CLASS=emphasis>SimpleInterfaceDeclaration</I> 5.5
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.3.1">Inner interface modifiers</A></h4>
+
+<P CLASS=para>
+The keywords <tt CLASS=literal>public</tt>, <tt CLASS=literal>abstract</tt>, 
+and <tt CLASS=literal>static</tt> can be used in the declaration of a
+nested top-level interface. In this situation, these 
+modifiers have the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>public</tt><br>
+<DD>
+
+<P CLASS=para>
+If a nested top-level interface is declared
+<tt CLASS=literal>public</tt>, it is accessible from any class or
+interface that can access the enclosing class. If the
+<tt CLASS=literal>public</tt> modifier is not used, however, the nested
+top-level interface can only be referenced by classes and interfaces
+in the same package as the enclosing class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>abstract</tt><br>
+<DD>
+
+<P CLASS=para>
+A nested top-level interface is implicitly <tt CLASS=literal>abstract</tt>; thus,
+all of the methods in the interface are implicitly
+<tt CLASS=literal>abstract</tt>. Including the <tt CLASS=literal>abstract</tt>
+modifier in a nested top-level interface declaration is permitted, 
+but it does not change the meaning of the interface declaration.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>static</tt><br>
+<DD>
+
+<P CLASS=para>
+A nested top-level interface is implicitly <tt CLASS=literal>static</tt>. 
+Including the <tt CLASS=literal>static</tt>
+modifier in a nested top-level interface declaration is permitted, 
+but it does not change the meaning of the interface declaration.</DL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.1">Interface Modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-5.4.3.2">Inner interface members</A></h4>
+
+<P CLASS=para>
+The remainder of a nested top-level interface 
+declaration is the same as that for a top-level 
+interface declaration, which is described 
+in <A HREF="ch05_05.htm#JLR2-CH-5-SECT-5">Interface Declarations</A>.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5">Interface Declarations</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.2">Interface Methods</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.1">Interface Variables</A>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Class Declarations</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Statements and Control Structures</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

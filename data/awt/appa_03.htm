@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<TITLE>[Appendix A] A.3 Resource Bundles</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:13:55 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="appa_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Appendix A<br>Using Properties and Resources</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="appb_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-APP-A-SECT-3">A.3 Resource Bundles</A></h2>
+
+<P CLASS=para>
+Java 1.1 adds two new pieces to make its property lists more general and 
+flexible. The first is the ability to use localized resource bundles; the 
+second is the use of resource files. 
+
+<P CLASS=para>
+Resource bundles let you write internationalized programs. The general 
+idea is that any string you want to display (for example, a button label) 
+shouldn't be specified as a literal constant. Instead, you want to 
+look up the string in a table of equivalents--a "resource bundle"--that 
+contains equivalent strings for different locales. For example, the string 
+"yes" is equivalent to "ja", "si", 
+"oui", and many other language-specific alternatives. A resource 
+bundle lets your program look up the right alternative at run-time, depending 
+on the user's locale. The list of alternatives must be implemented 
+as a subclass of <tt CLASS=literal>ResourceBundle</tt> 
+or <tt CLASS=literal>ListResourceBundle</tt>, in which 
+you provide a key value pair for each label. For each locale you support, 
+a separate subclass and list must be provided. Then you look up the 
+appropriate string through the <tt CLASS=literal>ResourceBundle.getString()</tt> 
+method. A complete example of how to use resource bundles could easily require 
+an entire chapter; I hope this is enough information to get you started.[1] 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ 
+See the <I CLASS=emphasis>Java Fundamental Classes Reference</I> 
+for a more complete description.
+</blockquote>
+<P CLASS=para>
+Resource bundles have one important implication for more mundane programs. 
+Resource bundles can be saved in files and read at run-time. To support 
+them, Java 1.1 has added the ability to load arbitrary properties files. 
+In <A HREF="appa_02.htm#JAWT-APP-A-EX-1">Example A.1</A>, we looked for the <I CLASS=emphasis>prop.list</I> 
+file on the applet server. What if we want to permit users to modify the 
+default font to be what they want, not what we think they want? With Java 
+1.0, that could not be done because there was no way for an applet to access 
+the local filesystem. Now, with Java 1.1, you can access read-only resource 
+files located in the <tt CLASS=literal>CLASSPATH</tt>. 
+To do so, you use the <tt CLASS=literal>Class.getResource()</tt> 
+method, which takes the name of a properties list file as an argument. 
+This method returns the URL of the file requested, which could be available 
+locally or on the applet server; where it actually looks depends on the 
+<tt CLASS=literal>ClassLoader</tt>. Once the file 
+is found, treat it as a Properties file, as in <A HREF="appa_02.htm#JAWT-APP-A-EX-1">Example A.1</A>, or do anything 
+you want with it. A similar method, <tt CLASS=literal>Class.getResourceAsStream()</tt>, 
+returns the <tt CLASS=literal>InputStream</tt> to 
+work with, instead of the URL. 
+
+<P CLASS=para>
+<A HREF="appa_03.htm#JAWT-APP-A-EX-2">Example A.2</A> is similar to <A HREF="appa_02.htm#JAWT-APP-A-EX-1">Example A.1</A>. 
+The file <I CLASS=emphasis>prop11.list</I> 
+includes three properties: the font to use, a message, and an image. We 
+need only a single property because we can use the new <tt CLASS=literal>Font.decode()</tt> 
+method to convert a complete font specification into a <tt CLASS=literal>Font</tt> 
+object: we don't need to load the font information in pieces, as 
+we did in the earlier example. As an added bonus, this example displays 
+an image. The name of the image is given by the property <tt CLASS=literal>MyProg.image</tt>. 
+Like the property file itself, the image file can be located anywhere. 
+Here's the properties list, which should be placed in the file <I CLASS=emphasis>prop11.list</I>: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+MyProg.font=Helvetica-italic-30
+MyProg.message=Hello World
+MyProg.image=ora-icon.gif
+</PRE>
+</DIV>
+
+<P CLASS=para>
+And the code for the applet is in <A HREF="appa_03.htm#JAWT-APP-A-EX-2">Example A.2</A>.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-APP-A-EX-2">Example A.2: Getting Properties from a Resource File</A></h4>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// Java 1.1 only
+import java.io.*;
+import java.net.*;
+import java.awt.*;
+import java.util.Properties;
+import java.applet.Applet;
+public class Prop11 extends Applet {
+    Image im;
+    Font f;
+    String msg;
+    public void paint (Graphics g) {
+        g.setFont (f);
+        if (im != null)
+            g.drawImage (im, 50, 100, this);
+        if (msg != null)
+            g.drawString (msg, 50, 50);
+    }
+    public void init () {
+        InputStream is = getClass().getResourceAsStream("prop11.list");
+        Properties p = new Properties();
+        try {
+            p.load (is);
+            f = Font.decode(p.getProperty("MyProg.font"));
+            msg = p.getProperty("MyProg.message");
+            String name = p.getProperty("MyProg.image");           
+            URL url = getClass().getResource(name);
+            im = getImage (url);
+        } catch (IOException e) {
+            System.out.println ("error loading props...");
+        }
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="appa_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="appb_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Server Properties</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>HTML Markup For Applets</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.5 Displaying Colors</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:27:44 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Fonts and Colors</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-3-SECT-5">3.5 Displaying Colors</A></h2>
+
+<P CLASS=para>
+<A HREF="ch03_05.htm#JAWT-CH-3-EX-3">Example 3.3</A> displays the predefined colors on
+the screen in a series of filled rectangles. When you press a mouse button, 
+they appear brighter. When you press a key, they appear darker. (Event 
+handling is fully explained in <A HREF="ch04_01.htm">Chapter 4, <i>Events</i></A>.) <A HREF="ch03_05.htm#JAWT-CH-3-FIG-4">Figure 3.4</A> 
+shows the results, although it doesn't look very impressive in black 
+and white. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-3-EX-3">Example 3.3: Color Display</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class ColorDisplay extends Frame {
+    int width, height;
+    static Color colors[] =
+                {Color.black, Color.blue, Color.cyan, Color.darkGray,
+                Color.gray, Color.green, Color.lightGray, Color.magenta,
+                Color.orange, Color.pink, Color.red, Color.white,
+                Color.yellow};
+    ColorDisplay () {
+        super ("ColorDisplay");
+        setBackground (Color.white);
+    }
+    static public void main (String args[]) {
+        ColorDisplay f = new ColorDisplay();
+        f.resize (300,300);
+        f.show();
+    }
+    public void paint (Graphics g) {
+        g.translate (insets().left, insets().top);
+        if (width == 0) {
+            Insets inset = insets();
+            width  = (size().width - inset.right - inset.left) / 3;
+            height = (size().height - inset.top - inset.bottom) / 5;
+        }
+        for (int i = 0; i &lt; 3; i++) {
+            for (int j = 0; j &lt; 5; j++) {
+                if ((i == 2) &amp;&amp; (j &gt;= 3)) break;
+                g.setColor (colors[i*5+j]);
+                g.fillRect (i*width, j*height, width, height);
+            }
+        }
+    }
+    public boolean keyDown (Event e, int c) {
+        for (int i=0;i&lt;colors.length;i++)
+            colors[i] = colors[i].darker();
+        repaint();
+        return true;
+    }
+    public boolean mouseDown (Event e, int x, int y) {
+        for (int i=0;i&lt;colors.length;i++)
+            colors[i] = colors[i].brighter();
+        repaint();
+        return true;
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-3-FIG-4">Figure 3.4: A color display</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0304.gif" alt="[Graphic: Figure 3-4]" width=209 height=209 border=0>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>SystemColor</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Using Desktop Colors</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

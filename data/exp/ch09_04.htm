@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.4 Web Browsers and Handlers</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Thu Jul 24 12:08:44 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Network Programming</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-4">9.4 Web Browsers and Handlers</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.WEB1"></A><A NAME="CH09.WEB2"></A><A NAME="CH09.WEB3"></A>The content- and protocol-handler mechanisms I've introduced can
+be used by any application that accesses data via
+URLs. This mechanism is extremely flexible; to
+handle a URL, you need only the appropriate
+protocol and content handlers. To extend a Java-built Web browser so
+that it can handle new and specialized kinds of
+URLs, you need only supply additional content
+and protocol handlers. Furthermore, Java's ability to load new
+classes over the Net means that the handlers don't even need to
+be a part of the browser. Content and protocol handlers could be
+downloaded over the Net, from the same site that supplies the data,
+and used by the browser. If you wanted to supply some completely new
+data type, using a completely new protocol, you could make your data
+file plus a content handler and a protocol handler available on your
+Web server; anyone using a Web browser built in Java would
+automatically get the appropriate handlers whenever they access your
+data. In short, Java lets you build automatically extendible Web
+browsers; instead of being a gigantic do-everything application, the
+browser becomes a lightweight scaffold that dynamically incorporates
+extensions as needed. <A HREF="ch09_04.htm#EXJ-CH-9-FIG-3">Figure 9.3</A> shows the
+conceptual operation of a content handler; <A HREF="ch09_04.htm#EXJ-CH-9-FIG-4">Figure 9.4</A> does the same for a protocol handler.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-9-FIG-3">Figure 9.3: A content handler at work</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0903.gif" alt="[Graphic: Figure 9-3]" width=503 height=193 border=0>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-9-FIG-4">Figure 9.4: A protocol handler at work</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0904.gif" alt="[Graphic: Figure 9-4]" width=503 height=224 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Sun's HotJava was the first browser to demonstrate these
+features. When HotJava encounters a type of content or a protocol it
+doesn't understand, it searches the remote server for an appropriate
+handler class. HotJava also interprets HTML data as
+a type of content; that is, HTML isn't a
+privileged data type built into the browser. HTML
+documents use the same content- and protocol-handler mechanisms as other
+data types.
+
+<P CLASS=para>
+Unfortunately, a few nasty flies are stuck in this
+ointment. Content and protocol handlers are part of the Java
+API: they're an intrinsic part of the mechanism
+for working with URLs. However, specific content
+and protocol handlers aren't part of the API;
+the <tt CLASS=literal>ContentHandler</tt> class and the two classes that
+make up protocol handlers, <tt CLASS=literal>URLStreamHandler</tt> and
+<tt CLASS=literal>URLConnection</tt>, are all abstract
+classes. They define what an implementation must provide, but they
+don't actually provide an implementation. This is not as
+paradoxical as it sounds. After all, the API
+defines the <tt CLASS=literal>Applet</tt> class, but doesn't include any
+specific applets. Likewise, the standard Java classes don't
+include content handlers for HTML,
+GIF, MPEG, or other common data
+types. Even this isn't a real problem, although a library of
+standard content handlers would be useful. (JDK provides some content and protocol handlers in the
+<tt CLASS=literal>sun.net.www.content</tt> and
+<tt CLASS=literal>sun.net.www.protocol</tt> packages, but these are
+undocumented and subject to change.) There are two real issues here:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>There isn't any standard that tells you what
+kind of object the content handler should return. I danced around the
+issue just above, but it's a real problem. It's common sense
+that GIF data should be turned into an
+<tt CLASS=literal>Image</tt> object, but at the moment, that's an
+application-level decision. If you're writing your own
+application and your own content handlers, that isn't an issue:
+you can make any decision you want. But if you're writing
+content handlers that interface to arbitrary Web browsers, you need a
+standard that defines what the browser expects. You can use the
+<tt CLASS=literal>sun.net</tt> classes to make a guess, but a real
+standard hasn't been worked out yet. 
+
+<P>
+<li CLASS=listitem>There isn't any standard that tells you where
+to put content and protocol handlers so that an application (like a
+Web browser) can find them. Again, you can make application-level
+decisions about where to place your own handlers, but that
+doesn't solve the real problem: we want our content and protocol
+handlers to be usable by any browser. It's possible to make an
+educated guess about what the standard will be, but it's still a
+guess. 
+
+<P>
+</UL>
+<P CLASS=para>
+The next release of Sun's HotJava Web browser should certainly
+take full advantage of handlers,[4]
+ but current versions of Netscape Navigator do not. When the next
+release of HotJava appears, it may resolve these questions, at least
+on a de facto basis. (It would certainly be in Sun's interest to
+publish some kind of standard as soon as possible.) Although we
+can't tell you what standards will eventually evolve, we can
+discuss how to write handlers for standalone applications. When the
+standards issues are resolved, revising these handlers to work with
+HotJava and other Web browsers should be simple.
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+Downloadable handlers will be part of HotJava 1.0, though they are not
+supported by the "pre-beta 1" release. The current release
+<I CLASS=emphasis>does</I> support local content and protocol
+handlers. HotJava 1.0 also promises additional classes to support
+network applications.
+</blockquote>
+<P CLASS=para>
+The most common Java-capable platform, Netscape Navigator,
+doesn't use the content- and protocol-handler mechanisms to
+render Net resources. It's a classic monolithic application: knowledge
+about certain kinds of objects, like HTML and
+GIF files, is built-in. It can be extended via a
+plug-in mechanism, but plug-ins aren't portable (they're
+written in C) and can't be downloaded dynamically over the
+Net. Applets running in Netscape can use a limited version of the
+<tt CLASS=literal>URL</tt> mechanism, but the browser imposes many
+restrictions. As I said earlier, you can construct
+URLs relative to the applet's code base, and
+use the <tt CLASS=literal>openStream()</tt> method to get a raw input
+stream from which to read data, but that's it. For the time
+being, you can't use your own content or protocol handlers to
+work with applets loaded over the Net. Allowing this would be a simple
+extension, even without content- and protocol-handler support
+integrated into Netscape itself. We can only hope they add this
+support soon.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Working with URLs</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Writing a Content Handler</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

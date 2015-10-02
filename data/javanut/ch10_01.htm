@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] Java Beans</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:57:41 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-10">10. Java Beans</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Bean Basics<br>
+<A HREF="ch10_02.htm">A Simple Bean</A><BR>
+<A HREF="ch10_03.htm">A More Complex Bean</A><BR>
+<A HREF="ch10_04.htm">Custom Events</A><BR>
+<A HREF="ch10_05.htm">Specifying Bean Information</A><BR>
+<A HREF="ch10_06.htm">Defining a Simple Property Editor</A><BR>
+<A HREF="ch10_07.htm">Defining a Complex Property Editor</A><BR>
+<A HREF="ch10_08.htm">Defining a Bean Customizer</A><BR>
+<A HREF="ch10_09.htm">Naming Patterns and Conventions</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+The JavaBeans API provides a framework for defining
+reusable, embeddable, modular software components.  The JavaBeans
+Specification includes the following definition of a bean:
+"a reusable software component that can be manipulated
+visually in a builder tool."  As you can see, this is a rather
+loose definition; beans can take a variety of forms.  At
+the simplest level, individual AWT components (in Java 1.1) are all
+beans, while
+at a much higher level, an embeddable spreadsheet
+application might also function as a bean.  Most beans, however,
+will probably fall somewhere between these two extremes.<A NAME="CH10.JAVABEANS.AP1"></A>
+
+<P CLASS=para>
+One of the goals of the JavaBeans model is interoperability
+with similar component frameworks.  So, for example, a native Windows
+program can, with an appropriate bridge or wrapper object,
+use a Java bean as if it were a COM or ActiveX component.
+The details of this sort of interoperability are beyond the
+scope of this chapter, however.
+
+<P CLASS=para>
+Beans can be used at three levels, by three different
+categories of programmers:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If you are developing GUI editors, application builders, or
+other "beanbox" tools, you need the JavaBeans API to manipulate beans
+within these tools.  <I CLASS=emphasis>beanbox</I> is the name of the sample
+bean manipulation program provided by Sun in its Beans Development Kit
+(BDK).  The term is a useful one, and I'll use it to
+describe any kind of graphical design tool or application
+builder that manipulates beans.
+
+<P>
+<li CLASS=listitem>If you are writing actual beans, you need the JavaBeans API
+to write code that can be used in any conforming beanbox.
+
+<P>
+<li CLASS=listitem>If you are writing applications that use beans developed by
+other programmers, or using a beanbox tool to combine those beans
+into an application, you do not actually need to be familiar with
+the JavaBeans API.   You only need to be familiar with the
+documentation for individual beans that you are using.
+
+<P>
+</UL>
+<P CLASS=para>
+This chapter explains how to use the JavaBeans API at the second
+level, or in other words, it describes how to write beans.  It covers
+the following topics:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Basic bean concepts and terminology
+
+<P>
+<li CLASS=listitem>Requirements for the simplest beans
+
+<P>
+<li CLASS=listitem>Packaging beans in JAR files
+
+<P>
+<li CLASS=listitem>Providing additional information about beans with the
+<tt CLASS=literal>BeanInfo</tt> class
+
+<P>
+<li CLASS=listitem>Defining property editors to allow custom editing of bean
+properties
+
+<P>
+<li CLASS=listitem>Defining bean customizers to allow customization of an
+entire bean
+
+<P>
+<li CLASS=listitem>The various naming conventions and requirements imposed by
+the JavaBeans model
+
+<P>
+</UL>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-10-SECT-1">10.1 Bean Basics</A></h2>
+
+<P CLASS=para>
+We begin our discussion of beans with some basic concepts and
+terminology.  Any object that conforms to certain
+basic rules can be a bean; there is no <tt CLASS=literal>Bean</tt> class
+that all beans are required to subclass.  Many beans are AWT
+components, but it is also quite possible, and often useful,
+to write "invisible" beans that do not have an on-screen
+appearance.  (Just because a bean does not have an on-screen
+appearance in a finished application does not mean that it
+won't be visually manipulated by a beanbox tool, however.)
+
+<P CLASS=para>
+A bean exports properties, events, and methods.  A
+<I CLASS=emphasis>property</I> is a piece of the bean's internal state that
+can be programmatically set and queried, usually through a
+standard pair of <tt CLASS=literal>get</tt> and <tt CLASS=literal>set</tt> accessor
+methods.  A bean may generate <I CLASS=emphasis>events</I> in the same way
+that an AWT component, such as a <tt CLASS=literal>Button</tt>, generates
+<tt CLASS=literal>ActionEvent</tt> events.  The JavaBeans API uses the same
+event model as the Java 1.1 AWT does.  See <A HREF="ch07_01.htm">Chapter 7, <i>Events</i></A>,
+for a full discussion of this model.  A bean
+defines an event if it provides methods for adding and
+removing event listener objects from a list of interested
+listeners for that event.  Finally, the <I CLASS=emphasis>methods</I>
+exported by a bean are simply any <tt CLASS=literal>public</tt> methods
+defined by the bean, excluding those methods used to get and
+set property values and register and remove event listeners.
+
+<P CLASS=para>
+In addition to the regular sort of properties described
+above, the JavaBeans API also provides support for "indexed
+properties," "bound properties," and "constrained
+properties." An indexed property is any property that has
+an array value and for which the bean provides methods to
+get and set individual elements of the array, as well as
+methods to get and set the entire array.  A bound property
+is one that sends out a notification event when its value
+changes, while a constrained property is one that sends out
+a notification event when its value changes and allows the
+change to be vetoed by listeners.
+
+<P CLASS=para>
+Because Java allows dynamic loading of classes, beanbox
+programs can load arbitrary beans.  The beanbox tool determines the
+properties, events, and methods a bean supports by using
+an "introspection" mechanism that is
+based on the <tt CLASS=literal>java.lang.reflect</tt> reflection
+mechanism for obtaining information about the members of a class.
+A bean can also provide an auxiliary
+<tt CLASS=literal>BeanInfo</tt> class that provides additional information
+about the bean.  The <tt CLASS=literal>BeanInfo</tt> class provides this
+additional information in the form of a number of
+<tt CLASS=literal>FeatureDescriptor</tt> objects, each one describing a
+single feature of the bean.  <tt CLASS=literal>FeatureDescriptor</tt> has a
+number of subclasses: <tt CLASS=literal>BeanDescriptor</tt>,
+<tt CLASS=literal>PropertyDescriptor</tt>,
+<tt CLASS=literal>IndexedPropertyDescriptor</tt>,
+<tt CLASS=literal>EventSetDescriptor</tt>, <tt CLASS=literal>MethodDescriptor</tt>, and
+<tt CLASS=literal>ParameterDescriptor</tt>.
+
+<P CLASS=para>
+One of the primary tasks of a beanbox application is
+to allow the user to customize a bean by setting property
+values.  A beanbox defines "property editors" for commonly
+used property types, such as numbers, strings, fonts, and
+colors.  If a bean has properties of more complicated types,
+however, it may need to define a <tt CLASS=literal>PropertyEditor</tt>
+class that enables the beanbox to let the user set
+values for that property.
+
+<P CLASS=para>
+In addition, a complex bean may not be satisfied with the
+property-by-property customization mechanism provided by
+most beanboxes.  Such a bean may want to define a
+<tt CLASS=literal>Customizer</tt> class, which creates a graphical interface
+that allows the user to configure a bean in some useful way.
+A particularly complex bean may even define customizers that serve
+as "wizards" that guide the user step-by-step through the
+customization process.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Advanced Serialization</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>A Simple Bean</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

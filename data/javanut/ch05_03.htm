@@ -1,0 +1,675 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.3 Member Classes</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:52:20 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Inner Classes and Other New Language Features</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-3">5.3 Member Classes</A></h2>
+
+<P CLASS=para>
+<A NAME="CH5.INNER.CLASSE3"></A><A NAME="CH5.MEMBER.CLASS1"></A><A NAME="CH5.CLASSES-MEMB1"></A>While nested top-level classes are nested within a
+containing class, we've seen that they are still top-level
+classes, and that the nesting is purely a matter of
+organizational convenience.  The same is not true of member
+classes, however.  These classes are also nested, but they
+are not declared <tt CLASS=literal>static</tt>, and in this case, the
+nesting is significant.  The main features of member classes
+are:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Every instance of a member class is internally associated
+with an instance of the class that defines or contains the member
+class.
+
+<P>
+<li CLASS=listitem>The methods of a member class can implicitly
+refer to the fields defined within the member class, as well
+as those defined by any enclosing class, including
+<tt CLASS=literal>private</tt> fields of the enclosing class.
+
+<P>
+</UL>
+<P CLASS=para>
+Like nested top-level classes, member classes are commonly used
+for helper classes required by the enclosing class.  You
+use a member class instead of a nested top-level class
+when the member class requires access to the instance fields of the
+enclosing class, or when every instance of the helper class
+must refer to an instance of the enclosing class.  When you use
+a member class, this
+reference from member class to enclosing class is
+implemented automatically for you.
+
+<P CLASS=para>
+Let's return to the <tt CLASS=literal>LinkedList</tt> example that we saw above.
+Suppose we want to add the ability to loop through the
+elements in the linked list using the
+<tt CLASS=literal>java.util.Enumeration</tt> interface.  To do this, we
+define a separate class that implements this
+interface, and then add a method to the <tt CLASS=literal>LinkedList</tt>
+class that returns an instance of the separate
+<tt CLASS=literal>Enumeration</tt> class.
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-3">Example 5.3</A>
+shows a typical Java 1.0-style implementation.
+[3]
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+For simplicity, this example implements a very simple
+<tt CLASS=literal>Enumeration</tt> class that is not thread-safe and that
+may return incorrect results if items are added to or
+removed from the list while an <tt CLASS=literal>Enumeration</tt> object is
+in use.
+</blockquote>
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-5-EX-3">Example 5.3: A LinkedList Enumerator, as a Separate Top-Level Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.util.*;
+public class LinkedList {
+  // Our nested top-level interface.  Body omitted here...
+  public interface Linkable { ... } 
+  // The head of the list.
+  Linkable head;  
+  // Method bodies omitted here.
+  public void addToHead(Linkable node) { ... }
+  public Linkable removeHead() { ...  }
+  // This method returns an Enumeration object for this LinkedList.
+  public Enumeration enumerate() { 
+    return new LinkedListEnumerator(this); 
+  }
+}
+// This class defines the Enumeration type we use to list the elements in
+// a LinkedList.  Note that each LinkedListEnumerator object is associated
+// with a particular LinkedList object which is passed to the constructor.
+class LinkedListEnumerator implements Enumeration {
+  private LinkedList container;
+  private LinkedList.Linkable current;
+  public LinkedListEnumerator(LinkedList l) { 
+    container = l;
+    current = container.head; 
+  }
+  public boolean hasMoreElements() { return (current != null); }
+  public Object nextElement() {
+    if (current == null) throw new NoSuchElementException("LinkedList");
+    Object value = current;
+    current = current.getNext();
+    return value;
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The point to notice about the <tt CLASS=literal>LinkedListEnumerator</tt>
+class in
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-3">Example 5.3</A>
+is that we must explicitly pass a <tt CLASS=literal>LinkedList</tt> object
+to its constructor.
+
+<P CLASS=para>
+The problem with
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-3">Example 5.3</A>
+is that <tt CLASS=literal>LinkedListEnumerator</tt> is defined as a
+separate top-level class, when it really would be more
+elegant to define it as part of the <tt CLASS=literal>LinkedList</tt> class
+itself.  In Java 1.1, this is easily done using a member
+class, as shown in
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-4">Example 5.4</A>.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-5-EX-4">Example 5.4: A LinkedList Enumerator, as a Member Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.util.*;
+public class LinkedList 
+{
+  // Our nested top-level interface.  Body omitted here...
+  public interface Linkable { ... } 
+  // The head of the list.  
+  // This field could be private except for inner class-related compiler bugs.
+  /* private */ Linkable head;  
+  // Method bodies omitted here.
+  public void addToHead(Linkable node) { ... }
+  public Linkable removeHead() { ...  }
+  // This method returns an Enumeration object for this LinkedList.
+  // Note: no LinkedList object is explicitly passed to the constructor.
+  public Enumeration enumerate() { return new Enumerator(); }
+  // And here is the implementation of the Enumeration interface,
+  // defined as a private member class.
+  private class Enumerator implements Enumeration {
+    Linkable current;
+    // Note: the constructor implicitly refers to 'head' in containing class.
+    public Enumerator() { current = head; }
+    public boolean hasMoreElements() {  return (current != null); }
+    public Object nextElement() {
+      if (current == null) throw new NoSuchElementException("LinkedList");
+      Object value = current;
+      current = current.getNext();
+      return value;
+    }
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+In this version of the example, notice how the
+<tt CLASS=literal>Enumerator</tt> class is nested within the <tt CLASS=literal>LinkedList</tt>
+class.  There is a real elegance to defining the helper
+class so close to where it is used by the containing class.
+[4]
+Of course, if you compiled this example you'd find that the
+<tt CLASS=literal>Enumerator</tt> member class is compiled to a file named
+<I CLASS=emphasis>LinkedList$Enumerator.class</I>--while one class is nested
+within the other in source code form, the same is not true
+of their compiled byte-code forms.
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+John Rose, the author of Sun's inner class specification,
+points out that
+the advantages of inner classes are not only their elegance,
+but also their "conciseness, expressiveness, and
+modularity."  He says, "Even prosy-minded programmers who
+don't care a fig for prissy elegance...will appreciate the
+fact that they can define their adapter classes right next
+to the code that needs them, and that they won't have to
+manually wire the adapter to the main object...and that
+they won't have to pollute the name space of the package..."
+</blockquote>
+<P CLASS=para>
+Notice that no instance of the containing
+<tt CLASS=literal>LinkedList</tt> class is passed to the
+<tt CLASS=literal>Enumerator()</tt> constructor of the member class.  A
+member class can refer to the members of its enclosing class
+implicitly; no explicit reference is necessary.
+Also note that the <tt CLASS=literal>Enumerator</tt> class makes use of the
+<tt CLASS=literal>head</tt> field of the enclosing class, even though
+<tt CLASS=literal>head</tt> is declared <tt CLASS=literal>private</tt>.  Because the
+member class is defined within the enclosing class, it is
+"inside" the class as far as the definition of
+<tt CLASS=literal>private</tt> fields and methods is concerned.  In
+general, member classes, as well as local and anonymous
+classes can use the <tt CLASS=literal>private</tt> fields and methods (and
+classes!) of their containing class.  Similarly, a
+containing class can use the <tt CLASS=literal>private</tt> fields, methods, and
+classes of the classes it contains.  And any two classes
+that are enclosed by the same third class can access each
+other's <tt CLASS=literal>private</tt> members.
+[5]
+
+<blockquote class=footnote>
+<P CLASS=para>[5] 
+As noted earlier, however, bugs in <I CLASS=emphasis>javac</I> in current
+versions of JDK 1.1 prevent this kind of access to
+<tt CLASS=literal>private</tt> members.  Until these bugs are fixed, you
+should use use package visibility instead of <tt CLASS=literal>private</tt>
+visibility.
+</blockquote>
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-3.1">How Member Classes Work</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>Enumerator</tt> member class of <tt CLASS=literal>LinkedList</tt>
+can refer to the <tt CLASS=literal>head</tt> field of <tt CLASS=literal>LinkedList</tt>
+because every instance of a member class implicitly refers
+to an instance of the class that contains it--this is one of
+the fundamental features of member classes.  It works
+because the compiler automatically inserts a <tt CLASS=literal>private</tt> field
+in the member class to hold the required reference to the
+containing object.  The compiler also automatically inserts
+a hidden argument to all constructors of a member class and
+passes the containing object as the value of this argument.
+[6]
+Once the compiler automatically adds this <tt CLASS=literal>private</tt> field and
+constructor argument to the code in
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-4">Example 5.4</A>,
+you can see that we end up with code very much like what we
+saw in 
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-3">Example 5.3</A>!
+
+<blockquote class=footnote>
+<P CLASS=para>[6] 
+If you're curious about this, use <I CLASS=emphasis>javap -p</I> to
+disassemble the class file of a member class.  It shows
+you both the inserted <tt CLASS=literal>private</tt> field and the extra
+constructor argument.
+</blockquote>
+<P CLASS=para>
+Because the Java Virtual Machine has no notion of inner
+classes, the Java 1.1 compiler also must take special action
+to allow member classes (and local and anonymous classes) to
+use the <tt CLASS=literal>private</tt> fields and methods in their
+enclosing classes (and vice versa).  When a <tt CLASS=literal>private</tt>
+field or method is used in a way that is allowed in Java
+1.1, but is not allowed by the Java interpreter, the
+compiler automatically inserts a special accessor method to
+allow the access.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-3.2">New Syntax for Member Classes</A></h3>
+
+<P CLASS=para>
+The most important feature of a member class is that it can
+implicitly refer to fields in its containing object.  We
+saw this in the following constructor from
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-4">Example 5.4</A>:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public Enumerator() { current = head; }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, <tt CLASS=literal>head</tt> is a field of the
+<tt CLASS=literal>LinkedList</tt> class, and we assign it to the
+<tt CLASS=literal>current</tt> field of the <tt CLASS=literal>Enumerator</tt> class.  What
+if we want to make these references explicit?  We
+could try code like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public Enumerator() { this.current = this.head; }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This code does not compile, however.  <tt CLASS=literal>this.current</tt>
+is fine; it is an explicit reference to the <tt CLASS=literal>current</tt>
+field in the newly created <tt CLASS=literal>Enumerator</tt> object.  It is
+the <tt CLASS=literal>this.head</tt> expression that causes the problem--it
+refers to a field named <tt CLASS=literal>head</tt> in the
+<tt CLASS=literal>Enumerator</tt> object.  There is no such field, so
+the compiler generates an error.  To prevent this problem,
+Java 1.1 defines new syntax for explicitly referring to the
+containing instance of the current instance of a member
+class.  If we wanted to be explicit in our constructor, we'd
+use the new syntax like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public Enumerator() { this.current = LinkedList.this.head; }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Similarly, we can use <tt CLASS=literal>LinkedList.this</tt> to refer to
+the containing <tt CLASS=literal>LinkedList</tt> object itself.  In general, the
+syntax is <I CLASS=emphasis><tt CLASS=literal>classname</tt></I><tt CLASS=literal>.this</tt>, where
+<I CLASS=emphasis><tt CLASS=literal>classname</tt></I> is the name of a containing class.  Note
+that member classes can themselves contain member classes,
+nested to any depth, and no member class can have the same
+name as any containing class.  Thus, the use of the class
+name prepended to <tt CLASS=literal>this</tt> is a perfectly general way to
+refer to any containing instance, as the following nested
+class example demonstrates:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class A {
+  public String name = "a";
+  public class B {
+    public String name = "b";
+    public class C {
+      public String name = "c";
+      public void print_names() {
+        System.out.println(name);        // "c": name field of class C
+        System.out.println(this.name);   // "c": name field of class C
+        System.out.println(C.this.name); // "c": name field of class C
+        System.out.println(B.this.name); // "b": name field of class B
+        System.out.println(A.this.name); // "a": name field of class A
+      }
+    }
+  }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Another new piece of Java 1.1 syntax has to do with the way
+member classes are created.  As we've seen, member classes
+work the way they do because the compiler automatically
+adds an argument to each member class constructor.  This
+argument passes a reference to the containing instance to
+the newly created member instance.  Now look again at our
+definition of the <tt CLASS=literal>enumerate()</tt> method in
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-4">Example 5.4</A>:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public Enumeration enumerate() { return new Enumerator(); }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Nowhere in this <tt CLASS=literal>new</tt> expression do we specify what
+the containing instance of the new <tt CLASS=literal>Enumerator</tt>
+instance should be.  In this case, the <tt CLASS=literal>this</tt> object is
+used as the containing instance, which is what you would
+expect to happen.  It is also what you want to occur in most
+cases.  Nevertheless, Java 1.1 supports a new syntax that
+lets you
+explicitly specify the containing instance when creating an
+instance of a member class.  We can make our method more
+explicit by using the following code:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public Enumeration enumerate() { return this.new Enumerator(); }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The syntax is <I CLASS=emphasis><tt CLASS=literal>containing_instance</tt></I>
+<tt CLASS=literal>.new</tt>, where
+<I CLASS=emphasis><tt CLASS=literal>containing_instance</tt></I> is an expression that evaluates
+to an instance of the class that defines the desired member
+class.  
+
+<P CLASS=para>
+Let's look at another example of this syntax.  Recall that we declared the
+<tt CLASS=literal>Enumerator</tt> member class to be <tt CLASS=literal>private</tt> in
+<A HREF="ch05_03.htm#JNUT2-CH-5-EX-4">Example 5.4</A>.
+We did this for reasons of modularity and encapsulation.
+Suppose, however, that we had given <tt CLASS=literal>Enumerator</tt>
+package visibility.  In that case, it would be accessible
+outside of the <tt CLASS=literal>LinkedList</tt> class, and we could
+instantiate our own copy of it.  In order to create an
+instance of the member class <tt CLASS=literal>LinkedList.Enumerator</tt>,
+however, we must specify the instance of <tt CLASS=literal>LinkedList</tt>
+that contains it (and is implicitly passed to its
+constructor).  Our code might look like the following:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// First create a linked list, and add elements to it (omitted).
+LinkedList list = new LinkedList();
+// Create an enumerator for the linked list.  Note the syntax of the
+// 'new' expression.
+Enumerator e = list.new Enumerator();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As a more complex example, consider the following lines of
+code used to create an instance of class <tt CLASS=literal>C</tt> nested within an
+instance of class <tt CLASS=literal>B</tt> nested within an instance of class <tt CLASS=literal>A</tt>:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+A a = new A();        // Create an instance of A.
+A.B b = a.new B();    // Create an instance of B within the instance of A.
+A.B.C c = b.new C();  // Create an instance of C within the instance of B.
+c.print_names();      // Invoke a method of the instance of c.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that in the <tt CLASS=literal>new</tt> expressions we name the class
+to be created relative to the instance that will contain
+it.  That is, we say <tt CLASS=literal>b.new C()</tt>, not <tt CLASS=literal>b.new A.B.C()</tt>
+.  
+
+<P CLASS=para>
+There is one final piece of new Java 1.1 syntax related to
+member class instantiation and initialization.  Before we
+consider it, however, let me point out that you should
+rarely, if ever,
+need to use this syntax.  It represents one of the
+pathological cases that snuck into the language along with
+all the elegant features of inner classes.
+
+<P CLASS=para>
+The new syntax for the <tt CLASS=literal>new</tt> operator described above
+allows us to specify the containing instance that is passed
+to the constructor of a member class.  There is one
+circumstance in which a constructor is invoked without the
+use of the <tt CLASS=literal>new</tt> operator--when it is invoked with the
+<tt CLASS=literal>super</tt> keyword from a subclass constructor.  As
+strange as it may seem, it <I CLASS=emphasis>is</I> possible for a top-level
+class to extend a member class.  This means that the
+subclass does not have a containing instance, but that its
+superclass does.  When the subclass constructor invokes the
+superclass constructor, it must specify the containing
+instance.  It does this by prepending the containing
+instance and a period to the <tt CLASS=literal>super</tt> keyword.  If we
+had not declared our <tt CLASS=literal>Enumerator</tt> class to be a
+<tt CLASS=literal>private</tt> member of <tt CLASS=literal>LinkedList</tt>, then we could
+subclass it.  Although it is not clear why we would want to
+do so, we could write code like the following:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// A top-level class that extends a member class
+class SpecialEnumerator extends LinkedList.Enumerator {
+  // The constructor must take the LinkedList argument explicitly, 
+  // and then must pass it implicitly to the superclass constructor 
+  // using the new 'super' syntax.
+  public SpecialEnumerator(LinkedList l) { l.super(); }
+  // Here we override one or the other of the LinkedList.Enumerator
+  // methods to have some kind of special behavior.
+     . . .
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-3.3">Scope Versus Inheritance</A></h3>
+
+<P CLASS=para>
+Having noted that a top-level class can extend a member
+class, it is important to point out that with the
+introduction of member classes there are two entirely
+separate hierarchies that must be considered for any class.
+The first is the class hierarchy, from superclass to
+subclass, that defines the fields that a member class
+inherits.  The second is the containment hierarchy, from
+containing class to contained class, that defines the fields
+that are in the scope of (and are therefore accessible to)
+the member class.
+
+<P CLASS=para>
+The two hierarchies are entirely distinct from each other,
+and it is important that you do not confuse them.  This
+should not be a problem if you refrain from creating name
+conflicts where a field or method in a superclass has the
+same name as a field or method in a containing class.  If
+such a name conflict does arise, however, the inherited
+field or method hides (i.e., takes precedence over) the field or
+method of the same name in the containing class or classes.
+This behavior is logical because when a class inherits a field or
+method, that field or method effectively becomes part of
+that class.  Therefore, inherited fields and methods are in
+the scope of the class that inherits them, and take
+precedence over fields and methods by the same name in
+enclosing scopes.
+
+<P CLASS=para>
+Because this can be quite confusing, Java does not leave it
+to chance that you get it right!  Whenever there is a
+name conflict between an inherited field or method and a
+field or method in a containing class, Java 1.1 requires
+that you <I CLASS=emphasis>explicitly</I> specify which one you mean.  For
+example, if a member class <tt CLASS=literal>B</tt> inherits a field named
+<tt CLASS=literal>x</tt> and is contained within a class <tt CLASS=literal>A</tt> that also
+defines a field named <tt CLASS=literal>x</tt>, you must use
+<tt CLASS=literal>this.x</tt> to specify the inherited field, or
+<tt CLASS=literal>A.this.x</tt> to specify the field in the containing
+class.  An attempt to use the field <tt CLASS=literal>x</tt> without an
+explicit specification of the desired instance causes a
+compilation error.
+
+<P CLASS=para>
+A good way to prevent confusion between the class hierarchy
+and the containment hierarchy is to avoid deep containment
+hierarchies.  If a class is nested more than two levels
+deep, it is probably going to cause more confusion than it
+is worth.  Furthermore, if a class has a deep class
+hierarchy (i.e.,
+if it has many superclass ancestors),
+consider defining it as a top-level class rather than as a
+member class.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-3.4">Restrictions on Member Classes</A></h3>
+
+<P CLASS=para>
+There are two important restrictions on member classes.
+First, they cannot have the same name as any containing
+class or package.  This is an important rule, and one that
+is not shared by fields and methods.
+
+<P CLASS=para>
+Second, member classes, like all inner classes, cannot
+contain any static members 
+(fields, methods, or classes).  The justification for this
+restriction is that <tt CLASS=literal>static</tt> fields, methods, and
+classes are "top level" constructs, and it is therefore
+reasonable that they only be defined at the "top
+level"--i.e., within top-level classes.  Defining a static,
+top-level member within a non-top-level member class would
+simply promote confusion and bad programming style.  It is
+clearer (and therefore required) to define all static
+members within a top-level class.  (Which may be a nested
+top-level class, of course.)
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-3.5">Member Classes and Visibility Modifiers</A></h3>
+
+<P CLASS=para>
+A member class, like any member of a class, may be
+assigned one of three visibility levels: <tt CLASS=literal>public</tt>,
+[7]
+<tt CLASS=literal>protected</tt>, or <tt CLASS=literal>private</tt>.  If none of these
+visibility modifiers is specified, the default "package"
+visibility is used.  However, as mentioned earlier, there
+have been no changes to the Java Virtual Machine to support
+member classes, and member classes are compiled to class
+files just like top-level classes are.  As far as the Java
+interpreter is concerned, therefore, member classes, like
+top-level classes, can only have public or package
+visibility.  Thus, a member class declared <tt CLASS=literal>protected</tt>
+is actually treated as a public class, and a member class
+declared <tt CLASS=literal>private</tt> actually has package visibility.
+While this is unfortunate, and is something you should be
+aware of, it does not constitute a major security flaw.
+
+<blockquote class=footnote>
+<P CLASS=para>[7] 
+Because member classes are nested, and because of their
+nature as "helper" classes, it is unusual to ever declare a
+member class <tt CLASS=literal>public</tt>.
+</blockquote>
+<P CLASS=para>
+Note that this does not mean that you should never declare a
+member class as <tt CLASS=literal>protected</tt> or <tt CLASS=literal>private</tt>.
+Although the interpreter cannot enforce these visibility
+attributes, the desired attributes are noted in the class
+file.  This means that any conforming Java 1.1 compiler can
+enforce the visibility attributes and prevent the member
+classes from being accessed in unintended ways.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Nested Top-Level Classes and Interfaces</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Local Classes</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

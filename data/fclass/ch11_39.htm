@@ -1,0 +1,2003 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] ObjectInputStream</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:38:40 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_38.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_40.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ObjectInputStream</H1>
+
+<H2>Name</H2>
+
+ObjectInputStream
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.264">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.ObjectInputStream</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.InputStream </tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.ObjectInput</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.265">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>ObjectInputStream</tt> class 
+can read both primitive types and object instances from an underlying <tt CLASS=literal>InputStream</tt>. 
+The objects and other data must have been written by an <tt CLASS=literal>ObjectOutputStream</tt>. 
+These two classes can provide persistent storage of objects when they are 
+used in conjunction with <tt CLASS=literal>FileInputStream</tt> 
+and <tt CLASS=literal>FileOutputStream</tt>. The classes 
+can also be used with socket streams to pass objects across the network. 
+
+<P CLASS=para>
+Only objects that are instances of classes that implement the <tt CLASS=literal>Serializable</tt> 
+or <tt CLASS=literal>Externalizable</tt> interfaces 
+can be deserialized from an input stream. The default deserialization mechanism 
+is implemented by <tt CLASS=literal>readObject()</tt>. 
+When an object is deserialized, the non-<tt CLASS=literal>static</tt> 
+and non-<tt CLASS=literal>transient</tt> fields of 
+the object are restored to the values they had when the object was serialized, 
+including any other objects referenced by the object (except for those 
+objects that do not implement the <tt CLASS=literal>Serializable</tt> 
+interface themselves). Graphs of objects are restored using a reference 
+sharing mechanism. New object instances are always allocated during the 
+deserialization process, to prevent existing objects from being overwritten. 
+Deserialized objects are returned as instances of type <tt CLASS=literal>Object</tt>, 
+so they should be cast to the appropriate type. Strings and arrays are 
+objects in Java, so they are treated as objects during deserialization. 
+
+<P CLASS=para>
+For example, the following code opens a file called <I CLASS=emphasis>color.ser</I> 
+and reads a <tt CLASS=literal>Color</tt> object: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream fileIn;
+ObjectInputStream in;
+Color color;
+try {
+    fileIn = new FileInputStream("color.ser");
+    in = new ObjectInputStream(fileIn);
+    color = (Color)in.readObject();
+    in.close();
+}
+catch (Exception e) {
+    System.out.println("Error reading: " + e);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Classes that have <tt CLASS=literal>transient</tt> instance variables
+may require special handling to reconstruct the values of these 
+variables when objects are deserialized. Special handling may
+also be necessary to correctly deserialize objects that were 
+serialized with a different version of their class than is in 
+use when they are deserialized.
+Classes that require special handling during serialization and deserialization 
+must implement the following methods (with these exact signatures): 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+private void readObject(ObjectOutputStream stream) 
+             throws IOException, ClassNotFoundException
+private void writeObject(ObjectOutputStream stream) throws IOException
+</PRE>
+</DIV>
+
+<P CLASS=para>
+
+The <tt CLASS=literal>writeObject()</tt> method is responsible for writing
+the state of the object for the particular class so that it can be
+restored by <tt CLASS=literal>readObject()</tt>.  The
+<tt CLASS=literal>readObject()</tt> method registers an object validation
+callback by calling <tt CLASS=literal>registerValidation()</tt> as its
+first action. The <tt CLASS=literal>readObject()</tt> method doesn't need
+to handle reading the state for the object's superclass or any
+of its subclasses except in the case where the superclass doesn't
+itself implement the <tt CLASS=literal>Serializable</tt> interface. In
+this case, the nonserializable class must have a no-argument
+constructor that can be called to initialize its fields, and it is the
+responsibility of the subclass to restore the state of its superclass.
+<P CLASS=para>
+A class that inherits the implementation of <tt CLASS=literal>Serializable</tt> 
+prevents itself from being serialized by defining <tt CLASS=literal>readObject()</tt> 
+and <tt CLASS=literal>writeObject()</tt> methods that 
+throw <tt CLASS=literal>NotSerializableException</tt> 
+objects. 
+
+<P CLASS=para>
+If a class needs complete control over the contents and formatting of the 
+serialized form of its objects, it should implement the <tt CLASS=literal>Externalizable</tt> 
+interface. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.266">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.io.ObjectInputStream extends java.io.InputStream
+             implements java.io.ObjectInput {
+  // Constructors
+  public ObjectInputStream(InputStream in);
+  // Public Instance Methods
+  public int available();
+  public void close();
+  public final void defaultReadObject();
+  public int read();
+  public int read(byte[] data, int offset, int length);
+  public boolean readBoolean();
+  public byte readByte();
+  public char readChar();
+  public double readDouble();
+  public float readFloat();
+  public void readFully(byte[] data);
+  public void readFully(byte[] data, int offset, int size);
+  public int readInt();
+  public String readLine();
+  public long readLong();
+  public final Object readObject();
+  public short readShort();
+  public int readUnsignedByte();
+  public int readUnsignedShort();
+  public String readUTF();
+  public synchronized void 
+         registerValidation(ObjectInputValidation obj, int prio);
+  public int skipBytes(int len);
+  // Protected Instance Methods
+  protected final boolean enableResolveObject(boolean enable);
+  protected void readStreamHeader();
+  protected Class resolveClass(ObjectStreamClass v);
+  protected Object resolveObject(Object obj);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.267">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.252">ObjectInputStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.319"><DIV CLASS=screen> <P> <PRE> public ObjectInputStream(InputStream in) throws IOException, StreamCorruptedException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>in</tt><br>
+<DD>
+
+<P CLASS=para>
+The underlying input 
+stream. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>StreamCorruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the stream header is not correct. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an <tt CLASS=literal>ObjectInputStream</tt> 
+that reads from the given input stream. The constructor attempts to read 
+the stream header, which consists of a magic number and a version number, 
+and if something goes wrong, an appropriate exception is thrown. If
+all of the bytes of the stream header are not available, the constructor
+does not return until they become available.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.268">Public Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.253">available</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.320">public int available() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of bytes that can be read without blocking. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ObjectInput.available()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream.available()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of bytes that can be read without having 
+to wait for more data to become available. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.254">close</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.321">public void close() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.</DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ObjectInput.close()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream.close()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method closes the stream and releases any system resources that are 
+associated with it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.255">defaultReadObject</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.322"><DIV CLASS=screen> <P> <PRE> public final void defaultReadObject() throws IOException, ClassNotFoundException, NotActiveException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassNotFoundException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the class of the object being read cannot be found.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NotActiveException</tt><br>
+<DD>
+
+<P CLASS=para>
+If serialization is not active. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads the fields of the current object that are not 
+<tt CLASS=literal>static</tt> and not <tt CLASS=literal>transient</tt>. The method 
+can only be called from the <tt CLASS=literal>private</tt> 
+<tt CLASS=literal>readObject()</tt> method of an object 
+that is being deserialized; it throws a <tt CLASS=literal>NotActiveException</tt> 
+if it is called at any other time. This method implements the default 
+deserialization mechanism. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.256">read</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.323">public int read() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The next byte of data or <tt CLASS=literal>-1</tt> if the end of the 
+stream is encountered. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ObjectInput.read()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream.read()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads the next byte from the stream. The method blocks until 
+some data is available, the end of the stream is detected, or an exception 
+is thrown. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.324"><DIV CLASS=screen> <P> <PRE> public int read(byte[] data, int offset, int length) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>data</tt><br>
+<DD>
+
+<P CLASS=para>
+Array of bytes to 
+be filled from the stream.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the 
+byte array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>length</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes 
+to read. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of bytes read or <tt CLASS=literal>-1</tt> if the end of the stream is encountered 
+immediately. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ObjectInput.read(byte[], int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream.read(byte[], int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads up to <tt CLASS=literal>length</tt> 
+bytes of input into the given array starting at index 
+<tt CLASS=literal>offset</tt>. The method blocks until there is some 
+input available. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.257">readBoolean</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.325">public boolean readBoolean() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>boolean</tt> value read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readBoolean()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a byte as a <tt CLASS=literal>boolean</tt> 
+value from the underlying input stream. A byte that contains a zero is 
+read as <tt CLASS=literal>false</tt>. A byte that 
+contains any other value is read as <tt CLASS=literal>true</tt>. 
+The method blocks until the byte is read, the end of the stream 
+is encountered, or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.258">readByte</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.326">public byte readByte() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>byte</tt> value read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readByte()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a signed 8-bit value, a <tt CLASS=literal>byte</tt>, 
+from the underlying input stream. The method blocks until the byte is read, 
+the end of the stream is encountered, or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.259">readChar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.327">public char readChar() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>char</tt> value read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readChar()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a 16-bit Unicode character from the stream. The method 
+reads two bytes from the underlying input stream and then creates 
+a <tt CLASS=literal>char</tt> value using the first byte read as the most 
+significant byte. The method blocks until the two bytes are read, the end 
+of the stream is encountered, or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.260">readDouble</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.328">public double readDouble() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>double</tt> value read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readDouble()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a 64-bit <tt CLASS=literal>double</tt> 
+quantity from the stream. The method reads a <tt CLASS=literal>long</tt> 
+value from the underlying input stream as if using the <tt CLASS=literal>readLong()</tt> 
+method. The <tt CLASS=literal>long</tt> value is then 
+converted to a <tt CLASS=literal>double</tt> using 
+the <tt CLASS=literal>longBitsToDouble()</tt> method 
+in <tt CLASS=literal>Double</tt>. The method blocks 
+until the necessary eight bytes are read, the end of the stream is 
+encountered, or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.261">readFloat</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.329">public float readFloat() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>float</tt> value read from the stream. 
+
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readFloat()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a 32-bit <tt CLASS=literal>float</tt> 
+quantity from the stream. The method reads an <tt CLASS=literal>int</tt> 
+value from the underlying input stream as if using the 
+<tt CLASS=literal>readInt()</tt> method. The <tt CLASS=literal>int</tt> value is then 
+converted to a <tt CLASS=literal>float</tt> using 
+the <tt CLASS=literal>intBitsToFloat()</tt> method 
+in <tt CLASS=literal>Float</tt>. The method blocks 
+until the necessary four bytes are read, the end of the stream is encountered, 
+or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.262">readFully</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.330">public void readFully(byte[] b) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+The array to fill. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readFully(byte[])</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads bytes into the given array <tt CLASS=literal>b</tt> 
+until the array is full. The method reads repeatedly from the underlying 
+stream to fill the array. The method blocks until all of the bytes are 
+read, the end of the stream is encountered, or an exception is thrown. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.331"><DIV CLASS=screen> <P> <PRE> public void readFully(byte[] data, int offset, int size) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>data</tt><br>
+<DD>
+
+<P CLASS=para>
+The array to fill.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the 
+array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>length</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes 
+to read. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readFully(byte[], int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads <tt CLASS=literal>len</tt> bytes 
+into the given array, starting at offset <tt CLASS=literal>off</tt>. 
+The method reads repeatedly from the underlying stream to fill the array. 
+The method blocks until all of the bytes are read, the end of the stream 
+is encountered, or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.263">readInt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.332">public int readInt() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>int</tt> value read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readInt()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a signed 32-bit <tt CLASS=literal>int</tt> 
+quantity from the stream. The method reads four bytes from the underlying 
+input stream and then creates an <tt CLASS=literal>int</tt> 
+quantity, using the first byte read as the most significant byte. The method 
+blocks until the four bytes are read, the end of the stream is encountered, 
+or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.264">readLine</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.333">public String readLine() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> that contains the line read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readLine()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads the next line of text from the stream. The method reads 
+bytes of data from the underlying input stream until it encounters a line 
+terminator. A line terminator is a carriage return (<tt CLASS=literal>"\r"</tt>), 
+a newline character (<tt CLASS=literal>"\n"</tt>), 
+a carriage return immediately followed by a newline character, or the end 
+of the stream. The method blocks until a line terminator is read, the end 
+of the stream is encountered, or an exception is thrown. Note that this 
+method calls the <tt CLASS=literal>readLine()</tt> 
+method of <tt CLASS=literal>DataInputStream</tt>, 
+which is deprecated in 1.1. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.265">readLong</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.334">public long readLong() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>long</tt> value read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readLong()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a signed 64-bit <tt CLASS=literal>long</tt> 
+quantity from the stream. The method reads eight bytes from the underlying 
+input stream and then creates a <tt CLASS=literal>long</tt> 
+quantity, using the first byte read as the most significant byte. The method 
+blocks until the eight bytes are read, the end of the stream is encountered, 
+or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.266">readObject</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.335"><DIV CLASS=screen> <P> <PRE> public final Object readObject() throws OptionalDataException, ClassNotFoundException, IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>Object</tt> that has been deserialized from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassNotFoundException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the object being deserialized has an unrecognized class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InvalidClassException</tt><br>
+<DD>
+
+<P CLASS=para>
+If there is a problem with the class of the deserialized object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>StreamCorruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the stream serialization information is not correct.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>OptionalDataException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the stream contains primitive data instead of an object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ObjectInput.readObject()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method deserializes an object from the stream and returns a reference 
+to the object. The non-<tt CLASS=literal>static</tt> 
+and non-<tt CLASS=literal>transient</tt> fields of 
+the object are restored to the values they had when the object was serialized. 
+If the object contains references to other objects, these objects are also 
+deserialized (as long as they implement the <tt CLASS=literal>Serializable</tt> 
+interface). Graphs of objects are restored using a reference-sharing mechanism. 
+New object instances are always allocated during the deserialization process, 
+to prevent existing objects from being overwritten. Deserialized objects 
+are returned as instances of type <tt CLASS=literal>Object</tt>, 
+so they should be cast to the appropriate type.
+
+<P CLASS=para>
+Once an object has been completely restored (i.e., all of its fields and 
+any objects it references have been restored), any object validation callbacks 
+for the object or any of the objects it references are called in an order 
+based on their priority. An object validation callback is registered by 
+the <tt CLASS=literal>private</tt> <tt CLASS=literal>readObject()</tt> 
+method for an object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.267">readShort</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.336">public short readShort() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>short</tt> value read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readShort()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a signed 16-bit <tt CLASS=literal>short</tt> 
+quantity from the stream. The method reads two bytes from the underlying 
+input stream and then creates a <tt CLASS=literal>short</tt> 
+quantity, using the first byte read as the most significant byte. The method 
+blocks until the two bytes are read, the end of the stream is encountered, 
+or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.268">readUnsignedByte</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.337">public int readUnsignedByte() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The unsigned <tt CLASS=literal>byte</tt> value read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readUnsignedByte()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads an unsigned 8-bit quantity from the stream. The method 
+reads a byte from the underlying input stream and returns that byte. The 
+method blocks until the byte is read, the end of the stream is encountered, 
+or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.269">readUnsignedShort</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.338">public int readUnsignedShort() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The unsigned <tt CLASS=literal>short</tt> value read 
+from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readUnsignedShort()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads an unsigned 16-bit quantity from the stream. The method 
+reads two bytes from the underlying input stream and creates an unsigned 
+<tt CLASS=literal>short</tt> quantity using the first 
+byte read as the most significant byte. The method blocks until the two 
+bytes are read, the end of the stream is encountered, or an exception is 
+thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.270">readUTF</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.339">public String readUTF() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> read from the stream. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>UTFDataFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the bytes do not represent a valid UTF-8 encoding. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.readUTF()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads a UTF-8 encoded string from the stream. 
+See the description 
+of <tt CLASS=literal>DataInputStream.readUTF(DataInput)</tt> for more information. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.271">registerValidation</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.340"><DIV CLASS=screen> <P> <PRE> public synchronized void registerValidation( ObjectInputValidation obj, int prio) throws NotActiveException, InvalidObjectException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object requesting 
+validation.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>prio</tt><br>
+<DD>
+
+<P CLASS=para>
+The priority of the 
+validation callback; use zero as a default. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NotActiveException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>serialization</tt> is not active.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InvalidObjectException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>obj</tt> is <tt CLASS=literal>null</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method may be called from an object's <tt CLASS=literal>private</tt> 
+<tt CLASS=literal>readObject()</tt> method to register 
+a validation callback. An object performs internal validation by implementing 
+the <tt CLASS=literal>ObjectInputValidation</tt> interface 
+and registering itself with the <tt CLASS=literal>ObjectInputStream</tt> 
+via this function. When <tt CLASS=literal>ObjectInputStream</tt> 
+has completely deserialized an object (i.e., restored all of its fields 
+and any objects it references), the stream calls <tt CLASS=literal>ObjectInputValidation.validateObject()</tt> 
+for every object that has an object validation callback. Objects that register 
+with higher priority values get validated before objects that register 
+with lower priority values. Within a priority value, the callbacks are 
+not processed in any particular order. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.272">skipBytes</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.341">public int skipBytes(int len) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes to skip. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The actual number of skipped bytes. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>EOFException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the end 
+of the file is encountered.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any other 
+kind I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>DataInput.skipBytes()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method skips over <tt CLASS=literal>n</tt> bytes 
+in the underlying input stream. The method blocks until all of the bytes 
+are skipped, the end of the stream is encountered, or an exception is thrown. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.269">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.273">enableResolveObject</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.342"><DIV CLASS=screen> <P> <PRE> protected final boolean enableResolveObject(boolean enable) throws SecurityException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>enable</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies whether or not object replacement is enabled. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if object replacement 
+was previously enabled; <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>enable</tt> is <tt CLASS=literal>true</tt> 
+and <tt CLASS=literal>getClassLoader()</tt> called 
+on the class of the stream does not return <tt CLASS=literal>null</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines if a trusted subclass of <tt CLASS=literal>ObjectInputStream</tt> 
+is allowed to replace deserialized objects. If the method is called with 
+<tt CLASS=literal>true</tt>, object replacement is 
+enabled. Each time an object is deserialized, <tt CLASS=literal>resolveObject()</tt> 
+is called to give the <tt CLASS=literal>ObjectInputStream</tt> 
+a chance to replace the object. A trusted stream is one whose class has 
+no <tt CLASS=literal>ClassLoader</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.274">readStreamHeader</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.343"><DIV CLASS=screen> <P> <PRE> protected void readStreamHeader() throws IOException, StreamCorruptedException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StreamCorruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the stream header is not correct.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method attempts to read the stream header, which consists of a magic 
+number and a version number. If something goes wrong, an appropriate exception 
+is thrown. This method is called by the constructor for <tt CLASS=literal>ObjectInputStream</tt> 
+and is the source of the exceptions it throws. If you subclass <tt CLASS=literal>ObjectInputStream</tt>, 
+
+you can override this method to provide your own stream header checking. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.275">resolveClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.344"><DIV CLASS=screen> <P> <PRE> protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>v</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ObjectStreamClass</tt> 
+to be resolved. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> that corresponds 
+to the given <tt CLASS=literal>ObjectStreamClass</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassNotFoundException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the class of the given <tt CLASS=literal>ObjectStreamClass</tt> 
+cannot be found.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method attempts to find the <tt CLASS=literal>Class</tt> 
+object that corresponds to the supplied <tt CLASS=literal>ObjectStreamClass</tt>. 
+When a object is deserialized, its class information is read into an <tt CLASS=literal>ObjectStreamClass</tt> 
+object, which is then resolved to a <tt CLASS=literal>Class</tt> 
+if possible. Subclasses of <tt CLASS=literal>ObjectInputStream</tt> 
+can override this method to allow classes to be fetched from alternate 
+sources. The version of the <tt CLASS=literal>ObjectStreamClass</tt> 
+and the <tt CLASS=literal>Class</tt> must match. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.276">resolveObject</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.345">protected Object resolveObject(Object obj) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be replaced. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A replacement for the given object. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+If object replacement is enabled for this <tt CLASS=literal>ObjectInputStream</tt> 
+(see <tt CLASS=literal>enableResolveObject()</tt>), 
+this method is called with each deserialized object to give the stream 
+a chance to replace the object. In <tt CLASS=literal>ObjectInputStream</tt>, 
+this method simply returns the object that was passed to it. Subclasses 
+can override this method to provide more useful functionality. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.270">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone() </tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>mark()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>markSupported()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>read(byte[])</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>reset()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>skip(long n)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.271">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Class</tt>, 
+<tt CLASS=literal>ClassNotFoundException</tt>, 
+<tt CLASS=literal>DataInput</tt>, 
+<tt CLASS=literal>Double</tt>, 
+<tt CLASS=literal>EOFException</tt>, 
+<tt CLASS=literal>Externalizable</tt>,
+<tt CLASS=literal>Float</tt>, 
+<tt CLASS=literal>InputStream</tt>, 
+<tt CLASS=literal>InvalidClassException</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>NotActiveException</tt>, 
+<tt CLASS=literal>ObjectInput</tt>, 
+<tt CLASS=literal>ObjectInputValidation</tt>, 
+<tt CLASS=literal>ObjectOuputStream</tt>, 
+<tt CLASS=literal>ObjectStreamClass</tt>, 
+<tt CLASS=literal>OptionalDataException</tt>, 
+<tt CLASS=literal>SecurityException</tt>, 
+<tt CLASS=literal>Serializable</tt>, 
+<tt CLASS=literal>StreamCorruptedException</tt>, 
+<tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>UTFDataFormatException</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_38.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_40.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ObjectInput</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ObjectInputValidation</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

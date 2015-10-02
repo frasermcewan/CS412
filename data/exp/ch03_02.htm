@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.2 The Class Path</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:49:30 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Tools of the Trade</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-2">3.2 The Class Path</A></h2>
+
+<P CLASS=para>
+<A NAME="CH03.PATH"></A>The concept of a path should be familiar to anyone who has worked on a
+DOS or UNIX platform. It's a
+piece of environment information that provides an application with a
+list of places to look for some resource. The most common example is a
+path for executable programs. In a UNIX shell, the
+<tt CLASS=literal>PATH</tt> environment variable is a colon-separated list
+of directories that are searched, in order, when the user types the
+name of a command. The Java <tt CLASS=literal>CLASSPATH</tt> environment
+variable, similarly, is a list of locations that can be searched for
+packages containing Java class files. Both the Java interpreter and
+the Java compiler use <tt CLASS=literal>CLASSPATH</tt> when searching for
+files on the local host platform.
+
+<P CLASS=para>
+Classes loaded from the local host via the class path have special
+features. For example, the Java interpreter loads classes in the class
+path just once; after a core class has been loaded, it can't be
+modified or replaced. The interpreter can also be told to trust
+classes in the class path and to load them without passing them
+through the byte-code verification process. This is important because
+certain kinds of optimizations on Java virtual machine instructions
+produce valid byte-code that, nonetheless, can't pass the verification
+process. Byte-code that is precompiled on the native host is an
+extreme example.
+
+<P CLASS=para>
+The class path is a list of locations where Java class packages
+are found. A location can be a path such as a directory name
+or the name of a class archive file. Java supports archives of class
+files in the uncompressed ZIP format.[1]
+ It automatically looks inside ZIP archives and
+retrieves classes, which then allows large groups of classes to be
+distributed in a single archive file. The precise means and format for
+setting the class path varies from system to system. On a
+UNIX system, you set the
+<tt CLASS=literal>CLASSPATH</tt> environment variable with a
+colon-separated list of directories and class archive files:
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+The ZIP format is an open standard for file
+archiving and compression. There are ZIP utilities
+available for most platforms; you'll need to get one if you want to
+store Java classes in ZIP archives. Use
+<A HREF="ftp://ftp.uu.net/pub/archiving/zip/">ftp://ftp.uu.net/pub/archiving/zip/</A> 
+to access an archive of freely available ZIP utilities.
+</blockquote>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+CLASSPATH=/usr/lib/java/classes.zip:/home/vicky/Java/classes:\
+    /home/vicky/.netscape/moz2_0.zip:.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+On a Windows system, the <tt CLASS=literal>CLASSPATH</tt> environment
+variable is set with a semicolon-separated list of directories and
+class archive files:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+CLASSPATH=C:\tools\java\classes.zip;D:\users\vicky\Java\classes;. 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The class path can also be set with the <tt CLASS=literal>-classpath</tt> 
+option to the Java interpreter <i CLASS=command>java</i> and the 
+Java compiler <i CLASS=command>javac</i>. 
+
+<P CLASS=para>
+The above UNIX example specifies a class
+path with four locations: a ZIP archive in
+<i CLASS=filename>/usr/lib/java</i>, a directory in the user's
+home, another ZIP file in the user's Netscape
+collection, and the current directory, which is always specified with
+a dot (<tt CLASS=literal>.</tt>). The last component of the class path,
+the current directory, is useful when tinkering with classes, but as a
+general rule, it's bad practice to put the current directory in any
+kind of path.
+
+<P CLASS=para>
+The Java interpreter searches each of these four locations in
+order to find classes. <i CLASS=command>java</i> expects to find
+class files in a directory hierarchy or in a directory within a ZIP
+archive that maps to the fully qualified name of the class. The
+components of a class-package name become the components of a
+pathname. Given the above class path, the first time we reference a
+class with the fully qualified name of
+<tt CLASS=literal>animals.birds.BigBird</tt>, for example,
+<i CLASS=command>java</i> begins the search with the
+<i CLASS=filename>classes.zip</i> archive in
+<i CLASS=filename>/usr/lib/java</i>. It looks for a class archived
+under the path <i CLASS=filename>animals/birds/BigBird</i>. If
+<i CLASS=command>java</i> does not find the class there, it looks for
+the class in <i CLASS=filename>/home/vicky/Java/classes/animals/birds/BigBird</i>.  If it's not found
+there, <i CLASS=command>java</i> moves on to the archive file
+specified next in the class path, and so on.
+
+<P CLASS=para>
+If you don't specify the <tt CLASS=literal>CLASSPATH</tt>
+environment variable or the <tt CLASS=literal>-classpath</tt> option,
+<i CLASS=command>java</i> uses the following default class path:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+.:$JAVA/classes:$JAVA/lib/classes.zip     <tt CLASS=replaceable><i>UNIX systems</i></tt> 
+.;$JAVA\classes;$JAVA\lib\classes.zip     <tt CLASS=replaceable><i>Windows systems</i></tt> 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this path, <tt CLASS=literal>$JAVA</tt> is the main Java directory 
+on your system. Notice that the current directory (<tt CLASS=literal>.</tt>) 
+is the first location in the default class path; this means the files 
+in your current directory are always available. If you change the class 
+path and don't include the current directory, these files will no 
+longer be accessible. 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Java Interpreter</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Java Compiler</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

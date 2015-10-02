@@ -1,0 +1,339 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.14 Miscellaneous Differences</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:48:18 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_13.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>How Java Differs from C</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14">2.14 Miscellaneous Differences</A></h2>
+
+<P CLASS=para>
+A number of miscellaneous differences between Java and C are
+described in the sections that follow.  Miscellaneous
+differences that were mentioned elsewhere, such as the lack
+of the <tt CLASS=literal>goto</tt> statement and the <tt CLASS=literal>sizeof</tt>
+operator, are not repeated here.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.1">Local Variable Declarations</A></h3>
+
+<P CLASS=para>
+A feature that Java has borrowed from C++ is the
+ability to declare and initialize local variables anywhere
+in a method body or other block of code.  Declarations and
+their initializers no longer have to be the first statements
+in any block--you can declare them where it is convenient
+and fits well with the structure of your code.
+
+<P CLASS=para>
+Don't let this freedom make you sloppy, however!  For
+someone reading your program, it is nice to have variable
+declarations grouped together in one place.  As a rule of
+thumb, put your declarations at the top of the block, unless
+you have some good organizational reason for putting them
+elsewhere.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.2">Forward References</A></h3>
+
+<P CLASS=para>
+For compiler efficiency, C requires that variables and
+functions must be defined, or at least declared, before they
+can be used or called.  That is, forward references are not
+allowed in C.  Java does not make this restriction, and by
+lifting it, it also does away with the whole concept of a
+variable or function declaration that is separate from the
+definition.
+
+<P CLASS=para>
+Java allows very flexible forward references.  A method may
+refer to a variable or another method of its class,
+regardless of where in the current class the variable or
+method is defined.  Similarly, it may refer to any class,
+regardless of where in the current file (or outside of the
+file) that class is defined.  The only place that forward
+references are not allowed is in variable initialization. A
+variable initializer (for local variables, class variables,
+or instance variables) may not refer to other variables that have
+not yet been declared and initialized.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.3">Method Overloading</A></h3>
+
+<P CLASS=para>
+A technique that Java borrows from C++ is called <I CLASS=emphasis>method
+overloading</I>.
+Overloaded methods are methods that have the same name, but
+have different signatures. In other words,  they take different
+types of arguments, a
+different number of arguments, or the same type of arguments
+in different positions in the argument list.
+You cannot overload a method by changing only its return
+type.  Two methods with the same name may have different
+return types, but only if the method arguments also differ.
+Similarly, two overloaded methods may throw different
+exceptions, but only if their arguments differ as well.
+
+<P CLASS=para>
+Method overloading is commonly used in Java to define a number of
+related functions with the same name, but different
+arguments.  Overloaded methods usually perform the same
+basic operation, but allow the programmer to specify
+arguments in different ways depending on what is convenient
+in a given situation. Method overloading is discussed in more 
+detail in the next chapter.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.4">The void Keyword</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>void</tt> keyword is used in Java, as in C, to
+indicate that a function returns no value.  (As we will see
+in the next section, constructor methods are an exception to
+this rule.)
+
+<P CLASS=para>
+Java differs from C (and is similar to C++) in that methods
+that take no arguments are declared with empty parentheses,
+not with the <tt CLASS=literal>void</tt> keyword.
+Java does not have any <tt CLASS=literal>void *</tt> type, nor does it
+use a <tt CLASS=literal>(void)</tt> cast in order to ignore the
+result returned by a call to a non-<tt CLASS=literal>void</tt> method.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.5">Modifiers</A></h3>
+
+<P CLASS=para>
+Java defines a number of modifier keywords that may be
+applied to variable and/or method declarations to provide
+additional information or place restrictions on the variable
+or method:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>final</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>final</tt> keyword is a modifier that may be applied
+to classes, methods, and variables.  It has a similar, but
+not identical, meaning in each case.  A <tt CLASS=literal>final</tt> class
+may never be subclassed.  A <tt CLASS=literal>final</tt> method may never
+be overridden.  A <tt CLASS=literal>final</tt> variable may never have its
+value set.  In Java 1.1, this modifier may also be applied to
+local variables and method parameters. This modifier is discussed 
+in more detail in the next chapter.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>native</tt><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>native</tt> is a modifier that may be applied to method
+declarations.  It indicates that the method is implemented
+elsewhere in C, or in some other platform-dependent
+fashion.  A <tt CLASS=literal>native</tt> method should have a semicolon
+in place of its body.  
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>synchronized</tt><br>
+<DD>
+
+<P CLASS=para>
+We saw the <tt CLASS=literal>synchronized</tt> keyword in a previous
+section where it was a statement that marked a critical
+section of code.  The same keyword can also be used as a
+modifier for class or instance methods.
+It indicates that the method modifies the internal state of
+the class or the internal state of an instance of the class
+in a way that is not thread-safe.  Before running a
+<tt CLASS=literal>synchronized</tt> class method, Java obtains a lock
+on the class, to ensure that no other threads can 
+modif the class concurrently.  Before running a
+<tt CLASS=literal>synchronized</tt> instance method, Java obtains a
+lock on the instance that invoked the method, ensuring that
+no other thread can modify the object at the same
+time.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>transient</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>transient</tt> keyword is a modifier that may be
+applied to instance fields in a class. This modifier is legal
+but unused in Java 1.0. In Java 1.1, it indicates a field that
+is not part of an object's persistent state and thus does not need to 
+be serialized with the object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>volatile</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>volatile</tt> keyword is a modifier that may be
+applied to fields.  It specifies that the field is used by
+synchronized threads and that the
+compiler should not attempt to perform optimizations with it.
+For example, it should read the variable's value from memory every
+time and not attempt to save a copy of it on the stack.</DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.6">No Structures or Unions</A></h3>
+
+<P CLASS=para>
+Java does not support C <tt CLASS=literal>struct</tt> or <tt CLASS=literal>union</tt>
+types.  Note, however, that a <tt CLASS=literal>class</tt> is essentially
+the same thing as a <tt CLASS=literal>struct</tt>, but with more features.
+And you can simulate the important features of a
+<tt CLASS=literal>union</tt> by subclassing.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.7">No Enumerated Types</A></h3>
+
+<P CLASS=para>
+Java does not support the C <tt CLASS=literal>enum</tt> keyword for
+defining types that consist of one of a specified number of
+named values. This is somewhat surprising for a
+strongly-typed language like Java. Enumerated types can be partially
+simulated with the use of <tt CLASS=literal>static</tt> <tt CLASS=literal>final</tt>
+constant values.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.8">No Method Types</A></h3>
+
+<P CLASS=para>
+C allows you to store the address of a function in a
+variable and to pass function addresses to other functions.
+You cannot do this in Java: methods are not data, and cannot
+be manipulated by Java programs.  Note, however, that
+objects are data, and that objects can define methods.
+[9]
+So, when you need to pass a method to another method, you
+declare a class that defines the desired method and pass an
+instance of that class.  See, for example, the
+<tt CLASS=literal>FilenameFilter</tt> interface in the <tt CLASS=literal>java.io</tt>
+package.
+
+<blockquote class=footnote>
+<P CLASS=para>[9] 
+An interesting way to think about objects in Java is as a
+kind of method that defines multiple entry points.
+</blockquote>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.9">No Bitfields</A></h3>
+
+<P CLASS=para>
+Java does not support the C ability to define variables
+that occupy particular bits within <tt CLASS=literal>struct</tt> and
+<tt CLASS=literal>union</tt> types.  This feature of C is usually only used
+to interface directly to hardware devices, which is never
+necessary with Java's platform-independent programming
+model.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.10">No typedef</A></h3>
+
+<P CLASS=para>
+Java does not support the C <tt CLASS=literal>typedef</tt> keyword to
+define aliases for type names.  Java has a much simpler type
+naming scheme than C does, however, and so there is no need for
+something like <tt CLASS=literal>typedef</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-14.11">No Variable-Length Argument Lists</A></h3>
+
+<P CLASS=para>
+Java does not allow you to define methods that take a
+variable number of arguments, as C does.  This is because
+Java is a strongly typed language and there is no way to do
+appropriate type checking for a method with variable
+arguments.  Method overloading allows you to simulate C
+"varargs" functions for simple cases, but there is no
+general replacement for this C feature.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_13.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Exceptions and Exception Handling</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Classes and Objects in Java</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

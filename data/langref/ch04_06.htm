@@ -1,0 +1,567 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.6 Additive Operators</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:10:16 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>Expressions</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-6">4.6 Additive Operators</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.ADD1"></A><A NAME="CH04.ADD2"></A>The additive operators
+in Java are binary operators that are used for addition and string
+concatenation (<tt CLASS=literal>+</tt>) and subtraction (<tt CLASS=literal>-</tt>).
+The additive operators appear in additive expressions.
+
+
+<p>
+<img align=middle src="./figs/jlr0416.gif" alt="[Graphic: Figure from the text]" width=424 height=223 border=0>
+
+<P CLASS=para>
+The additive operators are equal in precedence and are evaluated from
+left to right.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_05.htm#JLR2-CH-4-SECT-5">Multiplicative Operators</A>;
+<A HREF="ch04_14.htm#JLR2-CH-4-SECT-14">Order of Operations</A>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-6.1">Arithmetic Addition Operator +</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.PLUS1"></A><A NAME="CH04.PLUS2"></A><A NAME="CH04.PLUS4"></A><A NAME="CH04.PLUS3"></A>The binary arithmetic addition operator <tt CLASS=literal>+</tt>
+produces a pure value that is the sum of its operands. The arithmetic
+<tt CLASS=literal>+</tt> operator may appear in an additive expression.
+The arithmetic addition operator never throws an exception.
+
+<P CLASS=para>
+Here is an example that uses the arithmetic addition operator:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int addThree (int x, int y, int z) {
+    return x + y + z;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If the
+type of either operand of <tt CLASS=literal>+</tt> is a reference to
+a <tt CLASS=literal>String</tt> object, the operator is the string concatenation
+operator, not the arithmetic addition operator. The string concatenation
+operator is described in <A HREF="ch04_06.htm#JLR2-CH-4-SECT-6.3">String Concatenation Operator +</A>.
+
+<P CLASS=para>
+Otherwise, the
+types of both operands of the arithmetic addition operator must
+be arithmetic types, or a compile-time error occurs. The <tt CLASS=literal>+</tt>
+operator may perform type conversions on its operands:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If
+either operand is of type <tt CLASS=literal>double</tt>, the other operand
+is converted to <tt CLASS=literal>double</tt> and the operation produces
+a <tt CLASS=literal>double</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise, if either
+operand is of type <tt CLASS=literal>float</tt>, the other operand is
+converted to <tt CLASS=literal>float</tt> and the operation produces
+a <tt CLASS=literal>float</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise, if either
+operand is of type <tt CLASS=literal>long</tt>, the other operand is
+converted to <tt CLASS=literal>long</tt> and the operation produces
+a <tt CLASS=literal>long</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise, both operands
+are converted to <tt CLASS=literal>int</tt> and the operation produces
+an <tt CLASS=literal>int</tt> value.
+
+<P>
+</UL>
+<P CLASS=para>
+If the addition of
+integer data overflows, the value produced by <tt CLASS=literal>+</tt>
+contains the low order bits of the sum and the sign of the value
+is the opposite of the mathematically correct sign, due to the limitations
+of the two's complement representation used for integer data.
+
+<P CLASS=para>
+The addition of floating-point data is governed by the following
+rules:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If either operand is not-a-number (NaN), the
+sum is NaN.
+
+<P>
+<li CLASS=listitem>If one operand is positive infinity and
+the other is negative infinity, the sum is NaN.
+
+<P>
+<li CLASS=listitem>If both
+of the operands are positive infinity, the sum is positive infinity.
+
+<P>
+<li CLASS=listitem>If both of the operands are negative infinity, the
+sum is negative infinity.
+
+<P>
+<li CLASS=listitem>If one of the operands is
+an infinity value and the other operand is a finite value, the sum
+is the same infinity value as the operand.
+
+<P>
+<li CLASS=listitem>If one operand is positive zero and the other is negative zero;
+the sum is positive zero.
+
+<P>
+<li CLASS=listitem>If both operands are positive zero, the sum is
+positive zero.
+
+<P>
+<li CLASS=listitem>If both operands are negative zero,
+the sum is negative zero.
+
+<P>
+<li CLASS=listitem>If neither operand is NaN
+nor an infinity value, the sum is rounded to the nearest representable
+value. If the magnitude of the sum is too large to be represented,
+the operation overflows and an infinity value of the appropriate
+sign is produced. If the magnitude of the sum is too small to be
+represented, the operation underflows and a zero value of the appropriate
+sign is produced.
+
+<P>
+</UL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.1">Arithmetic Types</A>;
+<A HREF="ch04_06.htm#JLR2-CH-4-SECT-6.3">String Concatenation Operator +</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-6.2">Arithmetic Subtraction Operator -</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.SUBTRACT1"></A><A NAME="CH04.SUBTRACT2"></A><A NAME="CH04.SUBTRACT3"></A><A NAME="CH04.SUBTRACT4"></A>The binary subtraction operator <tt CLASS=literal>-</tt>
+produces a pure value that is the difference between its operands;
+it subtracts its right operand from its left operand. The arithmetic
+<tt CLASS=literal>-</tt> operator may appear in an additive expression.
+The arithmetic subtraction operator never throws an exception.
+
+<P CLASS=para>
+Here is an example that uses the arithmetic subtraction operator:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int subThree (int x, int y, int z) {
+    return x - y - z;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The types
+of both operands of the arithmetic subtraction operator must be
+arithmetic types, or a compile-time error occurs. The <tt CLASS=literal>-</tt>
+operator may perform type conversions on its operands:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If
+either operand is of type <tt CLASS=literal>double</tt>, the other operand
+is converted to <tt CLASS=literal>double</tt> and the operation produces
+a <tt CLASS=literal>double</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise, if either
+operand is of type <tt CLASS=literal>float</tt>, the other operand is
+converted to <tt CLASS=literal>float</tt> and the operation produces
+a <tt CLASS=literal>float</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise, if either
+operand is of type <tt CLASS=literal>long</tt>, the other operand is
+converted to <tt CLASS=literal>long</tt> and the operation produces
+a <tt CLASS=literal>long</tt> value.
+
+<P>
+<li CLASS=listitem>Otherwise, both operands
+are converted to <tt CLASS=literal>int</tt> and the operation produces
+an <tt CLASS=literal>int</tt> value.
+
+<P>
+</UL>
+<P CLASS=para>
+For both integer and
+floating-point data, <tt CLASS=literal>a-b</tt> always produces the
+same result as <tt CLASS=literal>a-(+b)</tt>.
+
+<P CLASS=para>
+If the subtraction
+of integer data overflows, the value produced by <tt CLASS=literal>-</tt>
+contains the low order bits of the difference and the sign of the
+value is the opposite of the mathematically correct sign, due to
+the limitations of the two's complement representation used for
+integer data.
+
+<P CLASS=para>
+The subtraction of floating-point data
+is governed by the following rules:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If either operand
+is not-a-number (NaN), the difference is NaN.
+
+<P>
+<li CLASS=listitem>If the
+left operand is positive infinity and the right operand is negative
+infinity, the difference is positive infinity.
+
+<P>
+<li CLASS=listitem>If the
+left operand is negative infinity and the right operand is positive
+infinity, the difference is negative infinity.
+
+<P>
+<li CLASS=listitem>If both
+operands are positive infinity, the difference is NaN.
+
+<P>
+<li CLASS=listitem>If
+both operands are negative infinity, the difference is NaN.
+
+<P>
+<li CLASS=listitem>If the left operand is an infinity value and the right operand
+is a finite value, the difference is the same infinity value as
+the left operand.
+
+<P>
+<li CLASS=listitem>If the left operand is a finite value
+and the right argument is an infinity value, the difference is the
+opposite infinity value of the right operand.
+
+<P>
+<li CLASS=listitem>If both
+operands are either positive zero or negative zero, the difference
+is positive zero.
+
+<P>
+<li CLASS=listitem>If the left operand is positive zero
+and the right operand is negative zero, the difference is positive
+zero.
+
+<P>
+<li CLASS=listitem>If the left operand is negative zero and the
+right operand is positive zero, the difference is negative zero.
+
+<P>
+<li CLASS=listitem>If neither operand is NaN nor an infinity value, the difference
+is rounded to the nearest representable value. If the magnitude
+of the difference is too large to be represented, the operation
+overflows and an infinity value of the appropriate sign is produced.
+If the magnitude of the difference is too small to be represented,
+the operation underflows and a zero value of the appropriate sign
+is produced.
+
+<P>
+</UL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.1">Arithmetic Types</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-6.3">String Concatenation Operator +</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.CONCAT1"></A><A NAME="CH04.CONCAT2"></A><A NAME="CH04.CONCAT3"></A>The string concatenation operator <tt CLASS=literal>+</tt> produces
+a pure value that is a reference to a <tt CLASS=literal>String</tt>
+object that it creates. The <tt CLASS=literal>String</tt>
+object contains the concatenation of the operands; the characters of the
+left operand precede the characters of the right operand in the
+newly created string. The string concatenation <tt CLASS=literal>+</tt>
+operator may appear in an additive expression.
+
+<P CLASS=para>
+Here
+is an example of some code that uses the string concatenation operator:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// format seconds into hours, minutes, and seconds
+String formatTime(int t) {
+    int minutes, seconds;
+    seconds = t%60;
+    t /= 60;
+    minutes = t%60;
+    return t/60 + ":" + minutes + ":" + seconds;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If neither
+operand of <tt CLASS=literal>+</tt> is a reference to a <tt CLASS=literal>String</tt>
+object, the operator is the arithmetic addition operator, not the
+string concatenation operator. Note that Java does not allow a program
+to define overloaded operators. However, the language defines the
+<tt CLASS=literal>+</tt> operator to have a meaning that is fundamentally
+different from arithmetic addition if at least one of its operands
+is a <tt CLASS=literal>String</tt> object.
+
+<P CLASS=para>
+The way in which
+Java decides if <tt CLASS=literal>+</tt> means arithmetic addition or
+string concatenation means that the use of parentheses can alter
+the meaning of the <tt CLASS=literal>+</tt> operator. Consider the following
+code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int x = 3, y = 4;
+System.out.println("x = " + x + ", y = " + y);
+System.out.println("\"??\" + x + y ==&gt; " + "??" + x + y);
+System.out.println("\"??\" + (x + y) ==&gt; " + "??"+ (x + y));
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the output
+from this code, you can see that the addition of parentheses
+changes the meaning of the last <tt CLASS=literal>+</tt> from string
+concatenation to arithmetic addition:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+x = 3, y = 4
+"??" + x + y ==&gt; ??34
+"??" + (x + y) ==&gt; ??7
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If one of the operands of
+<tt CLASS=literal>+</tt> is a <tt CLASS=literal>String</tt> object and the
+other is not, the operand that is not a <tt CLASS=literal>String</tt> object
+is converted to one using the following rules:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If the operand is an object reference that is <tt CLASS=literal>null</tt>,
+it is converted to the string literal <tt CLASS=literal>"null"</tt>.
+
+<P>
+<li CLASS=listitem>If the operand is a non-<tt CLASS=literal>null</tt> reference
+to an object that is not a string, the object's <tt CLASS=literal>toString()</tt>
+method is called. The result of the conversion is the string value
+returned by the object's <tt CLASS=literal>toString()</tt> method, unless
+the return value is <tt CLASS=literal>null</tt>, in which case the result
+of the conversion is the string literal <tt CLASS=literal>"null"</tt>.
+Since the <tt CLASS=literal>Object</tt> class defines a
+<tt CLASS=literal>toString()</tt> method, every class in Java has such a method.
+
+<P>
+<li CLASS=listitem>If the
+type of the operand is <tt CLASS=literal>char</tt>, the operand is converted
+to a reference to a <tt CLASS=literal>String</tt> object that has a
+length of one and contains that character.
+
+<P>
+<li CLASS=listitem>If the type
+of the operand is an integer type other than <tt CLASS=literal>char</tt>,
+the operand is converted to a base 10 string representation of its
+value. If the value is negative, the string value starts with a
+minus sign; if it is positive there is no sign character. If the
+value is zero, the result of the conversion is <tt CLASS=literal>"0"</tt>.
+Otherwise, the string representation of the integer does not have
+any leading zeros.
+
+<P>
+<li CLASS=listitem>If the type of the operand is a floating-point
+type, the exact string representation depends on the value being
+converted. If the absolute value of <tt CLASS=literal>d</tt>
+is greater than or equal to 10^-3 
+or less than or equal to 10^7, it
+is converted to a string with an optional minus sign (if the
+value is negative) followed by up to eight digits
+before the decimal point, a decimal point, and the necessary number
+of digits after the decimal point (but no trailing zero if there is 
+more than one significant digit).  There is always a minimum of
+one digit after the decimal point.
+
+<P CLASS=para>
+Otherwise, the value is converted to a string with an optional
+minus sign (if the value is negative), followed by a single digit,
+a decimal point, the necessary number of digits after the decimal
+point (but no trailing zero if there is more than one significant digit),
+and the letter <tt CLASS=literal>E</tt> followed by a plus or a minus 
+sign and a base 10 exponent of at least one digit.  Again, there is always 
+a minimum of one digit after the decimal point.
+
+<P CLASS=para>
+In addition, 
+the values <tt CLASS=literal>NaN</tt>,<tt CLASS=literal> NEGATIVE_INFINITY</tt>,
+<tt CLASS=literal>POSITIVE_INFINITY</tt>, <tt CLASS=literal>-0.0</tt>, and
+<tt CLASS=literal>+0.0</tt> are represented by 
+the strings <tt CLASS=literal>"NaN"</tt>, <tt CLASS=literal>"--Infinity"</tt>, 
+<tt CLASS=literal>"Infinity"</tt>, <tt CLASS=literal>"--0.0"</tt>, 
+and <tt CLASS=literal>"0.0"</tt>, respectively.
+
+<P CLASS=para>
+Note that the specification for this conversion has changed as of Java 
+1.1. Prior to that release, the conversion provided a string representation
+that was equivalent to the <tt CLASS=literal>%g</tt> format of 
+the <tt CLASS=literal>printf</tt> function in C. In addition, the string
+representations of the infinity values, the zero values, and NaN are
+not specified prior to Java 1.1.
+
+<P>
+<li CLASS=listitem>If the type of the operand is <tt CLASS=literal>boolean</tt>,
+the value is converted to a reference to either the string literal
+<tt CLASS=literal>"true"</tt> or the string literal <tt CLASS=literal>"false"</tt>.
+
+<P>
+</UL>
+<P CLASS=para>
+Java uses the <tt CLASS=literal>StringBuffer</tt> object to implement
+string concatenation. Consider the following code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+String s, s1,s2;
+s = s1 + s2;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To compute the string concatenation, Java compiler generates
+code equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+s = new StringBuffer().append(s1).append(s2).toString();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Consider another expression:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+s = 1 + s1 + 2
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this case,
+the Java compiler generates code equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+s = new StringBuffer().append(1).append(s1).append(2).toString()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+No matter how many strings are being concatenated in an expression,
+the expression always produces exactly one <tt CLASS=literal>StringBuffer</tt>
+object and one <tt CLASS=literal>String</tt> object.[3] From an efficiency
+standpoint, if you concatenate more than two strings, it
+may be more efficient to do so in a single expression, rather than
+in multiple expressions.
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+Although an optimizing compiler should be smart enough to combine
+multiple concatenation expressions when it is advantageous, the
+compiler provided with Sun's reference implementation of Java does not do this.
+</blockquote>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_06.htm#JLR2-CH-4-SECT-6.1">Arithmetic Addition Operator +</A>;
+<A HREF="ch10_14.htm">Object</A>;
+<A HREF="ch10_20.htm">String</A>;
+<A HREF="ch10_21.htm">StringBuffer</A>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Multiplicative Operators</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Shift Operators</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

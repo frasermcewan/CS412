@@ -1,0 +1,1102 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] PrintStream</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:40:26 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_51.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_53.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>PrintStream</H1>
+
+<H2>Name</H2>
+
+PrintStream
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.353">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.PrintStream</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.FilterOutputStream</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.354">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>PrintStream</tt> class provides 
+support for writing string representations of primitive data types and 
+objects to an underlying output stream. As of JDK 1.1, <tt CLASS=literal>PrintStream</tt> 
+uses the system's default encoding scheme to convert characters to 
+bytes and uses the system's own specific line separator, rather than 
+the newline character, for separating lines of text. Although this class 
+is not officially deprecated, its constructors are, and you should use 
+<tt CLASS=literal>PrintWriter</tt> instead of <tt CLASS=literal>PrintStream</tt> 
+in new code. 
+
+<P CLASS=para>
+Prior to JDK 1.1, <tt CLASS=literal>PrintStream</tt> 
+did not handle Unicode characters. Any <tt CLASS=literal>PrintStream</tt> 
+methods that wrote characters only wrote the low eight bits of each character. 
+In addition, prior to JDK 1.1, <tt CLASS=literal>PrintStream</tt> 
+used the newline character to separate lines of text, regardless of the 
+platform. These problems have been corrected as of JDK 1.1. 
+
+<P CLASS=para>
+All of the methods of <tt CLASS=literal>PrintStream</tt> 
+that write multiple times to the underlying output stream handle synchronization 
+internally, so that <tt CLASS=literal>PrintStream</tt> 
+objects are thread-safe. 
+
+<P CLASS=para>
+A <tt CLASS=literal>PrintStream</tt> object is often 
+used to write to a <tt CLASS=literal>BufferedOutputStream</tt> 
+object. Note that you can specify that the <tt CLASS=literal>PrintStream</tt> 
+be flushed every time it writes the line separator or the newline 
+character by using the constructor that takes a <tt CLASS=literal>boolean</tt> 
+argument. 
+
+<P CLASS=para>
+<tt CLASS=literal>PrintStream</tt> objects are often 
+used to report errors. For this reason, the methods of this class do not 
+throw exceptions. Instead, the methods catch any exceptions thrown by any 
+downstream <tt CLASS=literal>OutputStream</tt> objects 
+and set an internal flag, so that the object can remember that a problem 
+occurred. You can query the internal flag by calling the <tt CLASS=literal>checkError()</tt> 
+method. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.355">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.io.PrintStream extends java.io.FilterOutputStream {
+  // Constructors
+  public PrintStream(OutputStream out);           // Deprecated in 1.1
+  public PrintStream(OutputStream out, 
+                     boolean autoFlush);          // Deprecated in 1.1
+  // Public Instance Methods
+  public boolean checkError();
+  public void close();
+  public void flush();
+  public void print(boolean b);
+  public void print(char c);
+  public void print(char[] s);
+  public void print(double d);
+  public void print(float f);
+  public void print(int i);
+  public void print(long l);
+  public void print(String s);
+  public void print(Object obj);
+  public void println();
+  public void println(boolean b);
+  public void println(char c);
+  public void println(char[] s);
+  public void println(double d);
+  public void println(float f);
+  public void println(int i);
+  public void println(long l);
+  public void println(Object obj);
+  public void println(String s);
+  public void write(int b);
+  public void write(byte[] buf, int off, int len);
+  // Protected Instance Methods
+  protected void setError();                      // New in 1.1
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.356">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.345">PrintStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.430">public PrintStream(OutputStream out)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>out</tt><br>
+<DD>
+
+<P CLASS=para>
+The output stream to 
+use. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>PrintStream</tt> 
+object that sends output to the given <tt CLASS=literal>OutputStream</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.431">public PrintStream(OutputStream out, boolean autoflush)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>out</tt><br>
+<DD>
+
+<P CLASS=para>
+The output stream to use.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>autoflush</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates whether or not the
+print stream is flushed every time a newline is output.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>PrintStream</tt> 
+object that sends output to the given <tt CLASS=literal>OutputStream</tt>. 
+If <tt CLASS=literal>autoflush</tt> is <tt CLASS=literal>true</tt>, 
+every time the <tt CLASS=literal>PrintStream</tt> 
+object writes a newline character or line separator, it calls its <tt CLASS=literal>flush()</tt> 
+method. Note that this is different than with a <tt CLASS=literal>PrintWriter</tt> 
+object, which only calls its <tt CLASS=literal>flush()</tt> 
+method when a <tt CLASS=literal>println()</tt> method 
+is called. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.357">Public Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.346">checkError</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.432">public boolean checkError()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if any error has occurred; 
+<tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method flushes any buffered output and returns <tt CLASS=literal>true</tt> 
+if any error has occurred. Once the error flag for a <tt CLASS=literal>PrintStream</tt> 
+object has been set, it is never cleared. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.347">close</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.433">public void close()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>FilterOutputStream.close()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method closes this print stream and releases any resources associated 
+with the object. The method does this by calling the <tt CLASS=literal>close()</tt> 
+method of the underlying output stream and catching any exceptions that 
+are thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.348">flush</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.434">public void flush()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>FilterOutputStream.flush()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method flushes this print stream, forcing any bytes that may be buffered 
+to be written to the underlying output stream. The method does this by 
+calling the <tt CLASS=literal>flush()</tt> method 
+of the underlying output stream and catching any exceptions that are thrown. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.349">print</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.435">public void print(boolean b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>boolean</tt> 
+value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes <tt CLASS=literal>"true"</tt> to the underlying 
+output stream if <tt CLASS=literal>b</tt> is true; 
+otherwise it writes <tt CLASS=literal>"false"</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.436">public void print(char c)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>c</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>char </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the given character to the underlying output stream. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.437">public void print(char[] s)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>s</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>char </tt>array to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the characters in the given array to the underlying 
+output stream. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.438">public void print(double d)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>d</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>double </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a string representation of the given <tt CLASS=literal>double</tt> 
+value to the underlying output stream. The string representation is identical 
+to the one returned by calling <tt CLASS=literal>Double.toString(d)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.439">public void print(float f)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>f</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>float </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a string representation of the given <tt CLASS=literal>float</tt> 
+value to the underlying output stream. The string representation is identical 
+to the one returned by calling <tt CLASS=literal>Float.toString(f)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.440">public void print(int i)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>i</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>int </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a string representation of the given <tt CLASS=literal>int</tt> 
+value to the underlying output stream. The string representation is identical 
+to the one returned by calling <tt CLASS=literal>Integer.toString(i)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.441">public void print(long l)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>l</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>long </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a string representation of the given <tt CLASS=literal>long</tt> 
+value to the underlying output stream. The string representation is identical 
+to the one returned by calling <tt CLASS=literal>Long.toString(l)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.442">public void print(Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Object </tt>to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the string representation of the given <tt CLASS=literal>Object</tt> 
+to the underlying output stream. The string representation is that returned 
+by calling the <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>Object</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.443">public void print(String s)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>s</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> 
+to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the given <tt CLASS=literal>String</tt> 
+to the underlying output stream. If <tt CLASS=literal>String</tt> 
+is <tt CLASS=literal>null</tt>, the method writes 
+<tt CLASS=literal>"null"</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.350">println</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.444">public void println()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a line separator to the underlying output stream. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.445">public void println(boolean b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>boolean</tt> 
+value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes <tt CLASS=literal>"true"</tt> to the underlying 
+output stream if <tt CLASS=literal>b</tt> is true, 
+otherwise it writes <tt CLASS=literal>"false"</tt>. In either case, 
+the string is followed by a line separator. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.446">public void println(char c)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>c</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>char </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the given character, followed by a line separator, to 
+the underlying output stream. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.447">public void println(char[] s)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>s</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>char </tt>array to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the characters in the given array, followed by a line 
+separator, to the underlying output stream. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.448">public void println(double d)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>d</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>double </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a string representation of the given <tt CLASS=literal>double</tt> 
+value, followed by a line separator, to the underlying output stream. The 
+string representation is identical to the one returned by calling <tt CLASS=literal>Double.toString(d)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.449">public void println(float f)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>f</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>float </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a string representation of the given <tt CLASS=literal>float</tt> 
+value, followed by a line separator, to the underlying output stream. The 
+string representation is identical to the one returned by calling <tt CLASS=literal>Float.toString(f)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.450">public void println(int i)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>i</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>int </tt>value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a string representation of the given <tt CLASS=literal>int</tt> 
+value, followed by a line separator, to the underlying output stream. The 
+string representation is identical to the one returned by calling <tt CLASS=literal>Integer.toString(i)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.451">public void println(long l)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>l</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>long</tt> value to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes a string representation of the given <tt CLASS=literal>long</tt> 
+value, followed by a line separator, to the underlying output stream. The 
+string representation is identical to the one returned by calling <tt CLASS=literal>Long.toString(l)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.452">public void println(Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Object</tt> to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the string representation of the given <tt CLASS=literal>Object</tt>, 
+followed by a line separator, to the underlying output stream. The string 
+representation is that returned by calling the <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>Object</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.453">public void println(String s)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>s</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> to print. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the given <tt CLASS=literal>String</tt>, 
+followed by a line separator, to the underlying output stream. If <tt CLASS=literal>String</tt> 
+is <tt CLASS=literal>null</tt>, the method writes 
+<tt CLASS=literal>"null"</tt> followed 
+by a line separator. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.351">write</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.454">public void write(int b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to write to 
+the stream. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>FilterOutputStream.write(int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the lowest eight bits of <tt CLASS=literal>b</tt> 
+to the underlying stream as a byte. The method does this by calling the 
+<tt CLASS=literal>write()</tt> method of the underlying 
+output stream and catching any exceptions that are thrown. If necessary, 
+the method blocks until the byte is written. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.455">public void write(byte b[], int off, int len)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of bytes to write to the stream.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>off</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the byte array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes to write. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>FilterOutputStream.write(byte[], int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method writes the lowest eight bits of each of <tt CLASS=literal>len</tt> 
+bytes from the given array, starting <tt CLASS=literal>off</tt> elements from 
+the beginning of the array, to the underlying output stream. The method 
+does this by calling <tt CLASS=literal>write(b,</tt> 
+<tt CLASS=literal>off,</tt> <tt CLASS=literal>len)</tt> 
+for the underlying output stream and catching any exceptions that are thrown. 
+If necessary, the method blocks until the bytes are written. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.358">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.352">setError</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.456">protected void setError()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the error state of the <tt CLASS=literal>PrintStream</tt> 
+object to <tt CLASS=literal>true</tt>. Any subsequent 
+calls to <tt CLASS=literal>getError()</tt> return
+<tt CLASS=literal>true</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.359">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>write(byte[])</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>FilterOutputStream</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.360">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Double</tt>, 
+<tt CLASS=literal>FilterOutputStream</tt>, 
+<tt CLASS=literal>Float</tt>, 
+<tt CLASS=literal>Integer</tt>, 
+<tt CLASS=literal>Long</tt>, 
+<tt CLASS=literal>OutputStream</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_51.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_53.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>PipedWriter</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>PrintWriter</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

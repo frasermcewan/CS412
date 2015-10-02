@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.4 Serialized Applets</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:56:47 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Object Serialization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-9-SECT-4">9.4 Serialized Applets</A></h2>
+
+<P CLASS=para>
+
+One of the uses of object serialization in Java 1.1 is for
+serialized applets.  As discussed in <A HREF="ch15_01.htm">Chapter 15, <i>Java-Related HTML Tags</i></A>,
+the <tt CLASS=literal>&lt;APPLET&gt;</tt> 
+tag has a
+new attribute, <tt CLASS=literal>OBJECT</tt>, that can be used in place of
+the <tt CLASS=literal>CODE</tt> attribute to specify a serialized object file instead
+of a class file.  When such an <tt CLASS=literal>&lt;APPLET&gt;</tt>
+tag is encountered, the applet viewer or Web browser
+creates the applet by deserializing it.
+
+<P CLASS=para>
+The reason that this is an interesting thing to do is that
+it allows an applet to be shipped in a pre-initialized
+state.  The code for the applet need not even include the
+code that performed the initialization.  For example,
+imagine a GUI builder tool that allows a programmer to build
+a GUI using a point-and-click interface.  Such a tool could
+create a tree of AWT components within an <tt CLASS=literal>Applet</tt> panel, and
+then serialize the applet, including all of the GUI
+components it contains.  When deserialized, the applet would
+have a complete GUI, despite the fact that the applet's
+class file does not contain any code to create the GUI.
+
+<P CLASS=para>
+You can experiment with applet serialization with the JDK
+1.1 <I CLASS=emphasis>appletviewer</I> program.  Start an applet running in
+<I CLASS=emphasis>appletviewer</I> in the usual way.  This loads the
+applet and runs its <tt CLASS=literal>init()</tt> and <tt CLASS=literal>start()</tt>
+methods.  Next, select the <b>Stop</b> item from the menu to
+stop the applet.  Now use the <b>Save</b> menu item to
+serialize the applet to a file.  By convention, your
+serialized applet file should be given a <I CLASS=emphasis>.ser</I>
+extension.  If the applet refers to any non-serializable
+objects, you may not be able to serialize it.  For example,
+you may encounter problems serializing applets that use
+threads or images.
+
+<P CLASS=para>
+Once you have serialized an applet, create an HTML file with
+an <tt CLASS=literal>&lt;APPLET&gt;</tt> tag something like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;APPLET OBJECT="MyApplet.ser" WIDTH=400 HEIGHT=200&gt;&lt;/APPLET &gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Finally, you can use <I CLASS=emphasis>appletviewer</I> with this new HTML file.  It
+should deserialize and display the applet.  When created in
+this way, the applet's <tt CLASS=literal>init()</tt> method is not called
+(since it was called before serialization), but its
+<tt CLASS=literal>start()</tt> method is called (because the applet should
+have been stopped before serialization).
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Serialization and Class Versioning</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Advanced Serialization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

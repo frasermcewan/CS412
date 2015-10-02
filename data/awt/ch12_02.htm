@@ -1,0 +1,711 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] 12.2 ColorModel</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:50:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>Image Processing</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-2">12.2 ColorModel</A></h2>
+
+<P CLASS=para>
+<A NAME="CH12.COLOR"></A>A color model determines how colors are represented within AWT. <tt CLASS=literal>ColorModel</tt> 
+is an abstract class that you can subclass to specify your own representation 
+for colors. AWT provides two concrete subclasses of <tt CLASS=literal>ColorModel</tt> 
+that you can use to build your own color model; they are <tt CLASS=literal>DirectColorModel</tt> 
+and <tt CLASS=literal>IndexColorModel</tt>. These 
+two correspond to the two ways computers represent colors internally. 
+
+<P CLASS=para>
+Most modern computer systems use 24 bits to represent each pixel. These 
+24 bits contain 8 bits for each primary color (red, green, blue); each 
+set of 8 bits represents the intensity of that color for the particular pixel. 
+This arrangement yields the familiar "16 million colors" that 
+you see in advertisements. It corresponds closely to Java's direct 
+color model. 
+
+<P CLASS=para>
+However, 24 bits per pixel, with something like a million pixels on the 
+screen, adds up to a lot of memory. In the dark ages, memory was expensive, 
+and devoting this much memory to a screen buffer cost too much. Therefore, 
+designers used fewer bits--possibly as few as three, but more often 
+eight--for each pixel. Instead of representing the colors directly 
+in these bits, the bits were an index into a color map. Graphics programs 
+would load the color map with the colors they were interested in and then 
+represent each pixel by using the index of the appropriate color in the 
+map. For example, the value 1 might represent fuschia; the value 2 might represent 
+puce. Full information about how to display each color (the red, green, 
+and blue components that make up fuschia or puce) is contained only in 
+the color map. This arrangement corresponds closely to Java's indexed 
+color model. 
+
+<P CLASS=para>
+Because Java is platform-independent, you don't need to worry about 
+how your computer or the user's computer represents colors. Your 
+programs can use an indexed or direct color map as appropriate. Java will 
+do the best it can to render the colors you request. Of course, if you 
+use 5,000 colors on a computer that can only display 256, Java is going 
+to have to make compromises. It will decide which colors to put in the color 
+map and which colors are close enough to the colors in the color map, 
+but that's done behind your back. 
+
+<P CLASS=para>
+Java's default color model uses 8 bits per pixel for red, green, 
+and blue, along with another 8 bits for alpha (transparency) level. However, 
+as I said earlier, you can create your own <tt CLASS=literal>ColorModel</tt> 
+if you want to work in some other scheme. For example, you could create 
+a grayscale color model for black and white pictures, or an HSB (hue, 
+saturation, brightness) color model if you are more comfortable working 
+with this system. Your color model's job will be to take a pixel 
+value in your representation and translate that value into the corresponding 
+alpha, red, green, and blue values. If you are working with a grayscale 
+image, your image producer could deliver grayscale values to the image 
+consumer, plus a <tt CLASS=literal>ColorModel</tt> 
+that tells the consumer how to render these gray values in terms of ARGB 
+components. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-2.1">ColorModel Methods</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public ColorModel (int bits) </I><br>
+<DD>
+
+<P CLASS=para>
+There is a single constructor for <tt CLASS=literal>ColorModel</tt>. 
+It has one parameter, <tt CLASS=literal>bits</tt>, 
+which describes the number of bits required per pixel of an image. Since 
+this is an abstract class, you cannot call this constructor directly. Since 
+each pixel value must be stored within an integer, the maximum value for 
+<tt CLASS=literal>bits</tt> is 32. If you request more, you get 32. </DL>
+Pseudo-constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static ColorModel getRGBdefault() </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRGBdefault()</tt> method 
+returns the default <tt CLASS=literal>ColorModel,</tt> 
+which has 8 bits for each of the components alpha, red, green, and blue. 
+The order the pixels are stored in an integer is 0xAARRGGBB, or alpha in 
+highest order byte, down to blue in the lowest. </DL>
+Other methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getPixelSize () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPixelSize()</tt> method returns 
+the number of bits required for each pixel as described by this color model. 
+That is, it returns the number of bits passed to the constructor. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int getAlpha (int pixel)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlpha()</tt> method returns 
+the alpha component of <tt CLASS=literal>pixel</tt> 
+for a color model. Its range must be between 0 and 255, inclusive. A value 
+of 0 means the pixel is completely transparent and the background will 
+appear through the pixel. A value of 255 means the pixel is opaque and 
+you cannot see the background behind it. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int getRed (int pixel)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRed()</tt> method returns 
+the red component of <tt CLASS=literal>pixel</tt> 
+for a color model. Its range must be between 0 and 255, inclusive. A value 
+of 0 means the pixel has no red in it. A value of 255 means red is at maximum 
+intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int getGreen (int pixel)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getGreen()</tt> method returns 
+the green component of <tt CLASS=literal>pixel</tt> 
+for a color model. Its range must be between 0 and 255, inclusive. A value 
+of 0 means the pixel has no green in it. A value of 255 means green is 
+at maximum intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int getBlue (int pixel)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBlue()</tt> method returns 
+the blue component of <tt CLASS=literal>pixel</tt> 
+for a color model. Its range must be between 0 and 255, inclusive. A value 
+of 0 means the pixel has no blue in it. A value of 255 means blue is at 
+maximum intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getRGB(int pixel)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRGB()</tt> method returns 
+the color of <tt CLASS=literal>pixel</tt> in the default 
+RGB color model. If a subclass has changed the ordering or size of the 
+different color components, <tt CLASS=literal>getRGB()</tt> 
+will return the pixel in the RGB color model (0xAARRGGBB order). In theory, 
+the subclass does not need to override this method, unless it wants to 
+make it final. Making this method final may yield a significant performance 
+improvement. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void finalize ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The garbage collector calls <tt CLASS=literal>finalize()</tt> 
+when it determines that the <tt CLASS=literal>ColorModel</tt> 
+object is no longer needed. <tt CLASS=literal>finalize()</tt> frees 
+any internal resources that the <tt CLASS=literal>ColorModel</tt> 
+object has used. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-2.2">DirectColorModel</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>DirectColorModel</tt> class 
+is a concrete subclass of <tt CLASS=literal>ColorModel</tt>. 
+It specifies a color model in which each pixel contains all the color information 
+(alpha, red, green, and blue values) explicitly. Pixels are represented 
+by 32-bit (<tt CLASS=literal>int</tt>) quantities; the constructor lets you change which bits 
+are allotted to each component. 
+
+<P CLASS=para>
+All of the methods in this class, except constructors, are final, because 
+of assumptions made by the implementation. You can create subclasses of 
+<tt CLASS=literal>DirectColorModel</tt>, but you 
+can't override any of its methods. However, you should not need to 
+develop your own subclass. Just create an instance of <tt CLASS=literal>DirectColorModel</tt> 
+with the appropriate constructor. Any subclassing results in serious performance 
+degradation, because you are going from fast, static final method calls to 
+dynamic method lookups.Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public DirectColorModel (int bits, int redMask, int greenMask, int blueMask, 
+int alphaMask) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>DirectColorModel</tt> 
+in which <tt CLASS=literal>bits</tt> represents the total number of bits used to represent a pixel; 
+it must be less than or equal to 32. The <tt CLASS=literal>redMask</tt>, 
+<tt CLASS=literal>greenMask</tt>, <tt CLASS=literal>blueMask</tt>, 
+and <tt CLASS=literal>alphaMask</tt> specify where 
+in a pixel each color component exists. Each of the bit masks must be contiguous 
+(e.g., red cannot be the first, fourth, and seventh bits of the pixel), 
+must be smaller than 2^bits, 
+and should not exceed 8 bits. (You cannot display more than 8 bits of data 
+for any color component, but the mask can be larger.) Combined, the masks 
+together should be <tt CLASS=literal>bits</tt> in 
+length. The default RGB color model is: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new DirectColorModel (32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The run-time exception <tt CLASS=literal>IllegalArgumentException</tt> is 
+thrown if any of the following occur: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The bits that are set in a mask are not contiguous.
+
+<P>
+<li CLASS=listitem>Mask bits overlap (i.e., the same bit is set in two or more masks).
+
+<P>
+<li CLASS=listitem>The number of mask bits exceeds <tt CLASS=literal>bits</tt>.
+
+<P>
+</UL>
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public DirectColorModel (int bits, int redMask, int greenMask, int blueMask) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor for <tt CLASS=literal>DirectColorModel</tt> 
+calls the first with an alpha mask of 0, which means that colors in this 
+color model have no transparency component. All colors will be fully opaque 
+with an alpha value of 255. The same restrictions for the red, green, and 
+blue masks apply. </DL>
+Methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getAlpha (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlpha()</tt> method returns 
+the alpha component of <tt CLASS=literal>pixel</tt> 
+for the color model as a number from 0 to 255, inclusive. A value of 0 
+means the pixel is completely transparent, and the background will appear 
+through the pixel. A value of 255 means the pixel is opaque, and you cannot 
+see the background behind it. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getRed (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRed()</tt> method returns 
+the red component of <tt CLASS=literal>pixel</tt> 
+for the color model. Its range is from 0 to 255. A value of 0 means the 
+pixel has no red in it. A value of 255 means red is at maximum intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getGreen (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getGreen()</tt> method returns 
+the green component of <tt CLASS=literal>pixel</tt> 
+for the color model. Its range is from 0 to 255. A value of 0 means the 
+pixel has no green in it. A value of 255 means green is at maximum intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getBlue (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBlue()</tt> method returns 
+the blue component of <tt CLASS=literal>pixel</tt> 
+for the color model. Its range is from 0 to 255. A value of 0 means the 
+pixel has no blue in it. A value of 255 means blue is at maximum intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getRGB (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRGB()</tt> method returns 
+the color of <tt CLASS=literal>pixel</tt> in the default 
+RGB color model. If a subclass has changed the ordering or size of the 
+different color components, <tt CLASS=literal>getRGB()</tt> 
+will return the pixel in the RGB color model (0xAARRGGBB order). The <tt CLASS=literal>getRGB()</tt> 
+method in this subclass is identical to the method in <tt CLASS=literal>ColorModel</tt> 
+but overrides it to make it final. </DL>
+Other methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getAlphaMask () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlphaMask()</tt> method returns 
+the <tt CLASS=literal>alphaMask</tt> from the <tt CLASS=literal>DirectColorModel</tt> 
+constructor (or 0 if constructor did not have <tt CLASS=literal>alphaMask</tt>). 
+The <tt CLASS=literal>alphaMask</tt> specifies which 
+bits in the pixel represent the alpha transparency component of the color 
+model. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getRedMask () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRedMask()</tt> method returns 
+the <tt CLASS=literal>redMask</tt> from the <tt CLASS=literal>DirectColorModel</tt> 
+constructor. The <tt CLASS=literal>redMask</tt> specifies 
+which bits in the pixel represent the red component of the color model. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getGreenMask () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getGreenMask()</tt> method returns 
+the <tt CLASS=literal>greenMask</tt> from the <tt CLASS=literal>DirectColorModel</tt> 
+constructor. The <tt CLASS=literal>greenMask</tt> 
+specifies which bits in the pixel represent the green component of the 
+color model. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getBlueMask () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBlueMask()</tt> method returns 
+the <tt CLASS=literal>blueMask</tt> from the <tt CLASS=literal>DirectColorModel</tt> 
+constructor. The <tt CLASS=literal>blueMask</tt> specifies 
+which bits in the pixel represent the blue component of the color model. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-2.3">IndexColorModel</A></h3>
+
+<P CLASS=para>
+<A NAME="CH12.INDEX1"></A><A NAME="CH12.INDEX2"></A>The <tt CLASS=literal>IndexColorModel</tt> is another 
+concrete subclass of <tt CLASS=literal>ColorModel</tt>. 
+It specifies a <tt CLASS=literal>ColorModel</tt> that 
+uses a color map lookup table (with a maximum size of 256), rather than 
+storing color information in the pixels themselves. Pixels are represented 
+by an index into the color map, which is at most an 8-bit quantity. Each 
+entry in the color map gives the alpha, red, green, and blue components 
+of some color. One entry in the map can be designated "transparent." 
+This is called the "transparent pixel"; the alpha component 
+of this map entry is ignored. 
+
+<P CLASS=para>
+All of the methods in this class, except constructors, are final because 
+of assumptions made by the implementation. You shouldn't need to 
+create subclasses; you can if necessary, but you can't override any 
+of the <tt CLASS=literal>IndexColorModel</tt> methods. 
+<A HREF="ch12_03.htm#JAWT-CH-12-EX-2">Example 12.2</A> (later in this chapter) uses an <tt CLASS=literal>IndexColorModel</tt>. Constructors
+
+<P CLASS=para>
+There are two sets of constructors for <tt CLASS=literal>IndexColorModel</tt>. 
+The first two constructors use a single-byte array for the color map. The 
+second group implements the color map with separate byte arrays for each 
+color component. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public IndexColorModel (int bits, int size, byte colorMap[], int start, 
+boolean hasalpha, int transparent) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an <tt CLASS=literal>IndexColorModel</tt>. 
+<tt CLASS=literal>bits</tt> is the number of bits 
+used to represent each pixel and must not exceed 8. <tt CLASS=literal>size</tt> 
+is the number of elements in the map; it must be less than 2^bits. <tt CLASS=literal>hasalpha</tt> 
+should be <tt CLASS=literal>true</tt> if the color map includes alpha (transparency) components 
+and <tt CLASS=literal>false</tt> if it doesn't. <tt CLASS=literal>transparent</tt> 
+is the location of the transparent pixel in the map (i.e., the pixel value 
+that is considered transparent). If there is no transparent pixel, set 
+transparent to -1. 
+
+<P CLASS=para>
+The <tt CLASS=literal>colorMap</tt> describes the 
+colors used to paint pixels. <tt CLASS=literal>start</tt> 
+is the index within the <tt CLASS=literal>colorMap</tt> 
+array at which the map begins; prior elements of the array are ignored. 
+An entry in the map consists of three or four consecutive bytes, representing 
+the red, green, blue, and (optionally) alpha components. If <tt CLASS=literal>hasalpha</tt> 
+is <tt CLASS=literal>false</tt>, a map entry consists of three bytes, and no alpha components are 
+present; if <tt CLASS=literal>hasalpha</tt> is <tt CLASS=literal>true</tt>, 
+map entries consist of four bytes, and all four components must be present. 
+
+<P CLASS=para>
+For example, consider a pixel whose value is <tt CLASS=literal>p</tt>, and a color map with a 
+<tt CLASS=literal>hasalpha</tt> set to <tt CLASS=literal>false</tt>. Therefore, 
+each element in the color map occupies three consecutive array elements. 
+The red component of that pixel will be located at <tt CLASS=literal>colorMap[start 
++ 3*p]</tt>; the green component will be at <tt CLASS=literal>colorMap[start 
++ 3*p + 1]</tt>; and so on. The value of size may 
+be smaller than 2^bits, 
+meaning that there may be pixel values with no corresponding entry in the 
+color map. These pixel values (i.e., <tt CLASS=literal>size <= p</tt> &lt; 2^bits) are painted with the color components 
+set to 0; they are transparent if <tt CLASS=literal>hasalpha</tt> 
+is <tt CLASS=literal>true</tt>, opaque otherwise. 
+
+<P CLASS=para>
+If <tt CLASS=literal>bits</tt> is too large (greater 
+than 8), <tt CLASS=literal>size</tt> is too large 
+(greater than 2^bits), 
+or the <tt CLASS=literal>colorMap</tt> array is too 
+small to hold the map, the run-time 
+exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+will be thrown. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public IndexColorModel (int bits, int size, byte colorMap[], int start, 
+boolean hasalpha) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the <tt CLASS=literal>IndexColorModel</tt> 
+constructor calls the previous constructor with a <tt CLASS=literal>transparent</tt> 
+index of -1; that is, there is no transparent pixel. If <tt CLASS=literal>bits</tt> 
+is too large (greater than 8), or <tt CLASS=literal>size</tt> 
+is too large (greater than 2^bits), 
+or the <tt CLASS=literal>colorMap</tt> array is too 
+small to hold the map, the run-time 
+exception, <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+will be thrown. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public IndexColorModel (int bits, int size, byte red[], byte green[], byte 
+blue[],</I>  <I CLASS=emphasis>int transparent) </I><br>
+<DD>
+
+<P CLASS=para>
+The second set of constructors for <tt CLASS=literal>IndexColorModel</tt> 
+is similar to the first group, with the exception that these constructors 
+use three or four separate arrays (one per color component) to represent 
+the color map, instead of a single array. 
+
+<P CLASS=para>
+The <tt CLASS=literal>bits</tt> parameter still represents 
+the number of bits in a pixel. <tt CLASS=literal>size</tt> 
+represents the number of elements in the color map. <tt CLASS=literal>transparent</tt> 
+is the location of the transparent pixel in the map (i.e., the pixel value 
+that is considered transparent). If there is no transparent pixel, set 
+<tt CLASS=literal>transparent</tt> to -1. 
+
+<P CLASS=para>
+The <tt CLASS=literal>red</tt>, <tt CLASS=literal>green</tt>, 
+and <tt CLASS=literal>blue</tt> arrays contain the 
+color map itself. These arrays must have at least <tt CLASS=literal>size</tt> 
+elements. They contain the red, green, and blue components of the colors 
+in the map. For example, if a pixel is at position <tt CLASS=literal>p</tt>, 
+<tt CLASS=literal>red[p]</tt> contains the pixel's 
+red component; <tt CLASS=literal>green[p]</tt> contains 
+the green component; and <tt CLASS=literal>blue[p]</tt> 
+contains the blue component. The value of <tt CLASS=literal>size</tt> 
+may be smaller than 2^bits, 
+meaning that there may be pixel values with no corresponding entry in the 
+color map. These pixel values (i.e., <tt CLASS=literal>size <= p &lt;</tt> 2^bits) 
+are painted with the color components set to 0. 
+
+<P CLASS=para>
+If <tt CLASS=literal>bits</tt> is too large (greater 
+than 8), <tt CLASS=literal>size</tt> is too large 
+(greater than 2^bits), 
+or the red, green, and blue arrays are too small to hold the map, the run-time exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+will be thrown. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public IndexColorModel (int bits, int size, byte red[], byte green[], byte 
+blue[]) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the <tt CLASS=literal>IndexColorModel</tt> 
+constructor calls the previous one with a <tt CLASS=literal>transparent</tt> 
+index of -1; that is, there is no transparent pixel. If <tt CLASS=literal>bits</tt> 
+is too large (greater than 8), <tt CLASS=literal>size</tt> 
+is too large (greater than 2^bits), 
+or the red, green, and blue arrays are too small to hold the map, the run-time exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+will be thrown. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public IndexColorModel (int bits, int size, byte red[], byte green[], byte 
+blue[], byte alpha[]) </I><br>
+<DD>
+
+<P CLASS=para>
+Like the previous constructor, this version creates an <tt CLASS=literal>IndexColorModel</tt> 
+with no transparent pixel. It differs from the previous constructor in 
+that it supports transparency; the array alpha contains the map's 
+transparency values. If <tt CLASS=literal>bits</tt> 
+is too large (greater than 8), <tt CLASS=literal>size</tt> 
+is too large (greater than 2^bits), 
+or the red, green, blue, and alpha arrays are too small to hold the map, 
+the run-time exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+will be thrown. </DL>
+Methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getAlpha (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlpha()</tt> method returns 
+the alpha component of <tt CLASS=literal>pixel</tt> 
+for a color model, which is a number between 0 and 255, inclusive. A value 
+of 0 means the pixel is completely transparent and the background will 
+appear through the pixel. A value of 255 means the pixel is opaque and 
+you cannot see the background behind it. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getRed (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRed()</tt> method returns 
+the red component of <tt CLASS=literal>pixel</tt> 
+for a color model, which is a number between 0 and 255, inclusive. A value 
+of 0 means the pixel has no red in it. A value of 255 means red is at maximum 
+intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getGreen (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getGreen()</tt> method returns 
+the green component of <tt CLASS=literal>pixel</tt> 
+for a color model, which is a number between 0 and 255, inclusive. A value 
+of 0 means the pixel has no green in it. A value of 255 means green is 
+at maximum intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getBlue (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBlue()</tt> method returns 
+the blue component of <tt CLASS=literal>pixel</tt> 
+for a color model, which is a number between 0 and 255, inclusive. A value 
+of 0 means the pixel has no blue in it. A value of 255 means blue is at 
+maximum intensity. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getRGB (int pixel) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRGB()</tt> method returns 
+the color of <tt CLASS=literal>pixel</tt> in the default 
+RGB color model. If a subclass has changed the ordering or size of the 
+different color components, <tt CLASS=literal>getRGB()</tt> 
+will return the pixel in the RGB color model (0xAARRGGBB order). This version 
+of <tt CLASS=literal>getRGB</tt> is identical to the version in the <tt CLASS=literal>ColorModel</tt> 
+class but overrides it to make it final. </DL>
+Other methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getMapSize() </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMapSize()</tt> method returns 
+the size of the color map (i.e., the number of distinct colors). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public int getTransparentPixel () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getTransparentPixel()</tt> method 
+returns the color map index for the transparent pixel in the color model. 
+If no transparent pixel exists, it returns -1. It is not possible to change 
+the transparent pixel after the color model has been created. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public void getAlphas (byte alphas[]) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlphas()</tt> method copies 
+the alpha components of the <tt CLASS=literal>ColorModel</tt> 
+into elements 0 through <tt CLASS=literal>getMapSize()-1</tt> 
+of the <tt CLASS=literal>alphas</tt> array. Space 
+must already be allocated in the <tt CLASS=literal>alphas</tt> 
+array. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public void getReds (byte reds[]) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getReds()</tt> method copies 
+the red components of the <tt CLASS=literal>ColorModel</tt> 
+into elements 0 through <tt CLASS=literal>getMapSize()-1</tt> 
+of the <tt CLASS=literal>reds</tt> array. Space must 
+already be allocated in the <tt CLASS=literal>reds</tt> 
+array. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public void getGreens (byte greens[]) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getGreens()</tt> method copies 
+the green components of the <tt CLASS=literal>ColorModel</tt> 
+into elements 0 through <tt CLASS=literal>getMapSize()-1</tt> 
+of the <tt CLASS=literal>greens</tt> array. Space 
+must already be allocated in the <tt CLASS=literal>greens</tt> 
+array. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>final public void getBlues (byte blues[]) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBlues()</tt> method copies 
+the blue components of the <tt CLASS=literal>ColorModel</tt> 
+into elements 0 through <tt CLASS=literal>getMapSize()-1</tt> 
+of the <tt CLASS=literal>blues</tt> array. Space must 
+already be allocated in the <tt CLASS=literal>blues</tt> 
+array. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ImageObserver</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ImageProducer</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

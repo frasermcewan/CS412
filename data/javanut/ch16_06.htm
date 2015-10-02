@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] javah</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:04:19 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>JDK Tools</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<A NAME="CH16.JAVAH-1"></A>
+
+<DIV CLASS=refnamediv>
+<H1>javah</H1>
+
+<H2>Name</H2>
+
+javah---Native Method C File Generator
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-6.1">Availability</A></h2>
+
+<P CLASS=para>
+JDK 1.0 and later.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-6.2">Synopsis</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+javah [ <I CLASS=emphasis>options</I> ] <I CLASS=emphasis>classnames</I>
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-6.3">Description</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>javah</I> generates C header and source files (<I CLASS=emphasis>.h</I>
+and <I CLASS=emphasis>.c</I> files) that describe the specified classes.
+Note that classes are specified by classname, not filename.
+These generated C files provide the information necessary
+for implementing native methods for the specified
+classes in C.  By default, <I CLASS=emphasis>javah</I> produces output files
+suitable for the native interface used in JDK 1.0.  If the
+<tt CLASS=literal>-jni</tt> option is specified, it generates output files
+for use with the Java 1.1 Java Native Interface (JNI).
+
+<P CLASS=para>
+By default, <I CLASS=emphasis>javah</I> generates a header file for
+the specified class or classes.  This header file declares a
+C <tt CLASS=literal>struct</tt> that contains fields that correspond to the
+instance fields of the Java class.  The header also declares
+a procedure that you must implement for each of the native
+methods that the Java class contains.  (A full description
+of how to implement Java native methods in C is
+beyond the scope of this reference page.)
+
+<P CLASS=para>
+If <I CLASS=emphasis>javah</I> is run with the <tt CLASS=literal>-stubs</tt> option, it
+generates a <I CLASS=emphasis>.c</I> file that contains additional stub
+procedures necessary for linking the native method into the
+Java environment.  Note that you should not put your native
+method implementation in this generated stub file.
+
+<P CLASS=para>
+With the <tt CLASS=literal>-jni</tt> option specified, <I CLASS=emphasis>javah</I> generates
+C header files that declare function prototypes each of the
+native methods of the specified classes.  No structure
+definitions are required using this new native interface.
+The JNI does not require stub files, either, so
+<tt CLASS=literal>-stubs</tt> should not be specified with <tt CLASS=literal>-jni</tt>.
+
+<P CLASS=para>
+By default, <I CLASS=emphasis>javah</I> creates C files in the current
+directory and bases their name on the name of the class.  If
+the name of the class includes a package name, then the C
+files include all the components of the fully qualified
+class name, with periods replaced by underscores.  You can
+override this default behavior with the <tt CLASS=literal>-d</tt> and
+<tt CLASS=literal>-o</tt> options.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-6.4">Options</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>-classpath</tt> <I CLASS=emphasis>path</I><br>
+<DD>
+
+<P CLASS=para>
+The path that <I CLASS=emphasis>javah</I> uses to look up the classes named
+on the command line.  This option overrides the default
+path, and any path specified by the <tt CLASS=literal>CLASSPATH</tt>
+environment variable.  The <tt CLASS=literal>path</tt> specified is an
+ordered list of directories and ZIP files, separated by
+colons on UNIX systems or semicolons on Windows systems.
+
+<P CLASS=para>
+To specify additional directories or ZIP files for
+<I CLASS=emphasis>javah</I> to search without overriding the default system
+class path, use the <tt CLASS=literal>CLASSPATH</tt> environment variable.
+See the <I CLASS=emphasis>java</I> reference page for more information on
+specifying paths.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-d</tt> <I CLASS=emphasis>directory</I><br>
+<DD>
+
+<P CLASS=para>
+Specifies a directory where <I CLASS=emphasis>javah</I> should store the
+files it generates.  By default it stores them in the
+current directory.  This option does not work with
+<tt CLASS=literal>-o</tt>; you must specify any desired directory within
+the <tt CLASS=literal>-o</tt> filename.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-help</tt><br>
+<DD>
+
+<P CLASS=para>
+Causes <I CLASS=emphasis>javah</I> to display a simple usage message and exit.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-jni</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies that <I CLASS=emphasis>javah</I> should output a header file for
+use with the new JNI (Java Native Interface), rather than
+using the old JDK 1.0 native interface.  Available in JDK
+1.1 and later.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-o</tt> <I CLASS=emphasis>outputfile</I><br>
+<DD>
+
+<P CLASS=para>
+Combine all <I CLASS=emphasis>.h</I> or <I CLASS=emphasis>.c</I> file output into a
+single file, <tt CLASS=literal>outputfile</tt>.  This is a convenience when
+you want to implement native methods for a number of classes
+in a single package.  It allows you to avoid having many
+short <I CLASS=emphasis>.h</I> and <I CLASS=emphasis>.c</I> files that must be
+manipulated separately.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-stubs</tt><br>
+<DD>
+
+<P CLASS=para>
+Generate <I CLASS=emphasis>.c</I> stub files for the class or classes, and
+do not generate the <I CLASS=emphasis>.h</I> header files.  Without this
+option, <I CLASS=emphasis>javah</I> generates header files.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-td</tt> <I CLASS=emphasis>directory</I><br>
+<DD>
+
+<P CLASS=para>
+The directory where <I CLASS=emphasis>javah</I> should store temporary
+files.  The default is <I CLASS=emphasis>/tmp</I>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-trace</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies that <I CLASS=emphasis>javah</I> should include tracing output
+commands in the stub files it generates.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-v</tt><br>
+<DD>
+
+<P CLASS=para>
+Verbose.  Causes <I CLASS=emphasis>javah</I> to print messages about what it
+is doing.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-version</tt><br>
+<DD>
+
+<P CLASS=para>
+Causes <I CLASS=emphasis>javah</I> to display its version number.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-6.5">Environment</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>CLASSPATH</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies an ordered list (colon-separated on UNIX,
+semicolon-separated on Windows systems) of directories and
+ZIP files in which <I CLASS=emphasis>javah</I> should look for class
+definitions.  When a path is specified with this environment
+variable, <I CLASS=emphasis>javah</I> always implicitly appends the location
+of the system classes to the end of the path.  If this
+environment variable is not specified, the default path
+is the current directory
+and the system classes.  This variable is overridden by
+the <tt CLASS=literal>-classpath</tt> option.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-6.6">See Also</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>java</I>, <I CLASS=emphasis>javac</I>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>javadoc</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>javakey</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

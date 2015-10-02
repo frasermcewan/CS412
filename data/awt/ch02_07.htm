@@ -1,0 +1,709 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.7 Image</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:25:08 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>Simple Graphics</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-7">2.7 Image</A></h2>
+
+<P CLASS=para>
+<A NAME="CH02.IMAGE2"></A>An <tt CLASS=literal>Image</tt> is a displayable object 
+maintained in memory. AWT has built-in support for reading files in GIF 
+and JPEG format, including GIF89a animation. Netscape 
+Navigator, Internet Explorer, HotJava, and Sun's 
+JDK also understand the XBM image format. Images are loaded 
+from the filesystem or network by the <tt CLASS=literal>getImage()</tt> 
+method of either <tt CLASS=literal>Component</tt> 
+or <tt CLASS=literal>Toolkit</tt>, drawn onto the 
+screen with <tt CLASS=literal>drawImage()</tt> from 
+<tt CLASS=literal>Graphics</tt>, and manipulated by 
+several objects within the <tt CLASS=literal>java.awt.image</tt> 
+package. <A HREF="ch02_07.htm#JAWT-CH-2-FIG-15">Figure 2.15</A> shows an <tt CLASS=literal>Image</tt>. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-15">Figure 2.15: An Image</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0215.gif" alt="[Graphic: Figure 2-15]" width=202 height=202 border=0>
+
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>Image</tt> is an abstract class 
+implemented by many different platform-specific classes. The system that 
+runs your program will provide an appropriate implementation; you do not 
+need to know anything about the platform-specific classes, because the 
+<tt CLASS=literal>Image</tt> class completely defines 
+the API for working with images. If you're curious, the platform-specific packages used by the JDK are: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>sun.awt.win32.Win32Image</tt> 
+on Java 1.0 Windows NT/95 platforms
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>sun.awt.windows.WImage</tt> 
+on Java 1.1 Windows NT/95 platforms
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>sun.awt.motif.X11Image</tt> 
+on UNIX/Motif platforms
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>sun.awt.macos.MacImage</tt> 
+on the Macintosh
+
+<P>
+</UL>
+<P CLASS=para>
+This section covers only the <tt CLASS=literal>Image</tt> 
+object itself. AWT also includes a package named <tt CLASS=literal>java.awt.image</tt> 
+that includes more advanced image processing utilities. The classes in 
+<tt CLASS=literal>java.awt.image</tt> are covered 
+in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-7.1">Image Methods</A></h3>Constants
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final Object UndefinedProperty </I><br>
+<DD>
+
+<P CLASS=para>
+In Java 1.0, the sole constant of <tt CLASS=literal>Image</tt> 
+is <tt CLASS=literal>UndefinedProperty</tt>. It is 
+used as a return value from the <tt CLASS=literal>getProperty()</tt> 
+method to indicate that the requested property is unavailable. </DL>
+<P CLASS=para>
+Java 1.1 introduces the <tt CLASS=literal>getScaledInstance()</tt> 
+method. The final parameter to the method is a set of hints to tell the 
+method how best to scale the image. The following constants provide possible 
+values for this parameter. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCALE_DEFAULT <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCALE_DEFAULT</tt> hint should 
+be used alone to tell <tt CLASS=literal>getScaledInstance()</tt> 
+to use the default scaling algorithm. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCALE_FAST <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCALE_FAST</tt> hint tells <tt CLASS=literal>getScaledInstance()</tt> 
+that speed takes priority over smoothness. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCALE_SMOOTH <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCALE_SMOOTH</tt> hint tells 
+<tt CLASS=literal>getScaledInstance()</tt> that smoothness 
+takes priority over speed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCALE_REPLICATE <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCALE_REPLICATE</tt> hint tells 
+<tt CLASS=literal>getScaledInstance()</tt> to use 
+<tt CLASS=literal>ReplicateScaleFilter</tt> or a reasonable 
+alternative provided by the toolkit. <tt CLASS=literal>ReplicateScaleFilter</tt> 
+is discussed in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCALE_AREA_AVERAGING <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCALE_AREA_AVERAGING</tt> hint tells 
+<tt CLASS=literal>getScaledInstance()</tt> to use 
+<tt CLASS=literal>AreaAveragingScaleFilter</tt> or a reasonable 
+alternative provided by the toolkit. <tt CLASS=literal>AreaAveragingScaleFilter</tt> 
+is discussed in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. </DL>
+Constructors
+
+<P CLASS=para>
+There are no constructors for <tt CLASS=literal>Image</tt>. 
+You get an <tt CLASS=literal>Image</tt> object to 
+work with by using the <tt CLASS=literal>getImage()</tt> 
+method of <tt CLASS=literal>Applet</tt> (in an applet), 
+<tt CLASS=literal>Toolkit</tt> (in an application), 
+or the <tt CLASS=literal>createImage()</tt> method 
+of <tt CLASS=literal>Component</tt> or <tt CLASS=literal>Toolkit</tt>. 
+<tt CLASS=literal>getImage()</tt> uses a separate 
+thread to fetch the image. The thread starts when you call <tt CLASS=literal>drawImage()</tt>, 
+<tt CLASS=literal>prepareImage()</tt>, or any other 
+method that requires image information. <tt CLASS=literal>getImage()</tt> 
+returns immediately. You can also use the <tt CLASS=literal>MediaTracker</tt> 
+class to force an image to load before it is needed. <tt CLASS=literal>MediaTracker</tt> 
+is discussed in the next section. Characteristics
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int getWidth (ImageObserver observer) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getWidth()</tt> method returns 
+the width of the image object. The width may not be available if the image 
+has not started loading; in this case, <tt CLASS=literal>getWidth()</tt> 
+returns -1. An image's size is available long before loading is complete, 
+so it is often useful to call <tt CLASS=literal>getWidth()</tt> 
+while the image is loading. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract int getHeight (ImageObserver observer) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getHeight()</tt> method returns 
+the height of the image object. The height may not be available if the 
+image has not started loading; in this case, the <tt CLASS=literal>getHeight()</tt> method 
+returns -1. An image's size is available long before loading is complete, 
+so it is often useful to call <tt CLASS=literal>getHeight()</tt> 
+while the image is loading. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Image getScaledInstance (int width, int height, int hints) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getScaledInstance()</tt> method 
+enables you to generate scaled versions of images before they are needed. 
+Prior to Java 1.1, it was necessary to tell the <tt CLASS=literal>drawImage()</tt> 
+method to do the scaling. However, this meant that scaling didn't take place 
+until you actually tried to draw the image. Since scaling takes time, drawing 
+the image required more time; the net result was degraded appearance. With 
+Java 1.1, you can generate scaled copies of images before drawing them; 
+then you can use a version of <tt CLASS=literal>drawImage()</tt> 
+that does not do scaling, and therefore is much quicker. 
+
+<P CLASS=para>
+The <tt CLASS=literal>width</tt> parameter of <tt CLASS=literal>getScaledInstance()</tt> 
+is the new width of the image. The <tt CLASS=literal>height</tt> 
+parameter is the new height of the image. If either is -1, the scaling 
+retains the aspect ratio of the original image. For instance, if the original 
+image size was 241 by 72 pixels, and <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> were 100 and -1, 
+the new image size would be 100 by 29 pixels. If both width and height 
+are -1, the <tt CLASS=literal>getScaledInstance()</tt> 
+method retains the image's original size. The <tt CLASS=literal>hints</tt> 
+parameter is one of the <tt CLASS=literal>Image</tt> 
+class constants. </DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Image i = getImage (getDocumentBase(), "rosey.jpg");
+Image j = i.getScaledInstance (100, -1, Image.SCALE_FAST);
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract ImageProducer getSource () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSource()</tt> method returns 
+the image's producer, which is an object of type <tt CLASS=literal>ImageProducer</tt>. 
+This object represents the image's source. Once you have the <tt CLASS=literal>ImageProducer</tt>, 
+you can use it to do additional image processing; for example, you could 
+create a modified version of the original image by using a <tt CLASS=literal>FilteredImageSource</tt>. 
+Image producers and image filters are covered in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Graphics getGraphics () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getGraphics()</tt> method returns 
+the image's graphics context. The method <tt CLASS=literal>getGraphics()</tt> 
+works only for <tt CLASS=literal>Image</tt> objects 
+created in memory with <tt CLASS=literal>Component.createImage (int, int)</tt>. 
+If the image came from a URL or a file (i.e., from <tt CLASS=literal>getImage()</tt>), 
+<tt CLASS=literal>getGraphics()</tt> throws the run-time exception 
+<tt CLASS=literal>ClassCastException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Object getProperty (String name, ImageObserver observer) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getProperty()</tt> method interacts 
+with the image's property list. An object representing the requested 
+property <tt CLASS=literal>name</tt> will be returned 
+for <tt CLASS=literal>observer</tt>. <tt CLASS=literal>observer</tt> 
+represents the <tt CLASS=literal>Component</tt> on 
+which the image is rendered. If the property <tt CLASS=literal>name</tt> 
+exists but is not available yet, <tt CLASS=literal>getProperty()</tt> 
+returns <tt CLASS=literal>null</tt>. If the property name does not exist, the <tt CLASS=literal>getProperty()</tt> 
+method returns the <tt CLASS=literal>Image.UndefinedProperty</tt> 
+object. 
+
+<P CLASS=para>
+Each image type has its own property list. A property named <tt CLASS=literal>comment</tt> 
+stores a comment <tt CLASS=literal>String</tt> from 
+the image's creator. The <tt CLASS=literal>CropImageFilter</tt> 
+adds a property named <tt CLASS=literal>croprect</tt>. 
+If you ask <tt CLASS=literal>getProperty()</tt> for 
+an image's <tt CLASS=literal>croprect</tt> 
+property, you get a <tt CLASS=literal>Rectangle</tt> 
+that shows how the original image was cropped. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void flush() </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>flush()</tt> method resets an 
+image to its initial state. Assume you acquire an image over the network 
+with <tt CLASS=literal>getImage()</tt>. The first 
+time you display the image, it will be loaded over the network. If you 
+redisplay the image, AWT normally reuses the original image. However, if 
+you call <tt CLASS=literal>flush()</tt> before redisplaying 
+the image, AWT fetches the image again from its source. (Images created 
+with <tt CLASS=literal>createImage()</tt> aren't 
+affected.) The <tt CLASS=literal>flush()</tt> method 
+is useful if you expect images to change while your program is running. 
+The following program demonstrates <tt CLASS=literal>flush()</tt>. 
+It reloads and displays the file <I CLASS=emphasis>flush.gif</I> 
+every time you click the mouse. If you change the file <I CLASS=emphasis>flush.gif</I> 
+and click on the mouse, you will see the new file. </DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class flushMe extends Frame {
+    Image im;
+    flushMe () {
+        super ("Flushing");
+        im = Toolkit.getDefaultToolkit().getImage ("flush.gif");
+        resize (175, 225);
+    }
+    public void paint (Graphics g) {
+        g.drawImage (im, 0, 0, 175, 225, this);
+    }
+    public boolean mouseDown (Event e, int x, int y) {
+        im.flush();
+        repaint();
+        return true;
+    }
+    public static void main (String [] args) {
+        Frame f = new flushMe ();
+        f.show();
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-7.2">Simple Animation</A></h3>
+
+<P CLASS=para>
+<A NAME="CH02.ANIM1"></A><A NAME="CH02.ANIM2"></A>Creating simple animation sequences in Java is easy. Load a series of images, 
+then display the images one at a time. <A HREF="ch02_07.htm#JAWT-CH-2-EX-1">Example 2.1</A> is 
+an application that displays a simple animation sequence. <A HREF="ch02_07.htm#JAWT-CH-2-EX-2">Example 2.2</A> 
+is an applet that uses a thread to run the application. These programs 
+are far from ideal. If you try them, you'll probably notice some 
+flickering or missing images. We discuss how to fix these problems shortly. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-2-EX-1">Example 2.1: Animation Application</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class Animate extends Frame {
+    static Image im[];
+    static int numImages = 12;
+    static int counter=0;
+    Animate () {
+        super ("Animate");
+    }
+    public static void main (String[] args) {
+        Frame f = new Animate();
+        f.resize (225, 225);
+        f.show();
+        im = new Image[numImages];
+        for (int i=0;i&lt;numImages;i++) {
+            im[i] = Toolkit.getDefaultToolkit().getImage ("clock"+i+".jpg");
+        }
+    }
+    public synchronized void paint (Graphics g) {
+        g.translate (insets().left, insets().top);
+        g.drawImage (im[counter], 0, 0, this);
+        counter++;
+        if (counter == numImages)
+            counter = 0;
+        repaint (200);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+This application displays images with the name <I CLASS=emphasis>clock</I>n<I CLASS=emphasis>.jpg</I>, 
+where <I CLASS=emphasis>n</I> is a number between 
+0 and 11. It fetches the images using the <tt CLASS=literal>getImage()</tt> 
+method of the <tt CLASS=literal>Toolkit</tt> class--hence, 
+the call to <tt CLASS=literal>Toolkit.getDefaultToolkit()</tt>, 
+which gets a <tt CLASS=literal>Toolkit</tt> object 
+to work with. The <tt CLASS=literal>paint()</tt> method 
+displays the images in sequence, using <tt CLASS=literal>drawImage()</tt>. 
+<tt CLASS=literal>paint()</tt> ends with a call to 
+<tt CLASS=literal>repaint(200)</tt>, which schedules 
+another call to <tt CLASS=literal>paint()</tt> in 
+200 milliseconds. 
+
+<P CLASS=para>
+The <tt CLASS=literal>AnimateApplet</tt>, whose code 
+is shown in <A HREF="ch02_07.htm#JAWT-CH-2-EX-2">Example 2.2</A>, does more or less the same thing. It is able to use the 
+<tt CLASS=literal>Applet.getImage()</tt> method. A 
+more significant difference is that the applet creates a new thread to 
+control the animation. This thread calls <tt CLASS=literal>sleep(200)</tt>, 
+followed by <tt CLASS=literal>repaint()</tt>, to display 
+a new image every 200 milliseconds. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-2-EX-2">Example 2.2: Multithreaded Animation Applet</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+public class AnimateApplet extends Applet implements Runnable {
+    static Image im[];
+    static int numImages = 12;
+    static int counter=0;
+    Thread animator;
+    public void init () {
+        im = new Image[numImages];
+        for (int i=0;i&lt;numImages;i++)
+            im[i] = getImage (getDocumentBase(), "clock"+i+".jpg");
+    }
+    public void start() {
+        if (animator == null) {
+            animator = new Thread (this);
+            animator.start ();
+        }
+    }
+    public void stop() {
+        if ((animator != null) &amp;&amp; (animator.isAlive())) {
+            animator.stop();
+            animator = null;
+        }
+    }
+    public void run () {
+        while (animator != null) {
+            try {
+                animator.sleep(200);
+                repaint ();
+                counter++;
+                if (counter==numImages)
+                    counter=0;
+            } catch (Exception e) {
+                e.printStackTrace ();
+            }
+        }
+    }
+    public void paint (Graphics g) {
+        g.drawImage (im[counter], 0, 0, this);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+One quick fix will help the flicker problem in both of these examples. 
+The <tt CLASS=literal>update()</tt> method (which 
+is inherited from the <tt CLASS=literal>Component</tt> 
+class) normally clears the drawing area and calls <tt CLASS=literal>paint()</tt>. 
+In our examples, clearing the drawing area is unnecessary and, worse, results 
+in endless flickering; on slow machines, you'll see <tt CLASS=literal>update()</tt> 
+restore the background color between each image. It's a simple matter 
+to override <tt CLASS=literal>update()</tt> so that 
+it doesn't clear the drawing area first. Add the following method to 
+both of the previous examples: 
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void update (Graphics g) {
+    paint (g);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Overriding <tt CLASS=literal>update()</tt> helps, 
+but the real solution to our problem is double buffering, which we'll 
+turn to next. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-7.3">Double Buffering</A></h3>
+
+<P CLASS=para>
+<A NAME="CH02.DOUBLE1"></A><A NAME="CH02.DOUBLE2"></A><A NAME="CH02.DOUBLE3"></A>Double buffering means drawing to an offscreen graphics context and then 
+displaying this graphics context to the screen in a single operation. So 
+far, we have done all our drawing directly on the screen--that is, to 
+the graphics context provided by the <tt CLASS=literal>paint()</tt> 
+method. As your programs grow more complex, <tt CLASS=literal>paint()</tt> 
+gets bigger and bigger, and it takes more time and resources to update 
+the entire drawing area. On a slow machine, the user will see the individual 
+drawing operations take place, which will make your program look slow and 
+clunky. By using the double buffering technique, you can take your time 
+drawing to another graphics context that isn't displayed. When you 
+are ready, you tell the system to display the completely new image at once. 
+Doing so eliminates the possibility of seeing partial screen updates and 
+flickering. 
+
+<P CLASS=para>
+The first thing you need to do is create an image as your drawing canvas. 
+To get an image object, call the <tt CLASS=literal>createImage()</tt> 
+method. <tt CLASS=literal>createImage()</tt> is a 
+method of the <tt CLASS=literal>Component</tt> class, 
+which we will discuss in <A HREF="ch05_01.htm">Chapter 5, <i>Components</i></A>. Since <tt CLASS=literal>Applet</tt> 
+extends <tt CLASS=literal>Component</tt>, you can 
+call <tt CLASS=literal>createImage()</tt> within an 
+applet. When creating an application and extending <tt CLASS=literal>Frame</tt>, 
+<tt CLASS=literal>createImage()</tt> returns <tt CLASS=literal>null</tt> 
+until the <tt CLASS=literal>Frame</tt>'s peer 
+exists. To make sure that the peer exists, call <tt CLASS=literal>addNotify()</tt> 
+in the constructor, or make sure you call <tt CLASS=literal>show()</tt> 
+before calling <tt CLASS=literal>createImage()</tt>. 
+Here's the call to the <tt CLASS=literal>createImage()</tt> 
+method that we'll use to get an <tt CLASS=literal>Image</tt> 
+object: 
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Image im = createImage (300, 300); // width and height
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Once you have an <tt CLASS=literal>Image</tt> object, 
+you have an area you can draw on. But how do you draw on it? There are 
+no drawing methods associated with <tt CLASS=literal>Image</tt>; 
+they're all in the <tt CLASS=literal>Graphics</tt> 
+class. So we need to get a <tt CLASS=literal>Graphics</tt> 
+context from the <tt CLASS=literal>Image</tt>. To 
+do so, call the <tt CLASS=literal>getGraphics()</tt> 
+method of the <tt CLASS=literal>Image</tt> class, 
+and use that <tt CLASS=literal>Graphics</tt> context 
+for your drawing: 
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Graphics buf = im.getGraphics();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now you can do all your drawings with <tt CLASS=literal>buf</tt>. To display the drawing, the 
+<tt CLASS=literal>paint()</tt> method only needs to 
+call <tt CLASS=literal>drawImage(im, . . .)</tt>. 
+Note the hidden connection between the <tt CLASS=literal>Graphics</tt> 
+object, <tt CLASS=literal>buf</tt>, and the <tt CLASS=literal>Image</tt> 
+you are creating, <tt CLASS=literal>im</tt>. You draw 
+onto <tt CLASS=literal>buf</tt>; then you use <tt CLASS=literal>drawImage()</tt> 
+to render the image on the on-screen <tt CLASS=literal>Graphics</tt> 
+context within <tt CLASS=literal>paint()</tt>. 
+
+<P CLASS=para>
+Another feature of buffering is that you do not have redraw the entire 
+image with each call to <tt CLASS=literal>paint()</tt>. 
+The buffered image you're working on remains in memory, and you can 
+add to it at will. If you are drawing directly to the screen, you would 
+have to recreate the entire drawing each time <tt CLASS=literal>paint()</tt> 
+is called; remember, <tt CLASS=literal>paint()</tt> 
+always hands you a completely new <tt CLASS=literal>Graphics</tt> 
+object. <A HREF="ch02_07.htm#JAWT-CH-2-FIG-16">Figure 2.16</A> shows how double buffering 
+works. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-16">Figure 2.16: Double buffering</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0216.gif" alt="[Graphic: Figure 2-16]" width=202 height=202 border=0>
+
+</DIV>
+
+<P CLASS=para>
+<A HREF="ch02_07.htm#JAWT-CH-2-EX-3">Example 2.3</A> puts it all together for you. It plays a 
+game, with one move drawn to the screen each cycle. We still do the drawing 
+within <tt CLASS=literal>paint()</tt>, but we draw 
+into an offscreen buffer; that buffer is copied onto the screen by <tt CLASS=literal>g.drawImage(im, 
+0, 0, this)</tt>. If we were doing a lot of drawing, 
+it would be a good idea to move the drawing operations into a different 
+thread, but that would be overkill for this simple applet. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-2-EX-3">Example 2.3: Double Buffering--Who Won?</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+public class buffering extends Applet {
+    Image im;
+    Graphics buf;
+    int pass=0;
+    public void init () {
+        // Create buffer
+        im = createImage (size().width, size().height);
+        // Get its graphics context
+        buf = im.getGraphics();
+        // Draw Board Once
+        buf.setColor (Color.red);
+        buf.drawLine (  0,  50, 150,  50);
+        buf.drawLine (  0, 100, 150, 100);
+        buf.drawLine ( 50,   0,  50, 150);
+        buf.drawLine (100,   0, 100, 150);
+        buf.setColor (Color.black);
+    }
+    public void paint (Graphics g) {
+        // Draw image - changes are written onto buf
+        g.drawImage (im, 0, 0, this);
+        // Make a move
+        switch (pass) {
+            case 0:
+                buf.drawLine (50, 50, 100, 100);
+                buf.drawLine (50, 100, 100, 50);
+                break;
+            case 1:
+                buf.drawOval (0, 0, 50, 50);
+                break;
+            case 2:
+                buf.drawLine (100, 0, 150, 50);
+                buf.drawLine (150, 0, 100, 50);
+                break;
+            case 3:
+                buf.drawOval (0, 100, 50, 50);
+                break;
+            case 4:
+                buf.drawLine (0, 50, 50, 100);
+                buf.drawLine (0, 100, 50, 50);
+                break;
+            case 5:
+                buf.drawOval (100, 50, 50, 50);
+                break;
+            case 6:
+                buf.drawLine (50,  0, 100, 50);
+                buf.drawLine (50, 50, 100,  0);
+                break;
+            case 7:
+                buf.drawOval (50, 100, 50, 50);
+                break;
+            case 8:
+                buf.drawLine (100, 100, 150, 150);
+                buf.drawLine (150, 100, 100, 150);
+                break;
+        }
+        pass++;
+        if (pass &lt;= 9)
+            repaint (500);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Polygon</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>MediaTracker</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

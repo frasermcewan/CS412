@@ -1,0 +1,475 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] java</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:04:08 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>JDK Tools</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<A NAME="CH16.JAVA.INTERPR1"></A>
+
+<DIV CLASS=refnamediv>
+<H1>java</H1>
+
+<H2>Name</H2>
+
+java---The Java Interpreter
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-3.1">Availability</A></h2>
+
+<P CLASS=para>
+JDK 1.0 and later.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-3.2">Synopsis</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+java [ <I CLASS=emphasis>interpreter options</I> ] <I CLASS=emphasis>classname</I> [ <I CLASS=emphasis>program arguments</I> ]
+java_g [ <I CLASS=emphasis>interpreter options</I> ] <I CLASS=emphasis>classname</I> [ <I CLASS=emphasis>program arguments</I> ]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-3.3">Description</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>java</I> is the Java byte-code interpreter--it runs Java
+programs.  <I CLASS=emphasis>java_g</I> is a debugging version of the
+interpreter.  It is unoptimized, and has some additional
+options for tracing the execution of a program.
+
+<P CLASS=para>
+The program to be run is the class specified by
+<tt CLASS=literal>classname</tt>.  This must be a fully qualified
+name, it must include the package name of the
+class, but not the <I CLASS=emphasis>.class</I> file
+extension.  Note that you specify the package and class
+name, with components separated by '.', not the directory and
+filename of the class, which has its components separated
+by '/' or '/'.  If a Java class has no <tt CLASS=literal>package</tt>
+statement, then it is not in any package, and the class name
+is specified alone.  Examples:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% java david.games.Checkers
+% java test
+</PRE>
+</DIV>
+
+<P CLASS=para>
+See the description of the <tt CLASS=literal>-classpath</tt> option and the
+<tt CLASS=literal>CLASSPATH</tt> environment variable below for information
+on specifying where <I CLASS=emphasis>java</I> should look for classes.
+
+<P CLASS=para>
+The class specified by <tt CLASS=literal>classname</tt> must contain a
+method <tt CLASS=literal>main()</tt> with exactly the following signature:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public static void main(String argv[])
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Any arguments following the <tt CLASS=literal>classname</tt> on the
+<I CLASS=emphasis>java</I> command line are placed into an array and passed
+to the <tt CLASS=literal>main()</tt> method when <I CLASS=emphasis>java</I> starts up.
+
+<P CLASS=para>
+If <tt CLASS=literal>main()</tt> creates any threads, <I CLASS=emphasis>java</I>
+runs until the last thread exits.  Otherwise, the interpreter
+executes the body of <tt CLASS=literal>main()</tt> and exits.
+
+<P CLASS=para>
+Although only a single class name is specified when invoking
+<I CLASS=emphasis>java</I>, the interpreter automatically loads any
+additional classes required by the program.  These classes
+are located relative to the Java class path, described under
+the <tt CLASS=literal>-classpath</tt> option below.
+
+<P CLASS=para>
+By default, <I CLASS=emphasis>java</I> runs a byte-code verifier on all
+classes loaded over the network.  This verifier performs a
+number of tests on the byte-code of the loaded class to
+ensure, for example, that it does not corrupt the internal
+operand stack and that it performs appropriate run-time
+checks on such things as array references.  The
+<tt CLASS=literal>-verify</tt>, <tt CLASS=literal>-noverify</tt>, and
+<tt CLASS=literal>-verifyremote</tt> options control the byte-code
+verification process.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-3.4">Options</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>-classpath</tt> <I CLASS=emphasis>path</I><br>
+<DD>
+
+<P CLASS=para>
+The path that <I CLASS=emphasis>java</I> uses to look up the specified
+<tt CLASS=literal>classname</tt> and all other classes that it loads.
+Specifying this option overrides the default path and the
+<tt CLASS=literal>CLASSPATH</tt> environment variable.
+The class path is an ordered list of directories and ZIP
+files within and below which <I CLASS=emphasis>java</I> searches for
+named classes.  On UNIX systems, a path is specified as a
+colon-separated list of directories and ZIP files.  On
+Windows systems, directories and ZIP files (which may have
+drive specifiers that use colons) are separated from each
+other with semicolons.
+For example, a UNIX <tt CLASS=literal>-classpath</tt> specification might look
+like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+-classpath /usr/lib/java/classes:.:~/java/classes
+</PRE>
+</DIV>
+
+<P CLASS=para>
+On a Windows system, the specification might be:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+-classpath C:\tools\java\classes.zip;.;D:\users\david\classes
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A period by itself in the path indicates that the current
+working directory is searched.  Directories and ZIP
+files are searched in the order they appear.  Place the
+standard Java classes first in the path if you do not want
+them to be accidentally or maliciously overridden by classes
+with the same name in other directories.
+
+<P CLASS=para>
+<I CLASS=emphasis>java</I> expects to find class files in a directory
+hierarchy (or with a directory name within a ZIP file) that
+maps to the fully qualified name of the class.  Thus, on a
+UNIX system, Java would load the class
+<tt CLASS=literal>java.lang.String</tt> by looking for the file
+<I CLASS=emphasis>java/lang/String.class</I> beneath one of the
+directories specified in the class path.  Similarly, on a
+Windows 95 or Windows NT system (which support long
+filenames), <I CLASS=emphasis>java</I> would look for the file
+<I CLASS=emphasis>java\lang\String.class</I> beneath a specified
+directory or within a specified ZIP file.
+
+<P CLASS=para>
+If you do not specify <tt CLASS=literal>-classpath</tt> or the
+<tt CLASS=literal>CLASSPATH</tt> environment variable, the default
+class path is:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+.:$JAVA/classes:$JAVA/lib/classes.zip       <I CLASS=emphasis>UNIX systems</I>
+.;$JAVA\classes;$JAVA\lib\classes.zip       <I CLASS=emphasis>Windows systems</I>
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Where <tt CLASS=literal>$JAVA</tt> is JDK installation directory.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-cs</tt>, <tt CLASS=literal>-checksource</tt><br>
+<DD>
+
+<P CLASS=para>
+Both of these options tell <I CLASS=emphasis>java</I> to check the modification
+times on the specified class file and its corresponding
+source file.  If the class file cannot be found or if it is
+out of date, it is automatically recompiled from the source.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-D</tt><I CLASS=emphasis>propertyname</I>=<I CLASS=emphasis>value</I><br>
+<DD>
+
+<P CLASS=para>
+Defines <tt CLASS=literal>propertyname</tt> to equal <tt CLASS=literal>value</tt> in the
+system properties list.  Your Java program can then
+look up the specified value by its property name.  You
+may specify any number of <tt CLASS=literal>-D</tt> options.  For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% java -Dawt.button.color=gray -Dmy.class.pointsize=14 my.class
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-debug</tt><br>
+<DD>
+
+<P CLASS=para>
+Causes <I CLASS=emphasis>java</I> to display a password as it starts up.
+This password can be used to allow the <I CLASS=emphasis>jdb</I> debugger to
+attach itself to this interpreter session.  Note that this
+password should not be considered cryptographically secure.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-help</tt><br>
+<DD>
+
+<P CLASS=para>
+Print a usage message and exit.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-l</tt><I CLASS=emphasis>digit</I><br>
+<DD>
+
+<P CLASS=para>
+Sets the logging level for trace output.  <I CLASS=emphasis>java_g</I> only.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-ms </tt><I CLASS=emphasis>initmem</I><tt CLASS=literal>[k|m]</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies how much memory is allocated for the heap
+when the interpreter starts up.  By default, <tt CLASS=literal>initmem</tt>
+is specified in bytes.  You can specify it in kilobytes by
+appending the letter <tt CLASS=literal>k</tt> or in megabytes by appending
+the letter <tt CLASS=literal>m</tt>.  The default is 1
+MB.  For large or memory intensive applications (such
+as the Java compiler), you can improve run-time performance by
+starting the interpreter with a larger amount of memory.
+You must specify an initial heap size of at least 1000
+bytes.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-mx</tt> <I CLASS=emphasis>maxmem</I><tt CLASS=literal>[k|m]</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies the maximum heap size the interpreter will use
+for dynamically allocated objects and arrays.
+<tt CLASS=literal>maxmem</tt> is specified in bytes by default.  You can
+specify <tt CLASS=literal>maxmem</tt> in kilobytes by appending the letter
+<tt CLASS=literal>k</tt> and in megabytes by appending the letter
+<tt CLASS=literal>m</tt>.  The default is 16 MB.
+You must not specify a heap size less than 1000 bytes.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-noasyncgc</tt><br>
+<DD>
+
+<P CLASS=para>
+Do not do garbage collection asynchronously.  With this
+option specified, <I CLASS=emphasis>java</I> only performs garbage
+collection when it runs out of memory or when the garbage
+collector is explicitly invoked.  Without this option,
+<I CLASS=emphasis>java</I> runs the garbage collector as a separate,
+low-priority thread.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-noclassgc</tt><br>
+<DD>
+
+<P CLASS=para>
+Do not garbage collect loaded classes that are no longer in
+use.  This option is only available in JDK 1.1 and later.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-noverify</tt><br>
+<DD>
+
+<P CLASS=para>
+Never run the byte-code verifier.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-oss</tt> <I CLASS=emphasis>stacksize</I><tt CLASS=literal>[k|m]</tt><br>
+<DD>
+
+<P CLASS=para>
+Sets the size of each thread's Java code stack.  By
+default, <tt CLASS=literal>stacksize</tt> is specified in bytes.  You can
+specify it in kilobytes by appending the letter <tt CLASS=literal>k</tt> or
+in megabytes by appending the letter <tt CLASS=literal>m</tt>.  The default
+value is 400 KB.  You must specify at least 1000
+bytes.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-prof[:</tt><I CLASS=emphasis>file</I><tt CLASS=literal>]</tt><br>
+<DD>
+
+<P CLASS=para>
+Output profiling information to the specified <tt CLASS=literal>file</tt> or
+to the file <I CLASS=emphasis>java.prof</I> in the current directory.
+The format of this profiling information is not well
+documented.  Prior to JDK 1.1, no <tt CLASS=literal>file</tt> can be
+specified; profiling information is always output to <I CLASS=emphasis>./java.prof</I>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-ss</tt> <I CLASS=emphasis>stacksize</I><tt CLASS=literal>[k|m]</tt><br>
+<DD>
+
+<P CLASS=para>
+Sets the size of each thread's native code stack.  By
+default, <tt CLASS=literal>stacksize</tt> is specified in bytes.  You can
+specify it in kilobytes by appending the letter <tt CLASS=literal>k</tt> or
+in megabytes by appending the letter <tt CLASS=literal>m</tt>.  The default
+value is 128 KB.  You must specify at least 1000
+bytes.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-t</tt><br>
+<DD>
+
+<P CLASS=para>
+Output a trace of all bytecodes executed.  <I CLASS=emphasis>java_g</I> only.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-tm</tt><br>
+<DD>
+
+<P CLASS=para>
+Output a trace of all methods executed.  <I CLASS=emphasis>java_g</I> only.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-v</tt>, <tt CLASS=literal>-verbose</tt><br>
+<DD>
+
+<P CLASS=para>
+Print a terminal message each time <I CLASS=emphasis>java</I> loads a class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-verbosegc</tt><br>
+<DD>
+
+<P CLASS=para>
+Print a message whenever the garbage collector frees memory.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-verify</tt><br>
+<DD>
+
+<P CLASS=para>
+Run the byte-code verifier on all classes that are loaded.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-verifyremote</tt><br>
+<DD>
+
+<P CLASS=para>
+Run the byte-code verifier on all classes that are loaded
+through a class loader.  (This generally means classes that
+are dynamically loaded from an untrusted location.) This is
+the default behavior for <I CLASS=emphasis>java</I>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-version</tt><br>
+<DD>
+
+<P CLASS=para>
+Print the version of the Java interpreter and exit.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-3.5">Environment</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>CLASSPATH</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies an ordered list (colon-separated on UNIX,
+semicolon-separated on Windows systems) of directories and
+ZIP files in which <I CLASS=emphasis>java</I> should look for class
+definitions.  When a path is specified with this environment
+variable, <I CLASS=emphasis>java</I> always implicitly appends the location
+of the system classes to the end of the path.  If this
+environment variable is not specified, the default path
+is the current directory and the system classes.
+This variable is overridden by the <tt CLASS=literal>-classpath</tt>
+option.  See <tt CLASS=literal>-classpath</tt> above for more information
+on specifying paths.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-3.6">See Also</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>javac</I>, <I CLASS=emphasis>jdb</I>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>jar</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>javac</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

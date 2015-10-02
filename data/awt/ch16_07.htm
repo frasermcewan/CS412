@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] 16.7 Reading and Writing the Clipboard</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:57:06 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>Data Transfer</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch17_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-16-SECT-7">16.7 Reading and Writing the Clipboard</A></h2>
+
+<P CLASS=para>
+<A NAME="CH16.CLIP6"></A>Now that you know about the different <tt CLASS=literal>java.awt.datatransfer</tt> 
+classes required to use the clipboard, let's put them all together 
+in an example. <A HREF="ch16_07.htm#JAWT-CH-16-EX-1">Example 16.1</A> creates a <tt CLASS=literal>TextField</tt> 
+for input (copying), a read-only <tt CLASS=literal>TextArea</tt> 
+for output (pasting), and a couple of buttons to control its operation. 
+<A HREF="ch16_07.htm#JAWT-CH-16-FIG-1">Figure 16.1</A> shows the program's user interface. When the user clicks on the Copy button or presses Return 
+in the <tt CLASS=literal>TextField</tt>, the text 
+in the <tt CLASS=literal>TextField</tt> is copied 
+to the <tt CLASS=literal>Clipboard</tt>. When the 
+user clicks on the Paste button, the contents of the clipboard 
+are drawn in the <tt CLASS=literal>TextArea</tt>. 
+Since the clipboard is not private, you can copy or paste from anywhere 
+on your desktop, not just this program. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-16-EX-1">Example 16.1: Using the System Clipboard</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.io.*;
+import java.awt.*;
+import java.awt.datatransfer.*;
+public class ClipMe extends Frame {
+    TextField tf;
+    TextArea ta;
+    Button copy, paste;
+    Clipboard clipboard = null;
+    ClipMe() {
+        super ("Clipping Example");
+        add (tf = new TextField("Welcome"), "North");
+        add (ta = new TextArea(), "Center");
+        ta.setEditable(false);
+        Panel p = new Panel();
+        p.add (copy = new Button ("Copy"));
+        p.add (paste = new Button ("Paste"));
+        add (p, "South");
+        setSize (250, 250);
+    }
+    public static void main (String args[]) {
+        new ClipMe().show();
+    }
+    public boolean handleEvent (Event e) {
+        if (e.id == Event.WINDOW_DESTROY) {
+            System.exit(0);
+            return true;  // never gets here
+        }
+        return super.handleEvent (e);
+    }
+    public boolean action (Event e, Object o) {
+        if (clipboard == null)
+            clipboard = getToolkit().getSystemClipboard();
+        if ((e.target == tf) || (e.target == copy)) {
+            StringSelection data;
+            data = new StringSelection (tf.getText());
+            clipboard.setContents (data, data);
+        } else if (e.target == paste) {
+            Transferable clipData = clipboard.getContents(this);
+            String s;
+            try {
+                s = (String)(clipData.getTransferData(
+                       DataFlavor.stringFlavor));
+            } catch (Exception ee) {
+                s = ee.toString();
+            }
+            ta.setText(s);
+        }
+        return true;
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-16-FIG-1">Figure 16.1: Using the system clipboard</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1601.gif" alt="[Graphic: Figure 16-1]" width=203 height=203 border=0>
+
+</DIV>
+
+<P CLASS=para>
+We won't say anything about how the display is set up; that should 
+be familiar. All the interesting stuff happens in the <tt CLASS=literal>action</tt> method, which 
+is called in response to a button click. We check which button the user 
+clicked; if the user clicked the Copy button, we read the 
+text field <tt CLASS=literal>tf</tt> and use it to 
+create a new <tt CLASS=literal>StringSelection</tt> 
+named <tt CLASS=literal>data</tt>. If the user clicked 
+the Paste button, we retrieve the data from the clipboard 
+by calling <tt CLASS=literal>getContents()</tt>. This 
+gives us an object about which (strictly speaking) we know nothing, except 
+that it implements <tt CLASS=literal>Transferable</tt>. 
+In this case, we're pretty sure that we're getting text from 
+the clipboard, so we call <tt CLASS=literal>getTransferData()</tt> 
+and ask for the data in the <tt CLASS=literal>stringFlavor</tt> 
+form. We catch the exception that might occur if we're wrong about 
+the data flavor. This program has no way of placing anything but text on 
+the clipboard, but there's no guarantee that the user didn't 
+cut some other kind of object from a native application. 
+
+<P CLASS=para>
+Once we have our <tt CLASS=literal>String</tt>, we 
+call the <tt CLASS=literal>setText()</tt> method of 
+the <tt CLASS=literal>TextArea</tt> to tell it about 
+the new string, and we are finished. 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch17_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>UnsupportedFlavorException</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Printing</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

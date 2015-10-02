@@ -1,0 +1,616 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 18] The java.util.zip Package</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:48:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch18_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 18</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-18">18. The java.util.zip Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch18_02.htm'>CheckedInputStream</a><br>
+<a href='ch18_03.htm'>CheckedOutputStream</a><br>
+<a href='ch18_04.htm'>Checksum</a><br>
+<a href='ch18_05.htm'>CRC32</a><br>
+<a href='ch18_06.htm'>DataFormatException</a><br>
+<a href='ch18_07.htm'>Deflater</a><br>
+<a href='ch18_08.htm'>DeflaterOutputStream</a><br>
+<a href='ch18_09.htm'>GZIPInputStream</a><br>
+<a href='ch18_10.htm'>GZIPOutputStream</a><br>
+<a href='ch18_11.htm'>Inflater</a><br>
+<a href='ch18_12.htm'>InflaterInputStream</a><br>
+<a href='ch18_13.htm'>ZipEntry</a><br>
+<a href='ch18_14.htm'>ZipException</a><br>
+<a href='ch18_15.htm'>ZipFile</a><br>
+<a href='ch18_16.htm'>ZipInputStream</a><br>
+<a href='ch18_17.htm'>ZipOutputStream</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+The package <tt CLASS=literal>java.util.zip</tt> is new as of Java 1.1.
+It contains classes that provide support for general-purpose data
+compression and decompression using the ZLIB compression algorithms.
+The important classes in <tt CLASS=literal>java.util.zip</tt> are those
+that provide the means to read and write data that is compatible with
+the popular GZIP and ZIP formats: <tt CLASS=literal>GZIPInputStream</tt>,
+<tt CLASS=literal>GZIPOutputStream</tt>,
+<tt CLASS=literal>ZipInputStream</tt>, and
+<tt CLASS=literal>ZipOutputStream</tt>. <A HREF="ch18_01.htm#JFC-CH-18-FIG-1">Figure 18.1</A>
+shows the class hierarchy for the <tt CLASS=literal>java.util.zip</tt>
+package. 
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JFC-CH-18-FIG-1">Figure 18.1: The java.text package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jfc_1801.gif" alt="[Graphic: Figure 18-1]" width=502 height=507 border=0>
+
+</DIV>
+
+
+<A NAME="CH18.GZIP1"></A><A NAME="CH18.GZIP2"></A>
+
+<P CLASS=para>
+It is easy to use the GZIP and ZIP classes because they subclass
+<tt CLASS=literal>java.io.FilterInputStream</tt> and
+<tt CLASS=literal>java.io.FilterOutputStream</tt>.  For example, to
+decompress GZIP data, you simply create a
+<tt CLASS=literal>GZIPInputStream</tt> around the input stream that
+represents the compressed data.  As with any
+<tt CLASS=literal>InputStream</tt>, you could be reading from a file, a
+socket, or some other data source.  You can then read decompressed
+data by calling the <tt CLASS=literal>read()</tt> methods of the
+<tt CLASS=literal>GZIPInputStream</tt>.  The following code fragment
+creates a <tt CLASS=literal>GZIPInputStream</tt> that reads data from the
+file <I CLASS=emphasis>sample.gz</I> :
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream inFile;
+try { 
+    inFile = new FileInputStream("sample.gz"); 
+} catch (IOException e) {
+    System.out.println("Couldn't open file.");
+    return;
+}
+GZIPInputStream in = new GZIPInputStream(inFile);
+// Now use in.read() to get decompressed data.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Similarly, you can compress data using the GZIP format by creating a
+<tt CLASS=literal>GZIPOutputStream</tt> around an output stream and 
+using the <tt CLASS=literal>write()</tt> methods of 
+<tt CLASS=literal>GZIPOutputStream</tt>.  The 
+following code fragment
+creates a <tt CLASS=literal>GZIPOutputStream</tt> that writes data to
+the file <I CLASS=emphasis>sample.gz</I> :
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileOutputStream outFile;
+try { 
+    outFile = new FileOutputStream("sample.gz"); 
+} catch (IOException e) {
+    System.out.println("Couldn't open file.");
+    return;
+}
+GZIPOutputStream out = new GZIPOutputStream(outFile);
+// Now use out.write() to write compressed data.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A ZIP file, or archive, is not quite as easy to use because it may
+contain more than one compressed file.  A <tt CLASS=literal>ZipEntry</tt> 
+object represents each compressed file in the archive.  
+When you are reading from a <tt CLASS=literal>ZipInputStream</tt>, 
+you must first call <tt CLASS=literal>getNextEntry()</tt> to access 
+an entry, and then you can read decompressed data from the
+stream, just like with a <tt CLASS=literal>GZIPInputStream</tt>.  
+When you are writing data to a <tt CLASS=literal>ZipOutputStream</tt>, use
+<tt CLASS=literal>putNextEntry()</tt> before you start writing each entry in
+the archive.  The <tt CLASS=literal>ZipFile</tt>
+class is provided as a convenience for reading an archive; it allows
+nonsequential access to the entries in a ZIP file.
+
+<P CLASS=para>
+The remainder of the classes in <tt CLASS=literal>java.util.zip</tt> 
+exist to support the GZIP and ZIP classes.  
+The generic <tt CLASS=literal>Deflater</tt> and <tt CLASS=literal>Inflater</tt> 
+classes implement the ZLIB algorithms; they are used by 
+<tt CLASS=literal>DeflaterOutputStream</tt> and 
+<tt CLASS=literal>InflaterInputStream</tt> to 
+decompress and compress data.  The <tt CLASS=literal>Checksum</tt> 
+interface and the classes that implement it, <tt CLASS=literal>Adler32</tt> 
+and <tt CLASS=literal>CRC32</tt>, define algorithms that generate 
+checksums from stream data.  These checksums
+are used by the <tt CLASS=literal>CheckedInputStream</tt> and 
+<tt CLASS=literal>CheckedOutputStream</tt> classes.
+
+<DIV CLASS=refnamediv>
+<H1>Adler32</H1>
+
+<H2>Name</H2>
+
+Adler32
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.1">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.zip.Adler32</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.zip.Checksum</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.2">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>Adler32</tt> class implements 
+the <tt CLASS=literal>Checksum</tt> interface using 
+the Adler-32 algorithm. This algorithm is significantly faster than 
+CRC-32 and almost as reliable. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.3">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.util.zip.Adler32 extends java.lang.Object
+             implements java.util.zip.Checksum {
+  // Constructors
+  public Adler32();
+  
+  // Instance Methods
+  public long getValue();
+  public void reset();
+  public void update(int b);
+  public void update(byte[] b);
+  public native void update(byte[] b, int off, int len);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.4">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.1">Adler32</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.1">public Adler32()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an <tt CLASS=literal>Adler32</tt> 
+object. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.5">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.2">getValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.2">public long getValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current checksum value. 
+
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Checksum.getValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current value of this checksum. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.3">reset</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.3">public void reset()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Checksum.reset()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method resets the checksum to its initial value, making it appear as though 
+it has not been updated by any data. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch18-REFSECT2-AUTOID.4">update</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.4">public void update(int b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to be added to the data stream for the checksum calculation. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Checksum.update(int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method adds the specified value to the data stream and updates the 
+checksum value. The method uses only the lowest eight bits of the given 
+<tt CLASS=literal>int</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.5">public void update(byte[] b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of bytes to 
+be added to the data stream for the checksum calculation. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method adds the bytes from the specified array to the data stream 
+and updates the checksum value. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch18-REFSECT3-AUTOID.6">public native void update(byte[] b, int off, int len)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of bytes to be added to the data stream for the checksum
+calculation.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>off</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the byte array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bytes to use. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Checksum.update(byte[], int, int)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method adds <tt CLASS=literal>len</tt> bytes 
+from the specified array, starting at <tt CLASS=literal>off</tt>, 
+to the data stream and updates the checksum value. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.6">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, 
+int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch18-REFSECT1-AUTOID.7">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Checksum</tt>, 
+<tt CLASS=literal>CRC32</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Vector</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>CheckedInputStream</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

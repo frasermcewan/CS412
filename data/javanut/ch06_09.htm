@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.9 Signed Applets</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:53:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Applets</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-9">6.9 Signed Applets</A></h2>
+
+<P CLASS=para>
+In Java 1.1 it is possible to circumvent these applet
+security restrictions by attaching a digital signature to a
+JAR file.  When a Web browser or
+applet viewer loads a JAR file that has been signed by a
+trusted entity (the user specifies whom she trusts), the
+browser may
+grant the applet contained in the JAR file special
+privileges, such as the ability to read and write local
+files, that are not available to untrusted applets.
+
+<P CLASS=para>
+Signing an applet with the <I CLASS=emphasis>javakey</I> tool provided by
+the JDK is a somewhat cumbersome task.  First, of course,
+you must have a security database set up.  The database must
+contain the certificate and the public and private keys that you
+want to use to sign the applet.  See the
+<I CLASS=emphasis>javakey</I> documentation in <A HREF="ch16_01.htm">Chapter 16, <i>JDK Tools</i></A> for details on
+this process.
+
+<P CLASS=para>
+Once you have a properly configured security database, you
+must create a simple "directive file" that gives
+<I CLASS=emphasis>javakey</I> the information it needs to sign your JAR
+file.  A directive file might look like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+# The entity doing the signing
+signer=david
+# The certificate number to use
+cert=1
+# Currently unused
+chain=0
+# The base name of the signature files to be added to the JAR manifest
+signature.file=DAVIDSIG
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Having created a directive file named <I CLASS=emphasis>mysig</I>,
+for example, you could then sign a JAR file like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+% javakey -gs mysig soundmap.jar
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This command creates a new JAR file named
+<I CLASS=emphasis>soundmap.jar.sig</I> that you can use in an HTML
+<tt CLASS=literal>archive</tt> attribute just as you would use an unsigned
+JAR file.
+
+<P CLASS=para>
+The <I CLASS=emphasis>javakey</I> tool is used for all aspects of
+administering the Java system security database.  One of the
+other things you can do with it is to declare which entities
+are trusted.  You do this with the <tt CLASS=literal>-t</tt> option.  For
+example, you might declare your trust for the author as follows:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+% javakey -t DavidFlanagan true
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Or you could revoke your trust like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+% javakey -t DavidFlanagan false
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <I CLASS=emphasis>appletviewer</I> program makes use of any trust values
+declared in this way.  Note that <I CLASS=emphasis>javakey</I> and
+<I CLASS=emphasis>appletviewer</I> support only untrusted entities and
+fully-trusted entities, without any gradations in between.
+We may see additional levels of trust in the future.
+
+<P CLASS=para>
+Bear in mind that the <I CLASS=emphasis>javakey</I> techniques described
+here apply only to the JDK.  Other vendors may provide other
+mechanisms for signing applets, and Web browsers may provide
+other ways of declaring trusted entities.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Applet Security Restrictions</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Events</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

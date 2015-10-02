@@ -1,0 +1,612 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.6 Subclasses and Inheritance</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:49:47 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Classes and Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6">3.6 Subclasses and Inheritance</A></h2>
+
+<P CLASS=para>
+<A NAME="CH3.CLASSES2"></A>The <tt CLASS=literal>Circle</tt> class we've defined is good for abstract
+mathematical manipulation.  For some applications this is
+exactly what we need.  For other applications, we want to be
+able to manipulate circles <I CLASS=emphasis>and</I> draw them on the
+screen.  This means we need a new class,
+<tt CLASS=literal>GraphicCircle</tt>, that has all the functionality of
+<tt CLASS=literal>Circle</tt>, but also has the ability to be drawn.
+
+<P CLASS=para>
+We want to implement <tt CLASS=literal>GraphicCircle</tt> so that it can
+make use of the code we've already written for
+<tt CLASS=literal>Circle</tt>.  One way to do that is the following:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class GraphicCircle {
+    // Here is the mathematical circle.
+    public Circle c;    
+    // Here are the old methods.
+    public double area() { return c.area(); }
+    public double circumference() { return c.circumference(); }
+    // The new graphic variables and methods go here.
+    public Color outline, fill;
+    public void draw(DrawWindow dw) { /* code omitted */ }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This approach would work, but it is not particularly
+elegant.  The problem is that we have to write stubs for
+methods like <tt CLASS=literal>area()</tt> and <tt CLASS=literal>circumference()</tt> that
+have nothing to do with drawing circles.  It would be nice
+if we didn't have to do this.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.1">Extending a Class</A></h3>
+
+<P CLASS=para>
+In fact, we don't have to do it this way.  Java allows us to
+define <tt CLASS=literal>GraphicCircle</tt> as an extension, or
+<I CLASS=emphasis>subclass</I> of <tt CLASS=literal>Circle</tt>.
+<A HREF="ch03_06.htm#JNUT2-CH-3-EX-10">Example 3.10</A>
+shows how.  Note that this example assumes we have two other
+classes of objects defined: <tt CLASS=literal>Color</tt>, which represents a
+color, and <tt CLASS=literal>DrawWindow</tt>, a class that has the window
+into which drawing is done and that defines the primitive
+methods to do the drawing.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-10">Example 3.10: Subclassing a Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class GraphicCircle extends Circle {
+    // We automatically inherit the variables and methods of
+    // Circle, so we only have to put the new stuff here.
+    // We've omitted the GraphicCircle constructor, for now.
+    Color outline, fill;
+    public void draw(DrawWindow dw) { 
+        dw.drawCircle(x, y, r, outline, fill); 
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>extends</tt> keyword tells Java that
+<tt CLASS=literal>GraphicCircle</tt> is a subclass of <tt CLASS=literal>Circle</tt>, and
+that it <I CLASS=emphasis>inherits</I> the fields and methods of that
+class.
+[7]
+The definition of the <tt CLASS=literal>draw()</tt> method shows variable
+inheritance--this method uses the <tt CLASS=literal>Circle</tt> variables
+<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, and <tt CLASS=literal>r</tt> as if they were defined
+right in <tt CLASS=literal>GraphicCircle</tt> itself.
+
+<blockquote class=footnote>
+<P CLASS=para>[7] 
+Except for <tt CLASS=literal>private</tt> fields and methods.
+We'll discuss <tt CLASS=literal>private</tt> members of a class later.
+C++ programmers should note that <tt CLASS=literal>extends</tt> is the Java 
+equivalent of the <tt CLASS=literal>:</tt> operator in C++--both indicate 
+the superclass of a class.
+</blockquote>
+<P CLASS=para>
+<tt CLASS=literal>GraphicCircle</tt> also inherits the methods of
+<tt CLASS=literal>Circle</tt>.  Thus, if we have a <tt CLASS=literal>GraphicCircle</tt>
+object referred to by variable <tt CLASS=literal>gc</tt>, we can say:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+double area = gc.area();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This works just as if the <tt CLASS=literal>area()</tt> method were
+defined in <tt CLASS=literal>GraphicCircle</tt> itself.
+
+<P CLASS=para>
+Another feature of subclassing is that every
+<tt CLASS=literal>GraphicCircle</tt> object is also a perfectly legal
+<tt CLASS=literal>Circle</tt> object.  Thus, if <tt CLASS=literal>gc</tt>
+refers to a <tt CLASS=literal>GraphicCircle</tt> object, we can assign it
+to a <tt CLASS=literal>Circle</tt> variable, and we can forget all about its extra
+graphic capabilities: <tt CLASS=literal>Circle c = gc;</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.2">Final Classes</A></h3>
+
+<P CLASS=para>
+When a class is declared with the <tt CLASS=literal>final</tt> modifier, it
+means that it cannot be extended or subclassed.
+<tt CLASS=literal>java.lang.System</tt> is an example of a <tt CLASS=literal>final</tt>
+class.  Declaring a class <tt CLASS=literal>final</tt> prevents unwanted
+extensions to the class.  But it also allows the compiler to
+make some optimizations when invoking the methods of a
+class.  We'll explore this in more detail when we talk about
+method overriding later in this chapter.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.3">Superclasses, Object, and the Class Hierarchy</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.OBJECT.CLASS1"></A>In our example, <tt CLASS=literal>GraphicCircle</tt> is a subclass of
+<tt CLASS=literal>Circle</tt>.  We can also say that <tt CLASS=literal>Circle</tt> is the
+<I CLASS=emphasis>superclass</I> of <tt CLASS=literal>GraphicCircle</tt>.  The superclass
+of a class is specified in its <tt CLASS=literal>extends</tt> clause:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class GraphicCircle extends Circle { ... }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Every class you define has a superclass.  If you do not
+specify the superclass with an <tt CLASS=literal>extends</tt> clause,
+the superclass is the class <tt CLASS=literal>Object</tt>.
+<tt CLASS=literal>Object</tt> is a special class for a couple of reasons:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>It is the only class that does not have a superclass.
+
+<P>
+<li CLASS=listitem>The methods defined by <tt CLASS=literal>Object</tt> can be called by
+any Java object.
+
+<P>
+</UL>
+<P CLASS=para>
+Because every class has a superclass, classes in Java
+form a <I CLASS=emphasis>class hierarchy</I>, which can be represented as a
+tree with <tt CLASS=literal>Object</tt> at its root.
+<A HREF="ch03_06.htm#JNUT2-CH-3-FIG-1">Figure 3.1</A>
+shows a class hierarchy diagram which includes our
+<tt CLASS=literal>Circle</tt> and <tt CLASS=literal>GraphicCircle</tt> classes, as well as
+some of the standard classes from the Java API.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-3-FIG-1">Figure 3.1: A class hierarchy diagram</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_0301.gif" alt="[Graphic: Figure 3-1]" width=464 height=223 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The complete class hierarchy for the Java API is diagrammed
+in the figures of Part V, <I CLASS=emphasis>API Quick Reference</I>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.4">Subclass Constructors</A></h3>
+
+<P CLASS=para>
+In
+<A HREF="ch03_06.htm#JNUT2-CH-3-EX-10">Example 3.10</A>
+we left out the constructor method for our new <tt CLASS=literal>GraphicCircle</tt>
+class.  Let's implement that now.  Here's one way:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public GraphicCircle(double x, double y, double r, 
+                                Color outline, Color fill)
+{
+    this.x = x; 
+    this.y = y; 
+    this.r = r;
+    this.outline = outline; 
+    this.fill = fill;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This constructor relies on the fact that
+<tt CLASS=literal>GraphicCircle</tt> inherits all the variables of
+<tt CLASS=literal>Circle</tt> and simply initializes those variables
+itself.   But this duplicates the code of the <tt CLASS=literal>Circle</tt>
+constructor, and if <tt CLASS=literal>Circle</tt> did more elaborate
+initialization, it could become quite wasteful.
+Furthermore, if the <tt CLASS=literal>Circle</tt> class had internal
+<tt CLASS=literal>private</tt> fields (discussed later), we wouldn't be
+able to initialize them like this.  What we
+need is a way of calling a <tt CLASS=literal>Circle</tt> constructor from
+within our <tt CLASS=literal>GraphicCircle</tt> constructor.
+<A HREF="ch03_06.htm#JNUT2-CH-3-EX-11">Example 3.11</A>
+shows how we can do this.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-11">Example 3.11: Invoking a Superclass's Constructor</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public GraphicCircle(double x, double y, double r, 
+                                Color outline, Color fill) 
+{
+    super(x, y, r);
+    this.outline = outline; 
+    this.fill = fill;
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH3.SUPER.KEYWOR1"></A><tt CLASS=literal>super</tt> is a reserved word in Java.  One of its uses
+is that shown in the example--to invoke the constructor
+method of a superclass.  Its use is analogous to the use of
+the <tt CLASS=literal>this</tt> keyword to invoke one constructor method of
+a class from within another.  Using <tt CLASS=literal>super</tt> to invoke
+a constructor is subject to the same restrictions as using
+<tt CLASS=literal>this</tt> to invoke a constructor:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>super</tt> may only be used in this way within a
+constructor method.
+
+<P>
+<li CLASS=listitem>The call to the superclass constructor must appear as the
+first statement within the constructor method.  It must
+appear even before variable declarations.
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.5">Constructor Chaining</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.CONSTRUCTORS2"></A><A NAME="CH3.CHAINING1"></A>When you define a class, Java guarantees that the class's
+constructor method is called whenever an instance of
+that class is created.  It also guarantees that the
+constructor is called when an instance of any subclass
+is created.  In order to guarantee this second point, Java
+must ensure that every constructor method calls its
+superclass constructor method.  If the first
+statement in a constructor is not an explicit call to a
+constructor of the superclass with the <tt CLASS=literal>super</tt>
+keyword, then Java implicitly inserts the call
+<tt CLASS=literal>super()</tt>--that is, it calls the superclass
+constructor with no arguments.  If the superclass does not
+have a constructor that takes no arguments, this causes a
+compilation error.
+
+<P CLASS=para>
+There is one exception to the rule that Java invokes
+<tt CLASS=literal>super()</tt> implicitly if you do not do so explicitly.
+If the first line of a constructor, <tt CLASS=literal>C1</tt>, uses the
+<tt CLASS=literal>this()</tt> syntax to invoke another constructor,
+<tt CLASS=literal>C2</tt>, of the class, Java relies on <tt CLASS=literal>C2</tt> to
+invoke the superclass constructor, and does not insert a
+call to <tt CLASS=literal>super()</tt> into <tt CLASS=literal>C1</tt>.  Of course, if
+<tt CLASS=literal>C2</tt> itself uses <tt CLASS=literal>this()</tt> to invoke a third
+constructor, <tt CLASS=literal>C2</tt> does not call <tt CLASS=literal>super()</tt>
+either, but somewhere along the chain, a constructor
+either explicitly or implicitly invokes the superclass
+constructor, which is what is required.
+
+<P CLASS=para>
+Consider what happens when we create a new instance of the
+<tt CLASS=literal>GraphicCircle</tt> class.  First, the <tt CLASS=literal>GraphicCircle</tt>
+constructor shown in
+<A HREF="ch03_06.htm#JNUT2-CH-3-EX-11">Example 3.11</A>
+is invoked.  This constructor explicitly invokes a
+<tt CLASS=literal>Circle</tt> constructor and that <tt CLASS=literal>Circle</tt>
+constructor implicitly calls <tt CLASS=literal>super()</tt> to invoke the
+constructor of its superclass, <tt CLASS=literal>Object</tt>.  The body of
+the <tt CLASS=literal>Object</tt> constructor runs first, followed by the
+body of the <tt CLASS=literal>Circle</tt> constructor, and finally followed
+by the body of the <tt CLASS=literal>GraphicCircle</tt> constructor.
+
+<P CLASS=para>
+What this all means is that constructor calls are
+"chained"--any time an object is created, a sequence of
+constructor methods are invoked, from subclass to superclass
+on up to <tt CLASS=literal>Object</tt> at the root of the class hierarchy.
+Because a superclass constructor is always invoked as
+the first statement of its subclass constructor, the body of
+the <tt CLASS=literal>Object</tt> constructor always runs first, followed
+by the body of its subclass, and on down the class hierarchy
+to the class that is being instantiated.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.6">The Default Constructor</A></h3>
+
+<P CLASS=para>
+There is one missing piece in the description of constructor
+chaining above.  If a constructor does not invoke a
+superclass constructor, Java does so implicitly.  But what
+if a class is declared without any constructor at all?  In
+this case, Java implicitly adds a constructor to the class.
+This default constructor does nothing but invoke the
+superclass constructor.  
+
+<P CLASS=para>
+For example, if we did not declare a constructor for the
+<tt CLASS=literal>GraphicCircle</tt> class, Java would have implicitly
+inserted this constructor:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public GraphicCircle() { super(); }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that if the superclass, <tt CLASS=literal>Circle()</tt>, did not
+declare a no-argument constructor, then this automatically
+inserted default constructor would cause a compilation
+error.  If a class does not define a no-argument
+constructor, then all of its subclasses must define
+constructors that explicitly invoke the superclass
+constructor with the necessary arguments.
+
+<P CLASS=para>
+It can be confusing when Java implicitly calls a constructor
+or inserts a constructor definition into a class--something
+is happening that does not appear in your code!  Therefore,
+it is good coding style, whenever you rely on an implicit
+superclass constructor call or on a default constructor, to
+insert a comment noting this fact.  Your comments might look
+like those in the following example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class A {
+    int i;
+    public A() {
+        // Implicit call to super(); here.
+        i = 3;
+    }
+}
+class B extends A {
+    // Default constructor: public B() { super(); }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a class does not declare any constructor, it is
+given a <tt CLASS=literal>publicly</tt> constructor by default.  Classes that
+do not want to be publically instantiated, should declare a
+<tt CLASS=literal>protected</tt> constructor to prevent the insertion of
+this <tt CLASS=literal>public</tt> constructor.  Classes that never want to
+be instantiated at all should define a <tt CLASS=literal>private</tt>
+constructor.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.7">Finalizer Chaining?</A></h3>
+
+<P CLASS=para>
+You might assume that since Java chains constructor methods
+that it also automatically chains the
+finalizer methods for an object.  In other words, you may think 
+that the finalizer method of a class automatically invokes the
+finalizer of its superclass.  In fact, Java does <I CLASS=emphasis>not</I>
+do this.  In practice, finalizer methods are relatively
+rare, and the need for finalizer chaining rarely arises.  If
+a class <tt CLASS=literal>B</tt> with a finalizer method is a subclass of a class <tt CLASS=literal>A</tt>
+with its own finalizer method, then <tt CLASS=literal>B</tt>'s finalizer should be
+sure to invoke <tt CLASS=literal>A</tt>'s finalizer, explicitly creating a chain of
+finalizers.  This is a little tricky, since finalizers
+always have the same name (<tt CLASS=literal>finalize()</tt>), and we
+haven't yet learned how to invoke a method in the superclass
+when that method is also defined in the subclass.  We'll 
+return to the issue of finalizer chaining when we learn how.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.8">Shadowed Variables</A></h3>
+
+<P CLASS=para>
+Suppose that our <tt CLASS=literal>GraphicCircle</tt> class has a new
+variable that specifies the  resolution, in dots per inch, of the
+<tt CLASS=literal>DrawWindow</tt> object in which it is going to be drawn.
+And further, suppose that it names that new variable <tt CLASS=literal>r</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class GraphicCircle extends Circle {
+    Color outline, fill;
+    float r;  // New variable.  Resolution in dots-per-inch.
+    public GraphicCircle(double x, double y, double rad, Color o, Color f) {
+        super(x, y, rad); outline = o; fill = f;
+    }
+    public void setResolution(float resolution) { r = resolution; }
+    public void draw(DrawWindow dw) { dw.drawCircle(x, y, r, outline, fill); }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now, with this resolution variable declared, when we use the
+variable <tt CLASS=literal>r</tt> in the <tt CLASS=literal>GraphicCircle</tt> class, we
+are no longer referring to the radius of the circle.  The
+resolution variable <tt CLASS=literal>r</tt> in <tt CLASS=literal>GraphicCircle</tt>
+<I CLASS=emphasis>shadows</I> the radius variable <tt CLASS=literal>r</tt> in
+<tt CLASS=literal>Circle</tt>.
+[8]
+
+<blockquote class=footnote>
+<P CLASS=para>[8] 
+This is a contrived example, of course--we could simply
+rename the variable and avoid the issue.  Typically we would
+rename the variable: variable shadowing is a necessary part
+of Java syntax, but is not a useful programming technique.
+Your code will be easier to understand if you avoid shadowed
+variables.
+</blockquote>
+<P CLASS=para>
+So, how can we refer to the radius variable defined in the
+<tt CLASS=literal>Circle</tt> class when we need it?  Recall that using a
+variable, such as <tt CLASS=literal>r</tt>, in the class in which it is
+defined is shorthand for:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+this.r  // Refers to the GraphicCircle resolution variable.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As you might guess, you can refer to a variable <tt CLASS=literal>r</tt>
+defined in the superclass like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+super.r  // Refers to the Circle radius variable.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Another way you can do this is to cast <tt CLASS=literal>this</tt> to the
+appropriate class and then access the variable:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+((Circle) this).r
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This cast is exactly what the <tt CLASS=literal>super</tt> keyword does
+when used like this.  You can use this casting technique
+when you need to refer to a shadowed variable defined in a
+class that is not the immediate superclass.  For example, if
+<tt CLASS=literal>C</tt> is a subclass of <tt CLASS=literal>B</tt>, which is a subclass of
+<tt CLASS=literal>A</tt>, and class <tt CLASS=literal>C</tt> shadows a variable <tt CLASS=literal>x</tt>
+that is also defined in classes <tt CLASS=literal>A</tt> and <tt CLASS=literal>B</tt>, then you
+can refer to these different variables from class <tt CLASS=literal>C</tt>
+as follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+x                // Variable x in class C.
+this.x           // Variable x in class C.
+super.x          // Variable x in class B.
+((B)this).x      // Variable x in class B.
+((A)this).x      // Variable x in class A.
+super.super.x    // Illegal; does not refer to x in class A.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that you cannot refer to a shadowed variable <tt CLASS=literal>x</tt>
+in the superclass of a superclass with
+<tt CLASS=literal>super.super.x</tt>. Java does not recognize this syntax.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-6.9">Shadowed Methods?</A></h3>
+
+<P CLASS=para>
+Just as a variable defined in one class can shadow a
+variable with the same name in a superclass, you might
+expect that a method in one class could shadow a method with
+the same name (and same arguments) in a superclass.  In a
+sense, they do: "shadowed" methods are called overridden
+methods.  But method overriding is significantly different
+than variable shadowing; it is discussed in the sections
+that follow.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Object Destruction</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Overriding Methods</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

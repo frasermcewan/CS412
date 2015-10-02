@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.2 Packages</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:15:38 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Program Structure</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-7-SECT-2">7.2 Packages</A></h2>
+
+<P CLASS=para>
+A package is a group of classes. If a class is not declared as
+<tt CLASS=literal>public</tt>,
+it can only be referenced by other classes in the same package.
+A class is specified as being part of a particular package by a
+<tt CLASS=literal>package</tt> directive at the beginning of its compilation unit:
+
+
+<p>
+<img align=middle src="./figs/jlr0702.gif" alt="[Graphic: Figure from the text]" width=424 height=27 border=0>
+
+
+<p>
+<img align=middle src="./figs/jlr0703.gif" alt="[Graphic: Figure from the text]" width=424 height=50 border=0>
+
+<P CLASS=para>
+A <tt CLASS=literal>package</tt> directive can only occur at the beginning
+of a compilation unit (ignoring comments and white space). If there
+is no <tt CLASS=literal>package</tt> directive in a compilation unit,
+the compilation unit is part of the default package.
+A package is identified by its name. However, the default package
+has no name. Here are some examples of package directives:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package tools.text;
+package COM.geomaker;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A class or interface definition can refer to class and interface
+definitions in a different package by qualifying the class or interface
+name with the package name and a period. For example, you can refer
+to the <tt CLASS=literal>Socket</tt> class as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.net.Socket
+</PRE>
+</DIV>
+
+<P CLASS=para>
+However, if
+you attempt to use a non-<tt CLASS=literal>public</tt> class or interface
+defined in another package, the Java compiler issues an error message.
+
+<P CLASS=para>
+An <tt CLASS=literal>import</tt> directive, described in the next section, makes the class and interface definitions in
+another package available by their simple names. In other words,
+if you use an <tt CLASS=literal>import</tt> directive, you do not have
+to qualify the names of the classes and interfaces in the package
+with the package name.
+
+<P CLASS=para>
+In Sun's implementation of Java,
+the name of the package for a given compilation unit is used to
+determine the directories that the Java interpreter searches to
+find the compiled Java code (i.e., the <I CLASS=emphasis>.class</I>
+file) for the compilation unit. The Java interpreter uses a two-step
+process to find the compiled code for a class in a named package:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The name of the package is converted into a relative path.
+Each identifier in the package name becomes the name of a directory
+in this relative path. (This scheme assumes that the Java interpreter
+is operating in an environment that supports a hierarchical file
+system.)
+
+<P>
+<li CLASS=listitem>The relative path is appended to the directories
+specified in the <tt CLASS=literal>CLASSPATH</tt>
+environment variable and the resulting paths are searched for the
+<I CLASS=emphasis>.class</I> file.
+
+<P>
+</UL>
+<P CLASS=para>
+If the Java interpreter
+is searching for the compiled code for a class that is in the default
+package, it simply searches the directories specified in the
+<tt CLASS=literal>CLASSPATH</tt> environment variable.
+
+<P CLASS=para>
+For example, say that the value of the <tt CLASS=literal>CLASSPATH</tt>
+environment variable is as follows:[1]
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+This example
+uses Windows syntax for directory names. The syntax for directory
+names is different in other environments. In particular, the character
+used to separate directory names varies in other environments.
+</blockquote>
+<DIV CLASS=screen>
+<P>
+<PRE>
+\java\classes;.\; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this case, the Java interpreter searches for the
+<I CLASS=emphasis>.class</I> files for classes in the
+package named <tt CLASS=literal>COM.geomaker</tt> in the
+following directories:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+\java\classes\COM\geomaker
+.\COM\geomaker
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a package name contains a Unicode character that cannot
+directly appear in a directory name, the character is represented
+in the directory name by an "at" sign (<tt CLASS=literal>@</tt>) followed
+by one to four hexadecimal digits. For example, the package name:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+COM.geomaker.hg\u00f8
+</PRE>
+</DIV>
+
+<P CLASS=para>
+becomes the relative path:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+\COM\geomaker\hg@f8
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java classes can also be retrieved out of a <I CLASS=emphasis>.zip</I>
+file if the file is specified as part of the
+<tt CLASS=literal>CLASSPATH</tt>. For instance, the value of
+<tt CLASS=literal>CLASSPATH</tt> could be set as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+\java\classes;\java\classes.zip;.\; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When the Java interpreter finds a <I CLASS=emphasis>.zip</I> file in
+the <tt CLASS=literal>CLASSPATH</tt>, it searches the
+<I CLASS=emphasis>.zip</I> file for the appropriate
+<I CLASS=emphasis>.class</I> file. The core classes in the Java API are
+supplied in a file that is typically named something like
+<I CLASS=emphasis>jdk1.1/lib/classes.zip</I>. As of Java 1.1, you do
+not normally need to put that <I CLASS=emphasis>.zip</I> file in
+<tt CLASS=literal>CLASSPATH</tt> because the Java interpreter
+automatically puts <I CLASS=emphasis>startDir/../classes.zip</I> on the
+end of <tt CLASS=literal>CLASSPATH</tt> (where
+<I CLASS=emphasis>startDir</I> is the directory that contains the
+interpreter's executable file).
+
+<P CLASS=para>
+The Java
+language specification defines a scheme for creating package names
+that should be globally unique. Since Internet domain names are
+globally unique, the idea is to incorporate them into package names.
+This is done by reversing the order of the components of the domain
+name, capitalizing the top-level component of the domain name, and
+using the result as a prefix for the descriptive portion of a package
+name. For example, if different organizations were to create packages
+that they all wanted to call <tt CLASS=literal>opinion_poll</tt>, they
+could use this scheme to ensure global uniqueness. The resulting
+package names might be:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+COM.cnn.opinion_poll
+GOV.whitehouse.opinion_poll
+EDU.syracuse.newhouse.opinion_poll
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Package names that begin with an identifier that does not
+contain all uppercase letters are reserved for use as local package
+names. The one exception is package names that begin with the identifier
+<tt CLASS=literal>java</tt>, which are reserved for packages that are part
+of the standard Java distribution.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5">Interface Declarations</A>;
+<A HREF="ch07_03.htm#JLR2-CH-7-SECT-3">The import Directive</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Compilation Units</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The import Directive</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

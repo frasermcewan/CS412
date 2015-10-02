@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.4 Object Destruction</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:52:46 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-4">5.4 Object Destruction</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.DEST1"></A><A NAME="CH05.DEST2"></A>Now that we've seen how to create objects, it's time to talk 
+about their destruction. If you're accustomed to programming in C 
+or C++, you've probably spent time hunting down memory leaks 
+in your code. Java takes care of object destruction for you; you don't 
+have to worry about memory leaks, and you can concentrate on more important 
+programming tasks. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-4.1">Garbage Collection</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.GARB1"></A>Java uses a technique known as <I CLASS=emphasis>garbage collection</I> 
+to remove objects that are no longer needed. The garbage collector 
+is Java's grim reaper. It lingers, usually in a low priority thread, 
+stalking objects and awaiting their demise. It finds them, watches them, 
+and periodically counts references to them to see when their time has come. 
+When all references to an object are gone, and it's no longer 
+accessible, the garbage-collection mechanism reclaims it and returns the 
+space to the available pool of resources. 
+
+<P CLASS=para>
+There are many different algorithms for garbage collection; the
+Java virtual machine architecture doesn't specify a particular
+scheme. It's worth noting, though, that current implementations of Java
+use a conservative mark and sweep system. Under this scheme, Java
+first walks through the tree of all accessible object references and
+marks them as alive. Then Java scans the heap looking for identifiable
+objects that aren't so marked. Java finds objects on the heap because
+they are stored in a characteristic way and have a particular
+signature of bits in their handles unlikely to be reproduced
+naturally. This kind of algorithm doesn't suffer from the problem of
+cyclic references, where detached objects can mutually reference each
+other and appear alive.
+
+<P CLASS=para>
+ 
+By default, the Java virtual machine is configured to run the garbage
+collector in a low-priority thread, so that the garbage collector runs
+periodically to collect stray objects. With the
+<i CLASS=command>java</i> interpreter that comes with the
+JDK, you can turn off garbage collection by using
+the <tt CLASS=literal>-noasyncgc</tt> command-line option. If you do this,
+the garbage collector will be run only if it's requested explicitly or
+if the Java virtual machine runs out of memory.
+
+<P CLASS=para>
+A Java application can prompt the garbage collector to make a sweep explicitly 
+by invoking the <tt CLASS=literal>System.gc()</tt> method. An extremely 
+time-sensitive Java application might use this to its advantage by running 
+in an interpreter with asynchronous garbage collection deactivated and 
+scheduling its own cleanup periods. This issue is necessarily implementation 
+dependent, however, because on different platforms, garbage collection may
+be implemented in different ways.  On some systems it may be continuously
+running in hardware. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-4.2">Finalization</A></h3>
+
+<P CLASS=para>
+Before a method is removed by garbage collection, its
+<tt CLASS=literal>finalize()</tt> method is invoked to give it a last
+opportunity to clean up its act and free other kinds of resources
+it may be holding. While the garbage collector can reclaim memory
+resources, it may not take care of things like closing files and
+terminating network connections very gracefully or efficiently. That's what 
+the <tt CLASS=literal>finalize()</tt> method is for.
+
+<P CLASS=para>
+An object's <tt CLASS=literal>finalize()</tt> method is guaranteed 
+to be called once and only once before the object is garbage collected.  
+However there's no guarantee as to if or when that will happen.   
+Garbage collection may never run on a system that is not short of memory.
+It is also interesting to note that finalization and collection occur in
+two distinct phases of the garbage-collection process.   First items are
+finalized, then they are collected.  It is therefore possible that 
+finalization could (intentionally or unintentionally) create a 
+lingering reference to the object in question, postponing its garbage
+collection.  The object could, of course, be subject to collection later, 
+if the reference goes away, but its finalize() method would not be 
+called again.
+
+<P CLASS=para>
+Lastly, unlike constructors, the finalize() methods of superclasses 
+are not invoked automatically for you.  If you need to chain together
+the finalization of your parent classes, you should invoke the 
+finalize() method of your superclass, using <tt CLASS=literal>super().finalize()</tt>.
+See the following sections on inheritance and overridden methods.
+
+<P CLASS=para>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Object Creation</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Subclassing and Inheritance</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

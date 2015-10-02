@@ -1,0 +1,488 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.3 The Java 1.1 Event Model</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:55:06 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Events</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-3">7.3 The Java 1.1 Event Model</A></h2>
+
+<P CLASS=para>
+<A NAME="CH7.EVENTS-JAVA.2"></A>The Java 1.1 event model is used by both the AWT and by Java
+Beans.  In this model, different classes of events are
+represented by different Java classes.  Every event is a
+subclass of <tt CLASS=literal>java.util.EventObject</tt>.  AWT events,
+which is what we are concerned with here, are subclasses of
+<tt CLASS=literal>java.awt.AWTEvent</tt>.  For convenience, the various
+types of AWT events, such as <tt CLASS=literal>MouseEvent</tt> and
+<tt CLASS=literal>ActionEvent</tt>, are placed in the new
+<tt CLASS=literal>java.awt.event</tt> package.
+
+<P CLASS=para>
+Every event has a source object, which can be obtained with
+<tt CLASS=literal>getSource()</tt>, and every AWT event has a type value,
+which can be obtained with <tt CLASS=literal>getID()</tt>.  This value is
+used to distinguish the various types of events that are
+represented by the same event class.  For example, the
+<tt CLASS=literal>FocusEvent</tt> has two possible types:
+<tt CLASS=literal>FocusEvent.FOCUS_GAINED</tt> and
+<tt CLASS=literal>FocusEvent.FOCUS_LOST</tt>.  Event subclasses contain
+whatever data values are pertinent to the particular
+event type.  For example, <tt CLASS=literal>MouseEvent</tt> has
+<tt CLASS=literal>getX()</tt>, <tt CLASS=literal>getY()</tt>, and <tt CLASS=literal>getClickCount()</tt>
+methods; it also inherits the <tt CLASS=literal>getModifiers()</tt> and
+<tt CLASS=literal>getWhen()</tt> methods, among others.
+
+<P CLASS=para>
+<A NAME="CH7.LISTENER.INT1"></A>The 1.1 event handling model is based on the concept of an
+"event listener."  An object interested in receiving events
+is an <I CLASS=emphasis>event listener</I>.  An object that generates events (an <I CLASS=emphasis>event
+source</I>) maintains a list of listeners that are interested
+in being notified when events occur, and provides methods
+that allow listeners to add themselves and remove themselves
+from this list of interested objects.  When the event source
+object generates an event (or when a user input event occurs
+on the event source object), the event source notifies
+all the listener objects that the event has occurred.
+
+<P CLASS=para>
+An event source notifies an event listener object by
+invoking a method on it and passing it an event object (an
+instance of a subclass of <tt CLASS=literal>EventObject</tt>).  In
+order for a source to invoke a method on a listener, all
+listeners must implement the required method.  This is
+ensured by requiring that all event listeners for a particular
+type of event implement a corresponding interface.  For
+example, event listener objects for <tt CLASS=literal>ActionEvent</tt>
+events must implement the <tt CLASS=literal>ActionListener</tt> interface.
+The <tt CLASS=literal>java.awt.event</tt> package defines an event
+listener interface for each of the event types it defines.
+(Actually, for <tt CLASS=literal>MouseEvent</tt> events, it defines two
+listener interfaces: <tt CLASS=literal>MouseListener</tt> and
+<tt CLASS=literal>MouseMotionListener</tt>.)  All event listener interfaces
+themselves extend <tt CLASS=literal>java.util.EventListener</tt>.  This
+interface does not define any methods, but instead acts as a marker
+interface, clearly identifying all event listeners as such.
+
+<P CLASS=para>
+An event listener interface may define more than one method.
+For example, an event class like <tt CLASS=literal>MouseEvent</tt> represents several
+different types of mouse events, such as a button press
+event and a button release event, and these different event
+types cause different methods in the corresponding event
+listener to be invoked.  By convention, the methods of an
+event listener are passed a single argument, which is an
+event object of the type that corresponds to the listener.
+This event object should contain all the information a
+program needs to respond to the event.
+<A HREF="ch07_03.htm#JNUT2-CH-7-TAB-6">Table 7.6</A>
+lists the event types defined in <tt CLASS=literal>java.awt.event</tt>, the
+corresponding listener (or listeners), and the methods
+defined by each listener interface.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-7-TAB-6">Table 7.6: Java 1.1 Event Types, Listeners, and Listener Methods</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Event Class</TH>
+<TH ALIGN="left">Listener Interface</TH>
+<TH ALIGN="left">Listener Methods</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ActionEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>ActionListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>actionPerformed()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>AdjustmentEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>AdjustmentListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>adjustmentValueChanged()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ComponentEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>ComponentListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>componentHidden()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>componentMoved()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>componentResized()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>componentShown()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ContainerEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>ContainerListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>componentAdded()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>componentRemoved()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>FocusEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>FocusListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>focusGained()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>focusLost()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ItemEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>ItemListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>itemStateChanged()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KeyEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KeyListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>keyPressed()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>keyReleased()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>keyTyped()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MouseEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>MouseListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseClicked()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseEntered()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseExited()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>mousePressed()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseReleased()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">_</TD>
+<TD ALIGN="left">_</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>MouseMotionListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseDragged()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseMoved()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>TextEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>TextListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>textValueChanged()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>WindowEvent</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>WindowListener</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>windowActivated()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>windowClosed()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>windowClosing()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>windowDeactivated()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>windowDeiconified()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>windowIconified()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>windowOpened()</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+For each of the event listener interfaces that contains more
+than one method, <tt CLASS=literal>java.awt.event</tt> defines a simple
+"adapter" class that provides an empty body for each of the
+methods in the interface.  When you are only interested in
+one or two of the defined methods, it is sometimes easier to
+subclass the adapter class than it is to implement the
+interface.  If you subclass the adapter, you only have to override
+the methods of interest, but if you implement the interface
+directly you have to define all of the methods, which means
+you must provide empty bodies for all the methods
+that are not of interest.  These pre-defined no-op
+adapter classes bear the same name as the interfaces they
+implement, with "Listener" changed to "Adapter":
+<tt CLASS=literal>MouseAdapter</tt>, <tt CLASS=literal>WindowAdapter</tt>, etc.
+
+<P CLASS=para>
+Once you have implemented a listener interface, or
+subclassed a adapter class, you must instantiate your new
+class to define an individual event listener object.
+You then register that listener with the appropriate event source.
+In AWT programs, an event
+source is always some sort of AWT component.  Event listener
+registration methods follow a standard naming convention: if
+an event source generates events of type <tt CLASS=literal>X</tt>, it
+has a method named <tt CLASS=literal>addXListener()</tt>
+to add an event listener, and a method
+<tt CLASS=literal>removeXListener()</tt>
+to remove a listener. One of the nice features of the 1.1
+event model is that it
+is easy to determine the types of events a component can
+generate--just look for the event listener registration
+methods.  For example, by inspecting the API of the
+<tt CLASS=literal>Button</tt> object, you can determine that it generates
+<tt CLASS=literal>ActionEvent</tt> events.
+<A HREF="ch07_03.htm#JNUT2-CH-7-TAB-7">Table 7.7</A>
+lists AWT components and the events they generate.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-7-TAB-7">Table 7.7: AWT Components and the Java 1.1 Events They Generate</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Component</TH>
+<TH ALIGN="left">Events Generated</TH>
+<TH ALIGN="left">Meaning</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Button</TD>
+<TD ALIGN="left">ActionEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User clicked on the button</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Checkbox</TD>
+<TD ALIGN="left">ItemEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User selected or deselected an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">CheckboxMenuItem</TD>
+<TD ALIGN="left">ItemEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User selected or deselected an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Choice</TD>
+<TD ALIGN="left">ItemEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User selected or deselected an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Component</TD>
+<TD ALIGN="left">ComponentEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Component moved, resized, hidden, or shown</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">FocusEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Component gained or lost focus</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">KeyEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User pressed or released a key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">MouseEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User pressed or released mouse button, mouse entered or exited component,
+or user moved or dragged mouse.
+Note: <tt CLASS=literal>MouseEvent</tt> has two corresponding listeners,
+<tt CLASS=literal>MouseListener</tt> and <tt CLASS=literal>MouseMotionListener</tt>.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Container</TD>
+<TD ALIGN="left">ContainerEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Component added to or removed from container</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">List</TD>
+<TD ALIGN="left">ActionEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User double-clicked on list item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">ItemEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User selected or deselected an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">MenuItem</TD>
+<TD ALIGN="left">ActionEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User selected a menu item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Scrollbar</TD>
+<TD ALIGN="left">AdjustmentEvent</TD>
+<TD ALIGN="left">User moved the scrollbar</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">TextComponent</TD>
+<TD ALIGN="left">TextEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User changed text</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">TextField</TD>
+<TD ALIGN="left">ActionEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User finished editing text</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Window</TD>
+<TD ALIGN="left">WindowEvent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Window opened, closed, iconified, deiconified, or
+close requested</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Scribbling in Java 1.0</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Scribbling in Java 1.1</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

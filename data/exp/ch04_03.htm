@@ -1,0 +1,521 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.3 Types</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:50:51 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>The Java Language</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-3">4.3 Types</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.TYPES"></A>The type system of a programming language describes how its data
+elements (variables and constants) are associated with actual
+storage. In a statically typed language, such as C or C++, the type of
+a data element is a simple, unchanging attribute that often
+corresponds directly to some underlying hardware phenomenon, like a
+register value or a pointer indirection. In a more dynamic language
+like Smalltalk or Lisp, variables can be assigned arbitrary elements
+and can effectively change their type throughout their lifetime. A
+considerable amount of overhead goes into validating what happens in
+these languages at run-time. Scripting languages like Tcl and awk
+achieve ease of use by providing drastically simplified type systems
+in which only certain data elements can be stored in variables, and
+values are unified into a common representation such as strings.
+
+<P CLASS=para>
+As I described in <A HREF="ch01_01.htm">Chapter 1, <i>Yet Another Language?</i></A>, Java combines the
+best features of both statically and dynamically typed languages. As
+in a statically typed language, every variable and programming element
+in Java has a type that is known at compile-time, so the interpreter
+doesn't normally have to check the type validity of assignments while
+the code is executing. Unlike C or C++ though, Java also maintains
+run-time information about objects and uses this to allow safe
+run-time polymorphism.
+
+<P CLASS=para>
+Java data types fall into two categories. <I CLASS=emphasis>Primitive
+types</I> represent simple values that have built-in
+functionality in the language; they are fixed elements like literal
+constants and numeric expressions. <I CLASS=emphasis>Reference
+types</I> (or class types) include objects and arrays; they are
+called reference types because they are passed "by
+reference" as I'll explain shortly.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-3.1">Primitive Types</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.PRIM1"></A><A NAME="CH04.PRIM2"></A>Numbers, characters, and boolean values are fundamental elements in Java. 
+Unlike some other (perhaps more pure) object-oriented languages, they are 
+not objects. For those situations where it's desirable to treat a primitive 
+value as an object, Java provides "wrapper" classes 
+(see <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A>). One major advantage of 
+treating primitive values as such is that the Java compiler can more
+readily optimize their usage. 
+
+<P CLASS=para>
+Another advantage of working with the Java virtual-machine
+architecture is that primitive types are precisely defined. For
+example, you never have to worry about the size of an
+<tt CLASS=literal>int</tt> on a particular platform; it's always a
+32-bit, signed, two's complement number.  <A HREF="ch04_03.htm#EXJ-CH-4-TAB-2">Table 4.2</A> summarizes Java's primitive types.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-4-TAB-2">Table 4.2: Java Primitive Data Types</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Type</TH>
+<TH ALIGN="left">Definition</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> or <tt CLASS=literal>false</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>char</tt></TD>
+<TD ALIGN="left">16-bit Unicode character</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>byte</tt></TD>
+<TD ALIGN="left">8-bit signed two's complement integer</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>short</tt></TD>
+<TD ALIGN="left">16-bit signed two's complement integer</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>int</tt></TD>
+<TD ALIGN="left">32-bit signed two's complement integer</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>long</tt></TD>
+<TD ALIGN="left">64-bit signed two's complement integer</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>float</tt></TD>
+<TD ALIGN="left">32-bit IEEE 754 floating-point value</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">64-bit IEEE 754 floating-point value</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+If you think the primitive types look like an idealization of C
+scalar types on a byte-oriented 32-bit machine, you're
+absolutely right.  That's how they're supposed to
+look. The 16-bit characters were forced by Unicode, and generic pointers were
+deleted for other reasons we'll touch on later, but in general
+the syntax and semantics of Java primitive types are meant to fit a C
+programmer's mental habits. If you're like most of this
+book's readers, you'll probably find this saves you a lot
+of mental effort in learning the language.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-3.1.1">Declaration and initialization</A></h4>
+
+<P CLASS=para>
+Variables are declared inside of methods or classes in C style. For example: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int foo; 
+double d1, d2; 
+boolean isFun; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Variables can optionally be initialized with an appropriate expression 
+when they are declared: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int foo = 42; 
+double d1 = 3.14, d2 = 2 * 3.14; 
+boolean isFun = true; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Variables that are declared as instance variables in a class are set to 
+default values if they are not initialized. In this case, they act much 
+like <tt CLASS=literal>static</tt> variables in C or C++. Numeric types 
+default to the appropriate flavor of zero, characters are set to the null 
+character "<tt CLASS=literal>\0</tt>," and <tt CLASS=literal>boolean</tt> variables 
+have the value <tt CLASS=literal>false</tt>. Local variables declared 
+in methods, on the other hand, must be explicitly initialized before they 
+can be used. 
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-3.1.2">Integer literals</A></h4>
+
+<P CLASS=para>
+Integer literals can be specified in octal (base 8), decimal (base 10), 
+or hexadecimal (base 16). A decimal integer is specified by a sequence 
+of digits beginning with one of the characters 1-9: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i = 1230; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Octal numbers are distinguished from decimal by a leading zero: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i = 01230;             // i = 664 decimal 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+(An interesting, but meaningless, observation is that this would make the 
+number 0 an octal value in the eyes of the compiler.) 
+
+<P CLASS=para>
+As in C, a hexadecimal number is denoted by the leading characters
+<tt CLASS=literal>0x</tt> or <tt CLASS=literal>0X</tt> (zero "x"), followed by
+digits and the characters a-f or A-F, which represent the decimal
+values 10-15 respectively:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i = 0xFFFF;            // i = 65535 decimal 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Integer literals are of type <tt CLASS=literal>int</tt> unless they are
+suffixed with an <tt CLASS=literal>L</tt>, denoting that they are to be
+produced as a <tt CLASS=literal>long</tt> value:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+long l = 13L; 
+long l = 13;               // equivalent--13 is converted from type int 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+(The lowercase character <tt CLASS=literal>l</tt> ("el") is also
+acceptable, but should be avoided because it often looks like the
+numeral <tt CLASS=literal>1</tt>).
+
+<P CLASS=para>
+When a numeric type is used in an assignment or an expression involving 
+a type with a larger range, it can be promoted to the larger type. For 
+example, in the second line of the above example, the number 13 has the 
+default type of <tt CLASS=literal>int</tt>, but it's promoted to type 
+<tt CLASS=literal>long</tt> for assignment to the <tt CLASS=literal>long</tt> 
+variable. Certain other numeric and comparison operations also cause this 
+kind of arithmetic promotion. A numeric value can never be assigned to a type 
+with a smaller range without an explicit (C-style) cast, however: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i = 13; 
+byte b = i;                // Compile time error--explicit cast needed 
+byte b = (byte) i;         // Okay 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Conversions from floating point to integer types always require an explicit 
+cast because of the potential loss of precision. 
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-3.1.3">Floating-point literals</A></h4>
+
+<P CLASS=para>
+Floating-point values can be specified in decimal or scientific
+notation.  Floating-point literals are of type
+<tt CLASS=literal>double</tt> unless they are suffixed with an
+<tt CLASS=literal>f</tt> denoting that they are to be
+produced as a <tt CLASS=literal>float</tt> value:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+double d = 8.31; 
+double e = 3.00e+8; 
+float f = 8.31F; 
+float g = 3.00e+8F; 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-3.1.4">Character literals</A></h4>
+
+<P CLASS=para>
+A literal character value can be specified either as a single-quoted character 
+or as an escaped ASCII or Unicode sequence: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+char a = 'a'; 
+char newline = '\n'; 
+char octalff = \u00ff; 
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-3.2">Reference Types</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.REF1"></A><A NAME="CH04.REF2"></A><A NAME="CH04.REF3"></A>In C, you can make a new, complex data type by creating a
+<tt CLASS=literal>structure</tt>.  In Java (and other object-oriented
+languages), you instead create a <tt CLASS=literal>class</tt> that defines
+a new type in the language. For instance, if we create a new class
+called <tt CLASS=literal>Foo</tt> in Java, we are also implicitly creating
+a new type called <tt CLASS=literal>Foo</tt>. The type of an item governs
+how it's used and where it's assigned. An item of type
+<tt CLASS=literal>Foo</tt> can, in general, be assigned to a variable of
+type <tt CLASS=literal>Foo</tt> or passed as an argument to a method that
+accepts a <tt CLASS=literal>Foo</tt> value.
+
+<P CLASS=para>
+In an object-oriented language like Java, a type is not
+necessarily just a simple attribute. Reference types are related in
+the same way as the classes they represent. Classes exist in a
+hierarchy, where a subclass is a specialized kind of its parent
+class. The corresponding types have a similar relationship, where the
+type of the child class is considered a subtype of the parent
+class. Because child classes always extend their parents and have, at
+a minimum, the same functionality, an object of the
+child's type can be used in place of an object of the
+parent's type. For example, if I create a new class,
+<tt CLASS=literal>Bar</tt>, that extends <tt CLASS=literal>Foo</tt>, there is
+a new type <tt CLASS=literal>Bar</tt> that is considered a subtype of
+<tt CLASS=literal>Foo</tt>. Objects of type <tt CLASS=literal>Bar</tt> can
+then be used anywhere an object of type <tt CLASS=literal>Foo</tt>
+could be used; An object of type <tt CLASS=literal>Bar</tt> is said to be
+assignable to a variable of type <tt CLASS=literal>Foo</tt>. This is
+called <I CLASS=emphasis>subtype polymorphism</I> and is one of the
+primary features of an object-oriented language. We'll look more
+closely at classes and objects in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>.
+
+<P CLASS=para>
+Primitive types in Java are used and passed "by
+value." In other words, when a primitive value is assigned or
+passed as an argument to a method, it's simply copied. Reference
+types, on the other hand, are always accessed "by
+reference." A <I CLASS=emphasis>reference</I> is simply a handle
+or a name for an object. What a variable of a reference type
+holds is a reference to an object of its type (or of a subtype).  A
+reference is like a pointer in C or C++, except that its type is
+strictly enforced and the reference value itself is a primitive entity
+that can't be examined directly. A reference value can't be created
+or changed other than through assignment to an appropriate
+object. When references are assigned or passed to methods, they are
+copied by value. You can think of a reference as a pointer type that
+is automatically dereferenced whenever it's mentioned.
+
+<P CLASS=para>
+Let's run through an example. We specify a variable of
+type <tt CLASS=literal>Foo</tt>, called <tt CLASS=literal>myFoo</tt>, and
+assign it an appropriate object:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Foo myFoo = new Foo(); 
+Foo anotherFoo = myFoo; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>myFoo</tt> is a reference type variable that holds a
+reference to the newly constructed <tt CLASS=literal>Foo</tt> object.  For
+now, don't worry about the details of creating an object;
+we'll cover that in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>. We designate a
+second <tt CLASS=literal>Foo</tt> type variable,
+<tt CLASS=literal>anotherFoo</tt>, and assign it to the same object. There are
+now two identical references: <tt CLASS=literal>myFoo</tt> and
+<tt CLASS=literal>anotherFoo</tt>. If we change things in the state of
+the <tt CLASS=literal>Foo</tt> object itself, we will see the same 
+effect by looking at it with
+either reference. The comparable code in C++ would be:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// C++ 
+Foo&amp; myFoo = *(new Foo()); 
+Foo&amp; anotherFoo = myFoo; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We can pass one of the variables to a method, as in: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+myMethod( myFoo ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+An important, but sometimes confusing distinction to make at this
+point is that the reference itself is passed by value. That is, the
+argument passed to the method (a local variable from the method's
+point of view) is actually a third copy of the reference.  The method
+can alter the state of the <tt CLASS=literal>Foo</tt> object itself
+through that reference, but it can't change the caller's reference to
+<tt CLASS=literal>myFoo</tt>.  That is, the method can't change the
+caller's <tt CLASS=literal>myFoo</tt> to point to a different Foo object.
+For the times we want a method to change a reference for us, we have
+to pass a reference to the object that contains it, as shown in 
+<A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>.
+
+<P CLASS=para>
+Reference types always point to objects, and objects are always
+defined by classes. However, there are two special kinds of reference
+types that specify the type of object they point to in a slightly
+different way. Arrays in Java have a special place in the type
+system. They are a special kind of object automatically created to
+hold a number of some other type of object, known as the base
+type. Declaring an array-type reference implicitly creates the new
+class type, as you'll see in the next section.
+
+<P CLASS=para>
+Interfaces are a bit sneakier. An interface defines a set of methods
+and a corresponding type. Any object that implements all methods of
+the interface can be treated as an object of that type. Variables and
+method arguments can be declared to be of interface types, just like
+class types, and any object that implements the interface can be
+assigned to them. This allows Java to cross the lines of the class
+hierarchy in a type safe way, as you'll see in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-3.3">A Word About Strings</A></h3>
+
+<P CLASS=para>
+Strings in Java are objects; they are therefore a reference
+type. <tt CLASS=literal>String</tt> objects do, however, have some special
+help from the Java compiler that makes them look more
+primitive. Literal string values in Java source code are turned into
+<tt CLASS=literal>String</tt> objects by the compiler.  They can be used
+directly, passed as arguments to methods, or assigned to
+<tt CLASS=literal>String</tt> type variables:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+System.out.println( "Hello World..." ); 
+String s = "I am the walrus..."; 
+String t = "John said: \"I am the walrus...\""; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>+</tt> symbol in Java is overloaded to provide
+string concatenation; this is the only overloaded operator in Java:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String quote = "Four score and " + "seven years ago,"; 
+String more = quote + " our" + " fathers" +  " brought..."; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java builds a single <tt CLASS=literal>String</tt> object from the concatenated 
+strings and provides it as the result of the expression. We will discuss 
+the <tt CLASS=literal>String</tt> class in <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A>. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Comments</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Statements and Expressions</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

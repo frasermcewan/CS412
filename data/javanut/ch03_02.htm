@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.2 Object Creation</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:49:37 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Classes and Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-2">3.2 Object Creation</A></h2>
+
+<P CLASS=para>
+Take another look at how we've been creating our circle
+object:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle c = new Circle();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+What are those parentheses doing there?  They make it look
+like we're calling a function!  In fact, that is exactly
+what we're doing.  Every class in Java has at least one
+<I CLASS=emphasis>constructor</I> method, which has the same name as the
+class.  The purpose of a constructor is
+to perform any necessary initialization for the new object.
+Since we didn't define one for our <tt CLASS=literal>Circle</tt> class,
+Java gave us a default constructor that takes no arguments
+and performs no special initialization.
+
+<P CLASS=para>
+The way it works is this: The <tt CLASS=literal>new</tt> keyword creates a
+new dynamic instance of the class--i.e., it allocates the new
+object.  The constructor method is then called, passing the
+new object implicitly (a <tt CLASS=literal>this</tt> reference, as we saw
+above), and passing the arguments specified between
+parentheses explicitly.  
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-2.1">Defining a Constructor</A></h3>
+
+<P CLASS=para>
+There is some obvious initialization we could do for our
+circle objects, so let's define a constructor.
+<A HREF="ch03_02.htm#JNUT2-CH-3-EX-2">Example 3.2</A>
+shows a constructor that lets us specify the initial values
+for the center and radius of our new <tt CLASS=literal>Circle</tt> object.
+The example also shows a use of the <tt CLASS=literal>this</tt> keyword, as
+described in the previous section.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-2">Example 3.2: A Constructor for the Circle Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Circle {
+    public double x, y, r;  // The center and the radius of the circle
+    // The constructor method.
+    public Circle(double x, double y, double r)
+    {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+    }   
+    public double circumference() { return 2 * 3.14159 * r; }
+    public double area() { return 3.14159 * r*r; }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+With the old, default constructor, we had to write code like
+this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle c = new Circle();
+c.x = 1.414;  
+c.y = -1.0;  
+c.r = .25;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+With this new constructor the initialization becomes part of
+the object creation step:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle c = new Circle(1.414, -1.0, .25);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+There are two important notes about naming and declaring
+constructors: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The constructor name is always the same as the class name.
+
+<P>
+<li CLASS=listitem>The return type is implicitly an instance of the class.  No
+return type is specified in constructor declarations, nor is
+the <tt CLASS=literal>void</tt> keyword used.  The <tt CLASS=literal>this</tt> object is
+implicitly returned; a constructor should not use a
+<tt CLASS=literal>return</tt> statement to return a value.
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-2.2">Multiple Constructors</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.CONSTRUCTORS1"></A><A NAME="CH3.CLASSES21"></A>Sometimes you'll want to be able to initialize an object in a
+number of different ways, depending on what is most
+convenient in a particular circumstance.  For example, we
+might want to be able to initialize the radius of a circle
+without initializing the center, or we might want to
+initialize a circle to have the same center and radius as
+another circle, or we might want to initialize all the
+fields to default values.  Doing this is no problem: A class
+can have any number of constructor methods.
+<A HREF="ch03_02.htm#JNUT2-CH-3-EX-3">Example 3.3</A>
+shows how.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-3">Example 3.3: Multiple Circle Constructors</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Circle {
+    public double x, y, r;
+    public Circle(double x, double y, double r) {
+        this.x = x; this.y = y; this.r = r;
+    }
+    public Circle(double r) { x = 0.0; y = 0.0; this.r = r; }
+    public Circle(Circle c) { x = c.x; y = c.y; r = c.r; }
+    public Circle() { x = 0.0; y = 0.0; r = 1.0; }
+    public double circumference() { return 2 * 3.14159 * r; }
+    public double area() { return 3.14159 * r*r; }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-2.3">Method Overloading</A></h3>
+
+<P CLASS=para>
+The surprising thing in this example (not so surprising if
+you're a C++ programmer) is that all the constructor
+methods have the same name!  So how can the compiler tell
+them apart?  The way that you and I tell them apart is that the
+four methods take different arguments and are useful in
+different circumstances.  The compiler tells them apart in
+the same way.  In Java, a method is distinguished by its
+name, and by the number, type, and position of its
+arguments.  This is not limited to constructor methods--any
+two methods are not the same unless they have the same name,
+and the same number of arguments of
+the same type passed at the same position in the
+argument list. When you call a method and there is more
+than one method with the same name, the compiler
+automatically picks the
+one that matches the data types of the arguments you are
+passing.
+
+<P CLASS=para>
+Defining methods with the same name and different argument
+types is called <I CLASS=emphasis>method overloading</I>.  It can
+be a convenient technique, as long as you only give
+methods the same name when they perform similar functions on
+slightly different forms of input data. Overloaded methods
+may have different return types, but only if they have
+different arguments. Don't confuse
+method overloading with <I CLASS=emphasis>method overriding</I>, which we'll
+discuss later.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-2.4">this Again</A></h3>
+
+<P CLASS=para>
+There is a specialized use of the <tt CLASS=literal>this</tt> keyword that
+arises when a class has multiple constructors--it can be
+used from a constructor to invoke one of the other
+constructors of the same class.  So we could rewrite the
+additional constructors from
+<A HREF="ch03_02.htm#JNUT2-CH-3-EX-3">Example 3.3</A>
+in terms of the first one like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public Circle(double x, double y, double r) { 
+    this.x = x; this.y = y; this.r = r; 
+}
+public Circle(double r) { this(0.0, 0.0, r); }
+public Circle(Circle c) { this(c.x, c.y, c.r); }
+public Circle() { this(0.0, 0.0, 1.0); }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here, the <tt CLASS=literal>this()</tt> call refers to whatever constructor
+of the class takes the specified type of arguments.  This
+would be a more impressive example, of course, if the first
+constructor that we were invoking did a more significant
+amount of initialization, as it might, for example, if we were
+writing a more complicated class.
+
+<P CLASS=para>
+There is a very important restriction on this <tt CLASS=literal>this</tt>
+syntax: it may only appear as the first statement in a
+constructor.  It may, of course, be followed by any
+additional initialization that a particular version of the
+constructor needs to do.  The reason for this restriction
+involves the automatic invocation of superclass constructor
+methods, which we'll explore later in this chapter.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Introduction to Classes and Objects</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Class Variables</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

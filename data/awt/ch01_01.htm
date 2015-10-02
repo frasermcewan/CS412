@@ -1,0 +1,504 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 1] Abstract Window Toolkit Overview</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:21:19 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch00_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 1</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch01_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-1">1. Abstract Window Toolkit Overview</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Components<br>
+<A HREF="ch01_02.htm">Peers</A><BR>
+<A HREF="ch01_03.htm">Layouts</A><BR>
+<A HREF="ch01_04.htm">Containers</A><BR>
+<A HREF="ch01_05.htm">And the Rest</A><BR>
+<A HREF="ch01_06.htm">Summary</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+For years, programmers have had to go through the hassles of porting software 
+from BSD-based UNIX to System V Release 4-based UNIX, from OpenWindows 
+to Motif, from PC to UNIX to Macintosh (or some combination thereof), and 
+between various other alternatives, too numerous to mention. Getting an 
+application to work was only part of the problem; you also had to port 
+it to all the platforms you supported, which often took more time than 
+the development effort itself. In the UNIX world, standards like POSIX 
+and X made it easier to move applications between different UNIX platforms. 
+But they only solved part of the problem and didn't provide any 
+help with the PC world. Portability became even more important as the Internet 
+grew. The goal was clear: wouldn't it be great if you could just 
+move applications between different operating environments without worrying 
+about the software breaking because of a different operating system, windowing 
+environment, or internal data representation? 
+
+<P CLASS=para>
+In the spring of 1995, Sun Microsystems announced Java, which claimed to 
+solve this dilemma. What started out as a dancing penguin (or Star Trek 
+communicator) named Duke on remote controls for interactive television 
+has become a new paradigm for programming on the Internet. With Java, you 
+can create a program on one platform and deliver the compilation output 
+(byte-codes/class files) to every other supported environment without 
+recompiling or worrying about the local windowing environment, word size, 
+or byte order. The first generation of Java programs consisted mostly of 
+fancy animation applets that ran in a web browser like Netscape Navigator, 
+Internet Explorer, or HotJava. We're beginning to see the next generation 
+now: powerful distributed applications in areas ranging from commerce to 
+medical imaging to network management. All of these applications require 
+extreme portability: Joe's Online Bait Shop doesn't have the 
+time or energy to port its "Online Bait Buyer" program to every platform 
+on the Internet but doesn't want to limit its market to a specific 
+platform. Java neatly solves their problem. 
+
+<P CLASS=para>
+Windowing systems present the biggest challenges for portability. When 
+you move an application from Windows to the Macintosh, you may be able 
+to salvage most of the computational guts, but you'll have to rewrite 
+the window interface code completely. In Java, this part of the portability 
+challenge is addressed by a package called AWT, which stands for Abstract 
+Window Toolkit (although people have come up with many other expansions). 
+AWT provides the magic of maintaining the local look and feel of the user's 
+environment. Because of AWT, the same application program can look appropriate 
+in any environment. For example, if your program uses a pull-down list, 
+that list will look like a Windows list when you run the program under 
+Windows; a Macintosh list when you run the program on a Mac; and a Motif 
+list when you run the program on a UNIX system under Motif. The same code 
+works on all platforms. In addition to providing a common set of user interface 
+components, AWT provides facilities for manipulating images and generating 
+graphics. 
+
+<P CLASS=para>
+This book is a complete programmer's guide and reference to the <tt CLASS=literal>java.awt</tt> 
+package (including <tt CLASS=literal>java.awt.image</tt>, 
+<tt CLASS=literal>java.awt.event</tt>, <tt CLASS=literal>java.awt.datatransfer</tt>, 
+and <tt CLASS=literal>java.awt.peer</tt>). It assumes 
+that you're already familiar with the Java language and class libraries. 
+If you aren't, <I CLASS=emphasis>Exploring Java</I>, by Pat Niemeyer and Josh Peck, provides a general introduction, and other books in the O'Reilly 
+Java series provide detailed references and tutorials on specific topics. 
+This chapter provides a quick overview of AWT: it introduces you to the 
+various GUI elements contained within the <tt CLASS=literal>java.awt</tt> 
+package and gives you pointers to the chapters that provide more specific 
+information about each component. If you're interested in some of 
+the more advanced image manipulation capabilities, head right to 
+<A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>.
+The book ends with a reference section that summarizes what you 
+need to know about every class in AWT. 
+
+<P CLASS=para>
+In using this book, you should be aware that it covers two versions of 
+AWT: 1.0.2 and 1.1. The Java 1.1 JDK (&nbsp;&nbsp;Java Developer's Kit) occurred in December 1996. 
+This release includes many improvements and additions to AWT and is a major 
+step forward in Java's overall functionality. It would be nice if 
+I could say, "Forget about 1.0.2, it's obsolete--use this book 
+to learn 1.1." However, I can't; at this point, since browsers (Netscape 
+Navigator in particular) still incorporate 1.0.2, and we have no idea when 
+they will incorporate the new release. As of publication, Navigator 4.0 
+is in beta test and incorporates 1.0.2. Therefore, Java release 1.0.2 will 
+continue to be important, at least for the foreseeable future. 
+
+<P CLASS=para>
+In this summary, we'll point out new features of Java 1.1 as they 
+come up. However, one feature deserves mention and doesn't 
+fit naturally into an overview. Many of the methods of Java 1.0.2 have 
+been renamed in Java 1.1. The old names still work but are "deprecated." 
+The new names adhere strictly to the design patterns discussed in the JavaBeans documentation:[1] 
+all methods that retrieve the value of an object's property begin 
+with "get," all methods that set the value of a property begin 
+with "set," and all methods that test the value of some property 
+begin with "is." For example, the <tt CLASS=literal>size()</tt> 
+method is now called <tt CLASS=literal>getSize()</tt>. 
+The Java 1.1 compiler issues warnings whenever 
+you used a deprecated method name.
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ <A HREF="http://splash.javasoft.com/beans/spec.html">http://splash.javasoft.com/beans/spec.html</A>
+</blockquote>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1">1.1 Components</A></h2>
+
+<P CLASS=para>
+Modern user interfaces are built around the idea of "components": 
+reusable gadgets that implement a specific part of the interface. They 
+don't need much introduction: if you have used a computer since 1985 
+or so, you're already familiar with buttons, menus, windows, checkboxes, 
+scrollbars, and many other similar items. AWT comes with a repertoire of 
+basic user interface components, along with the machinery for creating 
+your own components (often combinations of the basic components) and for 
+communicating between components and the rest of the program. 
+
+<P CLASS=para>
+The next few sections summarize the components that are part of AWT. If 
+you're new to AWT, you may find it helpful to familiarize yourself 
+with what's available before jumping into the more detailed discussions 
+later in this book. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.1">Static Text</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>Label</tt> class provides a 
+means to display a single line of text on the screen. That's about 
+it. They provide visual aids to the user: for example, you might use a 
+label to describe an input field. You have control over the size, font, 
+and color of the text. Labels are discussed in <A HREF="ch05_02.htm#JAWT-CH-5-SECT-2">Labels</A>. 
+<A HREF="ch01_01.htm#JAWT-CH-1-FIG-1">Figure 1.1</A> 
+displays several labels with different attributes. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-1">Figure 1.1: Multiple Label instances</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0101.gif" alt="[Graphic: Figure 1-1]" width=209 height=175 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.2">User Input</A></h3>
+
+<P CLASS=para>
+<A NAME="CH01.USER"></A>Java provides several different ways for a user to provide input to an 
+application. The user can type the information or select it from a preset 
+list of available choices. The choice depends primarily on the desired 
+functionality of the program, the user-base, and the amount of back-end 
+processing that you want to do. 
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.2.1">The TextField and TextArea classes</A></h4>
+
+<P CLASS=para>
+Two components are available for entering keyboard input: <tt CLASS=literal>TextField</tt> 
+for single line input and <tt CLASS=literal>TextArea</tt> 
+for multi-line input. They provide the means to do things from character-level 
+data validation to complex text editing. These are discussed in much more 
+detail in <A HREF="ch08_01.htm">Chapter 8, <i>Input Fields</i></A>. 
+<A HREF="ch01_01.htm#JAWT-CH-1-FIG-2">Figure 1.2</A> shows a screen that contains various <tt CLASS=literal>TextField</tt> 
+and <tt CLASS=literal>TextArea</tt> components. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-2">Figure 1.2: TextField and TextArea elements</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0102.gif" alt="[Graphic: Figure 1-2]" width=209 height=256 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.2.2">The Checkbox and CheckboxGroup classes</A></h4>
+
+<P CLASS=para>
+The remaining input-oriented components provide mechanisms for letting 
+the user select from a list of choices. The first such mechanism is <tt CLASS=literal>Checkbox</tt>, 
+which lets you select 
+or deselect an option. The left side of the applet in <A HREF="ch01_01.htm#JAWT-CH-1-FIG-3">Figure 1.3</A> 
+shows a checkbox for a Dialog option. Clicking on the box 
+selects the option and makes the box change appearance. A second click 
+deselects the option.<I CLASS=emphasis></I> 
+
+<P CLASS=para>
+The <tt CLASS=literal>CheckboxGroup</tt> class is 
+not a component; it provides a means for grouping checkboxes into a mutual 
+exclusion set, often called a set of radio buttons. Selecting 
+any button in the group automatically deselects the other buttons. This 
+behavior is useful for a set of mutually exclusive choices. For example, 
+the right side of the applet in <A HREF="ch01_01.htm#JAWT-CH-1-FIG-3">Figure 1.3</A> shows a 
+set of checkboxes for selecting a font. It makes sense to select only one 
+font at a time, so these checkboxes have been put in a <tt CLASS=literal>CheckboxGroup</tt>. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-3">Figure 1.3: Examples of Checkbox and CheckboxGroup</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0103.gif" alt="[Graphic: Figure 1-3]" width=453 height=199 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The appearance of a checkbox varies from platform to platform. On the left, 
+<A HREF="ch01_01.htm#JAWT-CH-1-FIG-3">Figure 1.3</A> shows Windows; the right shows Motif. On 
+most platforms, the appearance also changes when a checkbox is put into 
+a <tt CLASS=literal>CheckboxGroup</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.2.3">The Choice class</A></h4>
+
+<P CLASS=para>
+<tt CLASS=literal>Checkbox</tt> and <tt CLASS=literal>CheckboxGroup</tt> 
+present a problem when the list of choices becomes long. Every element of 
+a <tt CLASS=literal>CheckboxGroup</tt> uses precious 
+screen real estate, which limits the amount of space available for other 
+components. The <tt CLASS=literal>Choice</tt> class 
+was designed to use screen space more efficiently. When a <tt CLASS=literal>Choice</tt> 
+element is displayed on the screen, it takes up the space of a single item 
+in the list, along with some extra space for decorations. This leaves more 
+space for other components. When the user selects a <tt CLASS=literal>Choice</tt> 
+component, it displays the available options next to or below the <tt CLASS=literal>Choice</tt>. 
+Once the user makes a selection, the choices are removed from the screen, 
+and the <tt CLASS=literal>Choice</tt> displays the 
+selection. At any time, only one item in a <tt CLASS=literal>Choice</tt> 
+may be selected, so selecting an item implicitly deselects everything else. 
+<A HREF="ch09_01.htm#JAWT-CH-9-SECT-1">Choice</A>
+explores the details of the <tt CLASS=literal>Choice</tt> 
+class. <A HREF="ch01_01.htm#JAWT-CH-1-FIG-4">Figure 1.4</A> shows examples of open (on the right of the screens) and 
+closed (on the left) <tt CLASS=literal>Choice</tt> items in Windows 95 
+and Motif. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-4">Figure 1.4: Open and closed Choice items</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0104.gif" alt="[Graphic: Figure 1-4]" width=455 height=248 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.2.4">The List class</A></h4>
+
+<P CLASS=para>
+Somewhere between <tt CLASS=literal>Choice</tt> and 
+<tt CLASS=literal>CheckboxGroup</tt> in the screen 
+real estate business is a component called <tt CLASS=literal>List</tt>. 
+With a <tt CLASS=literal>List</tt>, the user is still 
+able to select any item. However, the programmer recommends how many items 
+to display on the screen at once. All additional choices are still available, 
+but the user moves an attached scrollbar to access them. Unlike a <tt CLASS=literal>Choice</tt>, 
+a <tt CLASS=literal>List</tt> allows the user to select 
+multiple items. Section 9.2 covers the <tt CLASS=literal>List</tt> 
+component. <A HREF="ch01_01.htm#JAWT-CH-1-FIG-5">Figure 1.5</A> shows <tt CLASS=literal>List</tt> 
+components in different states. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-5">Figure 1.5: List components in different states</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0105.gif" alt="[Graphic: Figure 1-5]" width=249 height=175 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.2.5">Menus</A></h4>
+
+<P CLASS=para>
+Most modern user interfaces use menus heavily; therefore, it's no 
+surprise that Java supports menus. As you'd expect, Java menus look 
+like the menus in the windowing environment under which the program runs. 
+Currently, menus can only appear within a <tt CLASS=literal>Frame</tt>, 
+although this will probably change in the future. A <tt CLASS=literal>Menu</tt> 
+is a fairly complex object, with lots of moving parts: menu bars, menu 
+items, etc. Java 1.1 adds hot keys to menus, allowing users to navigate 
+a menu interface using keyboard shortcuts. The details of <tt CLASS=literal>Menu</tt> 
+are explored in <A HREF="ch10_01.htm">Chapter 10, <i>Would You Like to Choose from the Menu?</i></A> <A HREF="ch01_01.htm#JAWT-CH-1-FIG-6">Figure 1.6</A> shows frames with open menus for both Windows 
+and Motif. Since tear-off menus are available on Motif systems, its menus 
+look and act a little differently. <A HREF="ch01_01.htm#JAWT-CH-1-FIG-6">Figure 1.6</A> also includes a tear-off menu. The shortcuts (Ctrl+F8) are newly supported 
+in Java 1.1. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-6">Figure 1.6: Examples of menus</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0106.gif" alt="[Graphic: Figure 1-6]" width=503 height=173 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.2.6">The PopupMenu class</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>PopupMenu</tt> class is new 
+to Java 1.1. Pop-up menus can be used for context-sensitive, component-level 
+menus. Associated with each <tt CLASS=literal>Component</tt> 
+can be its own pop-up menu. The details of creating and working with the 
+<tt CLASS=literal>PopupMenu</tt> class and the fun time you have catching their events are covered in <A HREF="ch10_01.htm">Chapter 10, <i>Would You Like to Choose from the Menu?</i></A>, <I CLASS=emphasis>Would You Like to Choose from the Menu?</I> <A HREF="ch01_01.htm#JAWT-CH-1-FIG-7">Figure 1.7</A> shows an example of a pop-up menu. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-7">Figure 1.7: A Pop-up menu</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0107.gif" alt="[Graphic: Figure 1-7]" width=168 height=203 border=0>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.3">Event Triggers</A></h3>
+
+<P CLASS=para>
+Java provides two components whose sole purpose is to trigger actions on 
+the screen: <tt CLASS=literal>Button</tt> and <tt CLASS=literal>Scrollbar</tt>. 
+They provide the means for users to signal that they are ready to perform 
+an operation. (Note that all components except labels generate events; 
+I'm singling out buttons and scrollbars because their only purpose 
+is to generate events.) 
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.3.1">The Scrollbar class</A></h4>
+
+<P CLASS=para>
+Most people are familiar with scrollbars. In a word processor or a web 
+browser, when an image or document is too large to fit on the screen, the 
+scrollbar allows the user to move to another area. With Java, the <tt CLASS=literal>Scrollbar</tt> 
+performs similarly. Selecting or moving the scrollbar triggers an event 
+that allows the program to process the scrollbar movement and respond 
+accordingly. The details of the <tt CLASS=literal>Scrollbar</tt> 
+are covered in <A HREF="ch11_01.htm#JAWT-CH-11-SECT-1">Scrollbar</A>. <A HREF="ch01_01.htm#JAWT-CH-1-FIG-8">Figure 1.8</A> shows horizontal and vertical scrollbars.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-8">Figure 1.8: Horizontal and vertical scrollbars</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0108.gif" alt="[Graphic: Figure 1-8]" width=209 height=216 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Note that a scrollbar is just that. It generates events when the user adjusts 
+it, but the program using the scrollbar is responsible for figuring out 
+what to do with the events, such as displaying a different part of an image or 
+the text, etc. Several of the components we've discussed, 
+like <tt CLASS=literal>TextArea</tt> and <tt CLASS=literal>List</tt>, 
+have built-in scrollbars, saving you the trouble of writing your own code 
+to do the actual scrolling. Java 1.1 has a new container called a <tt CLASS=literal>ScrollPane</tt> 
+that has scrolling built in. By using a scroll pane, you should be able 
+to avoid using scroll bars as a positioning mechanism. An example of <tt CLASS=literal>ScrollPane</tt> 
+appears later in this chapter. 
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.3.2">The Button class</A></h4>
+
+<P CLASS=para>
+A button is little more than a label that you can click on. Selecting a 
+button triggers an event telling the program to go to work. <A HREF="ch05_03.htm#JAWT-CH-5-SECT-3">Buttons</A> 
+explores the <tt CLASS=literal>Button</tt> component. 
+<A HREF="ch01_01.htm#JAWT-CH-1-FIG-9">Figure 1.9</A> shows <tt CLASS=literal>Button</tt> examples. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-1-FIG-9">Figure 1.9: Various buttons</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0109.gif" alt="[Graphic: Figure 1-9]" width=128 height=175 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The Java Management API includes a fancier button (<tt CLASS=literal>ImageButton</tt>) 
+with pictures rather than labels. For the time being, this is a standard 
+extension of Java and not in the Core API. If you don't want to use 
+these extensions, you'll have to implement an image button yourself. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.4">Expansion</A></h3>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JAWT-CH-1-SECT-1.4.1">The Canvas class</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>Canvas</tt> class is just a 
+blank area; it doesn't have any predefined appearance. You can use 
+<tt CLASS=literal>Canvas</tt> for drawing images, 
+building new kinds of components, or creating super-components that are 
+aggregates of other components. For example, you can build a picture button 
+by drawing a picture on a <tt CLASS=literal>Canvas</tt> 
+and detecting mouse click events within the area of the <tt CLASS=literal>Canvas</tt>. <tt CLASS=literal>Canvas</tt> is discussed 
+in <A HREF="ch05_05.htm#JAWT-CH-5-SECT-5">Canvas</A>. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch00_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch01_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Acknowledgments</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Peers</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

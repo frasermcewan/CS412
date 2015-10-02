@@ -1,0 +1,941 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] Containers</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:36:31 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-6">6. Containers</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Container<br>
+<A HREF="ch06_02.htm">Panel</A><BR>
+<A HREF="ch06_03.htm">Insets</A><BR>
+<A HREF="ch06_04.htm">Window</A><BR>
+<A HREF="ch06_05.htm">Frames</A><BR>
+<A HREF="ch06_06.htm">Dialogs</A><BR>
+<A HREF="ch06_07.htm">FileDialog</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+This chapter covers a special type of <tt CLASS=literal>Component</tt>
+called <tt CLASS=literal>Container</tt>. A <tt CLASS=literal>Container</tt> is
+a subclass of <tt CLASS=literal>Component</tt> that can contain other
+components, including other containers. <tt CLASS=literal>Container</tt>
+allows you to create groupings of objects on the screen. This chapter
+covers the methods in the <tt CLASS=literal>Container</tt> class and its
+subclasses: <tt CLASS=literal>Panel</tt>, <tt CLASS=literal>Window</tt>,
+<tt CLASS=literal>Frame</tt>, <tt CLASS=literal>Dialog</tt>, and
+<tt CLASS=literal>FileDialog</tt>.  It also covers the
+<tt CLASS=literal>Insets</tt> class, which provides an internal border
+area for the <tt CLASS=literal>Container</tt> classes.  <A NAME="CH06.CONT2"></A>
+
+<P CLASS=para>
+Every container has a layout associated with it that controls how the container 
+organizes the components in it. The layouts are described in <A HREF="ch07_01.htm">Chapter 7, <i>Layouts</i></A>. 
+
+<P CLASS=para>
+Java 1.1 introduces a special <tt CLASS=literal>Container</tt> called
+<tt CLASS=literal>ScrollPane</tt>. Because of the similarities between
+scrolling and <tt CLASS=literal>ScrollPane</tt>, the new
+<tt CLASS=literal>ScrollPane</tt> container is covered with the
+<tt CLASS=literal>Scrollbar</tt> class in <A HREF="ch11_01.htm">Chapter 11, <i>Scrolling</i></A>.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-1">6.1 Container</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.CONT"></A><tt CLASS=literal>Container</tt> is an abstract class 
+that serves as a general purpose holder of other <tt CLASS=literal>Component</tt> 
+objects. The <tt CLASS=literal>Container</tt> class 
+holds the methods for grouping the components together, laying out the 
+components inside it, and dealing with events occurring within it. Because 
+<tt CLASS=literal>Container</tt> is an abstract class, 
+you never see a pure <tt CLASS=literal>Container</tt> 
+object; you only see subclasses that add specific behaviors to a generic 
+container. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-1.1">Container Methods</A></h3>Constructors
+
+<P CLASS=para>
+The abstract <tt CLASS=literal>Container</tt> class 
+contains a single constructor to be called by its children. Prior to Java 
+1.1, the constructor was package private. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected Container() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>Container</tt> 
+creates a new component without a native peer. Since you no longer have 
+a native peer, you must rely on your container to provide a display area. 
+This allows you to create containers that require fewer system resources. 
+For example, if you are creating panels purely for layout management, you 
+might consider creating a <tt CLASS=literal>LightweightPanel</tt> 
+class to let you assign a layout manager to a component group. Using <tt CLASS=literal>LightweightPanel</tt> 
+will speed things up since events do not have to propagate through the 
+panel and you do not have to get a peer from the native environment. The following code creates the <tt CLASS=literal>LightweightPanel</tt> class: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class LightweightPanel extends Container {
+    LightweightPanel () {}
+    LightweightPanel (LayoutManager lm) {
+        setLayout(lm);
+    }
+}
+</PRE>
+</DIV>
+
+</DL>
+Grouping
+
+<P CLASS=para>
+A <tt CLASS=literal>Container</tt> holds a set of objects within itself. This set of methods describes 
+how to examine and add components to the set. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getComponentCount () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public int countComponents () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getComponentCount()</tt> method 
+returns the number of components within the container at this level. <tt CLASS=literal>getComponentCount()</tt> 
+does not count components in any child <tt CLASS=literal>Container</tt> 
+(i.e., containers within the current container). 
+
+<P CLASS=para>
+<tt CLASS=literal>countComponents()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component getComponent (int position) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getComponent()</tt> method returns 
+the component at the specific <tt CLASS=literal>position</tt> 
+within it. If <tt CLASS=literal>position</tt> is invalid, 
+this method throws the run-time exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component[] getComponents () </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>getComponents()</tt> returns an 
+array of all the components held within the container. Since these are 
+references to the actual objects on the screen, any changes made to the 
+components returned will be reflected on the display. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component add (Component component, int position) </I><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="CH06.ADD"></A>The <tt CLASS=literal>add()</tt> method adds <tt CLASS=literal>component</tt> 
+to the container at <tt CLASS=literal>position</tt>. 
+If <tt CLASS=literal>position</tt> is -1, <tt CLASS=literal>add()</tt> 
+inserts <tt CLASS=literal>component</tt> as the last 
+object within the container. What the container does with <tt CLASS=literal>position</tt> 
+depends upon the <tt CLASS=literal>LayoutManager</tt> 
+of the container. If <tt CLASS=literal>position</tt> 
+is invalid, the <tt CLASS=literal>add()</tt> method throws the 
+run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+If you try to add <tt CLASS=literal>component</tt>'s 
+container to itself (anywhere in the containment tree), this method throws 
+an <tt CLASS=literal>IllegalArgumentException</tt>. 
+In Java 1.1, if you try to add a <tt CLASS=literal>Window</tt> 
+to a container, <tt CLASS=literal>add()</tt> throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+If you try to add <tt CLASS=literal>component</tt> 
+to a container that already contains it, the container is removed and re-added, 
+probably at a different position. 
+
+<P CLASS=para>
+Assuming that nothing goes wrong, the parent of <tt CLASS=literal>component</tt> 
+is set to the container, and the container is invalidated. <tt CLASS=literal>add()</tt> 
+returns the <tt CLASS=literal>component</tt> just 
+added. 
+
+<P CLASS=para>
+Calling this method generates a <tt CLASS=literal>ContainerEvent</tt> 
+with the id <tt CLASS=literal>COMPONENT_ADDED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component add (Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>add()</tt> method adds <tt CLASS=literal>component</tt> 
+to the container as the last object within the container. This is done 
+by calling the earlier version of <tt CLASS=literal>add()</tt> 
+with a <tt CLASS=literal>position</tt> of -1. If you 
+try to add <tt CLASS=literal>component</tt>'s 
+container to itself (anywhere in the containment tree), this method throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+In Java 1.1, if you try to add a <tt CLASS=literal>Window</tt> 
+to a container, <tt CLASS=literal>add()</tt> throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<P CLASS=para>
+Calling this method generates a <tt CLASS=literal>ContainerEvent</tt> 
+with the id <tt CLASS=literal>COMPONENT_ADDED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void add (Component component, Object constraints) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Component add (String name, Component component)</I><br>
+<DD>
+
+<P CLASS=para>
+This next version of <tt CLASS=literal>add()</tt> 
+is necessary for layouts that require additional information in order to 
+place components. The additional information is provided by the <tt CLASS=literal>constraints</tt> 
+parameter. This version of the <tt CLASS=literal>add()</tt> 
+method calls the <tt CLASS=literal>addLayoutComponent()</tt> 
+method of the <tt CLASS=literal>LayoutManager</tt>. 
+What the container does with <tt CLASS=literal>constraints</tt> depends upon the actual <tt CLASS=literal>LayoutManager</tt>. 
+It can be used for naming containers within a <tt CLASS=literal>CardLayout</tt>, 
+specifying a screen area for <tt CLASS=literal>BorderLayout</tt>, 
+or providing a set of <tt CLASS=literal>GridBagConstraints</tt> 
+for a <tt CLASS=literal>GridBagLayout</tt>. In the 
+event that this <tt CLASS=literal>add()</tt> is called 
+and the current <tt CLASS=literal>LayoutManager</tt> 
+does not take advantage of <tt CLASS=literal>constraints</tt>, 
+<tt CLASS=literal>component</tt> is added at the end with a position 
+of -1. If you try to add <tt CLASS=literal>component</tt>'s 
+container to itself (anywhere in the containment tree), this method throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+In Java 1.1, if you try to add a <tt CLASS=literal>Window</tt> 
+to a container, <tt CLASS=literal>add()</tt> throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>add(String</tt>, <tt CLASS=literal>Component)</tt> 
+method was changed to <tt CLASS=literal>add(component, object)</tt> 
+in Java 1.1 to accommodate the <tt CLASS=literal>LayoutManager2</tt> 
+interface (discussed in <A HREF="ch07_01.htm">Chapter 7, <i>Layouts</i></A>) and to provide greater flexibility. 
+In all cases, you can just flip the parameters to bring the code up to 
+1.1 specs. The string used as an identifier in Java 1.0 is just treated 
+as a particular kind of constraint. 
+
+<P CLASS=para>
+Calling this method generates a <tt CLASS=literal>ContainerEvent</tt> 
+with the id <tt CLASS=literal>COMPONENT_ADDED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void add (Component component, Object constraints, int index) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This final version of <tt CLASS=literal>add()</tt> 
+is necessary for layouts that require an <tt CLASS=literal>index</tt> 
+and need additional information to place components. The additional information 
+is provided by the <tt CLASS=literal>constraints</tt> 
+parameter. This version of <tt CLASS=literal>add()</tt> 
+also calls the <tt CLASS=literal>addLayoutComponent()</tt> 
+method of the <tt CLASS=literal>LayoutManager</tt>. 
+<tt CLASS=literal>component</tt> is added with a position 
+of <tt CLASS=literal>index</tt>. If you try to add 
+<tt CLASS=literal>component</tt>'s container 
+to itself (anywhere in the containment tree), this method throws the run-time 
+exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+In Java 1.1, if you try to add a <tt CLASS=literal>Window</tt> 
+to a <tt CLASS=literal>Container</tt>, <tt CLASS=literal>add()</tt> throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<P CLASS=para>
+Some layout managers ignore any index. For example, if you call <tt CLASS=literal>add(aButton, 
+BorderLayout.NORTH, 3)</tt> to add a <tt CLASS=literal>Button</tt> to a <tt CLASS=literal>BorderLayout</tt> 
+panel, the <tt CLASS=literal>Button</tt> appears in the north region of the layout, no matter 
+what the index. 
+
+<P CLASS=para>
+Calling this method generates a <tt CLASS=literal>ContainerEvent</tt> 
+with the id <tt CLASS=literal>COMPONENT_ADDED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void addImpl(Component comp, Object constraints, int index) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The protected <tt CLASS=literal>addImpl()</tt> method 
+is the helper method that all the others call. It deals with synchronization 
+and enforces all the restrictions on adding components to containers. 
+
+<P CLASS=para>
+The <tt CLASS=literal>addImpl()</tt> method tracks the container's components in an 
+internal list. The index with which each component is added determines its 
+position in the list. The lower the component's index, the higher it appears in the 
+stacking order. In turn, the stacking order determines how components are displayed 
+when sufficient space isn't available to display all of them. Components that are 
+added without indices are placed at the end of the list (i.e., at the end of the 
+stacking order) and therefore displayed behind other components. If all components 
+are added without indices, the first component added to the container is first in 
+the stacking order and therefore displayed in front.
+
+<P CLASS=para>
+You could override <tt CLASS=literal>addImpl()</tt> 
+to track when components are added to a container. However, the proper 
+way to find out when components are added is to register a <tt CLASS=literal>ContainerListener</tt> 
+and watch for the <tt CLASS=literal>COMPONENT_ADDED</tt> 
+and the <tt CLASS=literal>COMPONENT_REMOVED</tt> events. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void remove (int index) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>remove()</tt> method deletes 
+the <tt CLASS=literal>component</tt> at position <tt CLASS=literal>index</tt> 
+from the container. If <tt CLASS=literal>index</tt> 
+is invalid, the <tt CLASS=literal>remove()</tt> method throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+This method calls the <tt CLASS=literal>removeLayoutComponent()</tt> 
+method of the container's <tt CLASS=literal>LayoutManager</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>removeAll()</tt> generates a <tt CLASS=literal>ContainerEvent</tt> 
+with the id <tt CLASS=literal>COMPONENT_REMOVED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void remove (Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>remove()</tt> method deletes 
+<tt CLASS=literal>component</tt> from the container, 
+if the container directly contains <tt CLASS=literal>component</tt>. 
+<tt CLASS=literal>remove()</tt> does not look through 
+nested containers trying to find <tt CLASS=literal>component</tt>. 
+This method calls the <tt CLASS=literal>removeLayoutComponent()</tt> 
+method of the container's <tt CLASS=literal>LayoutManager</tt>. 
+
+<P CLASS=para>
+When you call this method, it generates a <tt CLASS=literal>ContainerEvent</tt> 
+with the id <tt CLASS=literal>COMPONENT_REMOVED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeAll () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeAll()</tt> method removes 
+all components from the container. This is done by looping through all 
+the components, setting each component's parent to <tt CLASS=literal>null</tt>, 
+setting the container's reference to the component to <tt CLASS=literal>null</tt>, 
+and invalidating the container. 
+
+<P CLASS=para>
+When you call this method, it generates a <tt CLASS=literal>ContainerEvent</tt> 
+with the id <tt CLASS=literal>COMPONENT_REMOVED</tt> 
+for each component removed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isAncestorOf(Component component) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isAncestorOf()</tt> method checks 
+to see if <tt CLASS=literal>component</tt> is a parent 
+(or grandparent or great grandparent) of this container. It could be 
+used as a helper method for <tt CLASS=literal>addImpl()</tt> 
+but is not. If <tt CLASS=literal>component</tt> is 
+an ancestor of the container, <tt CLASS=literal>isAncestorOf()</tt> 
+returns <tt CLASS=literal>true</tt>; otherwise, it 
+returns <tt CLASS=literal>false</tt>. </DL>
+Layout and sizing
+
+<P CLASS=para>
+<A NAME="CH06.LAYOUT1"></A><A NAME="CH06.LAYOUT2"></A>Every container has a <tt CLASS=literal>LayoutManager</tt>. 
+The <tt CLASS=literal>LayoutManager</tt> is responsible 
+for positioning the components inside the container. The <tt CLASS=literal>Container</tt> 
+methods listed here are used in sizing the objects within the container 
+and specifying a layout. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public LayoutManager getLayout () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLayout()</tt> method returns 
+the container's current <tt CLASS=literal>LayoutManager</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setLayout (LayoutManager manager) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setLayout()</tt> method changes 
+the container's <tt CLASS=literal>LayoutManager</tt> 
+to <tt CLASS=literal>manager</tt> and invalidates 
+the container. This causes the components contained inside to be repositioned 
+based upon <tt CLASS=literal>manager</tt>'s 
+rules. If <tt CLASS=literal>manager</tt> is <tt CLASS=literal>null</tt>, 
+there is no layout manager, and you are responsible for controlling the 
+size and position of all the components within the container yourself. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getPreferredSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension preferredSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPreferredSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (<tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt>) for the preferred size of the components within the container. 
+The container determines its preferred size by calling the 
+<tt CLASS=literal>preferredLayoutSize()</tt> method of the current <tt CLASS=literal>LayoutManager</tt>, 
+which says how much space the layout manager needs to arrange the components. 
+If you override this method, you are overriding the default preferred size. 
+
+<P CLASS=para>
+<tt CLASS=literal>preferredSize()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMinimumSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension minimumSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimumSize()</tt> method 
+returns the minimum <tt CLASS=literal>Dimension</tt> 
+(<tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt>) for the size of the components within the container. 
+This container determines its minimum size by calling the 
+<tt CLASS=literal>minimumLayoutSize()</tt> method of the current <tt CLASS=literal>LayoutManager</tt>, 
+which computes the minimum amount of space the layout manager needs to 
+arrange the components. It is possible for <tt CLASS=literal>getMinimumSize()</tt> 
+and <tt CLASS=literal>getPreferredSize()</tt> to return 
+the same dimensions. There is no guarantee that you will get this amount 
+of space for the layout. 
+
+<P CLASS=para>
+<tt CLASS=literal>minimumSize()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMaximumSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMaximumSize()</tt> method 
+returns the maximum <tt CLASS=literal>Dimension</tt> 
+(<tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt>) for the size of the components within the container. 
+This container determines its maximum size by calling the <tt CLASS=literal>maximumLayoutSize()</tt> method of the current <tt CLASS=literal>LayoutManager2</tt>, 
+which computes the maximum amount of space the layout manager needs to 
+arrange the components. If the layout manager is not an instance of <tt CLASS=literal>LayoutManager2</tt>, 
+this method calls the 
+<tt CLASS=literal>getMaximumSize()</tt> method of the <tt CLASS=literal>Component</tt>, which returns 
+<tt CLASS=literal>Integer.MAX_VALUE</tt> for both 
+dimensions. None of the <tt CLASS=literal>java.awt</tt> 
+layout managers use the concept of maximum size yet. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public float getAlignmentX () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlignmentX()</tt> method 
+returns the alignment of the components within the container along the 
+x axis. This container determines its alignment by calling the current 
+<tt CLASS=literal>LayoutManager2</tt>'s <tt CLASS=literal>getLayoutAlignmentX()</tt> 
+method, which computes it based upon its children. The return value is 
+between 0.0 and 1.0. Values nearer 0 indicate that the component should 
+be placed closer to the left edge of the area available. Values nearer 
+1 indicate that the component should be placed closer to the right. The value 0.5 
+means the component should be centered. If the layout manager is not an 
+instance of <tt CLASS=literal>LayoutManager2</tt>, 
+this method calls <tt CLASS=literal>Component</tt>'s 
+<tt CLASS=literal>getAlignmentX()</tt> method, which 
+returns the constant <tt CLASS=literal>Component.CENTER_ALIGNMENT</tt>. 
+None of the <tt CLASS=literal>java.awt</tt> layout 
+managers use the concept of alignment yet. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public float getAlignmentY () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAlignmentY()</tt> method 
+returns the alignment of the components within the container along the 
+y axis. This container determines its alignment by calling the current 
+<tt CLASS=literal>LayoutManager2</tt>'s <tt CLASS=literal>getLayoutAlignmentY()</tt> 
+method, which computes it based upon its children. The return value is 
+between 0.0 and 1.0. Values nearer 0 indicate that the component should 
+be placed closer to the top of the area available. Values nearer 1 indicate 
+that the component should be placed closer to the bottom. The value 0.5 means the 
+component should be centered. If the layout manager is not an instance 
+of <tt CLASS=literal>LayoutManager2</tt>, this method 
+calls <tt CLASS=literal>Component</tt>'s <tt CLASS=literal>getAlignmentY()</tt> 
+method, which returns the constant <tt CLASS=literal>Component.CENTER_ALIGNMENT</tt>. 
+None of the <tt CLASS=literal>java.awt</tt> layout 
+managers use the concept of alignment yet. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void doLayout () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void layout () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>doLayout()</tt> method of <tt CLASS=literal>Container</tt> 
+instructs the <tt CLASS=literal>LayoutManager</tt> 
+to lay out the container. This is done by calling the  
+<tt CLASS=literal>layoutContainer()</tt> method of the current <tt CLASS=literal>LayoutManager</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>layout()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void validate () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>validate()</tt> method sets 
+the container's valid state to <tt CLASS=literal>true</tt> 
+and recursively validates all of its children. If a child is a <tt CLASS=literal>Container</tt>, 
+its children are in turn validated. Some components are not completely 
+initialized until they are validated. For example, you cannot ask a <tt CLASS=literal>Button</tt> 
+for its display dimensions or position until it is validated. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void validateTree () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>validateTree()</tt> method is 
+a helper for <tt CLASS=literal>validate()</tt> that 
+does all the work. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void invalidate () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>invalidate()</tt> method invalidates 
+the container and recursively invalidates the children. If the layout manager 
+is an instance of <tt CLASS=literal>LayoutManager2</tt>, 
+its <tt CLASS=literal>invalidateLayout()</tt> method 
+is called to invalidate any cached values. </DL>
+Event delivery
+
+<P CLASS=para>
+The event model for Java is described in <A HREF="ch04_01.htm">Chapter 4, <i>Events</i></A>. These 
+methods help in the handling of the various system events at the container 
+level. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void deliverEvent (Event e) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>deliverEvent()</tt> method is 
+called by the system when the Java 1.0 <tt CLASS=literal>Event</tt> 
+<tt CLASS=literal>e</tt> happens. <tt CLASS=literal>deliverEvent()</tt> 
+tries to locate a component contained in the container that should receive 
+it. If one is found, the x and y coordinates of <tt CLASS=literal>e</tt> 
+are translated for the new target, and <tt CLASS=literal>Event</tt> 
+<tt CLASS=literal>e</tt> is delivered to this by calling 
+its <tt CLASS=literal>deliverEvent()</tt>. If <tt CLASS=literal>getComponentAt()</tt> 
+fails to find an appropriate target, the event is just posted to the container 
+with <tt CLASS=literal>postEvent()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component getComponentAt (int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Component locate (int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The container's <tt CLASS=literal>getComponentAt()</tt> 
+method calls each component's <tt CLASS=literal>contains()</tt> 
+method to see if the <tt CLASS=literal>x</tt> and 
+<tt CLASS=literal>y</tt> coordinates are within it. 
+If they are, that component is returned. If the coordinates are not in 
+any child component of this container, the container is returned. It is 
+possible for <tt CLASS=literal>getComponentAt()</tt> 
+to return <tt CLASS=literal>null</tt> if the <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt> coordinates are not within 
+the container. The method <tt CLASS=literal>getComponentAt()</tt> 
+can return another <tt CLASS=literal>Container</tt> 
+or a lightweight component. 
+
+<P CLASS=para>
+<tt CLASS=literal>locate()</tt>is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Component getComponentAt (Point p)  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>getComponentAt()</tt> method 
+is identical to the previous method, with the exception that the location is passed 
+as a single point, rather than as separate <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> coordinates. </DL>
+Listeners and 1.1 event handling
+
+<P CLASS=para>
+With the 1.1 event model, you register listeners, which are told when events 
+occur. Container events occur when a component is added or removed. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addContainerListener(ContainerListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addContainerListener()</tt> 
+method registers <tt CLASS=literal>listener</tt> as 
+an object interested in receiving notifications when an <tt CLASS=literal>ContainerEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Container</tt> as its 
+target. The <tt CLASS=literal>listener.componentAdded()</tt> 
+or <tt CLASS=literal>listener.componentRemoved()</tt> 
+method is called when these events occur. Multiple listeners can be registered. 
+The following code demonstrates how to use a <tt CLASS=literal>ContainerListener</tt> 
+to register action listeners for all buttons added to an applet. It is 
+similar to the <tt CLASS=literal>ButtonTest11</tt> 
+example in <A HREF="ch05_03.htm#JAWT-CH-5-SECT-3.2">Button Events</A>. The trick that makes this 
+code work is the call to <tt CLASS=literal>enableEvents()</tt> 
+in <tt CLASS=literal>init()</tt>. This method makes 
+sure that container events are delivered in the absence of listeners. In 
+this applet, we know there won't be any container listeners, so we 
+must enable container events explicitly before adding any components. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.awt.*;
+import java.applet.*;
+import java.awt.event.*; 
+public class NewButtonTest11 extends Applet implements ActionListener { 
+    Button b; 
+    public void init () { 
+        enableEvents (AWTEvent.CONTAINER_EVENT_MASK); 
+        add (b = new Button ("One")); 
+        add (b = new Button ("Two")); 
+        add (b = new Button ("Three")); 
+        add (b = new Button ("Four")); 
+    } 
+    protected void processContainerEvent (ContainerEvent e) { 
+        if (e.getID() == ContainerEvent.COMPONENT_ADDED) { 
+            if (e.getChild() instanceof Button) { 
+                Button b = (Button)e.getChild(); 
+                b.addActionListener (this); 
+            } 
+        } 
+    } 
+    public void actionPerformed (ActionEvent e) { 
+        System.out.println ("Selected: " + e.getActionCommand()); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeContainerListener(ContainerListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeContainerListener()</tt> 
+method removes <tt CLASS=literal>listener</tt> as 
+an interested listener. If <tt CLASS=literal>listener</tt> 
+is not registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+all <tt CLASS=literal>AWTEvent</tt>s with this <tt CLASS=literal>Container</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>Container</tt>, overriding <tt CLASS=literal>processEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+There is no equivalent under the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processEvent()</tt>, 
+remember to call <tt CLASS=literal>super.processEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processContainerEvent(ContainerEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processContainerEvent()</tt> 
+method receives all <tt CLASS=literal>ContainerEvent</tt>s 
+with this <tt CLASS=literal>Container</tt> as its 
+target. <tt CLASS=literal>processContainerEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>Container</tt>, overriding the <tt CLASS=literal>processContainerEvent()</tt> 
+method allows you to process all container events yourself, before sending them 
+to any listeners. There is no equivalent under the 1.0 event model. 
+
+<P CLASS=para>
+If you override the <tt CLASS=literal>processContainerEvent()</tt> method, 
+remember to call <tt CLASS=literal>super.processContainerEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. </DL>
+Painting
+
+<P CLASS=para>
+The following methods are early vestiges of an approach to painting 
+and printing. They are not responsible for anything that couldn't 
+be done with a call to <tt CLASS=literal>paintAll()</tt> 
+or <tt CLASS=literal>printAll()</tt>. However, they 
+are available if you wish to call them. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void paintComponents (Graphics g) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>paintComponents()</tt> method 
+of <tt CLASS=literal>Container</tt> paints the different 
+components it contains. It calls each component's <tt CLASS=literal>paintAll()</tt> 
+method with a clipped graphics context <tt CLASS=literal>g</tt>, 
+which is eventually passed to <tt CLASS=literal>paint()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void printComponents (Graphics g) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>printComponents()</tt> method 
+of <tt CLASS=literal>Container</tt> prints the different 
+components it contains. It calls each component's <tt CLASS=literal>printAll()</tt> 
+method with a clipped graphics context <tt CLASS=literal>g</tt>, 
+which is passed to <tt CLASS=literal>print()</tt>, 
+and eventually works its way to <tt CLASS=literal>paint()</tt>. </DL>
+<P CLASS=para>
+Since it is the container's responsibility to deal with painting 
+lightweight peers, the <tt CLASS=literal>paint()</tt> 
+and <tt CLASS=literal>print()</tt> methods are overridden 
+in Java 1.1. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void paint(Graphics g) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>paint()</tt> method of <tt CLASS=literal>Container</tt> 
+paints the different lightweight components it contains. </DL>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void print(Graphics g) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>print()</tt> method of <tt CLASS=literal>Container</tt> 
+prints the different lightweight components it contains.</DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+If you override <tt CLASS=literal>paint()</tt> or <tt CLASS=literal>print()</tt> in your containers (especially applets), call <tt CLASS=literal>super.paint(g)</tt> 
+or <tt CLASS=literal>super.print(g)</tt>, respectively, to make sure that lightweight components are rendered. This is a good practice 
+even if you don't currently use any lightweight components; you don't 
+want your code to break mysteriously if you add a lightweight component 
+later. 
+</blockquote><P>
+</DIV>
+
+Peers
+
+<P CLASS=para>
+The container is responsible for creating and destroying all the peers 
+of the components within it. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addNotify ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method of <tt CLASS=literal>Container</tt> 
+creates the peer of all the components within it. After <tt CLASS=literal>addNotify()</tt> 
+is called, the <tt CLASS=literal>Container</tt> is 
+invalid. It is useful for top-level containers to call this method explicitly 
+before calling the method <tt CLASS=literal>setVisible(true)</tt> 
+to guarantee that the container is laid out before it is displayed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeNotify ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeNotify()</tt> method destroys 
+the peer of all the top-level objects contained within it. This in effect 
+destroys the peers of all the components within the container. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString () </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of a container, the default <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>Component</tt> is called. 
+This in turn calls <tt CLASS=literal>paramString()</tt> 
+which builds up the string to display. At the <tt CLASS=literal>Container</tt> 
+level, <tt CLASS=literal>paramString()</tt> appends 
+the layout manager name, like <tt CLASS=literal>layout=java.awt.BorderLayout</tt>, 
+to the output. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Insets getInsets () <img src="gifs/bstar.gif" alt="(New)" border=0>  </I><br><I CLASS=emphasis>public Insets insets () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getInsets()</tt> method gets 
+the container's current insets. An inset is the amount of space reserved 
+for the container to use between its edge and the area actually available 
+to hold components. For example, in a <tt CLASS=literal>Frame</tt>, 
+the inset for the top would be the space required for the title bar and 
+menu bar. Insets exist for top, bottom, right, and left. When you override 
+this method, you are providing an area within the container that is reserved 
+for free space. If the container has insets, they would be the default. 
+If not, the default values are all zeroes. 
+
+<P CLASS=para>
+The following code shows how to override <tt CLASS=literal>insets()</tt> 
+to provide values other than the default. The top and bottom have 20 pixels 
+of inset. The left and right have 50. <A HREF="ch06_03.htm#JAWT-CH-6-SECT-3">Insets</A> 
+describes the <tt CLASS=literal>Insets</tt> class 
+in more detail. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public Insets insets () {            // getInsets() for Java 1.1
+        return new Insets (20, 50, 20, 50);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To find out the current value, just call the method and look at the results. 
+For instance, for a <tt CLASS=literal>Frame</tt> the 
+results could be the following in the format used by <tt CLASS=literal>toString()</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Insets[top=42,left=4,right=4,bottom=4]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>42</tt> is the space required for the title and menu bar, while the <tt CLASS=literal>4</tt> around 
+the edges are for the window decorations. These results are platform specific 
+and allow you to position items based upon the user's run-time environment. 
+
+<P CLASS=para>
+When drawing directly onto the graphics context of a container with a large 
+inset such as <tt CLASS=literal>Frame</tt>, remember 
+to work around the insets. If you do something like <tt CLASS=literal>g.drawString("Hello 
+World", 5, 5)</tt> onto a <tt CLASS=literal>Frame</tt>, 
+the user won't see the text. It will be under the title bar and menu 
+bar. 
+
+<P CLASS=para>
+<tt CLASS=literal>insets()</tt> is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void list (PrintWriter output, int indentation) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void list (PrintStream output, int indentation) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>list()</tt> method is very helpful 
+if you need to find out what is inside a container. It recursively calls 
+itself for each container level of objects inside it, increasing the <tt CLASS=literal>indentation</tt> 
+at each level. The results are written to the <tt CLASS=literal>PrintStream</tt> 
+or <tt CLASS=literal>PrintWriter</tt> <tt CLASS=literal>output</tt>. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Cursor</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Panel</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>
