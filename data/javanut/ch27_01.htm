@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 27] The java.math Package</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:29:35 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch26_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 27</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch27_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-27">27. The java.math Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+java.math.BigDecimal (JDK 1.1)<br>
+<A HREF="ch27_02.htm">java.math.BigInteger (JDK 1.1)</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH27.JAVA.MATH.PA1"></A><A NAME="CH27.NUMBERS-JAVA1"></A>The <tt CLASS=literal>java.math</tt> package, new in Java 1.1, contains
+classes for arbitrary-precision integer and floating-point
+arithmetic.  Arbitrary-length integers are required for
+cryptography, and arbitrary-precision floating-point values
+are useful for financial applications that need to be
+careful about rounding errors.  The class hierarchy of this
+extremely small package is shown in
+<A HREF="ch27_01.htm#JNUT2-CH-27-FIG-1">Figure 27.1</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-27-FIG-1">Figure 27.1: The java.math package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_2701.gif" alt="[Graphic: Figure 27-1]" width=464 height=153 border=0>
+
+</DIV>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-27-SECT-1">27.1 java.math.BigDecimal (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-27-SECT-1.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This subclass of <tt CLASS=literal>java.lang.Number</tt> represents a
+floating-point number of arbitrary size and precision.  Its
+methods duplicate the functionality of the standard Java
+arithmetic operators.  The <tt CLASS=literal>compareTo()</tt> method
+compares the value of two <tt CLASS=literal>BigDecimal</tt> objects and
+returns -1, 0, or 1 to indicate the result of the
+comparison.  
+
+<P CLASS=para>
+<tt CLASS=literal>BigDecimal</tt> objects are represented as an integer of
+arbitrary size and an integer scale that specifies the
+number of decimal places in the value.  When working with
+<tt CLASS=literal>BigDecimal</tt> values, you can explicitly specify the
+amount of precision (the number of decimal places) you are
+interested in.  Also, whenever a <tt CLASS=literal>BigDecimal</tt> method
+may discard precision (in a division operation, for
+example), you are required to specify what sort of rounding
+should be performed on the digit to the left of the
+discarded digit or digits.  The eight constants defined by
+this class specify the available rounding modes.  Because
+the <tt CLASS=literal>BigDecimal</tt> class provides arbitrary precision
+and gives you explicit control over rounding and the number
+of decimal places you are interested in, it can be useful
+when dealing with quantities that represent money, or in
+other circumstances where the tolerance for rounding errors
+is low.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>BigDecimal</tt> extends Number {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>BigDecimal</tt>(String <tt CLASS=literal>val</tt>) throws NumberFormatException;
+            public <tt CLASS=literal>BigDecimal</tt>(double <tt CLASS=literal>val</tt>) throws NumberFormatException;
+            public <tt CLASS=literal>BigDecimal</tt>(BigInteger <tt CLASS=literal>val</tt>);
+            public <tt CLASS=literal>BigDecimal</tt>(BigInteger <tt CLASS=literal>val</tt>, int <tt CLASS=literal>scale</tt>) throws NumberFormatException;
+    // <tt CLASS=literal>Constants</tt>
+            public static final int <tt CLASS=literal>ROUND_CEILING</tt>;
+            public static final int <tt CLASS=literal>ROUND_DOWN</tt>;
+            public static final int <tt CLASS=literal>ROUND_FLOOR</tt>;
+            public static final int <tt CLASS=literal>ROUND_HALF_DOWN</tt>;
+            public static final int <tt CLASS=literal>ROUND_HALF_EVEN</tt>;
+            public static final int <tt CLASS=literal>ROUND_HALF_UP</tt>;
+            public static final int <tt CLASS=literal>ROUND_UNNECESSARY</tt>;
+            public static final int <tt CLASS=literal>ROUND_UP</tt>;
+    // <tt CLASS=literal>Class Methods</tt>
+            public static BigDecimal <tt CLASS=literal>valueOf</tt>(long <tt CLASS=literal>val</tt>, int <tt CLASS=literal>scale</tt>) throws NumberFormatException;
+            public static BigDecimal <tt CLASS=literal>valueOf</tt>(long <tt CLASS=literal>val</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public BigDecimal <tt CLASS=literal>abs</tt>();
+            public BigDecimal <tt CLASS=literal>add</tt>(BigDecimal <tt CLASS=literal>val</tt>);
+            public int <tt CLASS=literal>compareTo</tt>(BigDecimal <tt CLASS=literal>val</tt>);
+            public BigDecimal <tt CLASS=literal>divide</tt>(BigDecimal <tt CLASS=literal>val</tt>, int <tt CLASS=literal>scale</tt>, int <tt CLASS=literal>roundingMode</tt>) throws ArithmeticException, IllegalArgumentException;
+            public BigDecimal <tt CLASS=literal>divide</tt>(BigDecimal <tt CLASS=literal>val</tt>, int <tt CLASS=literal>roundingMode</tt>) throws ArithmeticException, IllegalArgumentException;
+            public double <tt CLASS=literal>doubleValue</tt>();  //<tt CLASS=literal> Defines Number</tt>
+            public boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>x</tt>);  //<tt CLASS=literal> Overrides Object</tt>
+            public float <tt CLASS=literal>floatValue</tt>();  //<tt CLASS=literal> Defines Number</tt>
+            public int <tt CLASS=literal>hashCode</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public int <tt CLASS=literal>intValue</tt>();  //<tt CLASS=literal> Defines Number</tt>
+            public long <tt CLASS=literal>longValue</tt>();  //<tt CLASS=literal> Defines Number</tt>
+            public BigDecimal <tt CLASS=literal>max</tt>(BigDecimal <tt CLASS=literal>val</tt>);
+            public BigDecimal <tt CLASS=literal>min</tt>(BigDecimal <tt CLASS=literal>val</tt>);
+            public BigDecimal <tt CLASS=literal>movePointLeft</tt>(int <tt CLASS=literal>n</tt>);
+            public BigDecimal <tt CLASS=literal>movePointRight</tt>(int <tt CLASS=literal>n</tt>);
+            public BigDecimal <tt CLASS=literal>multiply</tt>(BigDecimal <tt CLASS=literal>val</tt>);
+            public BigDecimal <tt CLASS=literal>negate</tt>();
+            public int <tt CLASS=literal>scale</tt>();
+            public BigDecimal <tt CLASS=literal>setScale</tt>(int <tt CLASS=literal>scale</tt>, int <tt CLASS=literal>roundingMode</tt>) throws ArithmeticException, IllegalArgumentException;
+            public BigDecimal <tt CLASS=literal>setScale</tt>(int <tt CLASS=literal>scale</tt>) throws ArithmeticException, IllegalArgumentException;
+            public int <tt CLASS=literal>signum</tt>();
+            public BigDecimal <tt CLASS=literal>subtract</tt>(BigDecimal <tt CLASS=literal>val</tt>);
+            public BigInteger <tt CLASS=literal>toBigInteger</tt>();
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-27-SECT-1.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+Object->Number(Serializable)->BigDecimal
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch26_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch27_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.lang.reflect.Modifier (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.math.BigInteger (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

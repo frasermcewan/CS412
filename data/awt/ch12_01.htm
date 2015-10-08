@@ -1,0 +1,425 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] Image Processing</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:50:24 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-12">12. Image Processing</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+ImageObserver<br>
+<A HREF="ch12_02.htm">ColorModel</A><BR>
+<A HREF="ch12_03.htm">ImageProducer</A><BR>
+<A HREF="ch12_04.htm">ImageConsumer</A><BR>
+<A HREF="ch12_05.htm">ImageFilter</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+The image processing parts of Java are buried within the <tt CLASS=literal>java.awt.image</tt> 
+package. The package consists of three interfaces and eleven classes, two 
+of which are abstract. They are as follows: <A NAME="CH12.IMAGES"></A>
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem> The <tt CLASS=literal>ImageObserver</tt> interface
+provides the single method necessary to support the asynchronous
+loading of images. The interface implementers watch the production of
+an image and can react when certain conditions arise. We briefly
+touched on <tt CLASS=literal>ImageObserver</tt> when we discussed the
+<tt CLASS=literal>Component</tt> class (in <A HREF="ch05_01.htm">Chapter 5, <i>Components</i></A>),
+because <tt CLASS=literal>Component</tt> implements the interface.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>ImageConsumer</tt> and <tt CLASS=literal>ImageProducer</tt> 
+interfaces provide the means for low level image creation. The <tt CLASS=literal>ImageProducer</tt> 
+provides the source of the pixel data that is used by the <tt CLASS=literal>ImageConsumer</tt> 
+to create an <tt CLASS=literal>Image</tt>. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>PixelGrabber</tt> and <tt CLASS=literal>ImageFilter</tt> 
+classes, along with the <tt CLASS=literal>AreaAveragingScaleFilter</tt>, 
+<tt CLASS=literal>CropImageFilter</tt>, <tt CLASS=literal>RGBImageFilter</tt>, 
+and <tt CLASS=literal>ReplicateScaleFilter</tt> subclasses, 
+provide the tools for working with images. <tt CLASS=literal>PixelGrabber</tt> 
+consumes pixels from an <tt CLASS=literal>Image</tt> 
+into an array. The <tt CLASS=literal>ImageFilter</tt> 
+classes modify an existing image to produce another <tt CLASS=literal>Image</tt> 
+instance. <tt CLASS=literal>CropImageFilter</tt> makes 
+smaller images; <tt CLASS=literal>RGBImageFilter</tt> 
+alters pixel colors, while <tt CLASS=literal>AreaAveragingScaleFilter</tt> 
+and <tt CLASS=literal>ReplicateScaleFilter</tt> scale 
+images up and down using different algorithms. All of these classes implement 
+<tt CLASS=literal>ImageConsumer</tt> because they 
+take pixel data as input. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>MemoryImageSource</tt> and <tt CLASS=literal>FilteredImageSource</tt> 
+produce new images. <tt CLASS=literal>MemoryImageSource</tt> 
+takes an array and creates an image from it. <tt CLASS=literal>FilteredImageSource</tt> 
+uses an <tt CLASS=literal>ImageFilter</tt> to read 
+and modify data from another image and produces the new image based on 
+the original. Both <tt CLASS=literal>MemoryImageSource</tt> 
+and <tt CLASS=literal>FilteredImageSource</tt> implement 
+<tt CLASS=literal>ImageProducer</tt> because they 
+produce new pixel data. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>ColorModel</tt> and its subclasses, 
+<tt CLASS=literal>DirectColorModel</tt> and <tt CLASS=literal>IndexColorModel</tt>, 
+provide the palette of colors available when creating an image or tell 
+you the palette used when using <tt CLASS=literal>PixelGrabber</tt>. 
+
+<P>
+</UL>
+<P CLASS=para>
+The classes in the <tt CLASS=literal>java.awt.image</tt> 
+package let you create <tt CLASS=literal>Image</tt> 
+objects at run-time. These classes can be used to rotate images, make images 
+transparent, create image viewers for unsupported graphics formats, and 
+more. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-1">12.1 ImageObserver</A></h2>
+
+<P CLASS=para>
+<A NAME="CH12.IMAGES3"></A>As you may recall from <A HREF="ch02_01.htm">Chapter 2, <i>Simple Graphics</i></A>, the last parameter to the <tt CLASS=literal>drawImage()</tt> 
+method is the image's <tt CLASS=literal>ImageObserver</tt>. 
+However, in <A HREF="ch02_01.htm">Chapter 2, <i>Simple Graphics</i></A> I also said that you can use <tt CLASS=literal>this</tt> 
+as the image observer and forget about it. Now it's time to ask the 
+obvious questions: what is an image observer, and what is it for? 
+
+<P CLASS=para>
+Because <tt CLASS=literal>getImage()</tt> acquires 
+an image asynchronously, the entire <tt CLASS=literal>Image</tt> 
+object might not be fully loaded when <tt CLASS=literal>drawImage()</tt> 
+is called. The <tt CLASS=literal>ImageObserver</tt> 
+interface provides the means for a component to be told asynchronously 
+when additional information about the image is available. The <tt CLASS=literal>Component</tt> 
+class implements the <tt CLASS=literal>imageUpdate()</tt> 
+method (the sole method of the <tt CLASS=literal>ImageObserver</tt> 
+interface), so that method is inherited by any component that renders an 
+image. Therefore, when you call <tt CLASS=literal>drawImage()</tt>, 
+you can pass <tt CLASS=literal>this</tt> as the final 
+argument; the component on which you are drawing serves as the <tt CLASS=literal>ImageObserver</tt> 
+for the drawing process. The communication between the image observer and 
+the image consumer happens behind the scenes; you never have to worry about 
+it, unless you want to write your own <tt CLASS=literal>imageUpdate()</tt> 
+method that does something special as the image is being loaded. 
+
+<P CLASS=para>
+If you call <tt CLASS=literal>drawImage()</tt> to 
+display an image created in local memory (either for double buffering or 
+from a <tt CLASS=literal>MemoryImageSource</tt>), 
+you can set the <tt CLASS=literal>ImageObserver</tt> 
+parameter of <tt CLASS=literal>drawImage()</tt> to 
+<tt CLASS=literal>null</tt> because no asynchrony is involved; the entire image is available 
+immediately, so an <tt CLASS=literal>ImageObserver</tt> 
+isn't needed. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-1.1">ImageObserver Interface</A></h3>Constants
+
+<P CLASS=para>
+The various flags associated with the <tt CLASS=literal>ImageObserver</tt> 
+are used for the <tt CLASS=literal>infoflags</tt> 
+argument to <tt CLASS=literal>imageUpdate()</tt>. 
+The flags indicate what kind of information is available and how to interpret 
+the other arguments to <tt CLASS=literal>imageUpdate()</tt>. 
+Two or more flags are often combined (by an OR operation) to show that several kinds of information are available. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int WIDTH </I><br>
+<DD>
+
+<P CLASS=para>
+When the <tt CLASS=literal>WIDTH</tt> flag is set, 
+the <tt CLASS=literal>width</tt> argument to <tt CLASS=literal>imageUpdate()</tt> 
+correctly indicates the image's width. Subsequent calls to <tt CLASS=literal>getWidth()</tt> 
+for the <tt CLASS=literal>Image</tt> return the valid 
+image width. If you call <tt CLASS=literal>getWidth()</tt> 
+before this flag is set, expect it to return -1. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int HEIGHT </I><br>
+<DD>
+
+<P CLASS=para>
+When the <tt CLASS=literal>HEIGHT</tt> flag is set, 
+the <tt CLASS=literal>height</tt> argument to <tt CLASS=literal>imageUpdate()</tt> 
+correctly indicates the image's height. Subsequent calls to <tt CLASS=literal>getHeight()</tt> 
+for the <tt CLASS=literal>Image</tt> return the valid 
+image height. If you call <tt CLASS=literal>getHeight()</tt> 
+before this flag is set, expect it to return -1. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int PROPERTIES </I><br>
+<DD>
+
+<P CLASS=para>
+When the <tt CLASS=literal>PROPERTIES</tt> flag is 
+set, the image's properties are available. Subsequent calls to 
+<tt CLASS=literal>getProperty()</tt> return valid 
+image properties. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SOMEBITS </I><br>
+<DD>
+
+<P CLASS=para>
+When the <tt CLASS=literal>SOMEBITS</tt> flag of <tt CLASS=literal>infoflags</tt> 
+(from <tt CLASS=literal>imageUpdate()</tt>) is set, 
+the image has started loading and at least some of its content are available 
+for display. When this flag is set, the <tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, <tt CLASS=literal>width</tt>, and <tt CLASS=literal>height</tt> arguments 
+to <tt CLASS=literal>imageUpdate()</tt> indicate the 
+bounding rectangle for the portion of the image that has been delivered 
+so far. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int FRAMEBITS </I><br>
+<DD>
+
+<P CLASS=para>
+When the <tt CLASS=literal>FRAMEBITS</tt> flag of 
+<tt CLASS=literal>infoflags</tt> is set, a complete 
+frame of a multiframe image has been loaded and can be drawn. The remaining 
+parameters to <tt CLASS=literal>imageUpdate()</tt> 
+should be ignored (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, 
+<tt CLASS=literal>width</tt>, <tt CLASS=literal>height</tt>). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int ALLBITS </I><br>
+<DD>
+
+<P CLASS=para>
+When the <tt CLASS=literal>ALLBITS</tt> flag of infoflags 
+is set, the image has been completely loaded and can be drawn. The remaining 
+parameters to <tt CLASS=literal>imageUpdate()</tt> 
+should be ignored (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, 
+<tt CLASS=literal>width</tt>, <tt CLASS=literal>height</tt>). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int ERROR </I><br>
+<DD>
+
+<P CLASS=para>
+When the <tt CLASS=literal>ERROR</tt> flag is set, 
+the production of the image has stopped prior to completion because of 
+a severe problem. <tt CLASS=literal>ABORT</tt> may 
+or may not be set when <tt CLASS=literal>ERROR</tt> 
+is set. Attempts to reload the image will fail. You might get an <tt CLASS=literal>ERROR</tt> because the URL 
+of the <tt CLASS=literal>Image</tt> is invalid (file 
+not found) or the image file itself is invalid (invalid size/content). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int ABORT </I><br>
+<DD>
+
+<P CLASS=para>
+When the <tt CLASS=literal>ABORT</tt> flag is set, 
+the production of the image has aborted prior to completion. If <tt CLASS=literal>ERROR</tt> 
+is not set, a subsequent attempt to draw the image may succeed. For example, 
+an image would abort without an error if a network error occurred (e.g., 
+a timeout on the HTTP connection). </DL>
+Method
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean imageUpdate (Image image, int infoflags, int x, int y, int 
+width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="CH12.UPDATE"></A>The <tt CLASS=literal>imageUpdate()</tt> method is 
+the sole method in the <tt CLASS=literal>ImageObserver</tt> 
+interface. It is called whenever information about an image becomes available. 
+To register an image observer for an image, pass an object that implements 
+the <tt CLASS=literal>ImageObserver</tt> interface 
+to <tt CLASS=literal>getWidth()</tt>, <tt CLASS=literal>getHeight()</tt>, 
+<tt CLASS=literal>getProperty()</tt>, <tt CLASS=literal>prepareImage()</tt>, 
+or <tt CLASS=literal>drawImage()</tt>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>image</tt> parameter to <tt CLASS=literal>imageUpdate()</tt> 
+is the image being rendered on the observer. The <tt CLASS=literal>infoflags</tt> 
+parameter is a set of <tt CLASS=literal>ImageObserver</tt> 
+flags ORed together to signify the current information available 
+about <tt CLASS=literal>image</tt>. The meaning of 
+the <tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, 
+<tt CLASS=literal>width</tt>, and <tt CLASS=literal>height</tt> 
+parameters depends on the current <tt CLASS=literal>infoflags</tt> 
+settings. 
+
+<P CLASS=para>
+Implementations of <tt CLASS=literal>imageUpdate()</tt> 
+should return <tt CLASS=literal>true</tt> if additional information about the image is desired; 
+returning <tt CLASS=literal>false</tt> means that you don't want any additional information, 
+and consequently, <tt CLASS=literal>imageUpdate()</tt> 
+should not be called in the future for this image. The default <tt CLASS=literal>imageUpdate()</tt> 
+method returns <tt CLASS=literal>true</tt> if neither <tt CLASS=literal>ABORT</tt> 
+nor <tt CLASS=literal>ALLBITS</tt> are set in the 
+<tt CLASS=literal>infoflags</tt>--that is, the method <tt CLASS=literal>imageUpdate()</tt> 
+is interested in further information if no errors have occurred and the 
+image is not complete. If either flag is set, <tt CLASS=literal>imageUpdate()</tt> 
+returns <tt CLASS=literal>false</tt>. 
+
+<P CLASS=para>
+You should not call <tt CLASS=literal>imageUpdate()</tt> 
+directly--unless you are developing an <tt CLASS=literal>ImageConsumer</tt>, 
+in which case you may find it worthwhile to override the default <tt CLASS=literal>imageUpdate()</tt> 
+method, which all components inherit from the <tt CLASS=literal>Component</tt> 
+class. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-1.2">Overriding imageUpdate</A></h3>
+
+<P CLASS=para>
+Instead of bothering with the <tt CLASS=literal>MediaTracker</tt> 
+class, you can override the <tt CLASS=literal>imageUpdate()</tt> 
+method and use it to notify you when an image is completely loaded. 
+<A HREF="ch12_01.htm#JAWT-CH-12-EX-1">Example 12.1</A> demonstrates the use of <tt CLASS=literal>imageUpdate()</tt>, 
+along with a way to force your images to load immediately. Here's 
+how it works: the <tt CLASS=literal>init()</tt> method 
+calls <tt CLASS=literal>getImage()</tt> to request 
+image loading at some time in the future. Instead of waiting for <tt CLASS=literal>drawImage()</tt> 
+to trigger the loading process, <tt CLASS=literal>init()</tt> 
+forces loading to start by calling <tt CLASS=literal>prepareImage()</tt>, 
+which also registers an image observer. <tt CLASS=literal>prepareImage()</tt> 
+is a method of the <tt CLASS=literal>Component</tt> 
+class discussed in <A HREF="ch05_01.htm">Chapter 5, <i>Components</i></A>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>paint()</tt> method doesn't 
+attempt to draw the image until the variable <tt CLASS=literal>loaded</tt> 
+is set to <tt CLASS=literal>true</tt>. The <tt CLASS=literal>imageUpdate()</tt> 
+method checks the <tt CLASS=literal>infoflags</tt> 
+argument to see whether <tt CLASS=literal>ALLBITS</tt> 
+is set; when it is set, <tt CLASS=literal>imageUpdate()</tt> 
+sets <tt CLASS=literal>loaded</tt> to <tt CLASS=literal>true</tt>, and schedules 
+a call to <tt CLASS=literal>paint()</tt>. Thus, <tt CLASS=literal>paint()</tt> 
+doesn't call <tt CLASS=literal>drawImage()</tt> 
+until the method <tt CLASS=literal>imageUpdate()</tt> has discovered 
+that the image is fully loaded. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-1">Example 12.1: imageUpdate Override.</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.image.ImageObserver;
+public class imageUpdateOver extends Applet {
+    Image image;
+    boolean loaded = false;
+    public void init () {
+        image = getImage (getDocumentBase(), "rosey.jpg");
+        prepareImage (image, -1, -1, this);
+    }
+    public void paint (Graphics g) {
+        if (loaded)
+            g.drawImage (image, 0, 0, this);
+    }
+    public void update (Graphics g) {
+        paint (g);
+    }
+    public synchronized boolean imageUpdate (Image image, int infoFlags,
+                        int x, int y, int width, int height) {
+        if ((infoFlags &amp; ImageObserver.ALLBITS) != 0) {
+            loaded = true;
+            repaint();
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Note that the call to <tt CLASS=literal>prepareImage()</tt> 
+is absolutely crucial. It is needed both to start image loading and to 
+register the image observer. If <tt CLASS=literal>prepareImage()</tt> 
+were omitted, <tt CLASS=literal>imageUpdate()</tt> 
+would never be called, <tt CLASS=literal>loaded</tt> 
+would not be set, and <tt CLASS=literal>paint()</tt> 
+would never attempt to draw the image. As an alternative, you could use 
+the <tt CLASS=literal>MediaTracker</tt> class to force 
+loading to start and monitor the loading process; that approach might give 
+you some additional flexibility. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ScrollPane</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ColorModel</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

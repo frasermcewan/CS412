@@ -1,0 +1,589 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.5 The Applet Tag</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:49:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Tools of the Trade</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-5">3.5 The Applet Tag</A></h2>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    Add stuff about 'archive' tag.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH03.TAG1"></A><A NAME="CH03.TAG2"></A>Applets are embedded in HTML documents with the
+<tt CLASS=literal>&lt;applet&gt;</tt> tag. The
+<tt CLASS=literal>&lt;applet&gt;</tt> tag resembles the
+HTML <tt CLASS=literal>&lt;img&gt;</tt> image
+tag.[2]
+ It contains attributes that identify the
+applet to be displayed and, optionally, give the Web browser hints
+about how it should be displayed. The standard image tag sizing and
+alignment attributes, such as <tt CLASS=literal>height</tt> and
+<tt CLASS=literal>width</tt>, can be used inside the applet tag. Unlike
+images, however, applets have both an opening
+<tt CLASS=literal>&lt;applet&gt;</tt> and a closing
+<tt CLASS=literal>&lt;/applet&gt;</tt> tag. Sandwiched between these can be
+any number of <tt CLASS=literal>&lt;param&gt;</tt> tags that contain
+application-specific parameters to be passed to the applet itself:
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+If you are not familiar with HTML or other
+markup languages, you may want to refer to <i CLASS=citetitle>HTML: The
+Definitive Guide</i>, from O'Reilly &amp; Associates, for a
+complete reference on HTML and structured Web
+documents.
+</blockquote>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet <tt CLASS=replaceable><i>attribute [ attribute ] ... </i></tt> &gt; 
+[&lt;param <tt CLASS=replaceable><i>parameter</i></tt> &gt;] 
+[&lt;param <tt CLASS=replaceable><i>parameter</i></tt> &gt;] 
+... 
+&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-5.1">Attributes</A></h3>
+
+<P CLASS=para>
+Attributes are name/value pairs that are interpreted by a Web browser
+or applet viewer. (Many HTML tags besides
+<tt CLASS=literal>&lt;applet&gt;</tt> have attributes.) Attributes of the
+<tt CLASS=literal>&lt;applet&gt;</tt> tag specify general features that
+apply to all applets, such as size and alignment. The definition of
+the <tt CLASS=literal>&lt;applet&gt;</tt> tag lists a fixed set of
+recognized attributes; specifying an incorrect or 
+nonexistent
+attribute should be considered an HTML error.
+
+<P CLASS=para>
+Three attributes, <tt CLASS=literal>code</tt>,
+<tt CLASS=literal>width</tt>, and <tt CLASS=literal>height</tt>, are always
+required in the <tt CLASS=literal>&lt;applet&gt;</tt>
+tag. <tt CLASS=literal>code</tt> specifies the name of the applet to be
+loaded; <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt>
+determine its initial size. Other attributes are optional.
+
+<P CLASS=para>
+The following is an HTML fragment for a
+hypothetical, simple clock applet that takes no parameters and
+requires no special HTML layout:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet code=AnalogClock width=100 height=100&gt;&lt;/applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The HTML file that contains this
+<tt CLASS=literal>&lt;applet&gt;</tt> tag needs to be stored in the same
+directory as the <tt CLASS=literal>AnalogClock.class</tt> class file. The
+applet tag is not sensitive to spacing, so the above is therefore
+equivalent to:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet 
+    code=AnalogClock 
+    width=100 
+    height=100&gt; 
+&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can use whatever form seems appropriate. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-5.2">Parameters</A></h3>
+
+<P CLASS=para>
+Parameters are analogous to command-line arguments; they provide a way 
+to pass information to an applet. Each <tt CLASS=literal>&lt;param&gt;</tt> 
+tag contains a name and a value that are passed as strings to the applet: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;param name = <tt CLASS=replaceable><i>parameter_name</i></tt> value = <tt CLASS=replaceable><i>parameter_value</i></tt>&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Parameters provide a means of embedding application-specific data and
+configuration information within an HTML
+document.[3]
+ Our <tt CLASS=literal>AnalogClock</tt> applet, for example, might accept
+a parameter that selects between local and universal time:
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+If you are wondering why the applet's parameters are specified
+in yet another type of tag, here's the reason. In the original
+alpha release of Java, applet parameters were included inside of a
+single <tt CLASS=literal>&lt;app&gt;</tt> tag along with formatting
+attributes. However, this format was not
+SGML-compliant, so the
+<tt CLASS=literal>&lt;param&gt;</tt> tag was added.
+</blockquote>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet code=AnalogClock width=100 height=100&gt; 
+    &lt;param name=zone value=GMT&gt; 
+&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Presumably, this <tt CLASS=literal>AnalogClock</tt> applet is designed to
+look for a parameter named <tt CLASS=literal>zone</tt> with a possible
+value of <tt CLASS=literal>GMT</tt>.
+
+<P CLASS=para>
+Parameter names and values can be quoted to contain spaces and
+other special characters. We could therefore be more verbose
+and use a parameter value like the following:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;param name=zone value="Greenwich Mean Time"&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The parameters a given applet expects are determined by the developer
+of that applet. There is no fixed set of parameter names or
+values; it's up to the applet to interpret the parameter name/value
+pairs that are passed to it. Any number of parameters can be specified,
+and the applet may choose to use or ignore them as it sees fit. The
+applet might also consider parameters to be either optional or
+required and act accordingly.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-5.3">Hablo Applet?</A></h3>
+
+<P CLASS=para>
+Web browsers ignore tags they don't understand; if the Web
+browser doesn't interpret the <tt CLASS=literal>&lt;applet&gt;</tt> or
+<tt CLASS=literal>&lt;param&gt;</tt> tags, they should disappear and any
+HTML between the
+<tt CLASS=literal>&lt;applet&gt;</tt>and <tt CLASS=literal>&lt;/applet&gt;</tt>
+tags should appear normally.
+
+<P CLASS=para>
+By convention, Java-enabled Web browsers do the opposite and
+ignore any extra HTML between the
+<tt CLASS=literal>&lt;applet&gt;</tt> and
+<tt CLASS=literal>&lt;/applet&gt;</tt> tags. This means we can place
+some alternate HTML inside the
+<tt CLASS=literal>&lt;applet&gt;</tt> tag, which is then displayed only by
+Web browsers that can't run the applet.
+
+<P CLASS=para>
+For our <tt CLASS=literal>AnalogClock</tt> example, we could
+display a small text explanation and an image of the clock applet as a
+teaser:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet code=AnalogClock width=100 height=100&gt; 
+    &lt;param name=zone value=GMT&gt; 
+    &lt;strong&gt;If you see this you don't have a Java-enabled Web 
+    browser. Here's a picture of what you are missing.&lt;/strong&gt; 
+    &lt;img src="clockface.gif"&gt; 
+&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-5.4">The Complete Applet Tag</A></h3>
+
+<P CLASS=para>
+We can now spell out the full-blown <tt CLASS=literal>&lt;applet&gt;</tt> 
+tag:[4]
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+The HTML working group of the
+IETF is investigating standardization of embedded
+objects in HTML. A draft document can be found at
+<A HREF="ftp://ds.internic.net/internet-drafts/draft-ietf-html-cda-00.txt">ftp://ds.internic.net/internet-drafts/draft-ietf-html-cda-00.txt</A>.
+They would prefer a slightly less application-centric name such as
+<tt CLASS=literal>&lt;embed&gt;</tt>. However, their discussion, for the
+most part, parallels the <tt CLASS=literal>&lt;applet&gt;</tt> tag.
+</blockquote>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet 
+    code = <tt CLASS=replaceable><i>class name</i></tt> 
+    width = <tt CLASS=replaceable><i>pixels wide</i></tt> 
+    height = <tt CLASS=replaceable><i>pixels high</i></tt> 
+    [ codebase = <tt CLASS=replaceable><i>location URL</i></tt> ] 
+    [ name = <tt CLASS=replaceable><i>instance name</i></tt> ] 
+    [ alt = <tt CLASS=replaceable><i>alternate text</i></tt> ] 
+    [ align = <tt CLASS=replaceable><i>alignment style</i></tt> ] 
+    [ vspace = <tt CLASS=replaceable><i>vertical pad pixels</i></tt> ] 
+    [ hspace = <tt CLASS=replaceable><i>horizontal pad pixels</i></tt> ] 
+&gt; 
+[ &lt;param name = <tt CLASS=replaceable><i>parameter name</i></tt> value = <tt CLASS=replaceable><i>parameter value</i></tt>&gt; ] 
+[ &lt;param name = <tt CLASS=replaceable><i>parameter name</i></tt> value = <tt CLASS=replaceable><i>parameter value</i></tt>&gt; ] 
+... 
+[ <tt CLASS=replaceable><i>HTML for non Java aware browsers</i></tt> ] 
+&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>width</tt>, <tt CLASS=literal>height</tt>, 
+<tt CLASS=literal>align</tt>, <tt CLASS=literal>vspace</tt>, and 
+<tt CLASS=literal>hspace</tt> attributes have the same meanings as those 
+of the <tt CLASS=literal>&lt;img&gt;</tt> tag and determine the preferred 
+size, alignment, and padding respectively. 
+
+<P CLASS=para>
+The <tt CLASS=literal>alt</tt> attribute specifies alternate text that is
+displayed by browsers that understand the
+<tt CLASS=literal>&lt;applet&gt;</tt> tag and its attributes, but
+can't actually run applets. This attribute can also
+describe the applet, since in this case any alternate
+HTML between <tt CLASS=literal>&lt;applet&gt;</tt> and
+<tt CLASS=literal>&lt;\applet&gt;</tt> is ignored.
+
+<P CLASS=para>
+The <tt CLASS=literal>name</tt> attribute specifies an instance
+name for the executing applet. This is a name specified as
+a unique label for each copy of an applet on a particular
+HTML page. For example, if we include our
+clock twice on the same page (using two applet tags), we could give
+each instance a unique name to differentiate them:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet code=AnalogClock name="bigClock" width=300 height=300&gt;&lt;\applet&gt; 
+&lt;applet code=AnalogClock name="smallClock" width=50 height=50&gt;&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Applets use instance names to recognize and communicate with other
+applets on the same page. We could, for instance, create a
+"clock setter" applet that knows how to set the time on a
+<tt CLASS=literal>AnalogClock</tt> applet and pass it the instance name of
+a particular target clock on this page as a parameter. This might look
+something like:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet code=ClockSetter&gt; 
+    &lt;param name=clockToSet value="bigClock"&gt; 
+&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-5.5">Loading Class Files</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>code</tt> attribute of the
+<tt CLASS=literal>&lt;applet&gt;</tt> tag should specify the name of an
+applet. This is either a simple class name, or a package path and class
+name. For now, let's look at simple class names; I'll
+discuss packages in a moment. By default, the Java run-time system
+looks for the class file in the same location as the
+HTML document that contains it. This location is
+known as the base URL for the document.
+
+<P CLASS=para>
+Consider an HTML document,
+<i CLASS=filename>clock.html</i>, that contains our clock applet
+example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet code=AnalogClock width=100 height=100&gt;&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Let's say we retrieve the document at the following
+URL:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+http://www.time.ch/documents/clock.html
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java tries to retrieve the applet class file from the same base
+location:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+http://www.time.ch/documents/AnalogClock.class
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>codebase</tt> attribute of the
+<tt CLASS=literal>&lt;applet&gt;</tt> tag can be used to specify an
+alternative base URL for the class file search.
+Let's say our HTML document now
+specifies <tt CLASS=literal>codebase</tt>, as in the following example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet 
+    codebase=http://www.joes.ch/stuff/ 
+    code=AnalogClock 
+    width=100 
+    height=100&gt; 
+&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java now looks for the applet class file at: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+http://www.joes.ch/stuff/AnalogClock.class
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-5.6">Packages</A></h3>
+
+<P CLASS=para>
+<A NAME="CH03.PACK"></A>Packages are groups of Java classes; see <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A> for
+more information. A package name is a little like an Internet
+hostname, in that they both use a hierarchical, dot-separated naming
+convention. A Java class file can be identified by its full name by
+prefixing the class name with the package name. We might therefore
+have a package called <tt CLASS=literal>time</tt> for time-related Java
+classes, and perhaps a subordinate package called
+<tt CLASS=literal>time.clock</tt> to hold classes related to one or more
+clock applications.
+
+<P CLASS=para>
+In addition to providing a naming scheme, packages can be used
+to locate classes stored at a particular location. Before a class file
+is retrieved from a server, its package-name component is translated
+by the client into a relative path name under the base
+URL of the document. The components of a class
+package name are simply turned into the components of a path name,
+just like with classes on your local system.
+
+<P CLASS=para>
+Let's suppose that our <tt CLASS=literal>AnalogClock</tt> has 
+been placed into the <tt CLASS=literal>time.clock</tt> package and now 
+has the fully qualified name of <tt CLASS=literal>time.clock.AnalogClock</tt>. 
+Our simple <tt CLASS=literal>&lt;applet&gt;</tt> tag would now look 
+like: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet code=time.clock.AnalogClock width=100 height=100&gt;&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Let's say the <i CLASS=filename>clock.html</i> document is 
+once again retrieved from: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+http://www.time.ch/documents/clock.html
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java now looks for the class file in the following location: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+http://www.time.ch/documents/time/clock/AnalogClock.class
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The same is true when specifying an alternative
+<tt CLASS=literal>codebase</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+&lt;applet 
+    codebase=http://www.joes.ch/stuff/ 
+    code=time.clock.AnalogClock 
+    width=100 
+    height=100&gt; 
+&lt;\applet&gt; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java now tries to find the class in the corresponding path under the
+new base URL:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+http://www.joes.ch/stuff/time/clock/AnalogClock.class
+</PRE>
+</DIV>
+
+<P CLASS=para>
+One possible package-naming convention proposes that Internet host and
+domain names be incorporated as part of package names to form a unique
+identifier for classes produced by a given organization. If a company
+with the domain name <tt CLASS=literal>foobar.com</tt> produced our
+<tt CLASS=literal>AnalogClock</tt> class, they might distribute it in a
+package called <tt CLASS=literal>com.foobar.time.clock</tt>. The fully
+qualified name of the <tt CLASS=literal>AnalogClock</tt> class would then
+be <tt CLASS=literal>com.foo.time.clock.AnalogClock</tt>. This would
+presumably be a unique name stored on an arbitrary server. A future
+version of the Java class loader might use this to automatically
+search for classes on remote hosts.
+
+<P CLASS=para>
+Perhaps soon we'll run Sun's latest
+and greatest Web browser directly from its source with:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% java com.sun.java.hotjava.HotJava
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-5.7">Viewing Applets</A></h3>
+
+<P CLASS=para>
+Sun's JDK comes with an applet-viewer program
+aptly called <i CLASS=command>appletviewer</i>. To use
+<i CLASS=command>appletviewer</i>, specify the URL
+of the document on the command line. For example, to view our
+<tt CLASS=literal>AnalogClock</tt> at the URL shown
+above, use the following command:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% appletviewer http://www.time.ch/documents/clock.html 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <i CLASS=command>appletviewer</i> retrieves all applets in the
+specified document and displays each one in a separate
+window. <i CLASS=command>appletviewer</i> is not a Web browser; it
+doesn't attempt to display HTML. It's primarily a
+convenience for testing and debugging applets.  If the document
+doesn't contain <tt CLASS=literal>&lt;applet&gt;</tt> tags,
+<i CLASS=command>appletviewer</i> does nothing.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Netscape Alternative</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Java Language</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

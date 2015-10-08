@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 18] 18.27 java.awt.Graphics (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:10:06 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 18<br>The java.awt Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_28.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-27">18.27 java.awt.Graphics (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-27.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This abstract class defines a device-independent interface
+to graphics.  It specifies methods for doing 
+line drawing, area filling,
+image painting, area copying, and graphics output clipping.
+Specific subclasses of <tt CLASS=literal>Graphics</tt> are implemented for
+different platforms and different graphics output devices.  A
+<tt CLASS=literal>Graphics</tt> object cannot be created directly through a
+constructor--it must be obtained with the
+<tt CLASS=literal>getGraphics()</tt> method of a <tt CLASS=literal>Component</tt> or an
+<tt CLASS=literal>Image</tt>, or copied from an existing <tt CLASS=literal>Graphics</tt>
+object with <tt CLASS=literal>create()</tt>.  When a <tt CLASS=literal>Graphics</tt>
+object is no
+longer needed, you should call <tt CLASS=literal>dispose()</tt> to free up
+the window system resources it uses.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class <tt CLASS=literal>Graphics</tt> extends Object {
+    // <tt CLASS=literal>Protected Constructor</tt>
+            protected <tt CLASS=literal>Graphics</tt>();
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public abstract void <tt CLASS=literal>clearRect</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public abstract void <tt CLASS=literal>clipRect</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public abstract void <tt CLASS=literal>copyArea</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, int <tt CLASS=literal>dx</tt>, int <tt CLASS=literal>dy</tt>);
+            public abstract Graphics <tt CLASS=literal>create</tt>();
+            public Graphics <tt CLASS=literal>create</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public abstract void <tt CLASS=literal>dispose</tt>();
+            public void <tt CLASS=literal>draw3DRect</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, boolean <tt CLASS=literal>raised</tt>);
+            public abstract void <tt CLASS=literal>drawArc</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, int <tt CLASS=literal>startAngle</tt>, int <tt CLASS=literal>arcAngle</tt>);
+            public void <tt CLASS=literal>drawBytes</tt>(byte[] <tt CLASS=literal>data</tt>, int <tt CLASS=literal>offset</tt>, int <tt CLASS=literal>length</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+            public void <tt CLASS=literal>drawChars</tt>(char[] <tt CLASS=literal>data</tt>, int <tt CLASS=literal>offset</tt>, int <tt CLASS=literal>length</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+            public abstract boolean <tt CLASS=literal>drawImage</tt>(Image <tt CLASS=literal>img</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+            public abstract boolean <tt CLASS=literal>drawImage</tt>(Image <tt CLASS=literal>img</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+            public abstract boolean <tt CLASS=literal>drawImage</tt>(Image <tt CLASS=literal>img</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, Color <tt CLASS=literal>bgcolor</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+            public abstract boolean <tt CLASS=literal>drawImage</tt>(Image <tt CLASS=literal>img</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, Color <tt CLASS=literal>bgcolor</tt>, 
+            public abstract boolean <tt CLASS=literal>drawImage</tt>'u'ImageObserver <tt CLASS=literal>observer</tt>);
+        <b>1.1</b>  public abstract boolean <tt CLASS=literal>drawImage</tt>(Image <tt CLASS=literal>img</tt>, int <tt CLASS=literal>dx1</tt>, int <tt CLASS=literal>dy1</tt>, int <tt CLASS=literal>dx2</tt>, int <tt CLASS=literal>dy2</tt>, int <tt CLASS=literal>sx1</tt>, int <tt CLASS=literal>sy1</tt>, 
+        <b>1.1</b>  public abstract boolean <tt CLASS=literal>drawImage</tt>'u'int <tt CLASS=literal>sx2</tt>, int <tt CLASS=literal>sy2</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+        <b>1.1</b>  public abstract boolean <tt CLASS=literal>drawImage</tt>(Image <tt CLASS=literal>img</tt>, int <tt CLASS=literal>dx1</tt>, int <tt CLASS=literal>dy1</tt>, int <tt CLASS=literal>dx2</tt>, int <tt CLASS=literal>dy2</tt>, int <tt CLASS=literal>sx1</tt>, int <tt CLASS=literal>sy1</tt>, 
+        <b>1.1</b>  public abstract boolean <tt CLASS=literal>drawImage</tt>'u'int <tt CLASS=literal>sx2</tt>, int <tt CLASS=literal>sy2</tt>, Color <tt CLASS=literal>bgcolor</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+            public abstract void <tt CLASS=literal>drawLine</tt>(int <tt CLASS=literal>x1</tt>, int <tt CLASS=literal>y1</tt>, int <tt CLASS=literal>x2</tt>, int <tt CLASS=literal>y2</tt>);
+            public abstract void <tt CLASS=literal>drawOval</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public abstract void <tt CLASS=literal>drawPolygon</tt>(int[] <tt CLASS=literal>xPoints</tt>, int[] <tt CLASS=literal>yPoints</tt>, int <tt CLASS=literal>nPoints</tt>);
+            public void <tt CLASS=literal>drawPolygon</tt>(Polygon <tt CLASS=literal>p</tt>);
+        <b>1.1</b>  public abstract void <tt CLASS=literal>drawPolyline</tt>(int[] <tt CLASS=literal>xPoints</tt>, int[] <tt CLASS=literal>yPoints</tt>, int <tt CLASS=literal>nPoints</tt>);
+            public void <tt CLASS=literal>drawRect</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public abstract void <tt CLASS=literal>drawRoundRect</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, int <tt CLASS=literal>arcWidth</tt>, int <tt CLASS=literal>arcHeight</tt>);
+            public abstract void <tt CLASS=literal>drawString</tt>(String <tt CLASS=literal>str</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+            public void <tt CLASS=literal>fill3DRect</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, boolean <tt CLASS=literal>raised</tt>);
+            public abstract void <tt CLASS=literal>fillArc</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, int <tt CLASS=literal>startAngle</tt>, int <tt CLASS=literal>arcAngle</tt>);
+            public abstract void <tt CLASS=literal>fillOval</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public abstract void <tt CLASS=literal>fillPolygon</tt>(int[] <tt CLASS=literal>xPoints</tt>, int[] <tt CLASS=literal>yPoints</tt>, int <tt CLASS=literal>nPoints</tt>);
+            public void <tt CLASS=literal>fillPolygon</tt>(Polygon <tt CLASS=literal>p</tt>);
+            public abstract void <tt CLASS=literal>fillRect</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public abstract void <tt CLASS=literal>fillRoundRect</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, int <tt CLASS=literal>arcWidth</tt>, int <tt CLASS=literal>arcHeight</tt>);
+            public void <tt CLASS=literal>finalize</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+        <b>1.1</b>  public abstract Shape <tt CLASS=literal>getClip</tt>();
+        <b>1.1</b>  public abstract Rectangle <tt CLASS=literal>getClipBounds</tt>();
+        #   public Rectangle <tt CLASS=literal>getClipRect</tt>();
+            public abstract Color <tt CLASS=literal>getColor</tt>();
+            public abstract Font <tt CLASS=literal>getFont</tt>();
+            public FontMetrics <tt CLASS=literal>getFontMetrics</tt>();
+            public abstract FontMetrics <tt CLASS=literal>getFontMetrics</tt>(Font <tt CLASS=literal>f</tt>);
+        <b>1.1</b>  public abstract void <tt CLASS=literal>setClip</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+        <b>1.1</b>  public abstract void <tt CLASS=literal>setClip</tt>(Shape <tt CLASS=literal>clip</tt>);
+            public abstract void <tt CLASS=literal>setColor</tt>(Color <tt CLASS=literal>c</tt>);
+            public abstract void <tt CLASS=literal>setFont</tt>(Font <tt CLASS=literal>font</tt>);
+            public abstract void <tt CLASS=literal>setPaintMode</tt>();
+            public abstract void <tt CLASS=literal>setXORMode</tt>(Color <tt CLASS=literal>c1</tt>);
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public abstract void <tt CLASS=literal>translate</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-27.2">Passed To:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Canvas.paint(), 
+Component.paint(), 
+Component.paintAll(), 
+Component.print(), 
+Component.printAll(), 
+Component.update(), 
+ComponentPeer.paint(), 
+ComponentPeer.print(), 
+Container.paint(), 
+Container.paintComponents(), 
+Container.print(), 
+Container.printComponents(), 
+PropertyEditor.paintValue(), 
+PropertyEditorSupport.paintValue(), 
+ScrollPane.printComponents()</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-27.3">Returned By:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Component.getGraphics(), 
+ComponentPeer.getGraphics(), 
+Graphics.create(), 
+Image.getGraphics(), 
+PrintJob.getGraphics()</tt>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_28.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.awt.Frame (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.awt.GridBagConstraints (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

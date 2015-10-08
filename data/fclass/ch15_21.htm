@@ -1,0 +1,2099 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 15] URLConnection</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:23:15 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_20.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 15<br>The java.net Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_22.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>URLConnection</H1>
+
+<H2>Name</H2>
+
+URLConnection
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.138">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.net.URLConnection</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.net.HttpURLConnection</tt>
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.139">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>URLConnection</tt> class is 
+an <tt CLASS=literal>abstract</tt> class that represents 
+a connection to a <tt CLASS=literal>URL</tt>. A subclass 
+of <tt CLASS=literal>URLConnection</tt> supports a 
+protocol-specific connection. A <tt CLASS=literal>URLConnection</tt> 
+can both read from and write to a <tt CLASS=literal>URL</tt>. 
+
+<P CLASS=para>
+A <tt CLASS=literal>URLConnection</tt> object is created 
+when the <tt CLASS=literal>openConnection()</tt> method 
+is called for a <tt CLASS=literal>URL</tt> object. 
+At this point, the actual connection has not yet been made, so setup parameters 
+and general request properties can be modified for the specific connection. 
+The various <tt CLASS=literal>set</tt> methods control 
+the setup parameters and request properties. Then the actual connection 
+is made by calling the <tt CLASS=literal>connect()</tt> 
+method. Finally, the remote object becomes available, and the header fields 
+and the content are accessed using various <tt CLASS=literal>get</tt> 
+methods. 
+
+<P CLASS=para>
+The <tt CLASS=literal>URLConnection</tt> class defines quite a few methods
+for setting parameters and retrieving information.  Fortunately, for
+simple connections, all of the setup parameters and request properties
+can be left alone, as they all have reasonable default values.  In
+most cases, you'll only be interested in the
+<tt CLASS=literal>getInputStream()</tt> and
+<tt CLASS=literal>getContent()</tt>
+methods. <tt CLASS=literal>getInputStream()</tt> provides an
+<tt CLASS=literal>InputStream</tt> that reads from the
+<tt CLASS=literal>URL</tt>, while <tt CLASS=literal>getContent()</tt> uses a
+<tt CLASS=literal>ContentHandler</tt> to return an
+<tt CLASS=literal>Object</tt> that represents the content of the
+resource. These methods are mirrored by the
+<tt CLASS=literal>openStream()</tt> and <tt CLASS=literal>getContent()</tt>
+convenience methods in the <tt CLASS=literal>URL</tt> class.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.140">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.net.URLConnection extends java.lang.Object {
+  // Variables
+  protected boolean allowUserInteraction;
+  protected boolean connected;
+  protected boolean doInput;
+  protected boolean doOutput;
+  public static FileNameMap fileNameMap;            // New in 1.1
+  protected long ifModifiedSince;
+  protected URL url;
+  protected boolean useCaches;
+  // Constructors
+  protected URLConnection(URL url);
+  // Class Methods
+  public static boolean getDefaultAllowUserInteraction();
+  public static String getDefaultRequestProperty(String key);
+  protected static String guessContentTypeFromName(String fname);
+  public static String guessContentTypeFromStream(InputStream is);
+  public static synchronized void setContentHandlerFactory(
+                                  ContentHandlerFactory fac);
+  public static void setDefaultAllowUserInteraction(
+                     boolean defaultallowuserinteraction);
+  public static void setDefaultRequestProperty(String key, 
+                     String value);
+  // Instance Methods
+  public abstract void connect();
+  public boolean getAllowUserInteraction();
+  public Object getContent()
+  public String getContentEncoding();
+  public int getContentLength();
+  public String getContentType();
+  public long getDate();
+  public boolean getDefaultUseCaches();
+  public boolean getDoInput();
+  public boolean getDoOutput();
+  public long getExpiration();
+  public String getHeaderField(int n);
+  public String getHeaderField(String name);
+  public long getHeaderFieldDate(String name, long default);
+  public int getHeaderFieldInt(String name, int default);
+  public String getHeaderFieldKey(int n);
+  public long getIfModifiedSince();
+  public InputStream getInputStream();
+  public long getLastModified();
+  public OutputStream getOutputStream();
+  public String getRequestProperty(String key);
+  public URL getURL();
+  public boolean getUseCaches();
+  public void setAllowUserInteraction(boolean allowuserinteraction);
+  public void setDefaultUseCaches(boolean defaultusecaches);
+  public void setDoInput(boolean doinput);
+  public void setDoOutput(boolean dooutput);
+  public void setIfModifiedSince(long ifmodifiedsince);
+  public void setRequestProperty(String key, String value);
+  public void setUseCaches(boolean usecaches);
+  public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.141">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.167">allowUserInteraction</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.190">protected boolean allowUserInteraction</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A flag that indicates whether or not user interaction 
+is enabled for this connection. If this variable is <tt CLASS=literal>true</tt>, 
+it is possible to allow user interactions such as popping up dialog boxes. 
+If it is <tt CLASS=literal>false</tt>, no user interaction 
+is allowed. The variable can be set by <tt CLASS=literal>setAllowUserInteraction()</tt> 
+and retrieved by <tt CLASS=literal>getAllowUserInteraction()</tt>. 
+The default value is <tt CLASS=literal>false</tt>, 
+unless the <tt CLASS=literal>setDefaultAllowUserInteraction()</tt> 
+method has been called, in which case that method call controls the default 
+value. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.168">connected</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.191">protected boolean connected</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A flag that indicates whether or not this object 
+has established a connection to a remote host. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.169">doInput</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.192">protected boolean doInput</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A flag that indicates whether or not this connection 
+is enabled for input. Setting this variable to <tt CLASS=literal>true</tt> indicates that the 
+connection is going to read data. The variable can be set by 
+<tt CLASS=literal>setDoInput()</tt> and retrieved 
+by <tt CLASS=literal>getDoInput()</tt>. The default 
+value is <tt CLASS=literal>true</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.170">doOutput</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.193">protected boolean doOutput</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A flag that indicates whether or not this connection 
+is enabled for output. Setting this variable to <tt CLASS=literal>true</tt> indicates that the 
+connection is going to write data. The variable can be set by 
+<tt CLASS=literal>setDoOutput()</tt> and 
+
+retrieved 
+by <tt CLASS=literal>getDoOutput()</tt>. The default 
+value is <tt CLASS=literal>false</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.171">fileNameMap</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.194">public static FileNameMap fileNameMap</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A reference to the object that maps filename extensions to MIME 
+type strings. This variable is used in 
+<tt CLASS=literal>guessContentTypeFromName()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.172">ifModifiedSince</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.195">protected long ifModifiedSince</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A time value, specified as the number of seconds 
+since January 1, 1970, that controls whether or not a resource is fetched 
+based on its last modification time. Some protocols do not bother to retrieve 
+a resource if there is a current local cached copy. However, if the resource 
+has been modified more recently than <tt CLASS=literal>ifModifiedSince</tt>, 
+it is retrieved. If <tt CLASS=literal>ifModifiedSince</tt> 
+is 0, the resource is always 
+retrieved. The variable can be set by <tt CLASS=literal>setIfModifiedSince()</tt> 
+and retrieved by <tt CLASS=literal>getIfModifiedSince()</tt>. 
+The default value is 0, which 
+means that the resource must always be retrieved. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.173">url</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.196">protected URL url</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The resource to which this <tt CLASS=literal>URLConnection</tt> 
+connects. This variable is set to the value of the <tt CLASS=literal>URL</tt> 
+argument in the <tt CLASS=literal>URLConnection</tt> constructor. 
+It can be retrieved by <tt CLASS=literal>getURL()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.174">useCaches</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.197">protected boolean useCaches</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A flag that indicates whether or not locally 
+cached resources are used. Some protocols cache documents. If this variable 
+is <tt CLASS=literal>true</tt>, the protocol is allowed 
+to use caching whenever possible. If it is <tt CLASS=literal>false</tt>, 
+the protocol must always try to retrieve the resource. The variable can 
+be set by <tt CLASS=literal>setUseCaches()</tt> and 
+retrieved by <tt CLASS=literal>getUseCaches()</tt>. 
+The default value is <tt CLASS=literal>true</tt>, 
+unless the <tt CLASS=literal>setDefaultUseCaches()</tt> 
+method has been called, in which case that method call controls the default 
+value. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.142">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.175">URLConnection</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.198">protected URLConnection(URL url)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>url</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>URL</tt> 
+to access. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>URLConnection</tt> 
+object to manage a connection to the destination specified by the given 
+<tt CLASS=literal>URL</tt>. The actual connection 
+is not created, however. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.143">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.176">getDefaultAllowUserInteraction</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.199">public static boolean getDefaultAllowUserInteraction()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if user interaction is 
+allowed by default; <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the default value of the <tt CLASS=literal>allowUserInteraction</tt> 
+variable for all instances of <tt CLASS=literal>URLConnection</tt>. 
+The default value is <tt CLASS=literal>false</tt>, 
+unless the <tt CLASS=literal>setDefaultAllowUserInteraction()</tt> 
+method has been called, in which case that method call controls the default 
+value. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.177">getDefaultRequestProperty</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.200">public static String getDefaultRequestProperty(String key)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>key</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a request 
+property. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The default value of the named request property. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the default value for the request property named by 
+the <tt CLASS=literal>key</tt> parameter. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.178">guessContentTypeFromName</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.201">protected static String guessContentTypeFromName(String fname)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>fname</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> 
+that contains the name of a file. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A guess at the MIME type of the given file, or <tt CLASS=literal>null</tt> 
+if a guess cannot be made. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method uses the <tt CLASS=literal>FileNameMap</tt> 
+specified by the variable <tt CLASS=literal>fileNameMap</tt> 
+to return a MIME content type for the given filename. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.179">guessContentTypeFromStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.202"><DIV CLASS=screen> <P> <PRE> protected static String guessContentTypeFromStream(InputStream is) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>is</tt><br>
+<DD>
+
+<P CLASS=para>
+The input stream to 
+inspect </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A guess at the MIME type of the given input stream, or <tt CLASS=literal>null</tt> 
+if a guess cannot be made. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method looks at the first few bytes of an <tt CLASS=literal>InputStream</tt> 
+and returns a guess of the MIME content type. Note that the <tt CLASS=literal>InputStream</tt> 
+must support marks, which usually means that there is a <tt CLASS=literal>BufferedInputStream</tt> 
+at some level. Here are some strings that are recognized and the inferred 
+content type: </DL>
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">String</TH>
+<TH ALIGN="left">MIME Type Guess</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>#def</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>image/x-bitmap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;!</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>text/html</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;body</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>text/html</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;head&gt;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>text/html</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;html&gt;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>text/html</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>! XPM2</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>image/x-pixmap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>GIF8</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>image/gif</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.180">setContentHandlerFactory</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.203"><DIV CLASS=screen> <P> <PRE> public static synchronized void setContentHandlerFactory(ContentHandlerFactory fac) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>fac</tt><br>
+<DD>
+
+<P CLASS=para>
+An object that implements 
+<tt CLASS=literal>ContentHandlerFactory</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>Error</tt><br>
+<DD>
+
+<P CLASS=para>
+If the factory has 
+already been defined.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application does not have permission to set the factory. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells the <tt CLASS=literal>URLConnection</tt> class 
+to use the given <tt CLASS=literal>ContentHandlerFactory</tt> object 
+for all <tt CLASS=literal>URLConnection</tt> objects. 
+The purpose of this mechanism is to allow a program that hosts applets, 
+such as a web browser, control over the creation of
+<tt CLASS=literal>ContentHandler</tt> objects. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.181">setDefaultAllowUserInteraction</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.204"><DIV CLASS=screen> <P> <PRE> public static void setDefaultAllowUserInteraction( boolean defaultallowuserinteraction) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>defaultallowuserinteraction</tt><br>
+<DD>
+
+<P CLASS=para>
+The new default value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the default value of the <tt CLASS=literal>allowUserInteraction</tt> 
+variable for all new instances of <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.182">setDefaultRequestProperty</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.205"><DIV CLASS=screen> <P> <PRE> public static void setDefaultRequestProperty(String key, String value) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>key</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a request 
+property.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+The new default value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the default value of the request property named by the 
+<tt CLASS=literal>key</tt> parameter. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.144">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.183">connect</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.206">public abstract void connect() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+When a <tt CLASS=literal>URLConnection</tt> object 
+is created, it is not immediately connected to the resource specified by 
+its associated <tt CLASS=literal>URL</tt> object. 
+This method actually establishes the connection. If this method is called 
+after the connection has been established, it does nothing.
+
+<P CLASS=para>
+Before the connection is established, various parameters can be set with 
+the <tt CLASS=literal>set</tt> methods. After the 
+connection has been established, it is an error to try to set these parameters.
+
+<P CLASS=para>
+As they retrieve information about 
+the resource specified by the <tt CLASS=literal>URL</tt> 
+object, many of the <tt CLASS=literal>get</tt> methods require 
+that the connection be established. If the connection has not been established when one of these methods 
+is called, the connection is established implicitly. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.184">getAllowUserInteraction</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.207">public boolean getAllowUserInteraction()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if user interaction is 
+allowed for this connection; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the <tt CLASS=literal>allowUserInteraction</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.185">getContent</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.208"><DIV CLASS=screen> <P> <PRE> public Object getContent() throws IOException, UnknownServiceException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>Object</tt> 
+created from this <tt CLASS=literal>URLConnection</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>UnknownServiceException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the protocol cannot support the content type. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the content of the resource specified by the <tt CLASS=literal>URL</tt> 
+object associated with this <tt CLASS=literal>URLConnection</tt>. 
+If the connection for this object has not been established, the method 
+implicitly establishes it.
+
+<P CLASS=para>
+The method returns an object that encapsulates the content of the connection. 
+For example, for a connection that has content type <tt CLASS=literal>image/jpeg</tt>, 
+the method might return a object that belongs to subclass of <tt CLASS=literal>Image,</tt> 
+or for content type <tt CLASS=literal>text/plain</tt>, 
+it might return a <tt CLASS=literal>String</tt>. The 
+<tt CLASS=literal>instanceof</tt> operator should 
+determine the specific type of object that is returned.
+
+<P CLASS=para>
+The method first determines the content type of the connection by calling 
+<tt CLASS=literal>getContentType()</tt>. If this is 
+the first time the content type has been seen, a content handler of 
+type <tt CLASS=literal>ContentHandler</tt> is created 
+for the content type. Here are the steps that are taken to create a content 
+handler:
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>If an application has set up a <tt CLASS=literal>ContentHandlerFactory</tt>
+by calling <tt CLASS=literal>setContentHandlerFactory()</tt>, the method calls the 
+<tt CLASS=literal>createContentHandler()</tt>
+method of that object to create the content handler.  The content type
+is passed as a <tt CLASS=literal>String</tt> argument to that method.
+
+<P>
+<li CLASS=listitem>If no <tt CLASS=literal>ContentHandlerFactory</tt> has been established, or the 
+<tt CLASS=literal>createContentHandler()</tt> method returns 
+<tt CLASS=literal>null</tt>, the method retrieves the value of the system property 
+<tt CLASS=literal>java.content.handler.pkgs</tt>.  If this value is not 
+<tt CLASS=literal>null</tt>, it is interpreted as a list of packages
+separated by vertical bar (<tt CLASS=literal>|</tt>) characters.  The method
+then tries to load the class named 
+<I CLASS=emphasis>package</I><tt CLASS=literal>.</tt><I CLASS=emphasis>contentType</I>, 
+where <I CLASS=emphasis>package</I> is the name of the first package in 
+the list and <I CLASS=emphasis>contentType</I>
+is formed by taking the content-type string and replacing every 
+slash (<tt CLASS=literal>/</tt>) character with a period (<tt CLASS=literal>.</tt>)
+and every other nonalphanumeric character with an underscore 
+( <tt CLASS=literal>_</tt> ).  If the class exists and is a subclass of 
+<tt CLASS=literal>ContentHandler</tt>, it is used as the 
+<tt CLASS=literal>ContentHandler</tt> for the content type.  If the class 
+does not exist, or if it exists but is not a subclass of 
+<tt CLASS=literal>ContentHandler</tt>, the method tries the next package 
+in the list.
+
+<P>
+<li CLASS=listitem>If the previous step fails to find an appropriate content handler, 
+the method tries to load the class named 
+<tt CLASS=literal>sun.net.www.content.</tt><I CLASS=emphasis>contentType</I>,
+where <I CLASS=emphasis>contentType</I>
+is formed by taking the content-type string and replacing every slash 
+(<tt CLASS=literal>/</tt>) character with a period (<tt CLASS=literal>.</tt>)
+and every other nonalphanumeric character with an underscore 
+( <tt CLASS=literal>_</tt> ).  If the class exists and is a subclass of 
+<tt CLASS=literal>ContentHandler</tt>, it is used as the 
+<tt CLASS=literal>ContentHandler</tt>
+for the content type.  If the class does not exist, or if it exists 
+but is not a subclass of <tt CLASS=literal>ContentHandler</tt>, a 
+<tt CLASS=literal>UnknownServiceException</tt> is thrown.
+
+<P>
+</OL>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.186">getContentEncoding</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.209">public String getContentEncoding()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The content encoding, or <tt CLASS=literal>null</tt> if it is not known. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the content encoding of the resource specified by 
+the <tt CLASS=literal>URL</tt> object associated with 
+this <tt CLASS=literal>URLConnection</tt>. In other 
+words, the method returns the value of the <tt CLASS=literal>content-encoding</tt> 
+header field. If the connection for this object has not been established, 
+the method implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.187">getContentLength</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.210">public int getContentLength()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The content length or <tt CLASS=literal>-1</tt> if it is not known. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the content length of the resource specified by the 
+<tt CLASS=literal>URL</tt> object associated with 
+this <tt CLASS=literal>URLConnection</tt>. In other 
+words, the method returns the value of the <tt CLASS=literal>content-length</tt> 
+header field. If the connection for this object has not been established, 
+the method implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.188">getContentType</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.211">public String getContentType()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The content type, or <tt CLASS=literal>null</tt> if it is not known. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the content type of the resource specified by the 
+<tt CLASS=literal>URL</tt> object associated with 
+this <tt CLASS=literal>URLConnection</tt>. In other 
+words, the method returns the value of the <tt CLASS=literal>content-type</tt> 
+header field. This string is generally be a MIME type, such as <tt CLASS=literal>image/jpeg</tt> 
+or <tt CLASS=literal>text/html</tt>. If the 
+connection for this object has not been established, the method implicitly 
+establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.189">getDate</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.212">public long getDate()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The content date, or 0 if it is not known. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the date of the resource specified by the <tt CLASS=literal>URL</tt> 
+object associated with this <tt CLASS=literal>URLConnection</tt>. 
+In other words, the method returns the value of the <tt CLASS=literal>date</tt> 
+header field. The date is returned as the number of seconds since January 
+1, 1970. If the connection for this object has not been established, the 
+method implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.190">getDefaultUseCaches</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.213">public boolean getDefaultUseCaches()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the use of caches is 
+allowed by default; <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the default value of the <tt CLASS=literal>useCaches</tt> 
+variable for all instances of <tt CLASS=literal>URLConnection</tt>. 
+The default value is <tt CLASS=literal>true</tt>, 
+unless the <tt CLASS=literal>setDefaultUseCaches()</tt> 
+method has been called, in which case that method call controls the default 
+value. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.191">getDoInput</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.214">public boolean getDoInput()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this <tt CLASS=literal>URLConnection</tt> 
+is to be used for input; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the <tt CLASS=literal>doInput</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.192">getDoOutput</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.215">public boolean getDoOutput()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this <tt CLASS=literal>URLConnection</tt> 
+is to be used for output; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the <tt CLASS=literal>doOutput</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.193">getExpiration</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.216">public long getExpiration()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The content expiration date, or  
+if it is not known. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the expiration date of the resource specified by 
+the <tt CLASS=literal>URL</tt> object associated with 
+this <tt CLASS=literal>URLConnection</tt>. In other 
+words, the method returns the value of the <tt CLASS=literal>expires</tt> 
+header field. The date is returned as the number of seconds since January 
+1, 1970. If the connection for this object has not been established, the 
+method implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.194">getHeaderField</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.217">public String getHeaderField(int n)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+A header field index. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the header field with the given index, or <tt CLASS=literal>null</tt> 
+if <tt CLASS=literal>n</tt> is greater than the number 
+of fields in the header. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the value of the header field at index <tt CLASS=literal>n</tt> 
+of the resource specified by the <tt CLASS=literal>URL</tt> 
+object associated with this <tt CLASS=literal>URLConnection</tt>. 
+If the connection for this object has not been established, the method 
+implicitly establishes it. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.218">public String getHeaderField(String name)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A header field name. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the named header field, or <tt CLASS=literal>null</tt> 
+if the header field is not known or its value cannot be determined. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the value of the named header field of the resource 
+specified by the <tt CLASS=literal>URL</tt> object 
+associated with this <tt CLASS=literal>URLConnection</tt>. 
+This method is a helper for methods like <tt CLASS=literal>getContentEncoding()</tt> and <tt CLASS=literal>getContentType()</tt>. 
+If the connection for this object has not been established, the method 
+implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.195">getHeaderFieldDate</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.219">public long getHeaderFieldDate(String name, long default)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A header field name.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>default</tt><br>
+<DD>
+
+<P CLASS=para>
+A default date 
+value. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the named header field parsed as a date value, or <tt CLASS=literal>default</tt> 
+if the field is missing or cannot be parsed. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the value of the named header field of the resource 
+specified by the <tt CLASS=literal>URL</tt> object 
+associated with this <tt CLASS=literal>URLConnection</tt> 
+and parses it as a date value. The date is returned as the number of seconds 
+since January 1, 1970. If the value of the header field cannot be determined 
+or it is not a properly formed date, the given default value is returned. 
+If the connection for this object has not been established, the method 
+implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.196">getHeaderFieldInt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.220">public int getHeaderFieldInt(String name, int default)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A header field name.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>default</tt><br>
+<DD>
+
+<P CLASS=para>
+A default value. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the named header field parsed as a number, or <tt CLASS=literal>default</tt> 
+if the field is missing or cannot be parsed. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the value of the named header field of the resource 
+specified by the <tt CLASS=literal>URL</tt> object 
+associated with this <tt CLASS=literal>URLConnection</tt> 
+and parses it as a number. If the value of the header field cannot be determined 
+or it is not a properly formed integer, the given default value is returned. 
+If the connection for this object has not been established, the method 
+implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.197">getHeaderFieldKey</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.221">public String getHeaderFieldKey(int n)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+A header field index. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The name of the header field at the given index, or <tt CLASS=literal>null</tt> 
+if <tt CLASS=literal>n</tt> is greater than the number 
+of fields in the header. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the name of the header field at index <tt CLASS=literal>n</tt> 
+of the resource specified by the <tt CLASS=literal>URL</tt> 
+object associated with this <tt CLASS=literal>URLConnection</tt>. 
+If the connection for this object has not been established, the method 
+implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.198">getIfModifiedSince</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.222">public long getIfModifiedSince()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the <tt CLASS=literal>ifModifiedSince</tt> variable. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the <tt CLASS=literal>ifModifiedSince</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.199">getInputStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.223"><DIV CLASS=screen> <P> <PRE> public InputStream getInputStream() throws IOException, UnknownServiceException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>InputStream</tt> 
+that reads data from this connection. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>UnknownServiceException</tt><br>
+<DD>
+
+<P CLASS=para>
+If this protocol does not support input. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an <tt CLASS=literal>InputStream</tt> 
+that reads the contents of the resource specified by the <tt CLASS=literal>URL</tt> 
+object associated with this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.200">getLastModified</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.224">public long getLastModified()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The content last-modified date, or  
+if it is not known. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method retrieves the last-modified date of the resource specified 
+by the <tt CLASS=literal>URL</tt> object associated 
+with this <tt CLASS=literal>URLConnection</tt>. In 
+other words, the method returns the value of the <tt CLASS=literal>last-modified</tt> 
+header field. The date is returned as the number of seconds since January 
+1, 1970. If the connection for this object has not been established, the 
+method implicitly establishes it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.201">getOutputStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.225"><DIV CLASS=screen> <P> <PRE> public OutputStream getOutputStream() throws IOException, UnknownServiceException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>OutputStream</tt> 
+that writes data to this connection. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>UnknownServiceException</tt><br>
+<DD>
+
+<P CLASS=para>
+If this protocol does not support output. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an <tt CLASS=literal>OutputStream</tt> 
+that writes to the resource specified by the <tt CLASS=literal>URL</tt> 
+object associated with this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.202">getRequestProperty</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.226">public String getRequestProperty(String key)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>key</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a request 
+property. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the named request property. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the request property named by the <tt CLASS=literal>key</tt> 
+parameter. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.203">getURL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.227">public URL getURL()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>URL</tt> that this connection accesses. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a reference to the <tt CLASS=literal>URL</tt> 
+associated with this object. This is the value of the <tt CLASS=literal>url</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.204">getUseCaches</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.228">public boolean getUseCaches()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this <tt CLASS=literal>URLConnection</tt> 
+uses caches; <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of the <tt CLASS=literal>useCaches</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.205">setAllowUserInteraction</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.229">public void setAllowUserInteraction(boolean allowuserinteraction)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>allowuserinteraction</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates 
+whether user interaction is allowed or not. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessError</tt><br>
+<DD>
+
+<P CLASS=para>
+If this method is called after the connection has been established. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the value of the <tt CLASS=literal>allowUserInteraction</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. 
+This method must be called before this object establishes a connection. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.206">setDefaultUseCaches</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.230">public void setDefaultUseCaches(boolean defaultusecaches)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>defaultusecaches</tt><br>
+<DD>
+
+<P CLASS=para>
+The new default value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the default value of the <tt CLASS=literal>useCaches</tt> 
+variable for all new instances of <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.207">setDoInput</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.231">public void setDoInput(boolean doinput)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>doinput</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that indicates if this connection is to be used for input. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessError</tt><br>
+<DD>
+
+<P CLASS=para>
+If this method is called after the connection has been established. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the value of the <tt CLASS=literal>doInput</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. 
+This method must be called before this object establishes a connection. </DL>
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.208">setDoOutput</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.232">public void setDoOutput(boolean dooutput)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>dooutput</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that indicates if this connection is to be used for output. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessError</tt><br>
+<DD>
+
+<P CLASS=para>
+If this method is called after the connection has been established. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the value of the <tt CLASS=literal>doOutput</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. 
+This method must be called before this object establishes a connection. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.209">setIfModifiedSince</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.233">public void setIfModifiedSince(long ifmodifiedsince)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ifmodifiedsince</tt><br>
+<DD>
+
+<P CLASS=para>
+A time value, specified as the number of seconds since January 1, 1970. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessError</tt><br>
+<DD>
+
+<P CLASS=para>
+If this method is called after the connection has been established. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the value of the <tt CLASS=literal>ifModifiedSince</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. 
+This method must be called before this object establishes a connection. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.210">setRequestProperty</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.234">public void setRequestProperty(String key, String value)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>key</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a request 
+property.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>value</tt><br>
+<DD>
+
+<P CLASS=para>
+The new value. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessError</tt><br>
+<DD>
+
+<P CLASS=para>
+If this method is called after the connection has been established. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the value of the request property named by the <tt CLASS=literal>key</tt> 
+parameter. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.211">setUseCaches</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.235">public void setUseCaches(boolean defaultusecaches)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>defaultusecaches</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that indicates 
+if this connection uses caches. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessError</tt><br>
+<DD>
+
+<P CLASS=para>
+If this method is called after the connection has been established. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the value of the <tt CLASS=literal>useCaches</tt> 
+variable for this <tt CLASS=literal>URLConnection</tt>. 
+This method must be called before this object establishes a connection. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.212">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.236">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of the <tt CLASS=literal>URLConnection</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of this <tt CLASS=literal>URLConnection</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.145">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.146">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ContentHandler</tt>, 
+<tt CLASS=literal>ContentHandlerFactory</tt>, 
+<tt CLASS=literal>Error</tt>, 
+<tt CLASS=literal>FileNameMap</tt>, 
+<tt CLASS=literal>HttpURLConnection</tt>, 
+<tt CLASS=literal>IllegalAccessError</tt>, 
+<tt CLASS=literal>InputStream</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>OutputStream</tt>, 
+<tt CLASS=literal>SecurityException</tt>, 
+<tt CLASS=literal>UnknownServiceException</tt>, 
+<tt CLASS=literal>URL</tt>, 
+<tt CLASS=literal>URLStreamHandler</tt>, 
+<tt CLASS=literal>URLStreamHandlerFactory</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_20.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_22.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>URL</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>URLEncoder</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

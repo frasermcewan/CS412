@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.3 Class Variables</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:49:39 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Classes and Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-3">3.3 Class Variables</A></h2>
+
+<P CLASS=para>
+<A NAME="CH3.CLASS.VARIAB1"></A><A NAME="CH3.VARIABLES1"></A>In our <tt CLASS=literal>Circle</tt> class definition, we declared three
+"instance" variables: <tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, and <tt CLASS=literal>r</tt>.  Each
+instance of the class--each circle--has its own copy of
+these three variables.  These variables are like the fields
+of a <tt CLASS=literal>struct</tt> in C--each instance of the
+<tt CLASS=literal>struct</tt> has a copy of the fields.  Sometimes,
+though, we want a variable of which there is only one
+copy--something like a global variable in C.
+
+<P CLASS=para>
+The problem is that Java doesn't allow global variables.
+(Actually, those in the know consider this is feature!)
+Every variable in Java must be declared inside a class.  <A NAME="CH3.STATIC.MODIF1"></A>
+So Java uses the <tt CLASS=literal>static</tt> keyword to indicate that a
+particular variable is a <I CLASS=emphasis>class variable</I> rather than an
+<I CLASS=emphasis>instance variable</I>.  That is, that there is only one
+copy of the variable, associated with the class, rather than
+many copies of the variable associated with each instance of
+the class.  The one copy of the variable exists regardless
+of the number of instances of the class that are created--it
+exists and can be used even if the class is never actually
+instantiated.
+
+<P CLASS=para>
+This kind of variable, declared with the <tt CLASS=literal>static</tt>
+keyword, is often called a <I CLASS=emphasis>static variable</I>. I prefer
+(and recommend) the name "class variable" because it is
+easily distinguished from its opposite, "instance
+variable." We'll use both terms in this book.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-3.1">An Example</A></h3>
+
+<P CLASS=para>
+As an example (a somewhat contrived one), suppose that while
+developing the <tt CLASS=literal>Circle</tt> class we wanted to do some testing on
+it and determine how much it gets used.  One way to do this
+would be to count the number of <tt CLASS=literal>Circle</tt> objects that
+are instantiated.  To do this we obviously need a variable
+associated with the class, rather than with any particular
+instance.  
+<A HREF="ch03_03.htm#JNUT2-CH-3-EX-4">Example 3.4</A>
+shows how we can do it--we declare a <tt CLASS=literal>static</tt> variable
+and increment it each time we create a <tt CLASS=literal>Circle</tt>.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-4">Example 3.4: Static Variable Example</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Circle {
+    static int num_circles = 0; // class variable: how many circles created
+    public double x, y, r;      // instance vars: the center and the radius
+    public Circle(double x, double y, double r) {
+        this.x = x; this.y = y; this.r = r;
+        num_circles++;
+    }
+    public Circle(double r) { this(0.0, 0.0, r); }
+    public Circle(Circle c) { this(c.x, c.y, c.r); }
+    public Circle() { this(0.0, 0.0, 1.0); }
+    public double circumference() { return 2 * 3.14159 * r; }
+    public double area() { return 3.14159 * r*r; }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-3.2">Accessing Class Variables</A></h3>
+
+<P CLASS=para>
+Now that we are keeping track of the number of <tt CLASS=literal>Circle</tt>
+objects created, how can we access this
+information?  Because <tt CLASS=literal>static</tt> variables are
+associated with the class rather than with an instance, we
+access them through the class rather than through the
+instance.  Thus, we might write:
+[5]
+
+<blockquote class=footnote>
+<P CLASS=para>[5] 
+Recall that <tt CLASS=literal>System.out.println()</tt> prints a line of
+text, and that the string concatenation operator, <tt CLASS=literal>+</tt>,
+converts non-string types to strings as necessary.
+</blockquote>
+<DIV CLASS=screen>
+<P>
+<PRE>
+System.out.println("Number of circles created: " + Circle.num_circles);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Notice that in our definition of the constructor method in
+<A HREF="ch03_03.htm#JNUT2-CH-3-EX-4">Example 3.4</A>,
+we just used <tt CLASS=literal>num_circles</tt> instead of
+<tt CLASS=literal>Circle.num_circles</tt>.  We're allowed to do this within
+the class definition of <tt CLASS=literal>Circle</tt> itself.  Anywhere
+else, though, we must use the class name as well.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-3.3">Global Variables?</A></h3>
+
+<P CLASS=para>
+Earlier we said that Java does not support global variables.
+In a sense, though, <tt CLASS=literal>Circle.num_circles</tt> behaves just
+like one.  What is different from a global variable in C is
+that there is no possibility of name conflicts.  If we use
+some other class with a class variable named
+<tt CLASS=literal>num_circles</tt>, there won't be a "collision" between
+these two "global" variables, because they must both be
+referred to by their class names.  Since each class variable
+must be part of a class and must be referred to with its
+class name, each has a unique name.  Furthermore, each class
+has a unique name because, as we saw in <A HREF="ch02_01.htm">Chapter 2, <i>How Java Differs from C</i></A>, 
+it is part of a package with a unique name.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-3.4">Constants: Another Class Variable Example</A></h3>
+
+<P CLASS=para>
+Let's try a less forced example of why you might want to use
+a class variable with the <tt CLASS=literal>Circle</tt> class.  When
+computing the area and circumference of circles, we use the
+value pi.  Since we use the value frequently, we don't want 
+to keep typing out 3.14159, so we'll define it as a class variable 
+that has a convenient name:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Circle {
+    public static final double PI = 3.14159265358979323846;
+    public double x, y, r;
+    // ... etc....
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Besides the <tt CLASS=literal>static</tt> keyword that we've already seen,
+we use the <tt CLASS=literal>final</tt> keyword, which means that this
+variable can never have its value changed.  This prevents
+you from doing something stupid like:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle.PI = 4;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+which would tend to give you some pretty square-looking
+circles. 
+
+<P CLASS=para>
+The Java compiler is smart about variables declared both
+<tt CLASS=literal>static</tt> and <tt CLASS=literal>final</tt>--it knows that they have
+constant values.  So when you write code like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+double circumference = 2 * Circle.PI * radius;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+the compiler precomputes the value <tt CLASS=literal>2 * Circle.PI</tt>
+, instead of leaving it for the interpreter.
+
+<P CLASS=para>
+Java does not have a preprocessor with a C-style
+<tt CLASS=literal>#define</tt> directive.  <tt CLASS=literal>static</tt> <tt CLASS=literal>final</tt>
+variables are Java's substitute for C's <tt CLASS=literal>#define</tt>'d
+constants.  Note that the C convention
+of capitalizing constants has been carried over into Java.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Object Creation</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Class Methods</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

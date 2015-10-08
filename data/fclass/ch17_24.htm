@@ -1,0 +1,827 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 17] TimeZone</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:44:27 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_23.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 17<br>The java.util Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch17_25.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>TimeZone</H1>
+
+<H2>Name</H2>
+
+TimeZone
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.169">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.TimeZone</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.SimpleTimeZone</tt>
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.Serializable</tt>, 
+<tt CLASS=literal>java.lang.Cloneable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.170">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>TimeZone</tt> class is an <tt CLASS=literal>abstract</tt> 
+class that represents a time zone offset. In addition, the class incorporates 
+knowledge about daylight savings time. Usually, you get a <tt CLASS=literal>TimeZone</tt> 
+object by calling <tt CLASS=literal>getDefault()</tt>. 
+This method creates a <tt CLASS=literal>TimeZone</tt> 
+that is appropriate for the current locale. You can also call <tt CLASS=literal>getTimeZone()</tt> 
+to obtain a <tt CLASS=literal>TimeZone</tt> object 
+for a specific time zone. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.171">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.util.TimeZone extends java.lang.Object
+                      implements java.io.Serializable, java.lang.Cloneable {
+  // Class Methods
+  public static synchronized String[] getAvailableIDs();
+  public static synchronized String[] getAvailableIDs(int rawOffset);
+  public static synchronized TimeZone getDefault();
+  public static synchronized TimeZone getTimeZone(String ID);
+  public static synchronized void setDefault(TimeZone zone);
+  // Instance Methods
+  public Object clone();
+  public String getID();
+  public abstract int getOffset(int era, int year, int month, 
+                               int day, int dayOfWeek, int milliseconds);
+  public abstract int getRawOffset();
+  public abstract boolean inDaylightTime(Date date);
+  public void setID(String ID);
+  public abstract void setRawOffset(int offsetMillis);
+  public abstract boolean useDaylightTime();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.172">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.269">getAvailiableIDs</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.307">public static synchronized String[] getAvailableIDs()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of strings that contains the predefined time zone IDs. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a list of the predefined time zone IDs. Time zones 
+are defined for the following ID values, starting from Greenwich, England, 
+and progressing eastward around the world: 
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">GMT</TD>
+<TD ALIGN="left">Greenwich Mean Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">ECT</TD>
+<TD ALIGN="left">European Central Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">EET</TD>
+<TD ALIGN="left">Eastern European Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">ART</TD>
+<TD ALIGN="left">(Arabic) Egypt Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">EAT</TD>
+<TD ALIGN="left">Eastern African Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">MET</TD>
+<TD ALIGN="left">Middle East Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">NET</TD>
+<TD ALIGN="left">Near East Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">PLT</TD>
+<TD ALIGN="left">Pakistan Lahore Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">IST</TD>
+<TD ALIGN="left">India Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">BST</TD>
+<TD ALIGN="left">Bangladesh Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">VST</TD>
+<TD ALIGN="left">Vietnam Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">CTT</TD>
+<TD ALIGN="left">China Taiwan Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">JST</TD>
+<TD ALIGN="left">Japan Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">ACT</TD>
+<TD ALIGN="left">Australia Central Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">AET</TD>
+<TD ALIGN="left">Australia Eastern Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">SST</TD>
+<TD ALIGN="left">Solomon Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">NST</TD>
+<TD ALIGN="left">New Zealand Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">MIT</TD>
+<TD ALIGN="left">Midway Islands Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">HST</TD>
+<TD ALIGN="left">Hawaii Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">AST</TD>
+<TD ALIGN="left">Alaska Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">PST</TD>
+<TD ALIGN="left">Pacific Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">PNT</TD>
+<TD ALIGN="left">Phoenix Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">MST</TD>
+<TD ALIGN="left">Mountain Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">CST</TD>
+<TD ALIGN="left">Central Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">EST</TD>
+<TD ALIGN="left">Eastern Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">IET</TD>
+<TD ALIGN="left">Indiana Eastern Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">PRT</TD>
+<TD ALIGN="left">Puerto Rico and U.S. Virgin Islands Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">CNT</TD>
+<TD ALIGN="left">Canada Newfoundland Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">AGT</TD>
+<TD ALIGN="left">Argentina Standard Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">BET</TD>
+<TD ALIGN="left">Brazil Eastern Time</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">CAT</TD>
+<TD ALIGN="left">Central African Time</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+
+</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.308">public static synchronized String[] getAvailableIDs(int rawOffset)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of strings that contains the predefined time zone IDs with the 
+given raw offset value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a list of the predefined time zone IDs that have the 
+given raw offset value from <tt CLASS=literal>GMT</tt>. 
+For example, both <tt CLASS=literal>PNT</tt> and <tt CLASS=literal>MST</tt> 
+have an offset of GMT-07:00. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.270">getDefault</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.309">public static synchronized TimeZone getDefault()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>TimeZone</tt> that represents 
+the local time zone. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the default <tt CLASS=literal>TimeZone</tt> 
+object for the local system. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.271">getTimeZone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.310">public static synchronized TimeZone getTimeZone(String ID)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ID</tt><br>
+<DD>
+
+<P CLASS=para>
+The ID of a time zone. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>TimeZone</tt> that represents 
+the time zone with the given ID. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the <tt CLASS=literal>TimeZone</tt> 
+object that corresponds to the time zone with the given ID. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.272">setDefault</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.311">public static synchronized void setDefault(TimeZone zone)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>zone</tt><br>
+<DD>
+
+<P CLASS=para>
+The new default time 
+zone. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the <tt CLASS=literal>TimeZone</tt> 
+that is returned by <tt CLASS=literal>getDefault()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.173">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.273">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.312">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this <tt CLASS=literal>TimeZone</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>TimeZone</tt> 
+and returns it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.274">getID</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.313">public String getID()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>The ID of this TimeZone</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the ID string of this <tt CLASS=literal>TimeZone</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.275">getOffset</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.314"><DIV CLASS=screen> <P> <PRE> public abstract int getOffset(int era, int year, int month, int day, int dayOfWeek, int millis) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>era</tt><br>
+<DD>
+
+<P CLASS=para>
+The era.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>year</tt><br>
+<DD>
+
+<P CLASS=para>
+The year.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>month</tt><br>
+<DD>
+
+<P CLASS=para>
+The month.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>day</tt><br>
+<DD>
+
+<P CLASS=para>
+The day.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>dayOfWeek</tt><br>
+<DD>
+
+<P CLASS=para>
+The day of the 
+week.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>millis</tt><br>
+<DD>
+
+<P CLASS=para>
+The time of day 
+in milliseconds. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An offset from GMT, in milliseconds. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method calculates an offset from GMT for the given date for this <tt CLASS=literal>TimeZone</tt>. 
+In other words, the offset takes daylight savings time into account. The 
+return value should be added to GMT to get local time. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.276">getRawOffset</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.315">public abstract int getRawOffset()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An offset from GMT, in milliseconds.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the raw offset from GMT for this <tt CLASS=literal>TimeZone</tt>. 
+In other words, the offset does not take daylight savings time into account. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.277">inDaylightTime</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.316">public abstract boolean isDaylightTime(Date date)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>date</tt><br>
+<DD>
+
+<P CLASS=para>
+The date to be tested. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the given date is between 
+the start and end of daylight savings time for this <tt CLASS=literal>TimeZone</tt>; 
+<tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>boolean</tt> 
+value that indicates if the given date is in daylight savings time for 
+this <tt CLASS=literal>TimeZone</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.278">setID</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.317">public void setID(String ID)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ID</tt><br>
+<DD>
+
+<P CLASS=para>
+The new time zone ID. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the ID of this <tt CLASS=literal>TimeZone</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.279">setRawOffset</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.318">public abstract void setRawOffset(int offsetMillis)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offsetMillis</tt><br>
+<DD>
+
+<P CLASS=para>
+The new raw 
+offset from GMT, in milliseconds. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is used to set the raw offset value for this <tt CLASS=literal>TimeZone</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.280">useDaylightTime</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.319">public abstract boolean useDaylightTime()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this <tt CLASS=literal>TimeZone</tt> 
+uses daylight savings time; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>boolean</tt> 
+value that indicates whether or not this <tt CLASS=literal>TimeZone</tt> 
+uses daylight savings time. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.174">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.175">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Calendar</tt>, 
+<tt CLASS=literal>Cloneable</tt>, 
+<tt CLASS=literal>GregorianCalendar</tt>, 
+<tt CLASS=literal>Locale</tt>, 
+<tt CLASS=literal>Serializable</tt>, 
+<tt CLASS=literal>SimpleTimeZone</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_23.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch17_25.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>StringTokenizer</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>TooManyListenersException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

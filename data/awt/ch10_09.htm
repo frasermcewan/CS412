@@ -1,0 +1,220 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] 10.9 PopupMenu</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:46:42 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>Would You Like to Choose from the Menu?</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-10-SECT-9">10.9 PopupMenu</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.MENU6"></A>The <tt CLASS=literal>PopupMenu</tt> class is new 
+to Java 1.1; it allows you to associate context-sensitive menus with Java 
+components. To associate a pop-up menu with a component, create the menu, 
+and add it to the component using the <tt CLASS=literal>add(PopupMenu)</tt> 
+method, which all components inherit from the <tt CLASS=literal>Component</tt> 
+class. 
+
+<P CLASS=para>
+In principle, any GUI object can have a pop-up menu. In practice, there 
+are a few exceptions. If the component's peer has its own pop-up 
+menu (i.e., a pop-up menu provided by the run-time platform), that pop-up 
+menu effectively overrides the pop-up menu provided by Java. For example, 
+under Windows NT/95, a <tt CLASS=literal>TextArea</tt> has 
+a pop-up menu provided by the Windows NT/95 platforms. Java can't 
+override this menu; although you can add a pop-up menu to a <tt CLASS=literal>TextArea</tt>, 
+you can't display that menu under Windows NT/95 with the usual mouse sequence. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-10-SECT-9.1">PopupMenu Methods</A></h3><A NAME="CH10.POPUPCLASS"></A>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public PopupMenu() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The first <tt CLASS=literal>PopupMenu</tt> constructor 
+creates an untitled <tt CLASS=literal>PopupMenu</tt>. 
+Once created, the menu can be populated with menu items like any other 
+menu. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public PopupMenu(String label) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>PopupMenu</tt> 
+with a title of <tt CLASS=literal>label</tt>. The 
+title appears only on platforms that support titles for context menus. 
+Once created, the menu can be populated with menu items like any other 
+menu. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void show(Component origin, int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+Call the <tt CLASS=literal>show()</tt> method to display 
+the <tt CLASS=literal>PopupMenu</tt>. <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt> specify the location 
+at which the pop-up menu should appear; <tt CLASS=literal>origin</tt> 
+specifies the <tt CLASS=literal>Component</tt> whose 
+coordinate system is used to locate <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt>. In most cases, you'll 
+want the menu to appear at the point where the user clicked the mouse; 
+to do this, set <tt CLASS=literal>origin</tt> to the 
+<tt CLASS=literal>Component</tt> that received the 
+mouse event, and set <tt CLASS=literal>x</tt> and 
+<tt CLASS=literal>y</tt> to the location of the mouse 
+click. It is easy to extract this information from an old-style (1.0) <tt CLASS=literal>Event</tt> 
+or a Java 1.1 <tt CLASS=literal>MouseEvent</tt>. In 
+Java 1.1, the platform-independent way to say "give me the mouse 
+events that are supposed to trigger pop-up menus" is to call <tt CLASS=literal>MouseEvent.isPopupTrigger()</tt>. 
+If this method returns <tt CLASS=literal>true</tt>, 
+you should show the pop-up menu if one is associated with the event source. 
+(Note that the mouse event could also be used for some other purpose.) 
+
+<P CLASS=para>
+If the <tt CLASS=literal>PopupMenu</tt> is not associated 
+with a <tt CLASS=literal>Component</tt>, <tt CLASS=literal>show()</tt> 
+throws the run-time exception <tt CLASS=literal>NullPointerException</tt>. 
+If <tt CLASS=literal>origin</tt> is not the <tt CLASS=literal>MenuContainer</tt> 
+for the <tt CLASS=literal>PopupMenu</tt> and <tt CLASS=literal>origin</tt> 
+is not within the <tt CLASS=literal>Container</tt> 
+that the pop-up menu belongs to, <tt CLASS=literal>show()</tt> 
+throws the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+Finally, if the <tt CLASS=literal>Container</tt> of 
+<tt CLASS=literal>origin</tt> does not exist or is 
+not showing, <tt CLASS=literal>show()</tt> throws 
+a run-time exception. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>PopupMenu</tt> peer 
+with all the <tt CLASS=literal>MenuItems</tt> on it. </DL>
+<P CLASS=para>
+<A HREF="ch10_09.htm#JAWT-CH-10-EX-3">Example 10.3</A> is a simple applet that raises a pop-up 
+menu if the user clicks the appropriate mouse button anywhere within the 
+applet. Although the program could use the 1.0 event model, under the 1.0 
+model, it is impossible to tell which mouse event is appropriate to display 
+the pop-up menu. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-10-EX-3">Example 10.3: Using a PopupMenu</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.awt.*;
+import java.applet.*;
+import java.awt.event.*;
+public class PopupTest extends Applet implements ActionListener {
+    PopupMenu popup;
+    public void init() {
+        MenuItem mi;
+        popup = new PopupMenu("Title Goes Here");
+        popup.add(mi = new MenuItem ("Undo"));
+        mi.addActionListener (this);
+        popup.addSeparator();
+        popup.add(mi = new MenuItem("Cut")).setEnabled(false);
+        mi.addActionListener (this);
+        popup.add(mi = new MenuItem("Copy")).setEnabled(false);
+        mi.addActionListener (this);
+        popup.add(mi = new MenuItem ("Paste"));
+        mi.addActionListener (this);
+        popup.add(mi = new MenuItem("Delete")).setEnabled(false);
+        mi.addActionListener (this);
+        popup.addSeparator();
+        popup.add(mi = new MenuItem ("Select All"));
+        mi.addActionListener (this);
+        add (popup);
+        resize(200, 200);
+        enableEvents (AWTEvent.MOUSE_EVENT_MASK);
+    }
+    protected void processMouseEvent (MouseEvent e) {
+        if (e.isPopupTrigger())
+            popup.show(e.getComponent(), e.getX(), e.getY());
+        super.processMouseEvent (e);
+    }
+    public void actionPerformed(ActionEvent e) {
+        System.out.println (e);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Putting It All Together</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Scrolling</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

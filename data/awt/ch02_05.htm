@@ -1,0 +1,573 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.5 Rectangle</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:24:54 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>Simple Graphics</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-5">2.5 Rectangle</A></h2>
+
+<P CLASS=para>
+<A NAME="CH02.RECT1"></A>The <tt CLASS=literal>Rectangle</tt> class encapsulates 
+x and y coordinates and width and height (<tt CLASS=literal>Point</tt> 
+and <tt CLASS=literal>Dimension</tt> information) 
+within a single object. It is often used by methods that return a rectangular 
+boundary as a single object: for example, <tt CLASS=literal>Polygon.getBounds()</tt>, 
+<tt CLASS=literal>Component.getBounds()</tt>, and 
+<tt CLASS=literal>Graphics.getClipBounds()</tt>. Like 
+<tt CLASS=literal>Point</tt>, the <tt CLASS=literal>Rectangle</tt> 
+class is not a visual object and does not represent a rectangle on the 
+screen; ironically, <tt CLASS=literal>drawRect()</tt> 
+and <tt CLASS=literal>fillRect()</tt> don't 
+take <tt CLASS=literal>Rectangle</tt> as an argument. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-5.1">Rectangle Methods</A></h3>Variables
+
+<P CLASS=para>
+The four public variables available for <tt CLASS=literal>Rectangle</tt> 
+have the same names as the public instance variables of <tt CLASS=literal>Point</tt> 
+and <tt CLASS=literal>Dimension</tt>. They are all 
+accessible directly or through use of the <tt CLASS=literal>getBounds()</tt> 
+method. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int x </I><br>
+<DD>
+
+<P CLASS=para>
+The x coordinate of the upper left corner. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int y </I><br>
+<DD>
+
+<P CLASS=para>
+The y coordinate of the upper left corner. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int width </I><br>
+<DD>
+
+<P CLASS=para>
+The width variable represents the size of the <tt CLASS=literal>Rectangle</tt> 
+along the horizontal axis (left to right). Width should not be negative; 
+however, there is nothing within the class to prevent this from happening. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int height </I><br>
+<DD>
+
+<P CLASS=para>
+The height variable represents the size of the <tt CLASS=literal>Rectangle</tt> 
+along the vertical axis (top to bottom). Height should not be negative; however, 
+there is nothing within the class to prevent this from happening. </DL>
+Constructors
+
+<P CLASS=para>
+The following seven constructors create <tt CLASS=literal>Rectangle</tt> 
+objects. When you create a <tt CLASS=literal>Rectangle</tt>, 
+you provide the location of the top left corner, along with the <tt CLASS=literal>Rectangle</tt>'s 
+width and height. A <tt CLASS=literal>Rectangle</tt> 
+located at (0,0) with a width and height of 100 has its bottom right corner 
+at (99, 99). The <tt CLASS=literal>Point</tt> (100, 
+100) lies outside the <tt CLASS=literal>Rectangle</tt>, 
+since that would require a width and height of 101. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle () </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>Rectangle</tt> constructor 
+creates a <tt CLASS=literal>Rectangle</tt> object 
+in which x, y, width, and height are all 0. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle (int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>Rectangle</tt> constructor 
+creates a <tt CLASS=literal>Rectangle</tt> with (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) coordinates of (0,0) and the specified <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt>. Notice that there 
+is no <tt CLASS=literal>Rectangle(int x, int y)</tt> 
+constructor because that would have the same method signature as this one, 
+and the compiler would have no means to differentiate them. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Rectangle</tt> constructor creates 
+a <tt CLASS=literal>Rectangle</tt> object with an 
+initial x coordinate of <tt CLASS=literal>x</tt>, 
+y coordinate of <tt CLASS=literal>y</tt>, width of 
+<tt CLASS=literal>width</tt>, and height of <tt CLASS=literal>height</tt>. 
+Height and width should be positive, but the constructor does not check 
+for this. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle (Rectangle r) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>Rectangle</tt> constructor 
+creates a <tt CLASS=literal>Rectangle</tt> matching 
+the original. The (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) coordinates are (<tt CLASS=literal>r.x</tt>, 
+<tt CLASS=literal>r.y</tt>), with a width of <tt CLASS=literal>r.width</tt> 
+and a height of <tt CLASS=literal>r.height</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle (Point p, Dimension d) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>Rectangle</tt> constructor 
+creates a <tt CLASS=literal>Rectangle</tt> with (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) coordinates of (<tt CLASS=literal>p.x</tt>, <tt CLASS=literal>p.y</tt>), 
+a width of <tt CLASS=literal>d.width</tt>, and a height 
+of <tt CLASS=literal>d.height</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle (Point p) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>Rectangle</tt> constructor 
+creates a <tt CLASS=literal>Rectangle</tt> with (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) coordinates of (<tt CLASS=literal>p.x</tt>, <tt CLASS=literal>p.y</tt>). 
+The width and height are both zero. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle (Dimension d) </I><br>
+<DD>
+
+<P CLASS=para>
+The last <tt CLASS=literal>Rectangle</tt> constructor 
+creates a <tt CLASS=literal>Rectangle</tt> with (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) coordinates of (0, 0). The initial <tt CLASS=literal>Rectangle</tt> 
+width is <tt CLASS=literal>d.width</tt> and height 
+is <tt CLASS=literal>d.height</tt>. </DL>
+Shaping and sizing
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle getBounds() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="CH02.SIZE1"></A><A NAME="CH02.SIZE2"></A>The <tt CLASS=literal>getBounds()</tt> method returns 
+a copy of the original <tt CLASS=literal>Rectangle</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setBounds (int x, int y, int width, int height) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void reshape (int x, int y, int width, int height) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setBounds()</tt> method changes 
+the origin of the <tt CLASS=literal>Rectangle</tt> 
+to (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+and changes the dimensions to <tt CLASS=literal>width</tt> 
+by <tt CLASS=literal>height</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>reshape()</tt> is the 
+Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setBounds (Rectangle r) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setBounds()</tt> method changes 
+the origin of the <tt CLASS=literal>Rectangle</tt> to (<tt CLASS=literal>r.x</tt>, <tt CLASS=literal>r.y</tt>) 
+and changes the dimensions to <tt CLASS=literal>r.width</tt> 
+by <tt CLASS=literal>r.height</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Point getLocation() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLocation()</tt>retrieves 
+the current origin of this rectangle as a <tt CLASS=literal>Point</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setLocation (int x, int y)  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void move (int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setLocation()</tt> method changes 
+the origin of the <tt CLASS=literal>Rectangle</tt>  
+to (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>). 
+
+<P CLASS=para>
+<tt CLASS=literal>move()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setLocation (Point p)  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setLocation()</tt> method changes 
+the <tt CLASS=literal>Rectangle</tt>'s origin 
+to (<tt CLASS=literal>p.x</tt>, <tt CLASS=literal>p.y</tt>). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void translate (int x, int y) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>translate()</tt> method moves 
+the <tt CLASS=literal>Rectangle</tt>'s origin 
+by the amount (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>). 
+If the original <tt CLASS=literal>Rectangle</tt>'s 
+location (r) is (3, 4) and you call <tt CLASS=literal>r.translate (4, 5)</tt>, 
+then r's location becomes (7, 9). x and y may be negative. <tt CLASS=literal>translate()</tt> 
+has no effect on the <tt CLASS=literal>Rectangle</tt>'s 
+width and height. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSize()</tt> method retrieves 
+the current size of the rectangle as a <tt CLASS=literal>Dimension</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setSize() (int width, int height) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void resize (int width, int height) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setSize()</tt> method changes 
+the <tt CLASS=literal>Rectangle</tt>'s dimensions 
+to <tt CLASS=literal>width</tt> x <tt CLASS=literal>height</tt>.
+
+<P CLASS=para>
+<tt CLASS=literal>resize()</tt> is the 
+Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setSize() (Dimension d)  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setSize()</tt> method changes 
+the <tt CLASS=literal>Rectangle</tt>'s dimensions 
+to <tt CLASS=literal>d.width</tt> x <tt CLASS=literal>d.height</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void grow (int horizontal, int vertical) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>grow()</tt> method increases 
+the <tt CLASS=literal>Rectangle</tt>'s dimensions 
+by adding the amount <tt CLASS=literal>horizontal</tt> 
+on the left and the right and adding the amount <tt CLASS=literal>vertical</tt> 
+on the top and bottom. Therefore, all four of the rectangle's variables 
+change. If the original location is (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>), the new location will be (x-<tt CLASS=literal>horizontal</tt>, 
+y-<tt CLASS=literal>vertical</tt>) (moving left and 
+up if both values are positive); if the original size is (<tt CLASS=literal>width,</tt> 
+<tt CLASS=literal>height</tt>), the new size will 
+be (<tt CLASS=literal>width+2*horizontal,</tt> <tt CLASS=literal>height+2*vertical</tt>). 
+Either horizontal or vertical can be negative to decrease the size of the 
+<tt CLASS=literal>Rectangle</tt>. The following code 
+demonstrates the changes: </DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.Rectangle;
+public class rect {
+    public static void main (String[] args) {
+        Rectangle r = new Rectangle (100, 100, 200, 200);
+        System.out.println (r);
+        r.grow (50, 75);
+        System.out.println (r);
+        r.grow (-25, -50);
+        System.out.println (r);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This program produces the following output: 
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Rectangle[x=100,y=100,width=200,height=200]
+java.awt.Rectangle[x=50,y=25,width=300,height=350]
+java.awt.Rectangle[x=75,y=75,width=250,height=250]
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void add (int newX, int newY) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>add()</tt> method incorporates 
+the point (<tt CLASS=literal>newX</tt>, <tt CLASS=literal>newY</tt>) 
+into the <tt CLASS=literal>Rectangle</tt>. If this 
+point is already in the <tt CLASS=literal>Rectangle</tt>, 
+there is no change. Otherwise, the size of the <tt CLASS=literal>Rectangle</tt> 
+increases to include (<tt CLASS=literal>newX</tt>, 
+<tt CLASS=literal>newY</tt>) within itself. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void add (Point p) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>add()</tt> method incorporates 
+the point (<tt CLASS=literal>p.x</tt>, <tt CLASS=literal>p.y</tt>) 
+into the <tt CLASS=literal>Rectangle</tt>. If this 
+point is already in the <tt CLASS=literal>Rectangle</tt>, 
+there is no change. Otherwise, the size of the <tt CLASS=literal>Rectangle</tt> 
+increases to include (<tt CLASS=literal>p.x</tt>, 
+<tt CLASS=literal>p.y</tt>) within itself. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void add (Rectangle r) </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>add()</tt> method incorporates 
+another <tt CLASS=literal>Rectangle</tt> <tt CLASS=literal>r</tt> 
+into this <tt CLASS=literal>Rectangle</tt>. This transforms 
+the current rectangle into the union of the two <tt CLASS=literal>Rectangle</tt>s. 
+This method might be useful in a drawing program that lets you select multiple 
+objects on the screen and create a rectangular area from them. 
+
+<P CLASS=para>
+We will soon encounter a method called <tt CLASS=literal>union()</tt> 
+that is almost identical. <tt CLASS=literal>add()</tt> 
+and <tt CLASS=literal>union()</tt> differ in that 
+<tt CLASS=literal>add()</tt> modifies the current 
+<tt CLASS=literal>Rectangle</tt>, while <tt CLASS=literal>union()</tt> returns 
+a new <tt CLASS=literal>Rectangle</tt>. The resulting 
+rectangles are identical. </DL>
+Intersections
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean contains (int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public boolean inside (int x, int y) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="CH02.INTER1"></A><A NAME="CH02.INTER2"></A>The <tt CLASS=literal>contains()</tt> method determines 
+if the point (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+is within this <tt CLASS=literal>Rectangle</tt>. If 
+so, <tt CLASS=literal>true</tt> is returned. If not, 
+<tt CLASS=literal>false</tt> is returned. 
+
+<P CLASS=para>
+<tt CLASS=literal>inside()</tt> is the 
+Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean contains (Point p) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>contains()</tt> method determines 
+if the point (<tt CLASS=literal>p.x</tt>, <tt CLASS=literal>p.y</tt>) 
+is within this <tt CLASS=literal>Rectangle</tt>. If 
+so, <tt CLASS=literal>true</tt> is returned. If not, 
+<tt CLASS=literal>false</tt> is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean intersects (Rectangle r) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>intersects()</tt> method checks 
+whether <tt CLASS=literal>Rectangle</tt> <tt CLASS=literal>r</tt> 
+crosses this <tt CLASS=literal>Rectangle</tt> at any 
+point. If it does, <tt CLASS=literal>true</tt> is 
+returned. If not, <tt CLASS=literal>false</tt> is 
+returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle intersection (Rectangle r) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>intersection()</tt> method returns 
+a new <tt CLASS=literal>Rectangle</tt> consisting 
+of all points that are in both the current <tt CLASS=literal>Rectangle</tt> 
+and <tt CLASS=literal>Rectangle</tt> <tt CLASS=literal>r</tt>. 
+For example, if <tt CLASS=literal>r = new Rectangle (50, 50, 100, 100)</tt> 
+and <tt CLASS=literal>r1 = new Rectangle (100, 100, 75, 75)</tt>, 
+then <tt CLASS=literal>r.intersection (r1)</tt> is 
+the <tt CLASS=literal>Rectangle (100, 100, 50, 50)</tt>, 
+as shown in <A HREF="ch02_05.htm#JAWT-CH-2-FIG-13">Figure 2.13</A>. </DL>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Rectangle union (Rectangle r) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>union()</tt> method combines 
+the current <tt CLASS=literal>Rectangle</tt> and <tt CLASS=literal>Rectangle</tt> 
+<tt CLASS=literal>r</tt> to form a new <tt CLASS=literal>Rectangle</tt>. 
+For example, if <tt CLASS=literal>r = new Rectangle (50, 50, 100, 100)</tt> 
+and <tt CLASS=literal>r1 = new Rectangle (100, 100, 75, 75)</tt>, 
+then <tt CLASS=literal>r.union (r1)</tt> is the <tt CLASS=literal>Rectangle 
+(50, 50, 125, 125)</tt>. The original rectangle is 
+unchanged. <A HREF="ch02_05.htm#JAWT-CH-2-FIG-14">Figure 2.14</A> demonstrates the effect of 
+<tt CLASS=literal>union()</tt>. Because <tt CLASS=literal>fillRect()</tt> 
+fills to <tt CLASS=literal>width-1</tt> and <tt CLASS=literal>height-1</tt>, 
+the rectangle drawn appears slightly smaller than you would
+expect. However, 
+that's an artifact of how rectangles are drawn; the returned rectangle 
+contains all the points within both. </DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-13">Figure 2.13: Rectangle intersection</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0213.gif" alt="[Graphic: Figure 2-13]" width=202 height=202 border=0>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-14">Figure 2.14: Rectangle union</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0214.gif" alt="[Graphic: Figure 2-14]" width=202 height=202 border=0>
+
+</DIV>
+
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isEmpty () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isEmpty()</tt> method checks 
+whether there are any points within the <tt CLASS=literal>Rectangle</tt>. 
+If the width and height of the <tt CLASS=literal>Rectangle</tt> 
+are both 0 (or less), the <tt CLASS=literal>Rectangle</tt> 
+is empty, and this method returns <tt CLASS=literal>true</tt>. 
+If either width or height is greater than zero, <tt CLASS=literal>isEmpty()</tt> 
+returns <tt CLASS=literal>false</tt>. This method 
+could be used to check the results of a call to any method that returns 
+a <tt CLASS=literal>Rectangle</tt> object. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int hashCode () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>hashCode()</tt> method returns 
+a hash code for the rectangle. The system calls this method when a <tt CLASS=literal>Rectangle</tt> 
+is used as the key for a hash table. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean equals (Object object) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>equals()</tt> method overrides 
+the <tt CLASS=literal>Object</tt>'s <tt CLASS=literal>equals()</tt> 
+method to define what equality means for <tt CLASS=literal>Rectangle</tt> 
+objects. Two <tt CLASS=literal>Rectangle</tt> objects 
+are equal if their <tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, width, and height values are equal. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Rectangle</tt> 
+displays the current values of the <tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, width, and height variables. 
+For example: </DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Rectangle[x=100,y=200,width=300,height=400]
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Shape</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Polygon</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

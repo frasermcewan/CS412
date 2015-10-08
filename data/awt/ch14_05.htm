@@ -1,0 +1,459 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 14] 14.5 Audio in Applications</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:54:08 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 14<br>And Then There Were Applets</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-5">14.5 Audio in Applications</A></h2>
+
+<P CLASS=para>
+<A NAME="CH14.AUDIO2"></A>The rest of this chapter describes how to use audio in your applications. 
+Because the audio support discussed so far has been provided by the browser, 
+applications that don't run in the context of a browser must use 
+a different set of classes to work with audio. These classes are within 
+the <tt CLASS=literal>sun.audio</tt> package. Although 
+the <tt CLASS=literal>sun.*</tt> package hierarchy 
+is not necessarily included by other vendors, the <tt CLASS=literal>sun.audio</tt> 
+classes discussed here are provided with Netscape Navigator 2.0/3.0 
+and Internet Explorer 3.0. Therefore, you can use these classes within 
+applets, too. This section ends by developing a <tt CLASS=literal>SunAudioClip</tt> 
+class that has an interface similar to the applet's audio interface; 
+you can use it to minimize coding differences between applets and applications. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-5.1">AudioData</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>AudioData</tt> class holds a 
+clip of 8000 Hz &micro;Law audio data. This data can be used to construct 
+an <tt CLASS=literal>AudioDataStream</tt> or <tt CLASS=literal>ContinuousAudioDataStream</tt>, 
+which can then be played with the <tt CLASS=literal>AudioPlayer</tt>. Constructor
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public AudioData (byte buffer[]) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>AudioData</tt> constructor accepts 
+a byte array <tt CLASS=literal>buffer</tt> and creates 
+an instance of <tt CLASS=literal>AudioData</tt>. The 
+buffer should contain 8000 Hz &micro;Law audio data. </DL>
+Methods
+
+<P CLASS=para>
+There are no methods for <tt CLASS=literal>AudioData</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-5.2">AudioStream</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>AudioStream</tt> subclasses <tt CLASS=literal>FilterInputStream</tt>, 
+which extends <tt CLASS=literal>InputStream</tt>. 
+Using an <tt CLASS=literal>InputStream</tt> lets you 
+move back and forth (rewind and fast forward) within an audio file, in 
+addition to playing the audio data from start to finish. Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public AudioStream (InputStream in) throws IOException </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>AudioStream</tt> constructor 
+has <tt CLASS=literal>InputStream</tt> <tt CLASS=literal>in</tt> 
+as its parameter and can throw <tt CLASS=literal>IOException</tt> 
+on error. In the following code, we get an input stream by opening a <I CLASS=emphasis>.au</I> 
+file. Another common way to construct an <tt CLASS=literal>AudioStream</tt> 
+is to use the stream associated with a URL through the URL's <tt CLASS=literal>openStream()</tt> 
+method. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream fis = new FileInputStream ("/usr/openwin/demo/sounds/1.au");
+AudioStream audiostream = new AudioStream (fis);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+or:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+AudioStream audiostream = new AudioStream (savedUrl.openStream());
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If you are constructing the audio data yourself, you would use a <tt CLASS=literal>ByteArrayInputStream</tt>. 
+Whatever the source of the data, the input stream should provide data in 
+Sun's <I CLASS=emphasis>.au</I> 
+format. </DL>
+Methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int read (byte buffer[], int offset, int length) throws IOException</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>read()</tt> method for <tt CLASS=literal>AudioStream</tt> 
+reads an array of bytes into <tt CLASS=literal>buffer</tt>. 
+<tt CLASS=literal>offset</tt> is the first element 
+of <tt CLASS=literal>buffer</tt> that is used. <tt CLASS=literal>length</tt> 
+is the maximum number of bytes to read. This method blocks until some input 
+is available. <tt CLASS=literal>read()</tt> returns 
+the actual number of bytes read. If the end of stream is encountered and 
+no bytes were read, <tt CLASS=literal>read()</tt> 
+returns -1. Ordinarily, you <tt CLASS=literal>read()</tt> 
+an <tt CLASS=literal>AudioStream</tt> only if you want 
+to modify the audio data in some way. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getLength() </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getLength()</tt> method returns 
+the length of the audio data contained within the <tt CLASS=literal>AudioStream</tt>, 
+excluding any header information in the file. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public AudioData getData () throws IOException </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getData()</tt> method of <tt CLASS=literal>AudioStream</tt> 
+is the most important and most frequently used. It reads the data from 
+the input stream and creates an <tt CLASS=literal>AudioData</tt> 
+instance. As the following code shows, you can create an <tt CLASS=literal>AudioStream</tt> 
+and get the <tt CLASS=literal>AudioData</tt> with 
+one statement. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+AudioData audiodata = new AudioStream (aUrl.openStream()).getData();
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-5.3">AudioDataStream</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public AudioDataStream (AudioData data) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an <tt CLASS=literal>AudioDataStream</tt> 
+from an <tt CLASS=literal>AudioData</tt> object <tt CLASS=literal>data</tt>. 
+The resulting <tt CLASS=literal>AudioDataStream</tt> 
+is a subclass of <tt CLASS=literal>ByteArrayInputStream</tt> 
+and can be played by the <tt CLASS=literal>AudioPlayer.start()</tt> 
+method. </DL>
+Methods
+
+<P CLASS=para>
+There are no methods for <tt CLASS=literal>AudioDataStream</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-5.4">ContinuousAudioDataStream</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public ContinuousAudioDataStream (AudioData data) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a continuous stream of audio from <tt CLASS=literal>data</tt>. 
+The resulting <tt CLASS=literal>ContinuousAudioDataStream</tt> 
+is a subclass of <tt CLASS=literal>AudioDataStream</tt> 
+and, therefore, of <tt CLASS=literal>ByteArrayInputStream</tt>. 
+It can be played by <tt CLASS=literal>AudioPlayer.start()</tt>; 
+whenever the player reaches the end of the continuous audio data stream, 
+it restarts from the beginning. </DL>
+Methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int read ()  </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>read()</tt> method of <tt CLASS=literal>ContinuousAudioDataStream</tt> 
+overrides the <tt CLASS=literal>read()</tt> method 
+in <tt CLASS=literal>ByteArrayInputStream</tt> to 
+rewind back to the beginning of the stream when end-of-file is reached. 
+This method is used by the system when it reads the <tt CLASS=literal>InputStream</tt>; 
+it is rarely called directly. <tt CLASS=literal>read()</tt> 
+never returns -1 since it loops back to the beginning on end-of-file. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int read (byte buffer[], int offset, int length)  </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>read()</tt> method of <tt CLASS=literal>ContinuousAudioDataStream</tt> 
+overrides the <tt CLASS=literal>read()</tt> method 
+in <tt CLASS=literal>ByteArrayInputStream</tt> to 
+rewind back to the beginning of the stream when end-of-file is reached. 
+This method is used by the system when it reads the <tt CLASS=literal>InputStream</tt>; 
+it is rarely called directly. <tt CLASS=literal>read()</tt> 
+returns the actual number of bytes read. <tt CLASS=literal>read()</tt> 
+never returns -1 since it loops back to the beginning on end-of-file. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-5.5">AudioStreamSequence</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public AudioStreamSequence (Enumeration e) </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>AudioStreamSequence</tt> 
+accepts an <tt CLASS=literal>Enumeration</tt> <tt CLASS=literal>e</tt><I CLASS=emphasis></I>(normally the elements of a <tt CLASS=literal>Vector</tt> 
+of <tt CLASS=literal>AudioStream</tt>s) as its sole 
+parameter. The constructor converts the sequence of audio streams into 
+a single stream to be played in order. An example follows: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Vector v = new Vector ();
+v.addElement (new AudioStream (url1.openStream ());
+v.addElement (new AudioStream (url2.openStream ());
+AudioStreamSequence audiostream = new AudioStreamSequence (v.elements ());
+</PRE>
+</DIV>
+
+Methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int read ()  </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>read()</tt> method of <tt CLASS=literal>AudioStreamSequence</tt> 
+overrides the <tt CLASS=literal>read()</tt> method 
+in <tt CLASS=literal>InputStream</tt> to start the 
+next stream when end-of-file is reached. This method is used by the system 
+when it reads the <tt CLASS=literal>InputStream</tt> 
+and is rarely called directly. If the end of all streams is encountered 
+and no bytes were read, <tt CLASS=literal>read()</tt> 
+returns -1. Otherwise, <tt CLASS=literal>read()</tt> 
+returns the character read. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int read (byte buffer[], int offset, int length)   </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>read()</tt> method of <tt CLASS=literal>AudioStreamSequence</tt> 
+overrides the <tt CLASS=literal>read()</tt> method 
+in <tt CLASS=literal>InputStream</tt> to start the 
+next stream when end-of-file is reached. This method is used by the system 
+when it reads the <tt CLASS=literal>InputStream</tt> 
+and is rarely called directly. <tt CLASS=literal>read()</tt> 
+returns the actual number of bytes read. If the end of all streams is encountered 
+and no bytes were read, <tt CLASS=literal>read()</tt> 
+returns -1. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-5.6">AudioPlayer</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>AudioPlayer</tt> class is the 
+workhorse of the <tt CLASS=literal>sun.audio</tt> 
+package. It is used to play all the streams that were created with the 
+other classes. There is no constructor for <tt CLASS=literal>AudioPlayer</tt>; 
+it just extends <tt CLASS=literal>Thread</tt> and 
+provides <tt CLASS=literal>start()</tt> and <tt CLASS=literal>stop()</tt> 
+methods. Variable
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static AudioPlayer player </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>player</tt> is the default audio 
+player. This audio player is initialized automatically when the class is 
+loaded; you do not have to initialize it (in fact, you can't because 
+it is final) or call the constructor yourself. </DL>
+Methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void start (InputStream in) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>start()</tt> method starts a 
+thread that plays the <tt CLASS=literal>InputStream</tt> 
+<tt CLASS=literal>in</tt>. Stream <tt CLASS=literal>in</tt> 
+continues to play until there is no more data or it is stopped. If <tt CLASS=literal>in</tt> is 
+a <tt CLASS=literal>ContinuousAudioDataStream</tt>, 
+the playing continues until <tt CLASS=literal>stop()</tt> 
+(described next) is called. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void stop (InputStream in) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>stop()</tt> method stops the 
+player from playing <tt CLASS=literal>InputStream</tt> 
+<tt CLASS=literal>in</tt>. Nothing happens if the 
+stream <tt CLASS=literal>in</tt> is no longer playing 
+or was never started. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-5.7">SunAudioClip Class Definition</A></h3>
+
+<P CLASS=para>
+The class in <A HREF="ch14_05.htm#JAWT-CH-14-EX-3">Example 14.3</A> is all you need to play audio files in applications. 
+It implements the <tt CLASS=literal>java.applet.AudioClip</tt> 
+interface, so the methods and functionality will be familiar. The test 
+program in <tt CLASS=literal>main()</tt> demonstrates 
+how to use the class. Although the class itself can be used in applets, 
+provided your users have the <tt CLASS=literal>sun.audio</tt> 
+package available, it is geared towards application users. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-14-EX-3">Example 14.3: The SunAudioClip Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.net.URL;
+import java.io.FileInputStream;
+import sun.audio.*;
+public class SunAudioClip implements java.applet.AudioClip {
+    private AudioData audiodata;
+    private AudioDataStream audiostream;
+    private ContinuousAudioDataStream continuousaudiostream;
+    static int length;
+    public SunAudioClip (URL url) throws java.io.IOException {
+        audiodata = new AudioStream (url.openStream()).getData();
+        audiostream = null;
+        continuousaudiostream = null;
+    }
+    public SunAudioClip (String filename) throws java.io.IOException {
+        FileInputStream fis = new FileInputStream (filename);
+        AudioStream audioStream = new AudioStream (fis);
+        audiodata = audioStream.getData();
+        audiostream = null;
+        continuousaudiostream = null;
+    }
+    public void play () {
+        audiostream = new AudioDataStream (audiodata);
+        AudioPlayer.player.start (audiostream);
+    }
+    public void loop () {
+        continuousaudiostream = new ContinuousAudioDataStream (audiodata);
+        AudioPlayer.player.start (continuousaudiostream);
+    }
+    public void stop () {
+        if (audiostream != null)
+            AudioPlayer.player.stop (audiostream);
+        if (continuousaudiostream != null)
+            AudioPlayer.player.stop (continuousaudiostream);
+    }
+    public static void main (String args[]) throws Exception {
+        URL url1 = new URL ("http://localhost:8080/audio/1.au");
+        URL url2 = new URL ("http://localhost:8080/audio/2.au");
+        SunAudioClip sac1 = new SunAudioClip (url1);
+        SunAudioClip sac2 = new SunAudioClip (url2);
+        SunAudioClip sac3 = new SunAudioClip ("1.au");
+        sac1.play ();
+        sac2.loop ();
+        sac3.play ();
+        try {// Delay for loop
+            Thread.sleep (2000);
+        } catch (InterruptedException ie) {}
+        sac2.stop();
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>AppletStub Interface</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Toolkit and Peers</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

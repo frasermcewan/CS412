@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.4 Handling Events</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:53:25 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Applets</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-4">6.4 Handling Events</A></h2>
+
+<P CLASS=para>
+<A NAME="CH6.EVENTS-1"></A>The previous two applets have only displayed output. If an
+applet is to be interactive in any way, it has to receive
+and respond to user input.
+<A HREF="ch06_04.htm#JNUT2-CH-6-EX-3">Example 6.3</A>
+shows a simple applet that lets the user do a freehand
+sketch (or scribble) with the mouse.<A NAME="CH6.SCRIBBLING.A1"></A>
+<A HREF="ch06_04.htm#JNUT2-CH-6-FIG-3">Figure 6.3</A>
+shows such a scribble.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-6-FIG-3">Figure 6.3: Scribbling with the scribble applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_0603.gif" alt="[Graphic: Figure 6-3]" width=464 height=432 border=0>
+
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH6.MOUSE.EVENTS1"></A><A NAME="CH6.MOUSEDOWN1"></A><A NAME="CH6.MOUSEDRAG1"></A>The <tt CLASS=literal>mouseDown()</tt> and <tt CLASS=literal>mouseDrag()</tt> methods are
+called by the system when the user presses a mouse button
+and moves the mouse with the button down, respectively. This
+very simple applet draws lines directly in response to these
+events. It does not have a <tt CLASS=literal>paint()</tt> method, which
+means that the user's scribble is lost any time that the
+applet is redrawn (for example, when a Web browser scrolls
+down a page and then scrolls back up again).
+
+<P CLASS=para>
+Note that both <tt CLASS=literal>mouseDown()</tt> and <tt CLASS=literal>mouseDrag()</tt>
+return <tt CLASS=literal>true</tt>. This is to tell the system that
+they've handled the <tt CLASS=literal>Event</tt> object that was passed to
+them, and that the event should not be processed any further.
+
+<P CLASS=para>
+The <tt CLASS=literal>mouseDown()</tt> and <tt CLASS=literal>mouseDrag()</tt> methods
+shown here work in both Java 1.0 and Java 1.1, but they (and
+related methods) have been deprecated in Java 1.1 and
+replaced with a new, more flexible, event handling model.
+Event processing is often the central task of applets and of
+GUI-based applications, and is a big topic in its own right.
+<A HREF="ch07_01.htm">Chapter 7, <i>Events</i></A> explains and demonstrates the Java 1.1 and 1.0
+event processing models in more detail.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-6-EX-3">Example 6.3: The Scribble Applet</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+public class Scribble extends Applet {
+  private int last_x = 0, last_y = 0;  // Fields to store a point in.
+  // Called when the user clicks.
+  public boolean mouseDown(Event e, int x, int y) {
+    last_x = x; last_y = y;            // Remember the location of the click.
+    return true;
+  }
+  // Called when the mouse moves with the button down.
+  public boolean mouseDrag(Event e, int x, int y)  {
+    Graphics g = getGraphics();        // Get a Graphics to draw with.
+    g.drawLine(last_x, last_y, x, y);  // Draw a line from last point to this.
+    last_x = x; last_y = y;            // And update the saved location.
+    return true;
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Drawing Graphics</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Reading Applet Parameters</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

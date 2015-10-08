@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 20] 20.18 java.awt.event.KeyEvent (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:14:04 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch20_17.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 20<br>The java.awt.event Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch20_19.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-20-SECT-18">20.18 java.awt.event.KeyEvent (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-20-SECT-18.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+An event of this type indicates that the user has pressed or
+released a key or typed a character.
+
+<P CLASS=para>
+Call <tt CLASS=literal>getID()</tt> to determine the particular type of
+key event that has occurred.  The constant <tt CLASS=literal>KEY_PRESSED</tt>
+indicates that a key has been pressed, while the constant
+<tt CLASS=literal>KEY_RELEASED</tt> indicates that a key has been released.
+Not all keystrokes actually correspond to or generate Unicode
+characters.  Modifier keys and function keys, for example,
+do not correspond to characters.  Furthermore, for
+internationalized input, multiple keystrokes are sometimes
+required to generate a single character of input.
+Therefore, <tt CLASS=literal>getID()</tt> returns a third constant,
+<tt CLASS=literal>KEY_TYPED</tt>, to indicate a <tt CLASS=literal>KeyEvent</tt> that
+actually contains a character value.
+
+<P CLASS=para>
+For <tt CLASS=literal>KEY_PRESSED</tt> and <tt CLASS=literal>KEY_RELEASED</tt> key events,
+use <tt CLASS=literal>getKeyCode()</tt> to obtain the "virtual key code" of
+the key that was pressed or released.  <tt CLASS=literal>KeyEvent</tt>
+defines a number of <tt CLASS=literal>VK_</tt> constants that represent
+these "virtual keys."  Note that not all keys on all
+keyboards have corresponding constants in the
+<tt CLASS=literal>KeyEvent</tt> class, and not all keyboards can generate
+all of the virtual key codes defined by the class.  In JDK
+1.1, the <tt CLASS=literal>VK_</tt> constants for letter keys, number keys, and some
+other keys have the same values as the ASCII encodings of the
+letters and numbers.  You should not rely on this to always be
+the case, however.  If the key that was pressed or released
+corresponds directly to a Unicode character, you can obtain
+that character by calling <tt CLASS=literal>getKeyChar()</tt>.  If there is
+not a corresponding Unicode character, this method
+returns the constant <tt CLASS=literal>CHAR_UNDEFINED</tt>.  The
+<tt CLASS=literal>isActionKey()</tt> method returns <tt CLASS=literal>true</tt> if the key
+that was pressed or released does not have a corresponding
+character.
+
+<P CLASS=para>
+For <tt CLASS=literal>KEY_TYPED</tt> key events, use <tt CLASS=literal>getKeyChar()</tt>
+to return the Unicode character that was typed.  If you call
+<tt CLASS=literal>getKeyCode()</tt> for this type of key event, it returns
+<tt CLASS=literal>VK_UNDEFINED</tt>.
+
+<P CLASS=para>
+See <tt CLASS=literal>InputEvent</tt> for information on inherited methods
+you can use to obtain the keyboard modifiers that were down
+during the event and other important methods.
+
+<P CLASS=para>
+Use <tt CLASS=literal>getComponent()</tt>, inherited from
+<tt CLASS=literal>ComponentEvent</tt>, to determine what component the event
+occurred over.
+
+<P CLASS=para>
+The static method <tt CLASS=literal>getKeyText()</tt> returns a (possibly
+localized) textual name for a given key code.  The static
+method <tt CLASS=literal>getKeyModifiersText()</tt> returns a (possibly
+localized) textual description for a set of modifiers.
+
+<P CLASS=para>
+The <tt CLASS=literal>KeyEvent</tt> has methods that allow you to change the
+key code, key character, or modifiers of an event.  These
+methods, along with the <tt CLASS=literal>consume()</tt> method, allow a
+<tt CLASS=literal>KeyListener</tt> to perform filtering of key
+events before they are passed to the underlying AWT
+component.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>KeyEvent</tt> extends InputEvent {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>KeyEvent</tt>(Component <tt CLASS=literal>source</tt>, int <tt CLASS=literal>id</tt>, long <tt CLASS=literal>when</tt>, int <tt CLASS=literal>modifiers</tt>, int <tt CLASS=literal>keyCode</tt>, char <tt CLASS=literal>keyChar</tt>);
+            public <tt CLASS=literal>KeyEvent</tt>(Component <tt CLASS=literal>source</tt>, int <tt CLASS=literal>id</tt>, long <tt CLASS=literal>when</tt>, int <tt CLASS=literal>modifiers</tt>, int <tt CLASS=literal>keyCode</tt>);
+    // <tt CLASS=literal>Constants</tt>
+    // <tt CLASS=literal>Event Type Constants</tt>
+            public static final int <tt CLASS=literal>KEY_FIRST</tt>;
+            public static final int <tt CLASS=literal>KEY_LAST</tt>;
+            public static final int <tt CLASS=literal>KEY_PRESSED</tt>;
+            public static final int <tt CLASS=literal>KEY_RELEASED</tt>;
+            public static final int <tt CLASS=literal>KEY_TYPED</tt>;
+    // <tt CLASS=literal>Undefined Key and Character</tt>
+            public static final int <tt CLASS=literal>VK_UNDEFINED</tt>;
+            public static final char <tt CLASS=literal>CHAR_UNDEFINED</tt>;
+    // <tt CLASS=literal>Alphanumeric Keys</tt>
+            public static final int <tt CLASS=literal>VK_A</tt>, VK_B, <tt CLASS=literal>VK_C</tt>, <tt CLASS=literal>VK_D</tt>, <tt CLASS=literal>VK_E</tt>, <tt CLASS=literal>VK_F</tt>, <tt CLASS=literal>VK_G</tt>, <tt CLASS=literal>VK_H</tt>, <tt CLASS=literal>VK_I</tt>;
+            public static final int <tt CLASS=literal>VK_J</tt>, <tt CLASS=literal>VK_K</tt>, <tt CLASS=literal>VK_L</tt>, <tt CLASS=literal>VK_M</tt>, <tt CLASS=literal>VK_N</tt>, <tt CLASS=literal>VK_O</tt>, <tt CLASS=literal>VK_P</tt>, <tt CLASS=literal>VK_Q</tt>, <tt CLASS=literal>VK_R</tt>;
+            public static final int <tt CLASS=literal>VK_S</tt>, <tt CLASS=literal>VK_T</tt>, <tt CLASS=literal>VK_U</tt>, <tt CLASS=literal>VK_V</tt>, <tt CLASS=literal>VK_W</tt>, <tt CLASS=literal>VK_X</tt>, <tt CLASS=literal>VK_Y</tt>, <tt CLASS=literal>VK_Z</tt>;
+            public static final int <tt CLASS=literal>VK_SPACE</tt>;
+            public static final int <tt CLASS=literal>VK_0</tt>, <tt CLASS=literal>VK_1</tt>, <tt CLASS=literal>VK_2</tt>, <tt CLASS=literal>VK_3</tt>, <tt CLASS=literal>VK_4</tt>, <tt CLASS=literal>VK_5</tt>, <tt CLASS=literal>VK_6</tt>, <tt CLASS=literal>VK_7</tt>, <tt CLASS=literal>VK_8</tt>, <tt CLASS=literal>VK_9</tt>;
+            public static final int <tt CLASS=literal>VK_NUMPAD0</tt>, <tt CLASS=literal>VK_NUMPAD1</tt>, <tt CLASS=literal>VK_NUMPAD2</tt>, <tt CLASS=literal>VK_NUMPAD3</tt>, <tt CLASS=literal>VK_NUMPAD4</tt>;
+            public static final int <tt CLASS=literal>VK_NUMPAD5</tt>, <tt CLASS=literal>VK_NUMPAD6</tt>, <tt CLASS=literal>VK_NUMPAD7</tt>, <tt CLASS=literal>VK_NUMPAD8</tt>, <tt CLASS=literal>VK_NUMPAD9</tt>;
+    // <tt CLASS=literal>Control Keys</tt>
+            public static final int <tt CLASS=literal>VK_BACK_SPACE</tt>, <tt CLASS=literal>VK_ENTER</tt>, <tt CLASS=literal>VK_ESCAPE</tt>, <tt CLASS=literal>VK_TAB</tt>;
+    // <tt CLASS=literal>Modifier Keys</tt>
+            public static final int <tt CLASS=literal>VK_ALT</tt>, <tt CLASS=literal>VK_CAPS_LOCK</tt>, <tt CLASS=literal>VK_CONTROL</tt>, <tt CLASS=literal>VK_META</tt>, <tt CLASS=literal>VK_SHIFT</tt>;
+    // <tt CLASS=literal>Function Keys</tt>
+            public static final int <tt CLASS=literal>VK_F1</tt>, <tt CLASS=literal>VK_F2</tt>, <tt CLASS=literal>VK_F3</tt>, <tt CLASS=literal>VK_F4</tt>, <tt CLASS=literal>VK_F5</tt>, <tt CLASS=literal>VK_F6</tt>;
+            public static final int <tt CLASS=literal>VK_F7</tt>, <tt CLASS=literal>VK_F8</tt>, <tt CLASS=literal>VK_F9</tt>, <tt CLASS=literal>VK_F10</tt>, <tt CLASS=literal>VK_F11</tt>, <tt CLASS=literal>VK_F12</tt>;
+            public static final int <tt CLASS=literal>VK_PRINTSCREEN</tt>, <tt CLASS=literal>VK_SCROLL_LOCK</tt>, <tt CLASS=literal>VK_PAUSE</tt>;
+            public static final int <tt CLASS=literal>VK_DELETE</tt>, <tt CLASS=literal>VK_INSERT</tt>;
+            public static final int <tt CLASS=literal>VK_PAGE_DOWN</tt>, <tt CLASS=literal>VK_PAGE_UP</tt>;
+            public static final int <tt CLASS=literal>VK_DOWN</tt>, <tt CLASS=literal>VK_LEFT</tt>, <tt CLASS=literal>VK_RIGHT</tt>, <tt CLASS=literal>VK_UP</tt>;
+            public static final int <tt CLASS=literal>VK_END</tt>, <tt CLASS=literal>VK_HOME</tt>;
+            public static final int <tt CLASS=literal>VK_ACCEPT</tt>, <tt CLASS=literal>VK_NUM_LOCK</tt>, <tt CLASS=literal>VK_CANCEL</tt>;
+            public static final int <tt CLASS=literal>VK_CLEAR</tt>, <tt CLASS=literal>VK_CONVERT</tt>, <tt CLASS=literal>VK_FINAL</tt>;
+            public static final int <tt CLASS=literal>VK_HELP</tt>, <tt CLASS=literal>VK_KANA</tt>, <tt CLASS=literal>VK_KANJI</tt>;
+            public static final int <tt CLASS=literal>VK_MODECHANGE</tt>, <tt CLASS=literal>VK_NONCONVERT</tt>;
+    // <tt CLASS=literal>Punctuation Keys</tt>
+            public static final int <tt CLASS=literal>VK_ADD</tt>, <tt CLASS=literal>VK_BACK_QUOTE</tt>, <tt CLASS=literal>VK_BACK_SLASH</tt>;
+            public static final int <tt CLASS=literal>VK_CLOSE_BRACKET</tt>, <tt CLASS=literal>VK_COMMA</tt>, <tt CLASS=literal>VK_DECIMAL</tt>;
+            public static final int <tt CLASS=literal>VK_DIVIDE</tt>, <tt CLASS=literal>VK_EQUALS</tt>, <tt CLASS=literal>VK_MULTIPLY</tt>;
+            public static final int <tt CLASS=literal>VK_OPEN_BRACKET</tt>, <tt CLASS=literal>VK_PERIOD</tt>, <tt CLASS=literal>VK_QUOTE</tt>;
+            public static final int <tt CLASS=literal>VK_SEMICOLON</tt>, <tt CLASS=literal>VK_SEPARATER</tt>, <tt CLASS=literal>VK_SLASH</tt>;
+            public static final int <tt CLASS=literal>VK_SUBTRACT</tt>;
+    // <tt CLASS=literal>Class Methods</tt>
+            public static String <tt CLASS=literal>getKeyModifiersText</tt>(int <tt CLASS=literal>modifiers</tt>);
+            public static String <tt CLASS=literal>getKeyText</tt>(int <tt CLASS=literal>keyCode</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public char <tt CLASS=literal>getKeyChar</tt>();
+            public int <tt CLASS=literal>getKeyCode</tt>();
+            public boolean <tt CLASS=literal>isActionKey</tt>();
+            public String <tt CLASS=literal>paramString</tt>();  //<tt CLASS=literal> Overrides ComponentEvent</tt>
+            public void <tt CLASS=literal>setKeyChar</tt>(char <tt CLASS=literal>keyChar</tt>);
+            public void <tt CLASS=literal>setKeyCode</tt>(int <tt CLASS=literal>keyCode</tt>);
+            public void <tt CLASS=literal>setModifiers</tt>(int <tt CLASS=literal>modifiers</tt>);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-20-SECT-18.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Object->EventObject(Serializable)->AWTEvent->ComponentEvent->InputEvent->KeyEvent</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-20-SECT-18.3">Passed To:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>AWTEventMulticaster.keyPressed(), 
+AWTEventMulticaster.keyReleased(), 
+AWTEventMulticaster.keyTyped(), 
+Component.processKeyEvent(), 
+KeyAdapter.keyPressed(), 
+KeyAdapter.keyReleased(), 
+KeyAdapter.keyTyped(), 
+KeyListener.keyPressed(), 
+KeyListener.keyReleased(), 
+KeyListener.keyTyped()</tt>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch20_17.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch20_19.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.awt.event.KeyAdapter (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.awt.event.KeyListener (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

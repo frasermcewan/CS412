@@ -1,0 +1,430 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 1] 1.4 Safety of Design</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:47:18 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 1<br>Yet Another Language?</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch01_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-4">1.4 Safety of Design</A></h2>
+
+<P CLASS=para>
+<A NAME="CH01.SEC1"></A><A NAME="CH01.SEC2"></A>You have no doubt heard a lot about the fact that Java is designed to
+be a safe language. But what do we mean by safe? Safe from what or
+whom? The security features that attract the most attention for Java
+are those features that make possible new types of dynamically
+portable software. Java provides several layers of protection from
+dangerously flawed code, as well as more mischievous things like
+viruses and trojan horses. In the next section, we'll take a
+look at how the Java virtual machine architecture assesses the safety
+of code before it's run, and how the Java class loader builds a wall
+around untrusted classes. These features provide the foundation for
+high-level security policies that allow or disallow various kinds
+of activities on an application-by-application basis.
+
+<P CLASS=para>
+In this section though, we'll look at some general
+features of the Java programming language. What is perhaps more
+important, although often overlooked in the security din, is the
+safety that Java provides by addressing common design and programming
+problems. Java is intended to be as safe as possible from the simple
+mistakes we make ourselves, as well as those we inherit from
+contractors and third-party software vendors.  The goal with Java has
+been to keep the language simple, provide tools that have demonstrated
+their usefulness, and let users build more complicated facilities on
+top of the language when needed.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-4.1">Syntactic Sweet 'n Low</A></h3>
+
+<P CLASS=para>
+ 
+Java is parsimonious in its features; simplicity rules. Compared to C,
+Java uses few automatic type coercions, and the ones that remain are
+simple and well-defined. Unlike C++, Java doesn't allow
+programmer-defined operator overloading. The string concatenation
+operator <tt CLASS=literal>+</tt> is the only system-defined, overloaded
+operator in Java. All methods in Java are like C++ virtual methods, so
+overridden methods are dynamically selected at run-time.
+
+<P CLASS=para>
+Java doesn't have a preprocessor, so it doesn't have
+macros, <tt CLASS=literal>#define</tt> statements, or conditional source
+compilation. These constructs exist in other languages primarily to
+support platform dependencies, so in that sense they should not be needed 
+in Java. Another
+common use for conditional compilation is for debugging
+purposes. 
+Debugging code can be included directly in your Java source
+code by making it conditional on a constant (i.e.,
+<tt CLASS=literal>static</tt> and
+<tt CLASS=literal>final</tt>) variable. The 
+Java compiler is smart enough to remove this code when it determines
+that it won't be called. 
+<P CLASS=para>
+Java provides a well-defined package
+structure for organizing class files. The package system allows the
+compiler to handle most of the functionality of
+<I CLASS=emphasis>make</I>. The compiler also works with compiled
+Java classes because all type information is preserved; there is no
+need for header files. All of this means that Java code requires
+little context to read. Indeed, you may sometimes find it faster to
+look at the Java source code than to refer to class documentation.
+
+<P CLASS=para>
+Java replaces some features that have been troublesome in other
+languages.  For example, Java supports only a single inheritance class
+hierarchy, but allows multiple inheritance of interfaces. An
+interface, like an abstract class in C++, specifies
+the behavior of an object without defining its implementation,
+a powerful mechanism borrowed from Objective C. It allows a class
+to implement the behavior of the interface, without needing to be a
+subclass of the interface. Interfaces in Java eliminate the
+need for multiple inheritance of classes, without causing the problems
+associated with multiple inheritance.
+
+<P CLASS=para>
+As you'll see in <A HREF="ch04_01.htm">Chapter 4, <i>The Java Language</i></A>, Java is a
+simple, yet elegant, programming language.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-4.2">Type Safety and Method Binding</A></h3>
+
+<P CLASS=para>
+One attribute of a language is the kind of type checking it uses. When
+we categorize a language as static or dynamic we are referring to the
+amount of information about variable types that is known at compile
+time versus what is determined while the application is running.
+
+<P CLASS=para>
+In a strictly statically typed language like C or C++, data
+types are etched in stone when the source code is compiled. The
+compiler benefits from having enough information to enforce usage
+rules, so that it can catch many kinds of errors before the code is
+executed. The code doesn't require run-time type checking, which is
+advantageous because it can be compiled to be small and fast. But
+statically typed languages are inflexible. They don't support
+high-level constructs like lists and collections as naturally as
+languages with dynamic type checking, and they make it impossible for
+an application to safely import new data types while it's running.
+
+<P CLASS=para>
+In contrast, a dynamic language like Smalltalk or Lisp has a
+run-time system that manages the types of objects and performs
+necessary type checking while an application is executing. These kinds
+of languages allow for more complex behavior, and are in many respects
+more powerful. However, they are also generally slower, less safe, and
+harder to debug.
+
+<P CLASS=para>
+The differences in languages have been likened to the
+differences between kinds of automobiles.[2]
+ Statically typed languages like C++ are analogous to a sports
+car--reasonably safe and fast--but useful only if
+you're driving on a nicely paved road. Highly dynamic languages
+like Smalltalk are more like an offroad vehicle: they afford you
+more freedom, but can be somewhat unwieldy. It can be fun (and
+sometimes faster) to go roaring through the back woods, but you might
+also get stuck in a ditch or mauled by bears.
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+The credit for the car analogy goes to Marshall P. Cline, author of
+the C++ FAQ.
+</blockquote>
+<P CLASS=para>
+Another attribute of a language deals with when it binds method
+calls to their definitions. In an early-binding language like C or
+C++, the definitions of methods are normally bound at compile-time,
+unless the programmer specifies otherwise. Smalltalk, on the other
+hand, is a late-binding language because it locates the definitions of
+methods dynamically at run-time. Early-binding is important for
+performance reasons; an application can run without the overhead
+incurred by searching method tables at run-time. But late-binding is
+more flexible. It's also necessary in an object-oriented language,
+where a subclass can override methods in its superclass, and only the
+run-time system can determine which method to run.
+
+<P CLASS=para>
+Java provides some of the benefits of both C++ and Smalltalk;
+it's a statically typed, late-binding language. Every object in Java
+has a well-defined type that is known at compile time. This means
+the Java compiler can do the same kind of static type checking and
+usage analysis as C++. As a result, you can't assign an object
+to the wrong type of reference or call nonexistent methods within
+it. The Java compiler goes even further and prevents you from messing
+up and trying to use uninitialized variables.
+
+<P CLASS=para>
+However, Java is fully run-time typed as well. The Java
+run-time system keeps track of all objects and makes it possible to
+determine their types and relationships during execution. This means
+you can inspect an object at run-time to determine what it is. Unlike
+C or C++, casts from one type of object to another are checked by the
+run-time system, and it's even possible to use completely new kinds
+of dynamically loaded objects with a level of type safety.
+
+<P CLASS=para>
+Since Java is a late-binding language, all methods are like
+virtual methods in C++. This makes it possible for
+a subclass to override methods in its superclass. But Java also allows
+you to gain the performance benefits of early-binding by declaring
+(with the <tt CLASS=literal>final</tt> modifier) that certain methods
+can't be overridden by subclassing, removing the need for run-time
+lookup.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-4.3">Incremental Development</A></h3>
+
+<P CLASS=para>
+Java carries all data-type and method-signature information with it
+from its source code to its compiled byte-code form. This means that
+Java classes can be developed incrementally. Your own Java classes can
+also be used safely with classes from other sources your compiler
+has never seen.  In other words, you can write new code that
+references binary class files, without losing the type safety you
+gain from having the source code.  The Java run-time system can load
+new classes while an application is running, thus providing the
+capabilities of a dynamic linker.
+
+<P CLASS=para>
+A common irritation with C++ is the "fragile base
+class" problem.  In C++, the implementation of a base class can
+be effectively frozen by the fact that it has many derived classes;
+changing the base class may require recompilation of the derived
+classes. This is an especially difficult problem for developers of
+class libraries. Java avoids this problem by dynamically locating
+fields within classes. As long as a class maintains a valid form of
+its original structure, it can evolve without breaking other classes
+that are derived from it or that make use of it.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-4.4">Dynamic Memory Management</A></h3>
+
+<P CLASS=para>
+Some of the most important differences between Java and C or C++
+involve how Java manages memory. Java eliminates ad hoc pointers and
+adds garbage collection and true arrays to the language. These
+features eliminate many otherwise insurmountable problems with safety,
+portability, and optimization.
+
+<P CLASS=para>
+Garbage collection alone should save countless programmers from the
+single largest source of programming errors in C or C++: explicit
+memory allocation and deallocation. In addition to maintaining objects
+in memory, the Java run-time system keeps track of all references to
+those objects.  When an object is no longer in use, Java automatically
+removes it from memory. You can simply throw away references to
+objects you no longer use and have confidence that the
+system will clean them up at an appropriate time. Sun's current
+implementation of Java uses a conservative, mark and sweep garbage
+collector that runs intermittently in the background, which means that
+most garbage collecting takes place between mouse clicks and keyboard
+hits. Once you get used to garbage collection, you won't go
+back. Being able to write air-tight C code that juggles memory without
+dropping any on the floor is an important skill, but once you become
+addicted to Java you can "realloc" some of those brain
+cells to new tasks.
+
+<P CLASS=para>
+You may hear people say that Java doesn't have
+pointers. Strictly speaking, this statement is true, but it's also
+misleading. What Java provides are
+<I CLASS=emphasis>references</I>--a safe kind of pointer--and
+Java is rife with them. A reference is a strongly typed
+handle for an object. All objects in Java, with the exception of
+primitive numeric types, are accessed through references. If
+necessary, you can use references to build all the normal kinds of
+data structures you're accustomed to building with pointers,
+like linked lists, trees, and so forth.  The only difference is that
+with references you have to do so in a type-safe way.
+
+<P CLASS=para>
+Another important difference between a reference and a pointer
+is that you can't do pointer arithmetic with references. A
+reference is an atomic thing; you can't manipulate the value of
+a reference except by assigning it to an object. References are passed
+by value, and you can't reference an object through more than a
+single level of indirection. The protection of references is one of
+the most fundamental aspects of Java security. It means that Java code
+has to play by the rules; it can't peek into places it
+shouldn't.
+
+<P CLASS=para>
+Unlike C or C++ pointers, Java references can  point only to
+class types.  There are no pointers to methods. 
+People often complain
+about this missing feature, but you will find that most tasks that
+call for pointers to methods, such as callbacks, can be accomplished
+using interfaces and anonymous adapter classes instead.
+[3]
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+Java 1.1 does have a <tt CLASS=literal>Method</tt>
+class, which lets you have a reference to a method. You can use a
+<tt CLASS=literal>Method</tt> object to construct a callback, but
+it's tricky. 
+</blockquote>
+<P CLASS=para>
+Finally, arrays in Java are true, first-class objects. They can
+be dynamically allocated and assigned like other objects. Arrays know
+their own size and type, and although you can't directly define array
+classes or subclass them, they do have a well-defined inheritance
+relationship based on the relationship of their base types. Having
+true arrays in the language alleviates much of the need for pointer
+arithmetic like that in C or C++.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-4.5">Error Handling</A></h3>
+
+<P CLASS=para>
+Java's roots are in networked devices and embedded systems. For
+these applications, it's important to have robust and intelligent
+error management.  Java has a powerful exception-handling mechanism,
+somewhat like that in newer implementations of C++. Exceptions provide
+a more natural and elegant way to handle errors. Exceptions allow you
+to separate error-handling code from normal code, which makes for
+cleaner, more readable applications.
+
+<P CLASS=para>
+When an exception occurs, it causes the flow of program
+execution to be transferred to a predesignated catcher block of
+code. The exception carries with it an object that contains
+information about the situation that caused the exception. The Java
+compiler requires that a method either declare the exceptions it
+can generate or catch and deal with them itself.  This promotes error
+information to the same level of importance as argument and return
+typing. As a Java programmer, you know precisely what exceptional
+conditions you must deal with, and you have help from the compiler in
+writing correct software that doesn't leave them unhandled.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-4.6">Multithreading</A></h3>
+
+<P CLASS=para>
+Applications today require a high degree of parallelism. Even a very
+single-minded application can have a complex user interface. As
+machines get faster, users become more sensitive to waiting for
+unrelated tasks that seize control of their time. Threads provide
+efficient multiprocessing and distribution of tasks. Java makes
+threads easy to use because support for them is built into the
+language.
+
+<P CLASS=para>
+Concurrency is nice, but there's more to programming with
+threads than just performing multiple tasks simultaneously. In many
+cases, threads need to be synchronized, which can be tricky without
+explicit language support. Java supports synchronization based on the
+monitor and condition model developed by C.A.R. Hoare--a sort of
+lock and key system for accessing resources. A keyword,
+<tt CLASS=literal>synchronized</tt>, designates methods for safe,
+serialized access within an object. Only one synchronized method
+within the object may run at a given time. There are also simple,
+primitive methods for explicit waiting and signaling between threads
+interested in the same object.
+
+<P CLASS=para>
+Learning to program with threads is an important part of
+learning to program in Java. See <A HREF="ch06_01.htm">Chapter 6, <i>Threads</i></A> for a 
+discussion of this topic. For complete coverage of threads, see
+<i CLASS=citetitle>Java Threads</i>, by Scott Oaks and Henry Wong (O'Reilly &amp;
+Associates). 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-4.7">Scalability</A></h3>
+
+<P CLASS=para>
+At the lowest level, Java programs consist of classes. Classes are
+intended to be small, modular components. They can be separated
+physically on different systems, retrieved dynamically, and even
+cached in various distribution schemes. Over classes, Java provides
+packages, a layer of structure that groups classes into functional
+units. Packages provide a naming convention for organizing classes and
+a second level of organizational control over the visibility of
+variables and methods in Java applications.
+
+<P CLASS=para>
+Within a package, a class is either publicly visible or
+protected from outside access. Packages form another type of scope
+that is closer to the application level. This lends itself to building
+reusable components that work together in a system. Packages also
+help in designing a scalable application that can grow without
+becoming a bird's nest of tightly coupled code dependency.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch01_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Java Compared</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Safety of Implementation</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,1430 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] Simple Graphics</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:24:21 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-2">2. Simple Graphics</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Graphics<br>
+<A HREF="ch02_02.htm">Point</A><BR>
+<A HREF="ch02_03.htm">Dimension</A><BR>
+<A HREF="ch02_04.htm">Shape</A><BR>
+<A HREF="ch02_05.htm">Rectangle</A><BR>
+<A HREF="ch02_06.htm">Polygon</A><BR>
+<A HREF="ch02_07.htm">Image</A><BR>
+<A HREF="ch02_08.htm">MediaTracker</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+This chapter digs into the meat of the AWT classes. After completing this 
+chapter, you will be able to draw strings, images, and shapes via the <tt CLASS=literal>Graphics</tt> 
+class in your Java programs. We discuss geometry-related classes--<tt CLASS=literal>Polygon</tt>, 
+<tt CLASS=literal>Rectangle</tt>, <tt CLASS=literal>Point</tt>, 
+and <tt CLASS=literal>Dimension</tt>, and the <tt CLASS=literal>Shape</tt> 
+interface--you will see these throughout the remaining AWT objects. You 
+will also learn several ways to do smooth animation by using double buffering 
+and the <tt CLASS=literal>MediaTracker</tt>. 
+
+<P CLASS=para>
+After reading this chapter, you should be able to do simple animation and 
+image manipulation with AWT. For most applications, this should be sufficient. 
+If you want to look at AWT's more advanced graphics capabilities, 
+be sure to take a look at <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-1">2.1 Graphics</A></h2>
+
+<P CLASS=para>
+<A NAME="CH02.GRAPH"></A>The <tt CLASS=literal>Graphics</tt> class is an abstract 
+class that provides the means to access different graphics devices. It 
+is the class that lets you draw on the screen, display images, and so forth. 
+<tt CLASS=literal>Graphics</tt> is an abstract class 
+because working with graphics requires detailed knowledge of the platform 
+on which the program runs. The actual work is done by concrete classes 
+that are closely tied to a particular platform. Your Java Virtual Machine 
+vendor provides the necessary concrete classes for your environment. You 
+never need to worry about the platform-specific classes; once you have 
+a <tt CLASS=literal>Graphics</tt> object, you can 
+call all the methods of the <tt CLASS=literal>Graphics</tt> 
+class, confident that the platform-specific classes will work correctly 
+wherever your program runs. 
+
+<P CLASS=para>
+You rarely need to create a <tt CLASS=literal>Graphics</tt> 
+object yourself; its constructor is protected and is only called by the 
+subclasses that extend <tt CLASS=literal>Graphics</tt>. 
+How then do you get a <tt CLASS=literal>Graphics</tt> 
+object to work with? The sole parameter of the <tt CLASS=literal>Component.paint()</tt> 
+and <tt CLASS=literal>Component.update()</tt> methods 
+is the current graphics context. Therefore, a <tt CLASS=literal>Graphics</tt> 
+object is always available when you override a component's <tt CLASS=literal>paint()</tt> 
+and <tt CLASS=literal>update()</tt> methods. You can 
+ask for the graphics context of a <tt CLASS=literal>Component</tt> 
+by calling <tt CLASS=literal>Component.getGraphics()</tt>. 
+However, many components do not have a drawable graphics context. <tt CLASS=literal>Canvas</tt> 
+and <tt CLASS=literal>Container</tt> objects return a valid <tt CLASS=literal>Graphics</tt> 
+object; whether or not any other component has a drawable graphics context 
+depends on the run-time environment. (The latest versions of Netscape Navigator 
+provide a drawable graphics context for any component, but you shouldn't 
+get used to writing platform-specific code.) This restriction isn't 
+as harsh as it sounds. For most components, a drawable graphics context 
+doesn't make much sense; for example, why would you want to draw 
+on a <tt CLASS=literal>List</tt>? If you want to draw 
+on a component, you probably can't. The notable exception is <tt CLASS=literal>Button</tt>, 
+and that may be fixed in future versions of AWT. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-1.1">Graphics Methods</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected Graphics ()</I><br>
+<DD>
+
+<P CLASS=para>
+Because <tt CLASS=literal>Graphics</tt> is an abstract 
+class, it doesn't have a visible constructor. The way to get a <tt CLASS=literal>Graphics</tt> 
+object is to ask for one by calling <tt CLASS=literal>getGraphics()</tt> 
+or to use the one given to you by the <tt CLASS=literal>Component.paint()</tt> 
+or <tt CLASS=literal>Component.update()</tt> method. </DL>
+<P CLASS=para>
+The abstract methods of the <tt CLASS=literal>Graphics</tt> 
+class are implemented by some windowing system-specific class. You rarely 
+need to know which subclass of <tt CLASS=literal>Graphics</tt> 
+you are using, but the classes you actually get (if you are using the JDK) are <tt CLASS=literal>sun.awt.win32.Win32Graphics</tt> 
+(&nbsp;&nbsp;JDK1.0), <tt CLASS=literal>sun.awt.window.WGraphics</tt> 
+(&nbsp;&nbsp;JDK1.1), <tt CLASS=literal>sun.awt.motif.X11Graphics</tt>, 
+or <tt CLASS=literal>sun.awt.macos.MacGraphics</tt>. Pseudo-constructors
+
+<P CLASS=para>
+In addition to using the graphics contexts given to you by <tt CLASS=literal>getGraphics()</tt> 
+or in <tt CLASS=literal>Component.paint()</tt>, you 
+can get a <tt CLASS=literal>Graphics</tt> object by 
+creating a copy of another <tt CLASS=literal>Graphics</tt> 
+object. Creating new graphics contexts has resource implications. Certain 
+platforms have a limited number of graphics contexts that can be active. 
+For instance, on Windows 95 you cannot have more than four in use at one 
+time. Therefore, it's a good idea to call <tt CLASS=literal>dispose()</tt> 
+as soon as you are done with a <tt CLASS=literal>Graphics</tt> 
+object. Do not rely on the garbage collector to clean up for you. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Graphics create () </I><br>
+<DD>
+
+<P CLASS=para>
+This method creates a second reference to the graphics context. It is useful 
+for clipping (reducing the drawable area). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Graphics create (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+This method creates a second reference to a subset of the drawing area 
+of the graphics context. The new <tt CLASS=literal>Graphics</tt> 
+object covers the rectangle from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) through (<tt CLASS=literal>x+width-1</tt>, 
+<tt CLASS=literal>y+height-1</tt>) in the original 
+object. The coordinate space of the new <tt CLASS=literal>Graphics</tt> 
+context is translated so that the upper left corner is (0, 0) and the lower 
+right corner is (<tt CLASS=literal>width</tt><I CLASS=emphasis>,</I> 
+<tt CLASS=literal>height</tt>). Shifting the coordinate 
+system of the new object makes it easier to work within a portion of the 
+drawing area without using offsets. </DL>
+Drawing strings
+
+<P CLASS=para>
+These methods let you draw text strings on the screen. The coordinates 
+refer to the left end of the text's baseline. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void drawString (String text, int x, int y) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawString()</tt> method draws 
+<tt CLASS=literal>text</tt> on the screen in the current 
+font and color, starting at position (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>). The starting coordinates 
+specify the left end of the <tt CLASS=literal>String</tt>'s 
+baseline. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void drawChars (char text[], int offset, int length, int x, int 
+y) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawChars()</tt> method creates 
+a <tt CLASS=literal>String</tt> from the char array 
+<tt CLASS=literal>text</tt> starting at <tt CLASS=literal>text[offset]</tt> 
+and continuing for <tt CLASS=literal>length</tt> characters. 
+The newly created <tt CLASS=literal>String</tt> is 
+then drawn on the screen in the current font and color, starting at position 
+(<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>). 
+The starting coordinates specify the left end of the <tt CLASS=literal>String</tt>'s 
+baseline. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void drawBytes (byte text[], int offset, int length, int x, int 
+y) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawBytes()</tt> method creates 
+a <tt CLASS=literal>String</tt> from the byte array 
+<tt CLASS=literal>text</tt> starting at <tt CLASS=literal>text[offset]</tt> 
+and continuing for <tt CLASS=literal>length</tt> characters. 
+This <tt CLASS=literal>String</tt> is then drawn on 
+the screen in the current font and color, starting at position (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>). The starting coordinates 
+specify the left end of the <tt CLASS=literal>String</tt>'s 
+baseline. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Font getFont () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFont()</tt> method returns 
+the current <tt CLASS=literal>Font</tt> of the graphics 
+context. See <A HREF="ch03_01.htm">Chapter 3, <i>Fonts and Colors</i></A>, for more on what you can do with 
+fonts. You cannot get meaningful results with <tt CLASS=literal>getFont()</tt> 
+until the applet or application is displayed on the screen (generally, 
+not in <tt CLASS=literal>init()</tt> of an applet or 
+<tt CLASS=literal>main()</tt> of an application). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void setFont (Font font) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setFont()</tt> method changes 
+the current <tt CLASS=literal>Font</tt> to <tt CLASS=literal>font</tt>. 
+If <tt CLASS=literal>font</tt> is not available on 
+the current platform, the system chooses a default. To change the current 
+font to 12 point bold TimesRoman: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+setFont (new Font ("TimesRoman", Font.BOLD, 12));
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public FontMetrics getFontMetrics () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getFontMetrics()</tt> method 
+returns the current <tt CLASS=literal>FontMetrics</tt> 
+object of the graphics context. You use <tt CLASS=literal>FontMetrics</tt> 
+to reveal sizing properties of the current <tt CLASS=literal>Font</tt>--for example, how wide the "Hello World" string will be in pixels 
+when displayed on the screen. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract FontMetrics getFontMetrics (Font font) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>getFontMetrics()</tt> 
+returns the <tt CLASS=literal>FontMetrics</tt> for 
+the <tt CLASS=literal>Font</tt> font 
+instead of the current font. You might use this method to see how much 
+space a new font requires to draw text. </DL>
+<P CLASS=para>
+For more information about <tt CLASS=literal>Font</tt> 
+and <tt CLASS=literal>FontMetrics</tt>, see <A HREF="ch03_01.htm">Chapter 3, <i>Fonts and Colors</i></A>. Painting
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Color getColor () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getColor()</tt> method returns 
+the current foreground <tt CLASS=literal>Color</tt> 
+of the <tt CLASS=literal>Graphics</tt> object. All 
+future drawing operations will use this color. <A HREF="ch03_01.htm">Chapter 3, <i>Fonts and Colors</i></A> describes 
+the <tt CLASS=literal>Color</tt> class. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void setColor (Color color) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setColor()</tt> method changes 
+the current drawing color to <tt CLASS=literal>color</tt>. 
+As you will see in the next chapter, the <tt CLASS=literal>Color</tt> 
+class defines some common colors for you. If you can't use one of 
+the predefined colors, you can create a color from its RGB values. To change 
+the current color to red, use any of the following: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+setColor (Color.red);
+setColor (new Color (255, 0, 0));
+setColor (new Color (0xff0000));
+</PRE>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void clearRect (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>clearRect()</tt> method sets 
+the rectangular drawing area from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) to (<tt CLASS=literal>x+width-1</tt>, 
+<tt CLASS=literal>y+height-1</tt>) to the current 
+background color. Keep in mind that the second pair of parameters is not 
+the opposite corner of the rectangle, but the width and height of the area 
+to clear. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void clipRect (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="CH02.CLIP"></A>The <tt CLASS=literal>clipRect()</tt> method reduces 
+the drawing area to the intersection of the current drawing area and the 
+rectangular area from (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+to (<tt CLASS=literal>x+width-1</tt>, <tt CLASS=literal>y+height-1</tt>). 
+Any future drawing operations outside this clipped area will have no effect. 
+Once you clip a drawing area, you cannot increase its size with <tt CLASS=literal>clipRect()</tt>; 
+the drawing area can only get smaller. (However, if the <tt CLASS=literal>clipRect()</tt> 
+call is in <tt CLASS=literal>paint()</tt>, the size 
+of the drawing area will be reset to its original size on subsequent calls 
+to <tt CLASS=literal>paint()</tt>.) If you want the 
+ability to draw to the entire area, you must create a second <tt CLASS=literal>Graphics</tt> 
+object that contains a copy of the drawing area before calling <tt CLASS=literal>clipRect()</tt> 
+or use <tt CLASS=literal>setClip()</tt>. The following code is a simple applet that demonstrates clipping; <A HREF="ch02_01.htm#JAWT-CH-2-FIG-1">Figure 2.1</A> 
+shows the result. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class clipping extends java.applet.Applet {
+    public void paint (Graphics g) {
+        g.setColor (Color.red);
+        Graphics clippedGraphics = g.create();
+        clippedGraphics.drawRect (0,0,100,100);
+        clippedGraphics.clipRect (25, 25, 50, 50);
+        clippedGraphics.drawLine (0,0,100,100);
+        clippedGraphics.dispose();
+        clippedGraphics=null;
+        g.drawLine (0,100,100,0);
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-1">Figure 2.1: Clipping restricts the drawing area</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0201.gif" alt="[Graphic: Figure 2-1]" width=146 height=202 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>paint()</tt> method for this 
+applet starts by setting the foreground color to red. It then creates a 
+copy of the <tt CLASS=literal>Graphics</tt> context 
+for clipping, saving the original object so it can draw on the entire screen 
+later. The applet then draws a rectangle, sets the clipping area to a smaller 
+region, and draws a diagonal line across the rectangle from upper left 
+to lower right. Because clipping is in effect, only part of the line is 
+displayed. The applet then discards the clipped <tt CLASS=literal>Graphics</tt> 
+object and draws an unclipped line from lower left to upper right using 
+the original object <tt CLASS=literal>g</tt>. </DL>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void setClip(int x, int y, int width, int height) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>setClip()</tt> method allows 
+you to change the current clipping area based on the parameters provided. 
+<tt CLASS=literal>setClip()</tt> is similar to <tt CLASS=literal>clipRect()</tt>, 
+except that it is not limited to shrinking the clipping area. The current 
+drawing area becomes the rectangular area from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) to (<tt CLASS=literal>x+width-1</tt>, 
+<tt CLASS=literal>y+height-1</tt>); this area may 
+be larger than the previous drawing area. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void setClip(Shape clip) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>setClip()</tt> method allows 
+you to change the current clipping area based on the <tt CLASS=literal>clip</tt> 
+parameter, which may be any object that implements the <tt CLASS=literal>Shape</tt> 
+interface. Unfortunately, practice is not as good as theory, and in practice, 
+<tt CLASS=literal>clip</tt> must be a <tt CLASS=literal>Rectangle</tt>; if you pass <tt CLASS=literal>setClip()</tt> 
+a <tt CLASS=literal>Polygon</tt>, it throws an <tt CLASS=literal>IllegalArgumentException</tt>.[1] (The <tt CLASS=literal>Shape</tt> 
+interface is discussed later in this chapter.) 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ 
+It should be simple for Sun to fix this bug; one would expect clipping 
+to a <tt CLASS=literal>Polygon</tt> to be the same 
+as clipping to the <tt CLASS=literal>Polygon</tt>'s 
+bounding rectangle. 
+</blockquote>
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Rectangle getClipBounds () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public abstract Rectangle getClipRect () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getClipBounds()</tt> methods 
+returns a <tt CLASS=literal>Rectangle</tt> that describes 
+the clipping area of a <tt CLASS=literal>Graphics</tt> 
+object. The <tt CLASS=literal>Rectangle</tt> gives 
+you the (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) coordinates of the top left corner of the clipping area 
+along with its width and height. (<tt CLASS=literal>Rectangle</tt> 
+objects are discussed later in this chapter.) 
+
+<P CLASS=para>
+<tt CLASS=literal>getClipRect()</tt> is the Java 1.0 name for this method.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Shape getClip () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getClip()</tt> method returns 
+a <tt CLASS=literal>Shape</tt> that describes the 
+clipping area of a <tt CLASS=literal>Graphics</tt> 
+object. That is, it returns the same thing as <tt CLASS=literal>getClipBounds()</tt> 
+but as a <tt CLASS=literal>Shape</tt>, instead of 
+as a <tt CLASS=literal>Rectangle</tt>. By calling 
+<tt CLASS=literal>Shape.getBounds()</tt>, you can 
+get the (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) coordinates of the top left corner of the clipping area 
+along with its width and height. In the near future, it is hard to imagine 
+the actual object that <tt CLASS=literal>getClip()</tt> 
+returns being anything other than a <tt CLASS=literal>Rectangle</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void copyArea (int x, int y, int width, int height, int 
+delta_x, int delta_y) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>copyArea()</tt> method copies 
+the rectangular area from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) to (<tt CLASS=literal>x+width</tt>, 
+<tt CLASS=literal>y+height</tt>) to the area with 
+an upper left corner of (<tt CLASS=literal>x+delta_x</tt>, 
+<tt CLASS=literal>y+delta_y</tt>). The <tt CLASS=literal>delta_x</tt> 
+and <tt CLASS=literal>delta_y</tt> parameters are not 
+the coordinates of the second point but an offset from the first coordinate 
+pair (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>). 
+The area copied may fall outside of the clipping region. This method is 
+often used to tile an area of the graphics context. <tt CLASS=literal>copyArea()</tt> 
+does not save the contents of the area copied. </DL>
+Painting mode
+
+<P CLASS=para>
+<A NAME="CH02.PAINT"></A>There are two painting or drawing modes for the <tt CLASS=literal>Graphics</tt> 
+class: paint (the default) and XOR mode. In paint mode, anything you draw 
+replaces whatever is already on the screen. If you draw a red square, you 
+get a red square, no matter what was underneath; this is what most programmers 
+have learned to expect. 
+
+<P CLASS=para>
+The behavior of XOR mode is rather strange, at least to people accustomed 
+to modern programming environments. XOR mode is short for eXclusive-OR 
+mode. The idea behind XOR mode is that drawing the same object twice returns 
+the screen to its original state. This technique was commonly used for 
+simple animations prior to the development of more sophisticated methods 
+and cheaper hardware. 
+
+<P CLASS=para>
+The side effect of XOR mode is that painting operations don't necessarily 
+get the color you request. Instead of replacing the original pixel with 
+the new value, XOR mode merges the original color, the painting color, 
+and an XOR color (usually the background color) to form a new color. The 
+new color is chosen so that if you repaint the pixel with the same color, 
+you get the original pixel back. For example, if you paint a red square 
+in XOR mode, you get a square of some other color on the screen. Painting 
+the same red square again returns the screen to its original state. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void setXORMode (Color xorColor) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setXORMode()</tt> method changes 
+the drawing mode to XOR mode. In XOR mode, the system uses the <tt CLASS=literal>xorColor</tt> 
+color to determine an alternate color for anything drawn such that drawing 
+the same item twice restores the screen to its original condition. The 
+<tt CLASS=literal>xorColor</tt> is usually the current 
+background color but can be any color. For each pixel, the new color is 
+determined by an exclusive-or of the old pixel color, the painting color, 
+and the <tt CLASS=literal>xorColor</tt>. 
+
+<P CLASS=para>
+For example, if the old pixel is red, the XOR color is blue, and the drawing 
+color is green, the end result would be white. To see why, it is necessary 
+to look at the RGB values of the three colors. Red is (255, 0, 0). Blue 
+is (0, 0, 255). Green is (0, 255, 0). The exclusive-or of these three values 
+is (255, 255, 255), which is white. Drawing another green pixel with a 
+blue XOR color yields red, the pixel's original color, since (255, 
+255, 255) <tt CLASS=literal>^</tt> (0, 0, 255) <tt CLASS=literal>^</tt> (0, 255, 0) yields (255, 0, 0).[2] The following code generates the display shown in <A HREF="ch02_01.htm#JAWT-CH-2-FIG-2">Figure 2.2</A>.
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+<tt CLASS=literal>^</tt> is the Java XOR operator.
+</blockquote>
+</DL>
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class xor extends java.applet.Applet {
+    public void init () {
+        setBackground (Color.red);
+    }
+    public void paint (Graphics g) {
+        g.setColor (Color.green);
+        g.setXORMode (Color.blue);
+        g.fillRect (10, 10, 100, 100);
+        g.fillRect (10, 60, 100, 100);
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-2">Figure 2.2: Drawing in XOR mode</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0202.gif" alt="[Graphic: Figure 2-2]" width=193 height=250 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Although it's hard to visualize what color XOR mode will pick, there 
+is one important special case. Let's say that there are only two 
+colors: a background color (the XOR color) and a foreground color (the 
+painting color). Each pixel must be in one color or the other. Painting 
+"flips" each pixel to the other color. Foreground pixels become 
+background, and vice versa. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void setPaintMode () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setPaintMode()</tt> method puts 
+the system into paint mode. When in paint mode, any drawing 
+operation replaces whatever is underneath it. Call <tt CLASS=literal>setPaintMode()</tt> 
+to return to normal painting when finished with XOR mode. </DL>
+Drawing shapes
+
+<P CLASS=para>
+<A NAME="CH02.SHAPE1"></A>Most of the drawing methods require you to specify a bounding rectangle 
+for the object you want to draw: the location of the object's upper 
+left corner, plus its width and height. The two exceptions are lines and 
+polygons. For lines, you supply two endpoints; for polygons, you provide 
+a set of points. 
+
+<P CLASS=para>
+Versions 1.0.2 and 1.1 of AWT always draw solid lines that are one pixel 
+wide; there is no support for line width or fill patterns. A future version 
+should support lines with variable widths and patterns. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void drawLine (int x1, int y1, int x2, int y2)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawLine()</tt> method draws 
+a line on the graphics context in the current color from (<tt CLASS=literal>x1</tt>, 
+<tt CLASS=literal>y1</tt>) to (<tt CLASS=literal>x2</tt>, 
+<tt CLASS=literal>y2</tt>). If (<tt CLASS=literal>x1</tt>, 
+<tt CLASS=literal>y1</tt>) and (<tt CLASS=literal>x2</tt>, 
+<tt CLASS=literal>y2</tt>) are the same point, you 
+will draw a point. There is no method specific to drawing a point. The following code generates the display shown in <A HREF="ch02_01.htm#JAWT-CH-2-FIG-3">Figure 2.3</A>. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+g.drawLine (5, 5, 50, 75);   // line
+g.drawLine (5, 75, 5, 75);   // point
+g.drawLine (50, 5, 50, 5);   // point
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-3">Figure 2.3: Drawing lines and points with drawLine()</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0203.gif" alt="[Graphic: Figure 2-3]" width=503 height=188 border=0>
+
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void drawRect (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawRect()</tt> method draws 
+a rectangle on the drawing area in the current color from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) to (<tt CLASS=literal>x+width</tt>, 
+<tt CLASS=literal>y+height</tt>). If <tt CLASS=literal>width</tt> 
+or <tt CLASS=literal>height</tt> is negative, 
+nothing is drawn. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void fillRect (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>fillRect()</tt> method draws 
+a filled rectangle on the drawing area in the current color from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) to (<tt CLASS=literal>x+width-1</tt>, 
+<tt CLASS=literal>y+height-1</tt>). Notice that the 
+filled rectangle is one pixel smaller to the right and bottom than requested. 
+If <tt CLASS=literal>width</tt> or <tt CLASS=literal>height</tt> 
+is negative, nothing is drawn. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void drawRoundRect (int x, int y, int width, int height, 
+int arcWidth, int arcHeight) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawRoundRect()</tt> method 
+draws a rectangle on the drawing area in the current color from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) to (<tt CLASS=literal>x+width</tt>, 
+<tt CLASS=literal>y+height</tt>). However, instead 
+of perpendicular corners, the corners are rounded with a horizontal 
+diameter of <tt CLASS=literal>arcWidth</tt> and a 
+vertical diameter of <tt CLASS=literal>arcHeight</tt>. 
+If <tt CLASS=literal>width</tt> or <tt CLASS=literal>height</tt> 
+is a negative number, nothing is drawn. If <tt CLASS=literal>width</tt>, 
+<tt CLASS=literal>height</tt>, <tt CLASS=literal>arcWidth</tt>, 
+and <tt CLASS=literal>arcHeight</tt> are all equal, 
+you get a circle. 
+
+<P CLASS=para>
+To help you visualize the <tt CLASS=literal>arcWidth</tt> 
+and <tt CLASS=literal>arcHeight</tt> of a rounded 
+rectangle, <A HREF="ch02_01.htm#JAWT-CH-2-FIG-4">Figure 2.4</A> shows one corner of a rectangle 
+drawn with an <tt CLASS=literal>arcWidth</tt> of 20 
+and a <tt CLASS=literal>arcHeight</tt> of 40. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-4">Figure 2.4: Drawing rounded corners</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0204.gif" alt="[Graphic: Figure 2-4]" width=185 height=185 border=0>
+
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void fillRoundRect (int x, int y, int width, int height, 
+int arcWidth, int arcHeight) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>fillRoundRect()</tt> method 
+draws a filled rectangle on the drawing area in the current color from 
+(<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+to (<tt CLASS=literal>x+width-1</tt>, <tt CLASS=literal>y+height-1</tt>). 
+However, instead of having perpendicular corners, the corners are rounded 
+with a horizontal diameter of <tt CLASS=literal>arcWidth</tt> 
+and a vertical diameter of <tt CLASS=literal>arcHeight</tt> 
+for the four corners. Notice that the filled rectangle is one pixel smaller 
+to the right and bottom than requested. If <tt CLASS=literal>width</tt> 
+or <tt CLASS=literal>height</tt> is a negative number, 
+nothing is filled. If <tt CLASS=literal>width</tt>, 
+<tt CLASS=literal>height</tt>, <tt CLASS=literal>arcWidth</tt>, 
+and <tt CLASS=literal>arcHeight</tt> are all equal, 
+you get a filled circle. 
+
+<P CLASS=para>
+<A HREF="ch02_01.htm#JAWT-CH-2-FIG-4">Figure 2.4</A> shows how AWT generates rounded corners. 
+<A HREF="ch02_01.htm#JAWT-CH-2-FIG-5">Figure 2.5</A> shows the collection of rectangles created by the following code. The rectangles in <A HREF="ch02_01.htm#JAWT-CH-2-FIG-5">Figure 2.5</A> are filled 
+and unfilled, with rounded and square corners. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+g.drawRect (25, 10, 50, 75);
+g.fillRect (25, 110, 50, 75);
+g.drawRoundRect (100, 10, 50, 75, 60, 50);
+g.fillRoundRect (100, 110, 50, 75, 60, 50);
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-5">Figure 2.5: Varieties of rectangles</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0205.gif" alt="[Graphic: Figure 2-5]" width=193 height=248 border=0>
+
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void draw3DRect (int x, int y, int width, int height, boolean raised) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>draw3DRect()</tt> method draws 
+a rectangle in the current color from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) to (<tt CLASS=literal>x+width</tt>, 
+<tt CLASS=literal>y+height</tt>); a shadow 
+effect makes the rectangle appear to float slightly above or below the 
+screen. The <tt CLASS=literal>raised</tt> parameter 
+has an effect only if the current color is not black. If <tt CLASS=literal>raised</tt> 
+is <tt CLASS=literal>true</tt>, the rectangle looks 
+like a button waiting to be pushed. If <tt CLASS=literal>raised</tt> 
+is <tt CLASS=literal>false</tt>, the rectangle 
+looks like a depressed button. If <tt CLASS=literal>width</tt> 
+or <tt CLASS=literal>height</tt> is negative, the 
+shadow appears from another direction. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void fill3DRect (int x, int y, int width, int height, boolean raised) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>fill3DRect()</tt> method draws 
+a filled rectangle in the current color from (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>) to (<tt CLASS=literal>x+width</tt>, 
+<tt CLASS=literal>y+height</tt>); a shadow 
+effect makes the rectangle appear to float slightly above or below the 
+screen. The <tt CLASS=literal>raised</tt> parameter 
+has an effect only if the current color is not black. If <tt CLASS=literal>raised</tt> 
+is <tt CLASS=literal>true</tt>, the rectangle looks 
+like a button waiting to be pushed. If <tt CLASS=literal>raised</tt> 
+is <tt CLASS=literal>false</tt>, the rectangle looks 
+like a depressed button. To enhance the shadow effect, the depressed area 
+is given a slightly deeper shade of the drawing color. If <tt CLASS=literal>width</tt> 
+or <tt CLASS=literal>height</tt> is negative, the 
+shadow appears from another direction, and the rectangle isn't filled. 
+(Different platforms could deal with this differently. Try to ensure the 
+parameters have positive values.) 
+
+<P CLASS=para>
+<A HREF="ch02_01.htm#JAWT-CH-2-FIG-6">Figure 2.6</A> shows the collection of three-dimensional rectangles created by the following code. The rectangles in the figure are raised 
+and depressed, filled and unfilled. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+g.setColor (Color.gray);
+g.draw3DRect (25, 10, 50, 75, true);
+g.draw3DRect (25, 110, 50, 75, false);
+g.fill3DRect (100, 10, 50, 75, true);
+g.fill3DRect (100, 110, 50, 75, false);
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-6">Figure 2.6: Filled and unfilled 3D rectangles</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0206.gif" alt="[Graphic: Figure 2-6]" width=163 height=209 border=0>
+
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void drawOval (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawOval()</tt> method draws 
+an oval in the current color within an invisible bounding rectangle from 
+(<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+to (<tt CLASS=literal>x+width</tt>, <tt CLASS=literal>y+height</tt>). 
+You cannot specify the oval's center point and radii. If <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> are equal, you get 
+a circle. If <tt CLASS=literal>width</tt> or <tt CLASS=literal>height</tt> 
+is negative, nothing is drawn. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void fillOval (int x, int y, int width, int height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>fillOval()</tt> method draws 
+a filled oval in the current color within an invisible bounding rectangle 
+from (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+to (<tt CLASS=literal>x+width-1</tt>, <tt CLASS=literal>y+height-1</tt>). 
+You cannot specify the oval's center point and radii. Notice that 
+the filled oval is one pixel smaller to the right and bottom than requested. 
+If <tt CLASS=literal>width</tt> or <tt CLASS=literal>height</tt> 
+is negative, nothing is drawn. 
+
+<P CLASS=para>
+<A HREF="ch02_01.htm#JAWT-CH-2-FIG-7">Figure 2.7</A> shows the collection of ovals, filled and 
+unfilled, that were generated by the following code: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+g.drawOval (25, 10, 50, 75);
+g.fillOval (25, 110, 50, 75);
+g.drawOval (100, 10, 50, 50);
+g.fillOval (100, 110, 50, 50);
+</PRE>
+</DIV>
+
+</DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-7">Figure 2.7: Filled and unfilled ovals</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0207.gif" alt="[Graphic: Figure 2-7]" width=163 height=209 border=0>
+
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void drawArc (int x, int y, int width, int height, int 
+startAngle, int arcAngle) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawArc()</tt> method draws 
+an arc in the current color within an invisible bounding rectangle from 
+(<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+to (<tt CLASS=literal>x+width</tt>, <tt CLASS=literal>y+height</tt>). 
+The arc starts at <tt CLASS=literal>startAngle</tt> 
+degrees and goes to <tt CLASS=literal>startAngle</tt> 
++ <tt CLASS=literal>arcAngle</tt> degrees. An angle 
+of 0 degrees is at the 3 o'clock position; angles increase counter-clockwise. 
+If <tt CLASS=literal>arcAngle</tt> is negative, drawing 
+is in a clockwise direction. If <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> are equal and <tt CLASS=literal>arcAngle</tt> 
+is 360 degrees, <tt CLASS=literal>drawArc()</tt> draws 
+a circle. If <tt CLASS=literal>width</tt> or <tt CLASS=literal>height</tt> 
+is negative, nothing is drawn. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void fillArc (int x, int y, int width, int height, int 
+startAngle, int arcAngle) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>fillArc()</tt> method draws 
+a filled arc in the current color within an invisible bounding rectangle 
+from (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+to (<tt CLASS=literal>x+width-1</tt>, <tt CLASS=literal>y+height-1</tt>). 
+The arc starts at <tt CLASS=literal>startAngle</tt> 
+degrees and goes to <tt CLASS=literal>startAngle</tt> 
++ <tt CLASS=literal>arcAngle</tt> degrees. An angle 
+of 0 degrees is at the 3 o'clock position; angles increase counter-clockwise. 
+If <tt CLASS=literal>arcAngle</tt> is negative, drawing 
+is in a clockwise direction. The arc fills like a pie (to the origin), 
+not from arc endpoint to arc endpoint. This makes creating pie charts 
+easier. If <tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt> 
+are equal and <tt CLASS=literal>arcAngle</tt> is 360 degrees, 
+<tt CLASS=literal>fillArc()</tt> draws a filled circle. 
+If <tt CLASS=literal>width</tt> or <tt CLASS=literal>height</tt> 
+is negative, nothing is drawn. 
+
+<P CLASS=para>
+<A HREF="ch02_01.htm#JAWT-CH-2-FIG-8">Figure 2.8</A> shows a collection of filled and unfilled 
+arcs that were generated by the following code: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+g.drawArc (25, 10, 50, 75, 0, 360);
+g.fillArc (25, 110, 50, 75, 0, 360);
+g.drawArc (100, 10, 50, 75, 45, 215);
+g.fillArc (100, 110, 50, 75, 45, 215);
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-8">Figure 2.8: Filled and unfilled arcs</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0208.gif" alt="[Graphic: Figure 2-8]" width=163 height=209 border=0>
+
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void drawPolygon (Polygon p) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawPolygon()</tt> method draws 
+a path for the points in polygon <tt CLASS=literal>p</tt> 
+in the current color. <A HREF="ch02_06.htm#JAWT-CH-2-SECT-6">Polygon</A> discusses the <tt CLASS=literal>Polygon</tt> 
+class in detail. 
+
+<P CLASS=para>
+The behavior of <tt CLASS=literal>drawPolygon()</tt> 
+changes slightly between Java 1.0.2 and 1.1. With version 1.0.2, if the 
+first and last points of a <tt CLASS=literal>Polygon</tt> 
+are not the same, a call to <tt CLASS=literal>drawPolygon()</tt> 
+results in an open polygon, since the endpoints are not connected for you. 
+Starting with version 1.1, if the first and last points are not the same, 
+the endpoints are connected for you. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void drawPolygon (int xPoints[], int yPoints[], int numPoints) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawPolygon()</tt> method draws 
+a path of <tt CLASS=literal>numPoints</tt> nodes by 
+plucking one element at a time out of <tt CLASS=literal>xPoints</tt> 
+and <tt CLASS=literal>yPoints</tt> to make each point. 
+The path is drawn in the current color. If either <tt CLASS=literal>xPoints</tt> 
+or <tt CLASS=literal>yPoints</tt> does not have <tt CLASS=literal>numPoints</tt> 
+elements, <tt CLASS=literal>drawPolygon()</tt> throws 
+a run-time exception. In 1.0.2, this exception is an <tt CLASS=literal>IllegalArgumentException</tt>; 
+in 1.1, it is an <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>. 
+This change shouldn't break older programs, since you are not required 
+to catch run-time exceptions. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void drawPolyline (int xPoints[], int yPoints[], int numPoints) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawPolyline()</tt> method functions 
+like the 1.0 version of <tt CLASS=literal>drawPolygon()</tt>. 
+It plays connect the dots with the points in the <tt CLASS=literal>xPoints</tt> 
+and <tt CLASS=literal>yPoints</tt> arrays and does 
+not connect the endpoints. If either <tt CLASS=literal>xPoints</tt> 
+or <tt CLASS=literal>yPoints</tt> does not have <tt CLASS=literal>numPoints</tt> 
+elements, <tt CLASS=literal>drawPolygon()</tt> throws 
+the run-time exception, <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>. </DL>
+<P CLASS=para>
+Filling polygons is a complex topic. It is not as easy as filling rectangles 
+or ovals because a polygon may not be closed and its edges may cross. AWT 
+uses an even-odd rule to fill polygons. This algorithm works by counting 
+the number of times each scan line crosses an edge of the polygon. If the 
+total number of crossings to the left of the current point is odd, the 
+point is colored. If it is even, the point is left alone. <A HREF="ch02_01.htm#JAWT-CH-2-FIG-9">Figure 2.9</A> 
+demonstrates this algorithm for a single scan line that intersects the 
+polygon at x values of 25, 75, 125, 175, 225, and 275. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-9">Figure 2.9: Polygon fill algorithm</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0209.gif" alt="[Graphic: Figure 2-9]" width=163 height=209 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The scan line starts at the left edge of the screen; at this point there 
+haven't been any crossings, so the pixels are left untouched. The 
+scan line reaches the first crossing when x equals 25. Here, the total 
+number of crossings to the left is one, so the scan line is inside the 
+polygon, and the pixels are colored. At 75, the scan line crosses again; 
+the total number of crossings is two, so coloring stops. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void fillPolygon (Polygon p) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>fillPolygon()</tt> method draws 
+a filled polygon for the points in <tt CLASS=literal>Polygon p</tt> 
+in the current color. If the polygon is not closed, <tt CLASS=literal>fillPolygon()</tt> 
+adds a segment connecting the endpoints. <A HREF="ch02_06.htm#JAWT-CH-2-SECT-6">Polygon</A>
+discusses the <tt CLASS=literal>Polygon</tt> 
+class in detail. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void fillPolygon (int xPoints[], int yPoints[], int nPoints) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>fillPolygon()</tt> method draws 
+a polygon of <tt CLASS=literal>numPoints</tt> nodes 
+by plucking one element at a time out of <tt CLASS=literal>xPoints</tt> 
+and <tt CLASS=literal>yPoints</tt> to make each point. 
+The polygon is drawn in the current color. If either <tt CLASS=literal>xPoints</tt> 
+or <tt CLASS=literal>yPoints</tt> does not have <tt CLASS=literal>numPoints</tt> 
+elements, <tt CLASS=literal>fillPolygon()</tt> throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+If the polygon is not closed, <tt CLASS=literal>fillPolygon()</tt> 
+adds a segment connecting the endpoints.[3] 
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+In Java 1.1, this method throws <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>, 
+not <tt CLASS=literal>IllegalArgumentException</tt>.
+</blockquote>
+</DL>
+<P CLASS=para>
+<A HREF="ch02_01.htm#JAWT-CH-2-FIG-10">Figure 2.10</A> shows several polygons created by the following code, containing different 
+versions of <tt CLASS=literal>drawPolygon()</tt> and 
+<tt CLASS=literal>fillPolygon()</tt>:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+int[] xPoints[] = {{50, 25, 25, 75, 75},
+                   {50, 25, 25, 75, 75},
+                   {100, 100, 150, 100, 150, 150, 125, 100, 150},
+                   {100, 100, 150, 100, 150, 150, 125, 100, 150}};
+int[] yPoints[] = {{10, 35, 85, 85, 35, 10},
+                   {110, 135, 185, 185, 135},
+                   {85, 35, 35, 85, 85, 35, 10, 35, 85},
+                   {185, 135, 135, 185, 185, 135, 110, 135, 185}};
+int   nPoints[] = {5, 5, 9, 9};
+g.drawPolygon (xPoints[0], yPoints[0], nPoints[0]);
+g.fillPolygon (xPoints[1], yPoints[1], nPoints[1]);
+g.drawPolygon (new Polygon(xPoints[2], yPoints[2], nPoints[2]));
+g.fillPolygon (new Polygon(xPoints[3], yPoints[3], nPoints[3]));
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-10">Figure 2.10: Filled and unfilled polygons</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0210.gif" alt="[Graphic: Figure 2-10]" width=285 height=248 border=0>
+
+</DIV>
+
+Drawing images
+
+<P CLASS=para>
+<A NAME="CH02.IMAGE1"></A>An <tt CLASS=literal>Image</tt> is a displayable object 
+maintained in memory. To get an image on the screen, you must draw it onto 
+a graphics context, using the <tt CLASS=literal>drawImage()</tt> 
+method of the <tt CLASS=literal>Graphics</tt> class. 
+For example, within a <tt CLASS=literal>paint()</tt> 
+method, you would call <tt CLASS=literal>g.drawImage(image, ... , this)</tt> 
+to display some image on the screen. In other situations, you might use 
+the <tt CLASS=literal>createImage()</tt> method to 
+generate an offscreen <tt CLASS=literal>Graphics</tt> 
+object, then use <tt CLASS=literal>drawImage()</tt> 
+to draw an image onto this object, for display later. 
+
+<P CLASS=para>
+This begs the question: where do images come from? We will have more to 
+say about the <tt CLASS=literal>Image</tt> class later 
+in this chapter. For now, it's enough to say that you can call <tt CLASS=literal>getImage()</tt> 
+to load an image from disk or across the Net. There are versions of <tt CLASS=literal>getImage()</tt> 
+in the <tt CLASS=literal>Applet</tt> and <tt CLASS=literal>Toolkit</tt> 
+classes; the latter is for use in applications. You can also call <tt CLASS=literal>createImage()</tt>, 
+a method of the <tt CLASS=literal>Component</tt> class, 
+to generate an image in memory. 
+
+<P CLASS=para>
+What about the last argument to <tt CLASS=literal>drawImage()</tt>? 
+What is <tt CLASS=literal>this</tt> for? The last 
+argument of <tt CLASS=literal>drawImage()</tt> is 
+always an image observer--that is, an object that implements the <tt CLASS=literal>ImageObserver</tt> 
+interface. This interface is discussed in detail in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>. 
+For the time being, it's enough to say that the call to <tt CLASS=literal>drawImage()</tt> 
+starts a new thread that loads the requested image. An image observer monitors 
+the process of loading an image; the thread that is loading the image notifies 
+the image observer whenever new data has arrived. The <tt CLASS=literal>Component</tt> 
+class implements the <tt CLASS=literal>ImageObserver</tt> 
+interface; when you're writing a <tt CLASS=literal>paint()</tt> 
+method, you're almost certainly overriding some component's 
+<tt CLASS=literal>paint()</tt> method; therefore, 
+it's safe to use <tt CLASS=literal>this</tt> 
+as the image observer in a call to <tt CLASS=literal>drawImage()</tt>. 
+More simply, we could say that any component can serve as an image observer 
+for images that are drawn on it. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract boolean drawImage (Image image, int x, int y, ImageObserver observer) </I><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="CH02.DRAW"></A>The <tt CLASS=literal>drawImage()</tt> method draws 
+<tt CLASS=literal>image</tt> onto the screen with 
+its upper left corner at (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>), using <tt CLASS=literal>observer</tt> 
+as its <tt CLASS=literal>ImageObserver</tt>. Returns 
+<tt CLASS=literal>true</tt> if the object is fully drawn, <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract boolean drawImage (Image image, int x, int y, int width, 
+int height, 
+ImageObserver observer) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawImage()</tt> method draws 
+<tt CLASS=literal>image </tt>onto the screen with 
+its upper left corner at (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>), using <tt CLASS=literal>observer</tt> 
+as its <tt CLASS=literal>ImageObserver</tt>. The system 
+scales <tt CLASS=literal>image</tt> to fit into a 
+<tt CLASS=literal>width</tt> x <tt CLASS=literal>height</tt> 
+area. The scaling may take time. This method returns <tt CLASS=literal>true</tt> 
+if the object is fully drawn, <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<P CLASS=para>
+With Java 1.1, you don't need to use <tt CLASS=literal>drawImage()</tt> 
+for scaling; you can prescale the image with the <tt CLASS=literal>Image.getScaledInstance()</tt> 
+method, then use the previous version of <tt CLASS=literal>drawImage()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract boolean drawImage (Image image, int x, int y, Color backgroundColor, 
+ImageObserver observer) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawImage()</tt> method draws 
+<tt CLASS=literal>image</tt> onto the screen with 
+its upper left corner at (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>), using <tt CLASS=literal>observer</tt> 
+as its <tt CLASS=literal>ImageObserver</tt>. <tt CLASS=literal>backgroundColor</tt> 
+is the color of the background seen through the transparent parts of the 
+image. If no part of the image is transparent, you will not see <tt CLASS=literal>backgroundColor</tt>. 
+Returns <tt CLASS=literal>true</tt> if the object 
+is fully drawn, <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract boolean drawImage (Image image, int x, int y, int width, 
+int height, 
+Color backgroundColor, ImageObserver observer) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawImage()</tt> method draws 
+<tt CLASS=literal>image</tt> onto the screen with 
+its upper left corner at (<tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>), using <tt CLASS=literal>observer</tt> 
+as its <tt CLASS=literal>ImageObserver</tt>. <tt CLASS=literal>backgroundColor</tt> 
+is the color of the background seen through the transparent parts of the 
+image. The system scales <tt CLASS=literal>image</tt> 
+to fit into a <tt CLASS=literal>width</tt> x <tt CLASS=literal>height</tt> 
+area. The scaling may take time. This method returns <tt CLASS=literal>true</tt> 
+if the image is fully drawn, <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<P CLASS=para>
+With Java 1.1, you can prescale the image with the <tt CLASS=literal>AreaAveragingScaleFilter</tt> 
+or <tt CLASS=literal>ReplicateScaleFilter</tt> described 
+in <A HREF="ch12_01.htm">Chapter 12, <i>Image Processing</i></A>, then use the previous version of <tt CLASS=literal>drawImage()</tt> 
+to display it. </DL>
+<P CLASS=para>
+The following code generated the images in <A HREF="ch02_01.htm#JAWT-CH-2-FIG-11">Figure 2.11</A>. The images 
+on the left come from a standard JPEG file. The images on the right come 
+from a file in GIF89a format, in which the white pixel is "transparent." 
+Therefore, the gray background shows through this pair of images. 
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+public class drawingImages extends Applet {
+    Image i, j;
+    public void init () {
+        i = getImage (getDocumentBase(), "rosey.jpg");
+        j = getImage (getDocumentBase(), "rosey.gif");
+    }
+    public void paint (Graphics g) {
+        g.drawImage (i, 10, 10, this);
+        g.drawImage (i, 10, 85, 150, 200, this);
+        g.drawImage (j, 270, 10, Color.lightGray, this);
+        g.drawImage (j, 270, 85, 150, 200, Color.lightGray, this);
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-11">Figure 2.11: Scaled and unscaled images</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0211.gif" alt="[Graphic: Figure 2-11]" width=163 height=209 border=0>
+
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract boolean drawImage(Image img, int dx1, int dy1, int dx2, 
+int dy2, int sx1, int sy1, int sx2, int sy2, ImageObserver observer) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawImage()</tt> method draws 
+a portion of <tt CLASS=literal>image</tt> onto the 
+screen. It takes the part of the image with corners at (<tt CLASS=literal>sx1</tt>, 
+<tt CLASS=literal>sy1</tt>) and (<tt CLASS=literal>sx2</tt>, 
+<tt CLASS=literal>sy2</tt>); it places this rectangular snippet on the screen with one corner at (<tt CLASS=literal>dx1</tt>, 
+<tt CLASS=literal>dy1</tt>) and another at (<tt CLASS=literal>dx2</tt>, 
+<tt CLASS=literal>dy2</tt>), using <tt CLASS=literal>observer</tt> 
+as its <tt CLASS=literal>ImageObserver</tt>. (Think 
+of <tt CLASS=literal>d</tt> for destination location 
+and <tt CLASS=literal>s</tt> for source image.) This 
+method returns <tt CLASS=literal>true</tt> if the 
+object is fully drawn, <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<P CLASS=para>
+<tt CLASS=literal>drawImage()</tt> flips the image 
+if source and destination endpoints are not the same corners, crops the 
+image if the destination is smaller than the original size, and scales 
+the image if the destination is larger than the original size. It does 
+not do rotations, only flips (i.e., it can produce a mirror image or an 
+image rotated 180 degrees but not an image rotated 90 or 270 degrees). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract boolean drawImage(Image img, int dx1, int dy1, int dx2, 
+int dy2, int sx1, int sy1, int sx2, int sy2, Color backgroundColor, ImageObserver 
+observer) <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>drawImage()</tt> method draws 
+a portion of <tt CLASS=literal>image</tt> onto the 
+screen. It takes the part of the image with corners at (<tt CLASS=literal>sx1</tt>, 
+<tt CLASS=literal>sy1</tt>) and (<tt CLASS=literal>sx2</tt>, 
+<tt CLASS=literal>sy2</tt>); it places this rectangular 
+snippet on the screen with one corner at (<tt CLASS=literal>dx1</tt>, 
+<tt CLASS=literal>dy1</tt>) and another at (<tt CLASS=literal>dx2</tt>, 
+<tt CLASS=literal>dy2</tt>), using <tt CLASS=literal>observer</tt> 
+as its <tt CLASS=literal>ImageObserver</tt>. (Think 
+of <tt CLASS=literal>d</tt> for destination location 
+and <tt CLASS=literal>s</tt> for source image.) <tt CLASS=literal>backgroundColor</tt> 
+is the color of the background seen through the transparent parts of the 
+image. If no part of the image is transparent, you will not see <tt CLASS=literal>backgroundColor</tt>. 
+This method returns <tt CLASS=literal>true</tt> if 
+the object is fully drawn, <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<P CLASS=para>
+Like the previous version of <tt CLASS=literal>drawImage()</tt>, 
+this method flips the image if source and destination endpoints are not 
+the same corners, crops the image if the destination is smaller than the 
+original size, and scales the image if the destination is larger than 
+the original size. It does not do rotations, only flips (i.e., it can produce 
+a mirror image or an image rotated 180 degrees but not an image rotated 
+90 or 270 degrees). </DL>
+<P CLASS=para>
+The following code demonstrates the new <tt CLASS=literal>drawImage()</tt> 
+methods in Java 1.1. They allow you to scale, flip, and crop images without 
+the use of image filters. The results are shown in <A HREF="ch02_01.htm#JAWT-CH-2-FIG-12">Figure 2.12</A>. 
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.awt.*;
+import java.applet.*;
+public class drawingImages11 extends Applet {
+    Image i, j;
+    public void init () {
+        i = getImage (getDocumentBase(), "rosey.gif");
+    }
+    public void paint (Graphics g) {
+        g.drawImage (i, 10, 10, this);
+        g.drawImage (i, 10, 85, 
+                     i.getWidth(this)+10, i.getHeight(this)+85, 
+                     i.getWidth(this), i.getHeight(this), 0, 0, this);
+        g.drawImage (i, 270, 10, 
+                     i.getWidth(this)+270, i.getHeight(this)*2+10, 0, 0, 
+                     i.getWidth(this), i.getHeight(this), Color.gray, this);
+        g.drawImage (i, 10, 170, 
+                     i.getWidth(this)*2+10, i.getHeight(this)+170, 0, 
+                     i.getHeight(this)/2, i.getWidth(this)/2, 0, this);
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-2-FIG-12">Figure 2.12: Flipped, mirrored, and cropped images</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0212.gif" alt="[Graphic: Figure 2-12]" width=430 height=296 border=0>
+
+</DIV>
+
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void translate (int x, int y)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>translate()</tt> method sets 
+how the system translates the coordinate space for you. The point at the 
+(<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) 
+coordinates becomes the origin of this graphics context. Any future drawing 
+will be relative to this location. Multiple translations are cumulative. 
+The following code leaves the coordinate system translated by (100, 50). 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+translate (100, 0);
+translate (0, 50);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that each call to <tt CLASS=literal>paint()</tt> 
+provides an entirely new <tt CLASS=literal>Graphics</tt> 
+context with its origin in the upper left corner. Therefore, don't 
+expect translations to persist from one call to <tt CLASS=literal>paint()</tt> 
+to the next. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void dispose () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>dispose()</tt> method frees 
+any system resources used by the <tt CLASS=literal>Graphics</tt> 
+context. It's a good idea to call <tt CLASS=literal>dispose()</tt> 
+whenever you are finished with a <tt CLASS=literal>Graphics</tt> 
+object, rather than waiting for the garbage collector to call it automatically 
+(through <tt CLASS=literal>finalize()</tt>). Disposing 
+of the <tt CLASS=literal>Graphics</tt> object yourself 
+will help your programs on systems with limited resources. However, you 
+should not dispose the <tt CLASS=literal>Graphics</tt> 
+parameter to <tt CLASS=literal>Component.paint()</tt> 
+or <tt CLASS=literal>Component.update()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void finalize () </I><br>
+<DD>
+
+<P CLASS=para>
+The garbage collector calls <tt CLASS=literal>finalize()</tt> 
+when it determines that the <tt CLASS=literal>Graphics</tt> 
+object is no longer needed. <tt CLASS=literal>finalize()</tt> 
+calls <tt CLASS=literal>dispose()</tt>, which frees 
+any resources that the <tt CLASS=literal>Graphics</tt> 
+object has used. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Graphics</tt> 
+returns a string showing the current font and color. However, <tt CLASS=literal>Graphics</tt> 
+is an abstract class, and classes that extend <tt CLASS=literal>Graphics</tt> 
+usually override <tt CLASS=literal>toString()</tt>. 
+For example, on a Windows 95 machine, <tt CLASS=literal>sun.awt.win32.Win32Graphics</tt> is the concrete class that extends <tt CLASS=literal>Graphics</tt>. 
+The class's <tt CLASS=literal>toString()</tt> 
+method displays the current origin of the <tt CLASS=literal>Graphics</tt> 
+object, relative to the original coordinate system: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+sun.awt.win32.Win32Graphics[0,0]
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Summary</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Point</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

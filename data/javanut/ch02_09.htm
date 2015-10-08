@@ -1,0 +1,475 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.9 Arrays</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:47:57 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>How Java Differs from C</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-9">2.9 Arrays</A></h2>
+
+<P CLASS=para>
+<A NAME="ARRAYS"></A>Most of what we learned in the previous sections about
+reference types and objects applies equally well to arrays
+in Java: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Arrays are manipulated by reference.
+
+<P>
+<li CLASS=listitem>They are dynamically created with <tt CLASS=literal>new</tt>.
+
+<P>
+<li CLASS=listitem>They are automatically garbage collected when no longer
+referred to.
+
+<P>
+</UL>
+<P CLASS=para>
+The following subsections explain these and other details.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-9.1">Creating and Destroying Arrays</A></h3>
+
+<P CLASS=para>
+There are two ways to create arrays in Java.  The first uses
+<tt CLASS=literal>new</tt>, and specifies how large the array should be:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+byte octet_buffer[] = new byte[1024];
+Button buttons[] = new Button[10];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Since creating an array does not create the objects that are
+stored in the array, there is no constructor to call, and
+the argument list is omitted with this form of the
+<tt CLASS=literal>new</tt> keyword.  The elements of an array created in
+this way are initialized to the default value for their
+type.  The elements of an array of <tt CLASS=literal>int</tt> are
+initialized to <tt CLASS=literal>0</tt>, for example, and the elements of
+an array of objects are initialized to <tt CLASS=literal>null</tt>.  This
+last point is important to remember: creating an array of
+objects only allocates storage for object references, not
+objects themselves.  The objects that will be referred to by
+the elements of the array must be created separately.
+
+<P CLASS=para>
+The second way to create an array is with an
+initializer, which looks just like it does in C:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+int lookup_table[] = {1, 2, 4, 8, 16, 32, 64, 128};
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This syntax dynamically creates an array and initializes its
+elements to the specified values.  The elements specified in
+an array initializer may be arbitrary expressions.  This is
+different than in C, where they must be constant
+expressions.
+
+<P CLASS=para>
+In Java 1.1, arrays may also be created and initialized
+"anonymously" by combining the <tt CLASS=literal>new</tt> syntax with the
+initializer syntax.  It looks like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Menu m = createMenu("File", new String[] { "Open...", "Save", "Quit" });
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Arrays are automatically garbage collected, just like objects
+are.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-9.2">Multidimensional Arrays</A></h3>
+
+<P CLASS=para>
+<A NAME="MULTIDIMENSIONAL-ARRAYS"></A>Java also supports multidimensional arrays.  These are
+implemented as arrays-of-arrays, as they are in C.
+You specify a variable
+as a multidimensional array type simply by appending the
+appropriate number of <tt CLASS=literal>[]</tt> pairs after it.  You
+allocate a multidimensional array with <tt CLASS=literal>new</tt>
+by specifying the appropriate number of elements (between
+square brackets) for each dimension.  For example:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+byte TwoDimArray[][] = new byte[256][16];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This statement does three things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Declares a variable named <tt CLASS=literal>TwoDimArray</tt>.  This
+variable has type <tt CLASS=literal>byte[][]</tt>
+(array-of-array-of-<tt CLASS=literal>byte</tt>).
+
+<P>
+<li CLASS=listitem>Dynamically allocates an array with 256 elements.  The type
+of this newly allocated array is <tt CLASS=literal>byte[][]</tt>, so it can
+be assigned to the variable we declared.  Each element of
+this new array is of type <tt CLASS=literal>byte[]</tt>--a single-dimensional array of <tt CLASS=literal>byte</tt>.
+
+<P>
+<li CLASS=listitem>Dynamically allocates 256 arrays of bytes, each of which
+holds 16 bytes, and stores a reference to these 256
+<tt CLASS=literal>byte[]</tt> arrays into the 256 elements of the
+<tt CLASS=literal>byte[][]</tt> array allocated in the second step. The 16 bytes in
+each of these 256 arrays are initialized to their default
+value of <tt CLASS=literal>0</tt>.
+
+<P>
+</UL>
+<P CLASS=para>
+When allocating a multidimensional array, you do not have
+to specify the number of elements that are contained in each
+dimension.  For example:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+int threeD[][][] = new int[10][][];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This expression allocates an array that contains ten elements, each of type
+<tt CLASS=literal>int[][]</tt>.  It is a single-dimensional allocation,
+although when the array elements are properly initialized to
+meaningful values, the array will be multidimensional.
+The rule for this sort of array allocation is that the first
+<I CLASS=emphasis>n</I> dimensions (where <I CLASS=emphasis>n</I> is at least one) must have
+the number of elements specified, and these dimensions may be
+followed by <I CLASS=emphasis>m</I> additional dimensions with no dimension
+size specified.  The following is legal:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+String lots_of_strings[][][][] = new String[5][3][][];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This is not:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+double temperature_data[][][] = new double[100][][10];  // illegal
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Multidimensional arrays can also be allocated and
+initialized with nested initializers.  For example, you
+might declare the following multidimensional array of
+strings for use by the <tt CLASS=literal>getParameterInfo()</tt> method of an
+applet:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+String param_info[][] = {
+    {"foreground", "Color",  "foreground color"},
+    {"background", "Color",  "background color"},
+    {"message",    "String", "the banner to display"}
+};
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that since Java implements multidimensional arrays as
+arrays-of-arrays, multidimensional arrays need not be
+"rectangular."  For example, this is how you could
+create and initialize a "triangular array":
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+short triangle[][] = new short[10][];       // A single-dimensional array.
+for(int i = 0; i &lt; triangle.length; i++) {  // For each element of that array
+    triangle[i] = new short[i+1];           // Allocate a new array.
+    for(int j=0; j &lt; i+1; j++)              // For each element of new array
+        triangle[i][j] = (short) i + j;     // Initialize it to a value.
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can also declare and initialize non-rectangular arrays
+with nested initializers:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+static int[][] twodim = {{1, 2}, {3, 4, 5}, {5, 6, 7, 8}};
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To simulate multiple dimensions within a single-dimensional array, you'd
+use code just as you would in C:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+final int rows = 600;
+final int columns = 800;
+byte pixels[] = new byte[rows*columns];
+// access element [i,j] like this:
+byte b = pixels[i + j*columns];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-9.3">Accessing Array Elements</A></h3>
+
+<P CLASS=para>
+Array access in Java is just like array access in C--you
+access an element of an array by putting an integer-valued
+expression between square brackets after the name of the
+array.
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+int a[] = new int[100];
+a[0] = 0;
+for(int i = 1; i &lt; a.length; i++) a[i] = i + a[i-1];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Notice how we computed the number of elements of the array
+in this example--by accessing the <tt CLASS=literal>length</tt> field of
+the array.  This is the only field that arrays support.
+Note that it is a constant (<tt CLASS=literal>final</tt>) field--any attempt to store a
+value into the <tt CLASS=literal>length</tt> field of an array will fail.
+
+<P CLASS=para>
+In all Java array references, the index is checked to make
+sure it is not too small (less than zero) or too big
+(greater than or equal to the array length).  If the index
+is out of bounds, an <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>
+is thrown.
+[4]
+This is another way that Java works to prevent
+bugs (and security problems).
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+The discussion of exceptions and exception handling is
+still to come.
+</blockquote>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-9.4">Are Arrays Objects?</A></h3>
+
+<P CLASS=para>
+It is useful to consider arrays to be a separate kind of
+reference type from objects.  In some ways, though, arrays
+behave just like objects.  As we saw, arrays use the object
+syntax <tt CLASS=literal>.length</tt> to refer to their length.  Arrays may
+also be assigned to variables of type <tt CLASS=literal>Object</tt>, and
+the methods of the <tt CLASS=literal>Object</tt> class may be invoked for
+arrays.  (<tt CLASS=literal>Object</tt> is the root class in Java, which
+means that all objects can be assigned to a variable of type
+<tt CLASS=literal>Object</tt> and all objects can invoke the methods of
+<tt CLASS=literal>Object</tt>.)
+
+<P CLASS=para>
+The evidence suggests that arrays are, in fact, objects.
+Java defines enough special syntax for arrays, however, that
+it is still most useful to consider them a different kind
+of reference type than objects.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-9.5">Declaring Array Variables and Arguments</A></h3>
+
+<P CLASS=para>
+In C, you declare an array variable or array function
+argument by placing square brackets next to the variable name:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+void reverse(char strbuf[], int buffer_size)  {
+    char buffer[500];
+        ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In Java, you would have to declare <tt CLASS=literal>buffer</tt> as an
+array variable, and then allocate the array itself with
+<tt CLASS=literal>new</tt>, but otherwise you could use the same syntax,
+with the array brackets after the variable or argument name.
+
+<P CLASS=para>
+However, Java also allows you to put the array brackets
+after the type name instead.  So you could rewrite this code
+fragment to look something like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+void reverse(char[] strbuf, int buffer_size) {
+    char[] buffer = new char[500];
+        ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In a lot of ways, this new array syntax is easier to read
+and easier to understand.  (It doesn't work in C, by the
+way, because pointers make C's type declaration syntax a
+real mess.)  The only problem with this new syntax is that
+if you get in the habit of using it, it will make it harder
+for you when you (hopefully only occasionally!) have to
+switch back and program in C.
+
+<P CLASS=para>
+Java even allows you to mix the declaration styles, which is
+something you may find occasionally useful (or frequently
+confusing!) for certain data structures or algorithms.  For
+example:  
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// row and column are arrays of byte.
+// matrix is an array of an array of bytes.
+byte[] row, column, matrix[];
+// This method takes an array of bytes and an
+// array of arrays of bytes.
+public void dot_product(byte[] column, byte[] matrix[]) { ... }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A final point to note about array declarations is that (as
+we've seen throughout this section) the size of an array is
+not part of its type as it is in C.  Thus, you can declare a
+variable to be of type <tt CLASS=literal>String[]</tt>, for example, and assign any array
+of <tt CLASS=literal>String</tt> objects to it, regardless of the length of
+the array:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+String[] strings;           // this variable can refer to any String array
+strings = new String[10];   // one that contains 10 Strings
+strings = new String[20];   // or one that contains 20.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Objects</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Strings</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

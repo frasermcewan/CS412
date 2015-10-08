@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.12 The try Statement</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:14:45 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Statements and Control Structures</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-12">6.12 The try Statement</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.TRY2"></A>A <tt CLASS=literal>try</tt> statement provides a way to
+catch exceptions and execute clean-up code for a block:
+
+
+<p>
+<img align=middle src="./figs/jlr0621.gif" alt="[Graphic: Figure from the text]" width=450 height=31 border=0>
+
+
+<p>
+<img align=middle src="./figs/jlr0622.gif" alt="[Graphic: Figure from the text]" width=424 height=28 border=0>
+
+<P CLASS=para>
+A <tt CLASS=literal>try</tt> statement contains a block of code to be
+executed. A <tt CLASS=literal>try</tt> statement can have any number
+of optional <tt CLASS=literal>catch</tt> clauses; these clauses act
+as exception handlers for the <tt CLASS=literal>try</tt> block. A
+<tt CLASS=literal>try</tt> statement can also have a <tt CLASS=literal>finally</tt>
+clause.
+If present, the <tt CLASS=literal>finally</tt> block is always executed
+before control leaves the <tt CLASS=literal>try</tt> statement, so it
+is a good place to supply clean-up code for the <tt CLASS=literal>try</tt> block.
+Note that a <tt CLASS=literal>try</tt> statement must have either a
+<tt CLASS=literal>catch</tt> clause or a <tt CLASS=literal>finally</tt> clause.
+
+<P CLASS=para>
+Here is an example of a <tt CLASS=literal>try</tt> statement that
+includes a <tt CLASS=literal>catch</tt> clause and a <tt CLASS=literal>finally</tt>
+clause:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    out.write(b);
+} catch (IOException e) {
+    System.out.println("Output Error");
+} finally {
+    out.close();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If <tt CLASS=literal>out.write()</tt> throws an <tt CLASS=literal>IOException</tt>,
+the exception is caught by the <tt CLASS=literal>catch</tt> clause.
+Regardless of whether <tt CLASS=literal>out.write()</tt> returns normally
+or throws an exception, the <tt CLASS=literal>finally</tt> block is
+executed, which ensures that <tt CLASS=literal>out.close()</tt> is always
+called.
+
+<P CLASS=para>
+A <tt CLASS=literal>try</tt> statement
+begins by executing the block that follows the keyword <tt CLASS=literal>try</tt>.
+If an exception is thrown from within the <tt CLASS=literal>try</tt>
+block and the <tt CLASS=literal>try</tt> statement has any <tt CLASS=literal>catch</tt>
+clauses, those clauses are searched in order for one that
+can handle the exception. A <tt CLASS=literal>catch</tt> clause can
+handle an exception if the <I CLASS=emphasis>ClassOrInterfaceName</I>
+specified in the clause is the same class as or a superclass of
+the object specified in the <tt CLASS=literal>throw</tt> statement that
+caused the exception. The <I CLASS=emphasis>ClassOrInterfaceName</I>
+specified in a catch clause must be <tt CLASS=literal>Throwable</tt>
+or be one of its subclasses. If a <tt CLASS=literal>catch</tt> clause handles
+an exception, that <tt CLASS=literal>catch</tt> block is executed.
+
+<P CLASS=para>
+If an exception is thrown from within the <tt CLASS=literal>try</tt> block
+and the <tt CLASS=literal>try</tt> statement does not have any
+<tt CLASS=literal>catch</tt> clauses that can handle the exception,
+the exception propagates
+up to the next enclosing <tt CLASS=literal>try</tt> statement. An exception
+also propagates up if it is thrown from within a <tt CLASS=literal>catch</tt>block in a <tt CLASS=literal>try</tt> statement.
+
+<P CLASS=para>
+The identifier specified in parentheses for the <tt CLASS=literal>catch</tt> clause
+is defined as a local variable within the <tt CLASS=literal>catch</tt> block.
+The local variable is initialized to refer to the thrown object,
+in a manner that is similar to the way it which formal parameters
+for a method are handled. This means that an identifier in a
+<tt CLASS=literal>catch</tt>
+clause cannot have the same name as a local variable or formal parameter
+that is defined in an enclosing block. If the <tt CLASS=literal>catch</tt>
+parameter is declared as <tt CLASS=literal>final</tt>, any assignment
+to that parameter in the <tt CLASS=literal>catch</tt> block generates
+an error. The syntax for specifying <tt CLASS=literal>final</tt> 
+<tt CLASS=literal>catch</tt> parameters is not supported prior to Java 1.1.
+
+<P CLASS=para>
+Any <tt CLASS=literal>catch</tt>
+clauses in a <tt CLASS=literal>try</tt> statement are checked in sequence
+to see if they can handle a given exception. Thus, the order in
+which <tt CLASS=literal>catch</tt> clauses appear is important. In essence,
+more specific <tt CLASS=literal>catch</tt> clauses should appear before
+more general <tt CLASS=literal>catch</tt> clauses.
+<A HREF="ch06_12.htm#JLR2-CH-6-FIG-1">Figure 6.1</A> shows
+the inheritance hierarchy for a few of the classes of objects that
+can be thrown in Java.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JLR2-CH-6-FIG-1">Figure 6.1: Some exception classes in Java</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jlrf0601.gif" alt="[Graphic: Figure 6-1]" width=503 height=163 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Based on the classes shown
+in <A HREF="ch06_12.htm#JLR2-CH-6-FIG-1">Figure 6.1</A>,
+consider the following example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    System.out.write(b);
+} catch (InterruptedIOException e) { ...
+} catch (IOException e) { ...
+} catch (Exception e) { ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>catch</tt> clauses in this example appear
+in order from most specific to least specific. That means that if
+an <tt CLASS=literal>InterruptedIOException</tt> were thrown, it would
+be caught by the first <tt CLASS=literal>catch</tt> clause. Similarly,
+an <tt CLASS=literal>IOException</tt> would be caught by the second
+<tt CLASS=literal>catch</tt> clause and an <tt CLASS=literal>Exception</tt>
+would be caught by the third clause. If, however, the <tt CLASS=literal>catch</tt>
+clause for <tt CLASS=literal>Exception</tt> appeared first, neither
+of the other <tt CLASS=literal>catch</tt> clauses would ever be executed
+because the <tt CLASS=literal>catch</tt> clause for <tt CLASS=literal>Exception</tt>
+would catch all of the exceptions.
+
+<P CLASS=para>
+If a <tt CLASS=literal>try</tt> statement includes a <tt CLASS=literal>finally</tt>
+clause, the <tt CLASS=literal>finally</tt> block is always executed
+before control leaves the <tt CLASS=literal>try</tt> statement. There
+are two different ways that control can leave a <tt CLASS=literal>try</tt>
+statement:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>try</tt> statement completes
+normally. Normal completion occurs when all of the statements in
+the <tt CLASS=literal>try</tt> block have been executed, so that control
+falls out of the bottom of the <tt CLASS=literal>try</tt> block. Normal
+completion can also occur when an exception is thrown in the
+<tt CLASS=literal>try</tt> block, as long as the exception is handled by a
+<tt CLASS=literal>catch</tt> clause in the <tt CLASS=literal>try</tt> statement.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>try</tt> statement completes abruptly, due to an attempted
+control transfer out of the <tt CLASS=literal>try</tt> block.
+A <tt CLASS=literal>break</tt>,
+<tt CLASS=literal>continue</tt>, or <tt CLASS=literal>return</tt> statement
+in the <tt CLASS=literal>try</tt> block causes an abrupt completion. In addition,
+abrupt completion can occur when an exception occurs and is not
+handled by a <tt CLASS=literal>catch</tt> clause in the <tt CLASS=literal>try</tt>
+statement, since the exception propagates out of the
+<tt CLASS=literal>try</tt> block.
+
+<P>
+</UL>
+<P CLASS=para>
+If a <tt CLASS=literal>try</tt> statement
+completes normally and it does not have a <tt CLASS=literal>finally</tt> clause,
+the statement following the <tt CLASS=literal>try</tt> statement is
+the next statement to be executed. However, if the <tt CLASS=literal>try</tt>
+statement does have a <tt CLASS=literal>finally</tt> clause,
+the <tt CLASS=literal>finally</tt> block is executed first,
+before control can be transferred to the statement following the
+<tt CLASS=literal>try</tt> statement.
+If the <tt CLASS=literal>finally</tt> block contains a <tt CLASS=literal>break</tt>,
+<tt CLASS=literal>continue</tt>, <tt CLASS=literal>return</tt>, or
+<tt CLASS=literal>throw</tt> statement, the pending control transfer
+is forgotten and
+control is instead transferred to the target of the <tt CLASS=literal>break</tt>,
+<tt CLASS=literal>continue</tt>, <tt CLASS=literal>return</tt>, or
+<tt CLASS=literal>throw</tt> statement in the <tt CLASS=literal>finally</tt> block.
+
+<P CLASS=para>
+If a <tt CLASS=literal>try</tt> statement completes abruptly and
+it does not have a <tt CLASS=literal>finally</tt> clause, the control
+transfer out of the <tt CLASS=literal>try</tt> block takes place immediately.
+However, if the <tt CLASS=literal>try</tt> statement does have a
+<tt CLASS=literal>finally</tt> clause, the <tt CLASS=literal>finally</tt>
+block is executed first, before the control transfer can take place.
+If the <tt CLASS=literal>finally</tt> block contains a <tt CLASS=literal>break</tt>,
+<tt CLASS=literal>continue</tt>,
+<tt CLASS=literal>return</tt>, or <tt CLASS=literal>throw</tt> statement,
+the pending control transfer is forgotten and control is instead
+transferred to the target of the <tt CLASS=literal>break</tt>,
+<tt CLASS=literal>continue</tt>,
+<tt CLASS=literal>return</tt>, or <tt CLASS=literal>throw</tt> statement
+in the <tt CLASS=literal>finally</tt> block.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+Exception Handling 9;
+<I CLASS=emphasis>Expression</I> 4;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch06_08.htm#JLR2-CH-6-SECT-8">The break Statement</A>;
+<A HREF="ch06_09.htm#JLR2-CH-6-SECT-9">The continue Statement</A>;
+<A HREF="ch06_10.htm#JLR2-CH-6-SECT-10">The return Statement</A>;
+<A HREF="ch06_11.htm#JLR2-CH-6-SECT-11">The throw Statement</A>;
+<A HREF="ch10_25.htm">Throwable</A>
+<I CLASS=emphasis>Type</I> 3;
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The throw Statement</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The synchronized Statement</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

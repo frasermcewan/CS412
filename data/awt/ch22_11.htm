@@ -1,0 +1,1004 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 22] MemoryImageSource</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:25:36 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 22<br>java.awt.image Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch22_12.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>MemoryImageSource</H1>
+
+<H2>Name</H2>
+
+MemoryImageSource
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.63"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/memoryi.gif" alt="[Graphic: Figure from the text]" width=503 height=53 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.64">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>MemoryImageSource</tt> class 
+allows you to create images completely in memory. You provide an array 
+of data; it serves as an image producer for that data. In the 1.1 release, 
+new methods support using this class for animation (notably <tt CLASS=literal>setAnimated()</tt> 
+and the various overrides of <tt CLASS=literal>newPixels()</tt>). 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.65">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.awt.image.MemoryImageSource
+    extends java.lang.Object 
+    implements java.awt.image.ImageProducer {
+  // Constructors
+  public MemoryImageSource (int w, int h, ColorModel cm, 
+      byte[] pix, int off, int scan);
+  public MemoryImageSource (int w, int h, ColorModel cm, 
+      byte[] pix, int off, int scan, Hashtable props);
+  public MemoryImageSource (int w, int h, ColorModel cm, 
+      int[] pix, int off, int scan);
+  public MemoryImageSource (int w, int h, ColorModel cm, 
+      int[] pix, int off, int scan, Hashtable props);
+  public MemoryImageSource (int w, int h, int[] pix, 
+      int off, int scan);
+  public MemoryImageSource (int w, int h, int[] pix, 
+      int off, int scan, Hashtable props);
+  // Instance Methods
+  public synchronized void addConsumer (ImageConsumer ic);
+  public synchronized boolean isConsumer (ImageConsumer ic);
+  public void newPixels(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized void newPixels (int x, int y, 
+      int w, int h); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized void newPixels (int x, int y, 
+      int w, int h, boolean framenotify); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized void newPixels (byte[] newpix, 
+      ColorModel newmodel, int offset, int scansize); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized void newPixels (int[] newpix, 
+      ColorModel newmodel, int offset, int scansize); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized void removeConsumer (ImageConsumer ic);
+  public void requestTopDownLeftRightResend (ImageConsumer ic);
+  public synchronized void setAnimated (boolean animated); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public synchronized void setFullBufferUpdates 
+      (boolean fullbuffers); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public void startProduction (ImageConsumer ic);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.66">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.86">MemoryImageSource</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.95">public MemoryImageSource (int w, int h, ColorModel cm, byte[] pix, int off, int scan)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>cm</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ColorModel</tt> 
+of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pix</I><br>
+<DD>
+
+<P CLASS=para>
+Array of pixel information.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>off</I><br>
+<DD>
+
+<P CLASS=para>
+The offset of the first pixel in the array; elements 
+prior to this pixel are ignored.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scan</I><br>
+<DD>
+
+<P CLASS=para>
+The number of pixels per scan line in the array. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>MemoryImageSource</tt> 
+object with the given parameters to serve as an <tt CLASS=literal>ImageProducer</tt> 
+for a new image. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.96">public MemoryImageSource (int w, int h, ColorModel cm, byte[] pix, int off, int scan, Hashtable props)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>cm</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ColorModel</tt> 
+of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pix</I><br>
+<DD>
+
+<P CLASS=para>
+Array of pixel information.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>off</I><br>
+<DD>
+
+<P CLASS=para>
+The offset of the first pixel in the array; elements 
+prior to this pixel are ignored.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scan</I><br>
+<DD>
+
+<P CLASS=para>
+The number of pixels per scan line in the array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>props</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Hashtable</tt> 
+of properties associated with image. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>MemoryImageSource</tt> 
+object with the given parameters to serve as an <tt CLASS=literal>ImageProducer</tt> 
+for a new image. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.97">public MemoryImageSource (int w, int h, ColorModel cm, int[] pix, int off, int scan)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>cm</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ColorModel</tt> 
+of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pix</I><br>
+<DD>
+
+<P CLASS=para>
+Array of pixel information.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>off</I><br>
+<DD>
+
+<P CLASS=para>
+The offset of the first pixel in the array; elements 
+prior to this pixel are ignored.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scan</I><br>
+<DD>
+
+<P CLASS=para>
+The number of pixels per scan line in the array. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>MemoryImageSource</tt> 
+object with the given parameters to serve as an <tt CLASS=literal>ImageProducer</tt> 
+for a new image. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.98">public MemoryImageSource (int w, int h, ColorModel cm, int[] pix, int off, int scan, Hashtable props)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>cm</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ColorModel</tt> 
+of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pix</I><br>
+<DD>
+
+<P CLASS=para>
+Array of pixel information.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>off</I><br>
+<DD>
+
+<P CLASS=para>
+The offset of the first pixel in the array; elements 
+prior to this pixel are ignored.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scan</I><br>
+<DD>
+
+<P CLASS=para>
+The number of pixels per scan line in the array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>props</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Hashtable</tt> 
+of properties associated with image. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>MemoryImageSource</tt> 
+object with the given parameters to serve as an <tt CLASS=literal>ImageProducer</tt> 
+for a new image. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.99">public MemoryImageSource (int w, int h, int[] pix, int off, int scan)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pix</I><br>
+<DD>
+
+<P CLASS=para>
+Array of pixel information.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>off</I><br>
+<DD>
+
+<P CLASS=para>
+The offset of the first pixel in the array; elements 
+prior to this pixel are ignored.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scan</I><br>
+<DD>
+
+<P CLASS=para>
+The number of pixels per scan line in the array. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>MemoryImageSource</tt> 
+object with the given parameters to serve as an <tt CLASS=literal>ImageProducer</tt> 
+for a new image. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.100">public MemoryImageSource (int w, int h, int[] pix, int off, int scan, Hashtable props)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the image being created.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pix</I><br>
+<DD>
+
+<P CLASS=para>
+Array of pixel information.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>off</I><br>
+<DD>
+
+<P CLASS=para>
+The offset of the first pixel in the array; elements 
+prior to this pixel are ignored.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scan</I><br>
+<DD>
+
+<P CLASS=para>
+The number of pixels per scan line in the array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>props</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Hashtable</tt> 
+of properties associated with image. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>MemoryImageSource</tt> 
+object with the given parameters to serve as an <tt CLASS=literal>ImageProducer</tt> 
+for a new image. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.67">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.87">addConsumer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.101">public synchronized void addConsumer (ImageConsumer ic)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ic</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer</tt> 
+requesting image data. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageProducer.addConsumer(</tt><tt CLASS=literal>ImageConsumer</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Registers an <tt CLASS=literal>ImageConsumer</tt> 
+as interested in <tt CLASS=literal>Image</tt> information. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.88">isConsumer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.102">public synchronized boolean isConsumer (ImageConsumer ic)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ic</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer</tt> 
+to check. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if <tt CLASS=literal>ImageConsumer</tt> 
+is registered with this <tt CLASS=literal>ImageProducer</tt>, 
+<tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageProducer.isConsumer(</tt><tt CLASS=literal>ImageConsumer</tt><tt CLASS=literal>)</tt> </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.89">newPixels</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.103">public synchronized void newPixels() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Notifies the <tt CLASS=literal>MemoryImageSource</tt> 
+that there is new data available. The <tt CLASS=literal>MemoryImageSource</tt> 
+notifies all <tt CLASS=literal>ImageConsumer</tt>s 
+that there is new data, sending the full rectangle and notifying the consumers 
+that the frame is complete. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.104">public synchronized void newPixels (int x, int y, int w, int h, boolean framenotify) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x coordinate of the top left corner of the new image 
+data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y coordinate of the top left corner of the new image 
+data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the new image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the new image data. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Notifies the <tt CLASS=literal>MemoryImageSource</tt> 
+that there is new data available. The <tt CLASS=literal>MemoryImageSource</tt> 
+notifies all <tt CLASS=literal>ImageConsumer</tt>s 
+that there is new data in the rectangle described by <tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>, <tt CLASS=literal>w</tt>, 
+and <tt CLASS=literal>h</tt>. The consumers are notified that the frame is complete. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.105">public synchronized void newPixels (int x, int y, int w, int h, boolean framenotify) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x coordinate of the top left corner of the new image 
+data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y coordinate of the top left corner of the new image 
+data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the new image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the new image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>framenotify</I><br>
+<DD>
+
+<P CLASS=para>
+Determines whether this is a complete frame or not. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Notifies the <tt CLASS=literal>MemoryImageSource</tt> 
+that there is new data available. The <tt CLASS=literal>MemoryImageSource</tt> 
+notifies all <tt CLASS=literal>ImageConsumer</tt>s 
+that there is new data in the rectangle described by <tt CLASS=literal>x</tt>, 
+<tt CLASS=literal>y</tt>, <tt CLASS=literal>w</tt>, 
+and <tt CLASS=literal>h</tt>. If <tt CLASS=literal>framenotify</tt> 
+is <tt CLASS=literal>true</tt>, the consumers will also be notified that a frame is complete. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.106">public synchronized void newPixels (byte[] newpix, ColorModel newmodel, int offset, int scansize) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>newpix</I><br>
+<DD>
+
+<P CLASS=para>
+New array of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>newmodel</I><br>
+<DD>
+
+<P CLASS=para>
+The color model to use for the new data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset into the data array
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Changes the image data for this <tt CLASS=literal>MemoryImageSource</tt> 
+and notifies its <tt CLASS=literal>ImageConsumer</tt>s 
+that new data is available. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.107">public synchronized void newPixels (int[] newpix, ColorModel newmodel, int offset, int scansize) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>newpix</I><br>
+<DD>
+
+<P CLASS=para>
+New array of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>newmodel</I><br>
+<DD>
+
+<P CLASS=para>
+The color model to use for the new data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset into the data array
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Changes the image data for this <tt CLASS=literal>MemoryImageSource</tt> 
+and notifies its <tt CLASS=literal>ImageConsumer</tt>s 
+that new data is available. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.90">removeConsumer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.108">public void removeConsumer (ImageConsumer ic)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ic</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer</tt> 
+to remove. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageProducer.removeConsumer(</tt><tt CLASS=literal>ImageConsumer</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Removes an <tt CLASS=literal>ImageConsumer</tt> from 
+registered consumers for this <tt CLASS=literal>ImageProducer</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.91">requestTopDownLeftRightResend</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.109">public void requestTopDownLeftRightResend (ImageConsumer ic)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ic</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer</tt> 
+requesting image data. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageProducer.requestTopDownLeftRightResend(</tt><tt CLASS=literal>ImageConsumer</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Requests the retransmission of the <tt CLASS=literal>Image</tt> 
+data in top-down, left-to-right order. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.92">setAnimated</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.110">public void setAnimated (boolean animated) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>animated</I><br>
+<DD>
+
+<P CLASS=para>
+Flag indicating whether this image is animated. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+To use this MemoryImageSource for animation, call <tt CLASS=literal>setAnimated(true)</tt>. 
+The <tt CLASS=literal>newPixels()</tt> methods will 
+not work otherwise. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.93">setFullBufferUpdates</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.111">public void setFullBufferUpdates (boolean fullbuffers) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>fullbuffers</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> to 
+send full buffers; <tt CLASS=literal>false</tt> otherwise. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is only important for animations; i.e., you should call <tt CLASS=literal>setAnimated(true)</tt> 
+before using this function. If you do request to send full buffers, then 
+any rectangle parameters passed to <tt CLASS=literal>newPixels()</tt> 
+will be ignored and the entire image will be sent to the consumers. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.94">startProduction</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.112">public void startProduction (ImageConsumer ic)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ic</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer</tt> 
+requesting image data. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageProducer.startProduction(</tt><tt CLASS=literal>ImageConsumer</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Registers <tt CLASS=literal>ImageConsumer</tt> as 
+interested in Image information 
+and tells <tt CLASS=literal>ImageProducer</tt> to 
+start sending the image data immediately. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.68">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ColorModel</tt>, <tt CLASS=literal>Hashtable</tt>, 
+<tt CLASS=literal>ImageConsumer</tt>, <tt CLASS=literal>ImageProducer</tt>, 
+<tt CLASS=literal>Object</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch22_12.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>IndexColorModel</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>PixelGrabber</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,633 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.7 Internationalization</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:55:58 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Basic Utility Classes</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-7">7.7 Internationalization</A></h2>
+
+<P CLASS=para>
+In order to deliver on the promise "Write once, run anywhere," the engineers
+at Java designed the famous Java Virtual Machine.  True, your program
+will run anywhere there is a JVM, but what about users in other countries?  Will
+they have to know English to use your application?  Java 1.1 answers that
+question with a resounding "no," backed up by various classes that are
+designed to make it easy for you to write a "global" application.
+In this section we'll talk about the concepts of internationalization and
+the classes that support them.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-7.1">java.util.Locale</A></h3>
+
+<P CLASS=para>
+Internationalization programming revolves around the
+<tt CLASS=literal>Locale</tt> class.  The class itself is very simple;
+it encapsulates a country code, a language code, and a rarely used
+variant code.  Commonly used
+languages and countries are defined as constants in the 
+<tt CLASS=literal>Locale</tt> class. (It's ironic that these
+names are all in English.) You can retrieve the
+codes or readable names, as follows:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Locale l = Locale.ITALIAN;
+System.out.println(l.getCountry()); // IT
+System.out.println(l.getDisplayCountry());  // Italy
+System.out.println(l.getLanguage());    // it
+System.out.println(l.getDisplayLanguage()); // Italian
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The country codes comply with ISO 639.  A complete list of
+country codes is at
+<A HREF="http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt">http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt</A>.
+The language codes comply with ISO 3166.  A complete list of
+language codes is at
+<A HREF="http://www.chemie.fu-berlin.de/diverse/doc/ISO_3166.html">http://www.chemie.fu-berlin.de/diverse/doc/ISO_3166.html</A>.
+There is no official set of variant codes; they are designated
+as vendor-specific or platform-specific.
+
+<P CLASS=para>
+Various classes throughout the Java API use a
+<tt CLASS=literal>Locale</tt> to decide how to represent
+themselves.  We have already seen how the
+<tt CLASS=literal>DateFormat</tt> class uses
+<tt CLASS=literal>Locale</tt>s to determine how to
+format and parse strings.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-7.2">Resource Bundles</A></h3>
+
+<P CLASS=para>
+If you're writing an internationalized program, you want all the text that
+is displayed by your application to be in the correct language.  Given
+what you have just learned about <tt CLASS=literal>Locale</tt>,
+you could print out different messages by testing the 
+<tt CLASS=literal>Locale</tt>.  This gets cumbersome quickly,
+however, because the messages for all <tt CLASS=literal>Locale</tt>s
+are embedded in your source code.  <tt CLASS=literal>ResourceBundle</tt>
+and its subclasses offer a cleaner, more flexible solution.
+
+<P CLASS=para>
+A <tt CLASS=literal>ResourceBundle</tt> is a collection of objects that
+your application can access by name, much like a
+<tt CLASS=literal>Hashtable</tt>
+with <tt CLASS=literal>String</tt> keys.
+The same <tt CLASS=literal>ResourceBundle</tt> may be defined for many different
+<tt CLASS=literal>Locale</tt>s.  To get a particular
+<tt CLASS=literal>ResourceBundle</tt>, call the
+factory method <tt CLASS=literal>ResourceBundle.getBundle()</tt>,
+which accepts the name of a <tt CLASS=literal>ResourceBundle</tt>
+and a <tt CLASS=literal>Locale</tt>.  The following example
+gets a <tt CLASS=literal>ResourceBundle</tt> for two
+<tt CLASS=literal>Locale</tt>s, retrieves a string message from
+it, and prints the message.  We'll define the <tt CLASS=literal>ResourceBundle</tt>s
+later to make this example work.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.util.*;
+public class Hello {
+  public static void main(String[] args) {
+    ResourceBundle bun;
+    bun = ResourceBundle.getBundle("Message", Locale.ITALY);
+    System.out.println(bun.getString("HelloMessage"));
+    bun = ResourceBundle.getBundle("Message", Locale.US);
+    System.out.println(bun.getString("HelloMessage"));
+  }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>getBundle()</tt> method throws the runtime
+exception <tt CLASS=literal>MissingResourceException</tt> if an
+appropriate <tt CLASS=literal>ResourceBundle</tt> cannot
+be located.
+
+<P CLASS=para>
+<tt CLASS=literal>Locale</tt>s are defined in three ways.  They can
+be stand-alone classes, in which case they will either be subclasses of
+<tt CLASS=literal>ListResourceBundle</tt> or direct subclasses of
+<tt CLASS=literal>ResourceBundle</tt>.  They can also be defined
+by a property file, in which case they will be represented at run-time by
+a  <tt CLASS=literal>PropertyResourceBundle</tt> object.  When
+you call <tt CLASS=literal>ResourceBundle.getBundle()</tt>, either
+a matching class is returned or an instance of <tt CLASS=literal>PropertyResourceBundle</tt>
+corresponding to a matching property file.  The algorithm used by
+<tt CLASS=literal>getBundle()</tt> is based on appending the
+country and language codes of the requested <tt CLASS=literal>Locale</tt>
+to the name of the resource.  Specifically, it searches for resources using
+this order:
+
+<DIV CLASS=simplelist>
+
+<P>
+<tt CLASS=literal>name_language_country_variant</tt><br>
+<tt CLASS=literal>name_language_country</tt><br>
+<tt CLASS=literal>name_language</tt><br>
+<tt CLASS=literal>name</tt><br>
+<tt CLASS=literal>name_default-language_default-country_default-variant</tt><br>
+<tt CLASS=literal>name_default-language_default-country</tt><br>
+<tt CLASS=literal>name_default-language</tt><br>
+</DIV>
+
+<P CLASS=para>
+In the example above, when we try to get the
+<tt CLASS=literal>ResourceBundle</tt>
+named <tt CLASS=literal>Message</tt>, specific to
+<tt CLASS=literal>Locale.ITALY</tt>, it searches for the following
+names (note that there are no variant codes in the
+<tt CLASS=literal>Locale</tt>s we are using):
+
+<DIV CLASS=simplelist>
+
+<P>
+<tt CLASS=literal>Message_it_IT</tt><br>
+<tt CLASS=literal>Message_it</tt><br>
+<tt CLASS=literal>Message</tt><br>
+<tt CLASS=literal>Message_en_US</tt><br>
+<tt CLASS=literal>Message_en</tt><br>
+</DIV>
+
+<P CLASS=para>
+Let's define the <tt CLASS=literal>Message_it_IT</tt>
+<tt CLASS=literal>ResourceBundle</tt> now, using a subclass
+of <tt CLASS=literal>ListResourceBundle</tt>.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.util.*;
+public class Message_it_IT extends ListResourceBundle {
+  public Object[][] getContents() {
+    return contents;
+  }
+  
+  static final Object[][] contents = {
+    {"HelloMessage", "Buon giorno, world!"},
+    {"OtherMessage", "Ciao."},
+  };
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>ListResourceBundle</tt> makes it easy to define a
+<tt CLASS=literal>ResourceBundle</tt> class; all we have to do is
+override the <tt CLASS=literal>getContents()</tt> method.
+
+<P CLASS=para>
+Now let's define a <tt CLASS=literal>ResourceBundle</tt> for
+<tt CLASS=literal>Locale.US</tt>.  This time, we'll make a
+property file.  Save the following data in a file called
+<i CLASS=filename>Message_en_US.properties</i>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+HelloMessage=Hello, world!
+OtherMessage=Bye.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+So what happens if somebody runs your program in
+<tt CLASS=literal>Locale.FRANCE</tt>, and there is no
+<tt CLASS=literal>ResourceBundle</tt> defined for that
+<tt CLASS=literal>Locale</tt>?  To avoid a run-time
+<tt CLASS=literal>MissingResourceException</tt>,
+it's a good idea to define
+a default <tt CLASS=literal>ResourceBundle</tt>.  So in
+our example, you could change the name of the property file
+to <tt CLASS=literal>Message.properties</tt>.  That way, if a
+language-specific or country-specific <tt CLASS=literal>ResourceBundle</tt>
+cannot be found, your application can still run.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-7.3">java.text</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.text</tt> package includes,
+among other things, a set of classes designed for generating and
+parsing string representations of objects.  We have already seen
+one of these classes, <tt CLASS=literal>DateFormat</tt>.
+In this section we'll talk about the other format classes,
+<tt CLASS=literal>NumberFormat</tt>,
+<tt CLASS=literal>ChoiceFormat</tt>, and
+<tt CLASS=literal>MessageFormat</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>NumberFormat</tt> class can be
+used to format and parse currency, percents, or plain old numbers.  Like
+<tt CLASS=literal>DateFormat</tt>,
+<tt CLASS=literal>NumberFormat</tt>
+is an abstract class.  However, it has several useful factory methods.
+For example, to generate currency strings, use
+<tt CLASS=literal>getCurrencyInstance()</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+double salary = 1234.56;
+String here = 
+    NumberFormat.getCurrencyInstance().format(salary); 
+    // $1,234.56
+String italy = 
+    NumberFormat.getCurrencyInstance(Locale.ITALY).format(salary);
+    // L 1.234,56 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first statement generates an American salary, with a dollar sign,
+a comma to separate thousands, and a period as a decimal point. The
+second statement presents the same string in Italian, with a lire
+sign, a period to separate thousands, and a comma as a decimal point.
+Remember that the <tt CLASS=literal>NumberFormat</tt> worries
+about format only; it doesn't attempt to do currency conversion.
+(Among other things, that would require access to a dynamically
+updated table and exchange rates: a good opportunity for a Java Bean,
+but too much to ask of a simple formatter.)
+
+<P CLASS=para>
+Likewise, <tt CLASS=literal>getPercentInstance()</tt>
+returns a formatter you can use for generating and parsing
+percents.  If you do not specify a <tt CLASS=literal>Locale</tt>
+when calling a <tt CLASS=literal>getInstance()</tt> method,
+the default <tt CLASS=literal>Locale</tt> is used.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+NumberFormat pf = NumberFormat.getPercentInstance();
+System.out.println(pf.format(progress)); // 44%
+try {
+  System.out.println(pf.parse("77.2%")); // 0.772
+}
+catch (ParseException e) {}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+And if you just want to generate and parse plain old numbers, use
+a <tt CLASS=literal>NumberFormat</tt> returned by
+<tt CLASS=literal>getInstance()</tt> or its
+equivalent, <tt CLASS=literal>getNumberInstance()</tt>.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+NumberFormat guiseppe = NumberFormat.getInstance(Locale.ITALY);
+NumberFormat joe = NumberFormat.getInstance();  // defaults to Locale.US
+try {
+  double theValue = guiseppe.parse("34.663,252").doubleValue();
+  System.out.println(joe.format(theValue)); // 34,663.252
+}
+catch (ParseException e) {}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We use <tt CLASS=literal>guiseppe</tt> to parse a number in Italian format
+(periods separate thousands, comma as the decimal point).  The return
+type of <tt CLASS=literal>parse()</tt> is <tt CLASS=literal>Number</tt>, so we
+use the <tt CLASS=literal>doubleValue()</tt> method to retrieve the value
+of the <tt CLASS=literal>Number</tt> as a <tt CLASS=literal>double</tt>. Then
+we use <tt CLASS=literal>joe</tt> to format the number correctly for the
+default (US) locale.
+
+<P CLASS=para>
+<A HREF="ch07_06.htm#EXJ-CH-7-TAB-9">Table 7.8</A> summarizes 
+the factory methods for text formatters in the <tt CLASS=literal>java.text</tt>
+package.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-10">Table 7.9: Format Factory Methods</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Factory Method</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getDateInstance()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getDateInstance(int style)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getDateInstance(int style, Locale aLocale)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getDateTimeInstance()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getDateTimeInstance(int dateStyle, int timeStyle)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getDateTimeInstance(int dateStyle, int timeStyle, Locale aLocale)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getInstance()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getTimeInstance()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getTimeInstance(int style)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DateFormat.getTimeInstance(int style, Locale aLocale)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NumberFormat.getCurrencyInstance()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NumberFormat.getCurrencyInstance(Locale inLocale)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NumberFormat.getInstance()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NumberFormat.getInstance(Locale inLocale)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NumberFormat.getNumberInstance()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NumberFormat.getNumberInstance(Locale inLocale)</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NumberFormat.getPercentInstance()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NumberFormat.getPercentInstance(Locale inLocale)</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Thus far we've seen how to format dates and numbers as text.  Now
+we'll take a look at a class, <tt CLASS=literal>ChoiceFormat</tt>,
+that maps numerical ranges to text.
+<tt CLASS=literal>ChoiceFormat</tt> is constructed by
+specifying the numerical ranges and the strings that correspond to them.
+One constructor accepts an array of <tt CLASS=literal>double</tt>s
+and an array of <tt CLASS=literal>String</tt>s, where each string corresponds to the
+range running from the matching number up through the next
+number:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+double[] limits = {0, 20, 40};
+String[] labels = {"young", "less young", "old"};
+ChoiceFormat cf = new ChoiceFormat(limits, labels);
+System.out.println(cf.format(12)); // young
+System.out.println(cf.format(26)); // less young
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can specify both the limits and the labels using a special
+string in another <tt CLASS=literal>ChoiceFormat</tt>
+constructor:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+ChoiceFormat cf = new ChoiceFormat("0#young|20#less young|40#old");
+System.out.println(cf.format(40)); // old
+System.out.println(cf.format(50)); // old
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The limit and value pairs are separated by pipe characters (|; also
+known as "vertical bar"), while the
+number sign serves to separate each limit from its corresponding
+value.
+
+<P CLASS=para>
+To complete our discussion of the formatting classes,
+we'll take a look at another class,
+<tt CLASS=literal>MessageFormat</tt>, 
+that helps you construct human-readable messages.  To construct
+a <tt CLASS=literal>MessageFormat</tt>, pass it a
+<I CLASS=emphasis>pattern string</I>.  A pattern
+string is a lot like the string you feed to
+<tt CLASS=literal>printf()</tt> in C, although the
+syntax is different.  Arguments are delineated by curly
+brackets, and may include information about how they
+should be formatted.  Each argument consists of a number,
+an optional type, and an optional style.  These are summarized in
+table <A HREF="ch07_07.htm#EXJ-CH-7-TAB-10">Table 7.9</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-11">Table 7.10: <tt CLASS=literal>MessageFormat</tt> arguments</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Type</TH>
+<TH ALIGN="left">Styles</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">choice</TD>
+<TD ALIGN="left"><I CLASS=emphasis>pattern</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">date</TD>
+<TD ALIGN="left">short, medium, long, full, <I CLASS=emphasis>pattern</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">number</TD>
+<TD ALIGN="left">integer, percent, currency, <I CLASS=emphasis>pattern</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">time</TD>
+<TD ALIGN="left">short, medium, long, full, <I CLASS=emphasis>pattern</I></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Let's use an example to clarify all of this.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+MessageFormat mf = new MessageFormat("You have {0} messages.");
+Object[] arguments = {"no"};
+System.out.println(mf.format(arguments)); // You have no messages.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We start by constructing a <tt CLASS=literal>MessageFormat</tt>
+object; the argument to the constructor is the pattern on which
+messages will be based. The special incantation {0} means "in this
+position, substitute element 0 from the array passed as an argument to
+the <tt CLASS=literal>format()</tt> method." Thus, we construct a
+<tt CLASS=literal>MessageFormat</tt> object with a pattern, which
+is a template on which messages are based. When we generate a message,
+by calling <tt CLASS=literal>format()</tt>, we pass in values to
+fill the blank spaces in the template.  In this case, we
+pass the array <tt CLASS=literal>arguments[]</tt> to
+<tt CLASS=literal>mf.format</tt>; this substitutes
+<tt CLASS=literal>arguments[0]</tt>, yielding the result "You
+have no messages." 
+
+<P CLASS=para>
+Let's try this example again, except we'll show how to
+format a number and a date instead of a string argument.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+MessageFormat mf = new MessageFormat(
+    "You have {0, number, integer} messages on {1, date, long}.");
+Object[] arguments = {new Integer(93), new Date()};
+System.out.println(mf.format(arguments));
+    // You have 93 messages on April 10, 1997.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, we need to fill in two spaces in the template, and
+therefore need two elements in the
+<tt CLASS=literal>arguments[]</tt> array. Element 0 must be a
+number, and is formatted as an integer. Element 1 must be a
+<tt CLASS=literal>Date</tt>, and will be printed in the long
+format. When we call <tt CLASS=literal>format()</tt>, the
+<tt CLASS=literal>arguments[]</tt> array supplies these two
+values.
+
+<P CLASS=para>
+This is still sloppy. What if there is only one message? 
+To make this grammatically correct, we can embed a
+<tt CLASS=literal>ChoiceFormat</tt>-style pattern string in
+our <tt CLASS=literal>MessageFormat</tt> pattern string.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+MessageFormat mf = new MessageFormat(
+    "You have {0, number, integer} message{0, choice, 0#s|1#|2#s}.");
+Object[] arguments = {new Integer(1)};
+System.out.println(mf.format(arguments)); // You have 1 message.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this case, we use element 0 of
+<tt CLASS=literal>arguments[]</tt> twice: once to supply the
+number of messages, and once to provide input to the
+<tt CLASS=literal>ChoiceFormat</tt> pattern. The pattern says to
+add an "s" if argument 0 has the value zero, or is two or more. 
+
+<P CLASS=para>
+Finally, a few words on how to be clever. If you want to write
+international programs, you can use resource bundles to supply the
+strings for your <tt CLASS=literal>MessageFormat</tt> objects.
+This way, you can automatically format messages that are in the
+appropriate language with dates and other language-dependent fields
+handled appropriately. 
+
+<P CLASS=para>
+In this context, it's helpful to realize that
+messages don't need to read elements from the array in order. In
+English, you would say "Disk C has 123 files"; in some other language,
+you might say "123 files are on Disk C." You could implement both
+messages with the same set of arguments:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+MessageFormat m1 = new MessageFormat(
+    "Disk {0} has {1, number, integer} files.");
+MessageFormat m2 = new MessageFormat(
+    "{1, number, integer} files are on disk {0}.");
+Object[] arguments = {"C", new Integer(123)};
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In real life, you'd only use a single
+<tt CLASS=literal>MessageFormat</tt> object, initialized 
+with a string taken from a resource bundle.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Security Manager</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Input/Output Facilities</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,851 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.6 Writing a Protocol Handler</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Thu Jul 24 12:08:52 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Network Programming</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6">9.6 Writing a Protocol Handler</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.WEB3A"></A>A <tt CLASS=literal>URL</tt> object uses a protocol handler to establish a
+connection with a server and perform whatever protocol is necessary to
+retrieve data. For example, an HTTP protocol
+handler knows how to talk to an HTTP server and
+retrieve a document; an FTP protocol handler knows
+how to talk to an FTP server and retrieve a
+file. All types of URLs use protocol handlers to
+access their objects. Even the lowly "file" type
+URLs use a special "file" protocol handler that
+retrieves files from the local filesystem. The data a protocol
+handler retrieves is then fed to an appropriate content handler for
+interpretation.
+
+<P CLASS=para>
+<A NAME="CH09.USH"></A>While we refer to a protocol handler as a single entity, it
+really has two parts: a <tt CLASS=literal>java.net.URLStreamHandler</tt>
+and a <tt CLASS=literal>java.net.URLConnection</tt>. These are both
+<tt CLASS=literal>abstract</tt> classes we will subclass to create
+our protocol handler. (Note that these are <tt CLASS=literal>abstract</tt>
+classes, not interfaces. Although they contain abstract methods we are required to implement,
+they also contain many utility methods we can use or override.)
+The <tt CLASS=literal>URL</tt> looks up an appropriate
+<tt CLASS=literal>URLStreamHandler</tt>, based on the protocol component
+of the <tt CLASS=literal>URL</tt>. The <tt CLASS=literal>URLStreamHandler</tt>
+then finishes parsing the URL and creates a
+<tt CLASS=literal>URLConnection</tt> when it's time to communicate with
+the server. The <tt CLASS=literal>URLConnection</tt> represents a single
+connection with a server, and implements the communication protocol
+itself.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6.1">Locating Protocol Handlers</A></h3>
+
+<P CLASS=para>
+Protocol handlers are organized in a package hierarchy similar to
+content handlers. Unlike content handlers, which are grouped into
+packages by the MIME types of the objects that they
+handle, protocol handlers are given individual packages. Both parts of
+the protocol handler (the <tt CLASS=literal>URLStreamHandler</tt> class
+and the <tt CLASS=literal>URLConnection</tt> class) are located in a
+package named for the protocol they support.
+
+<P CLASS=para>
+For example, the classes for an FTP protocol
+handler would be found in the <tt CLASS=literal>net.www.protocol.ftp</tt>
+package. The <tt CLASS=literal>URLStreamHandler</tt> is placed in this
+package and given the name <tt CLASS=literal>Handler</tt>; all
+<tt CLASS=literal>URLStreamHandler</tt>s are named
+<tt CLASS=literal>Handler</tt> and distinguished by the package in which
+they reside. The <tt CLASS=literal>URLConnection</tt> portion of the
+protocol handler is placed in the same package, and can be given any
+name. There is no need for a naming convention because the
+corresponding <tt CLASS=literal>URLStreamHandler</tt> is responsible for
+creating the <tt CLASS=literal>URLConnection</tt> objects it uses. <A HREF="ch09_06.htm#EXJ-CH-9-TAB-2">Table 9.2</A> gives the obvious examples.[9]
+
+<blockquote class=footnote>
+<P CLASS=para>[9] 
+The "pre-beta 1" release of HotJava has a temporary solution that is
+compatible with the convention described here. In the HotJava
+<i CLASS=filename>properties</i> file, add the line: 
+<tt CLASS=literal>java.protocol.handler.pkgs=net.www.protocol</tt>.
+</blockquote>
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-9-TAB-2">Table 9.2: Mapping Protocols into Package and Class Names</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Protocol</TH>
+<TH ALIGN="left">Package</TH>
+<TH ALIGN="left">URLStreamHandler</TH>
+<TH ALIGN="left">Handler</TH>
+</TR>
+<TR CLASS=row>
+<TH ALIGN="left">&nbsp;</TH>
+<TH ALIGN="left">name</TH>
+<TH ALIGN="left">class name</TH>
+<TH ALIGN="left">class location</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FTP</TD>
+<TD ALIGN="left"><tt CLASS=literal>net.www.protocol.ftp</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>Handler</tt></TD>
+<TD ALIGN="left"><i CLASS=filename>net/www/protocol/ftp/</i></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">HTTP</TD>
+<TD ALIGN="left"><tt CLASS=literal>net.www.protocol.http</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>Handler</tt></TD>
+<TD ALIGN="left"><i CLASS=filename>net/www/protocol/http/</i></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6.2">URLs, Stream Handlers, and Connections</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>URL</tt>, <tt CLASS=literal>URLStreamHandler</tt>,
+<tt CLASS=literal>URLConnection</tt>, and <tt CLASS=literal>ContentHandler</tt>
+classes work together closely. Before diving into an example,
+let's take a step back, look at the parts a little more closely,
+and see how these things communicate. <A HREF="ch09_06.htm#EXJ-CH-9-FIG-5">Figure 9.5</A>
+shows how these components relate to each other.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-9-FIG-5">Figure 9.5: The protocol handler machinery</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0905.gif" alt="[Graphic: Figure 9-5]" width=503 height=193 border=0>
+
+</DIV>
+
+<P CLASS=para>
+We begin with the <tt CLASS=literal>URL</tt> object, which points
+to the resource we'd like to retrieve. The
+<tt CLASS=literal>URLStreamHandler</tt> helps the <tt CLASS=literal>URL</tt>
+class parse the URL specification string for its
+particular protocol. For example, consider the following call to the
+<tt CLASS=literal>URL</tt> constructor:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+URL url = new URL("protocol://foo.bar.com/file.ext"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>URL</tt> class parses only the protocol component;
+later, a call to the <tt CLASS=literal>URL</tt> class's
+<tt CLASS=literal>getContent()</tt> or <tt CLASS=literal>openStream()</tt>
+method starts the machinery in motion. The <tt CLASS=literal>URL</tt>
+class locates the appropriate protocol handler by looking in the
+protocol-package hierarchy. It then creates an instance of the
+appropriate <tt CLASS=literal>URLStreamHandler</tt> class.
+
+<P CLASS=para>
+The <tt CLASS=literal>URLStreamHandler</tt> is responsible for
+parsing the rest of the URL string, including
+hostname and filename, and possibly an alternative port
+designation. This allows different protocols to have their own
+variations on the format of the URL specification
+string. Note that this step is skipped when a URL
+is constructed with the "protocol," "host," and "file"
+components specified explicitly. If the protocol is straightforward,
+its <tt CLASS=literal>URLStreamHandler</tt> class can let Java do the
+parsing and accept the default behavior. For this illustration,
+we'll assume that the <tt CLASS=literal>URL</tt> string requires no
+special parsing. (If we use a nonstandard
+URL with a strange format, we're responsible
+for parsing it ourselves, as I'll show shortly.)
+
+<P CLASS=para>
+The <tt CLASS=literal>URL</tt> object next invokes the
+handler's <tt CLASS=literal>openConnection()</tt> method, prompting
+the handler to create a new <tt CLASS=literal>URLConnection</tt> to the
+resource. The <tt CLASS=literal>URLConnection</tt> performs whatever
+communications are necessary to talk to the resource and begins to
+fetch data for the object. At that time, it also determines the
+MIME type of the incoming object data and prepares
+an <tt CLASS=literal>InputStream</tt> to hand to the appropriate content
+handler. This <tt CLASS=literal>InputStream</tt> must send
+"pure" data with all traces of the protocol removed.
+
+<P CLASS=para>
+The <tt CLASS=literal>URLConnection</tt> also locates an
+appropriate content handler in the content-handler package
+hierarchy. The <tt CLASS=literal>URLConnection</tt> creates an instance of
+a content handler; to put the content handler to work, the
+<tt CLASS=literal>URLConnection</tt>'s
+<tt CLASS=literal>getContent()</tt> method calls the content
+handler's <tt CLASS=literal>getContent()</tt> method. If this sounds
+confusing, it is: we have three <tt CLASS=literal>getContent()</tt> methods
+calling each other in a chain. The newly created
+<tt CLASS=literal>ContentHandler</tt> object then acquires the stream of
+incoming data for the object by calling the
+<tt CLASS=literal>URLConnection</tt>'s
+<tt CLASS=literal>getInputStream()</tt> method. (Recall that we acquired
+an <tt CLASS=literal>InputStream</tt> in our <tt CLASS=literal>x_tar</tt>
+content handler.) The content handler reads the stream and constructs
+an object from the data. This object is then returned up the
+<tt CLASS=literal>getContent()</tt> chain: from the content handler, the
+<tt CLASS=literal>URLConnection</tt>, and finally the
+<tt CLASS=literal>URL</tt> itself. Now our application has the desired
+object in its greedy little hands.
+
+<P CLASS=para>
+To summarize, we create a protocol handler by implementing a
+<tt CLASS=literal>URLStreamHandler</tt> class that creates specialized
+<tt CLASS=literal>URLConnection</tt> objects to handle our protocol. The
+<tt CLASS=literal>URLConnection</tt> objects implement the
+<tt CLASS=literal>getInputStream()</tt> method, which provides data to a
+content handler for construction of an object. The base
+<tt CLASS=literal>URLConnection</tt> class implements many of the methods
+we need; therefore, our <tt CLASS=literal>URLConnection</tt> needs only to
+provide the methods that generate the data stream and return the
+MIME type of the object data.
+
+<P CLASS=para>
+Okay. If you're not thoroughly confused by all that
+terminology (or even if you are), let's move on to the
+example. It should help to pin down what all these classes are
+doing.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6.3">The crypt Handler</A></h3>
+
+<P CLASS=para>
+<A NAME="CH09.CRYPT"></A>In this section, we'll build a <I CLASS=emphasis>crypt</I> 
+protocol handler. It parses URLs of the form: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+crypt:<tt CLASS=replaceable><i>type</i></tt>//<tt CLASS=replaceable><i>hostname</i></tt>[:<tt CLASS=replaceable><i>port</i></tt>]/<tt CLASS=replaceable><i>location</i></tt>/<tt CLASS=replaceable><i>item</i></tt> 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=replaceable><i>type</i></tt> is an identifier that specifies what kind of
+encryption to use. The protocol itself is a simplified version of
+HTTP; we'll implement the
+<tt CLASS=literal>GET</tt> command and no more. I added the
+<tt CLASS=replaceable><i>type</i></tt> identifier to the URL to
+show how to parse a nonstandard URL
+specification. Once the handler has figured out the encryption type,
+it dynamically loads a class that implements the chosen encryption
+algorithm and uses it to retrieve the data. Obviously, we don't
+have room to implement a full-blown public-key encryption algorithm,
+so we'll use the <tt CLASS=literal>rot13InputStream</tt> class from
+<A HREF="ch08_01.htm">Chapter 8, <i>Input/Output Facilities</i></A>. It should be apparent how the example can
+be extended by plugging in a more powerful encryption class.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6.3.1">The Encryption class</A></h4>
+
+<P CLASS=para>
+First, we'll lay out our plug-in encryption class. We'll
+define an abstract class called
+<tt CLASS=literal>CryptInputStream</tt> that provides some essentials for
+our plug-in encrypted protocol. From the
+<tt CLASS=literal>CryptInputStream</tt> we'll create a
+subclass, <tt CLASS=literal>rot13CryptInputStream</tt>, that implements
+our particular kind of encryption:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+package net.www.protocol.crypt; 
+import java.io.*; 
+ 
+abstract class CryptInputStream extends InputStream { 
+    InputStream in; 
+    OutputStream talkBack; 
+    abstract public void set( InputStream in, OutputStream talkBack ); 
+} 
+ 
+class rot13CryptInputStream extends CryptInputStream { 
+ 
+    public void set( InputStream in, OutputStream talkBack ) { 
+        this.in = new example.io.rot13InputStream( in ); 
+    } 
+    public int read() throws IOException {  
+        if ( in == null ) 
+            throw new IOException("No Stream"); 
+ 
+        return in.read(); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Our <tt CLASS=literal>CryptInputStream</tt> class defines a method called
+<tt CLASS=literal>set()</tt> that passes in the
+<tt CLASS=literal>InputStream</tt> it's to translate. Our
+<tt CLASS=literal>URLConnection</tt> calls <tt CLASS=literal>set()</tt> after
+creating an instance of the encryption class. We need a
+<tt CLASS=literal>set()</tt> method because we want to load the encryption
+class dynamically, and we aren't allowed to pass arguments to
+the constructor of a class when it's dynamically loaded. We ran into
+this same restriction in our content handler. In the encryption class,
+we also provide an <tt CLASS=literal>OutputStream</tt>. A more complex
+kind of encryption might use the <tt CLASS=literal>OutputStream</tt> to
+transfer public-key information. Needless to say,
+<I CLASS=emphasis>rot13</I> doesn't, so we'll ignore the
+<tt CLASS=literal>OutputStream</tt> here.
+
+<P CLASS=para>
+The implementation of <tt CLASS=literal>rot13CryptInputStream</tt>
+is very simple. <tt CLASS=literal>set()</tt> just takes the
+<tt CLASS=literal>InputStream</tt> it receives and wraps it with the
+<tt CLASS=literal>rot13InputStream</tt> filter we developed in <A HREF="ch08_01.htm">Chapter 8, <i>Input/Output Facilities</i></A>. <tt CLASS=literal>read()</tt> reads filtered data
+from the <tt CLASS=literal>InputStream</tt>, throwing an exception if
+<tt CLASS=literal>set()</tt> hasn't been called.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6.3.2">The URLStreamHandler</A></h4>
+
+<P CLASS=para>
+Next we'll build our <tt CLASS=literal>URLStreamHandler</tt> class.
+The class name is <tt CLASS=literal>Handler</tt>; it extends the
+abstract <tt CLASS=literal>URLStreamHandler</tt>
+class. This is the class the Java <tt CLASS=literal>URL</tt> looks up
+by converting the protocol name (<I CLASS=emphasis>crypt</I>) into a
+package name (<tt CLASS=literal>net.www.protocol.crypt</tt>). The
+fully 
+qualified name of this class is
+<tt CLASS=literal>net.www.protocol.crypt.Handler</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+package net.www.protocol.crypt; 
+ 
+import java.io.*; 
+import java.net.*; 
+ 
+public class Handler extends URLStreamHandler { 
+    String cryptype; 
+ 
+    protected void parseURL(URL u, String spec, int start, int end) { 
+        int slash = spec.indexOf('/'); 
+        cryptype = spec.substring(start, slash); 
+        start=slash; 
+        super.parseURL(u, spec, start, end); 
+    } 
+ 
+    protected URLConnection openConnection(URL url) 
+       throws IOException {
+ 
+        return new CryptURLConnection( url, cryptype ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java creates an instance of our <tt CLASS=literal>URLStreamHandler</tt>
+when we create a <tt CLASS=literal>URL</tt> specifying the
+<I CLASS=emphasis>crypt</I> protocol. <tt CLASS=literal>Handler</tt> has
+two jobs: to assist in parsing the URL
+specification strings and to create
+<tt CLASS=literal>CryptURLConnection</tt> objects when it's time to open a
+connection to the host.
+
+<P CLASS=para>
+Our <tt CLASS=literal>parseURL()</tt> method overrides the
+<tt CLASS=literal>parseURL()</tt> method in the
+<tt CLASS=literal>URLStreamHandler</tt> class. It's called whenever the
+<tt CLASS=literal>URL</tt> constructor sees a URL
+requesting the <I CLASS=emphasis>crypt</I> protocol. For example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+URL url = new URL("crypt:rot13//foo.bar.com/file.txt"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>parseURL()</tt> is passed a reference to the
+<tt CLASS=literal>URL</tt> object, the URL
+specification string, and starting and ending indexes that shows what
+portion of the URL string we're expected to
+parse. The <tt CLASS=literal>URL</tt> class has already identified the
+protocol name, otherwise it wouldn't have found our protocol
+handler. Our version of <tt CLASS=literal>parseURL()</tt> retrieves our
+<I CLASS=emphasis>type</I> identifier from the specification, stores it
+in the variable <tt CLASS=literal>cryptype</tt>, and then passes the rest
+on to the superclass's <tt CLASS=literal>parseURL()</tt> method to
+complete the job. To find the encryption type, take everything
+between the starting index we were given and the first slash in the
+URL string. Before calling
+<tt CLASS=literal>super.parseURL()</tt>, we update the start index, so
+that it points to the character just after the type specifier. This
+tells the superclass <tt CLASS=literal>parseURL()</tt> that we've
+already parsed everything prior to the first slash, and it's
+responsible for the rest.
+
+<P CLASS=para>
+Before going on, I'll note two other possibilities. If we
+hadn't hacked the URL string for our own
+purposes by adding a type specifier, we'd be dealing with a
+standard URL specification. In this case, we
+wouldn't need to override <tt CLASS=literal>parseURL()</tt>; the
+default implementation would have been sufficient. It could have
+sliced the URL into host, port, and filename
+components normally. On the other hand, if we had created a completely
+bizarre URL format, we would need to parse
+the entire string. There would be no point calling
+<tt CLASS=literal>super.parseURL()</tt>; instead, we'd have called the
+<tt CLASS=literal>URLStreamHandler</tt>'s protected method
+<tt CLASS=literal>setURL()</tt> to pass the URL's
+components back to the <tt CLASS=literal>URL</tt> object.
+
+<P CLASS=para>
+The other method in our <tt CLASS=literal>Handler</tt> class is
+<tt CLASS=literal>openConnection()</tt>. After the URL
+has been completely parsed, the <tt CLASS=literal>URL</tt> object calls
+<tt CLASS=literal>openConnection()</tt> to set up the data
+transfer. <tt CLASS=literal>openConnection()</tt> calls the constructor
+for our <tt CLASS=literal>URLConnection</tt> with appropriate arguments.
+In this case, our <tt CLASS=literal>URLConnection</tt> object is named
+<tt CLASS=literal>CryptURLConnection</tt>, and the constructor requires the
+<tt CLASS=literal>URL</tt> and the encryption type as arguments.
+<tt CLASS=literal>parseURL()</tt> picked the encryption type from the
+URL string and stored it in the
+<tt CLASS=literal>cryptype</tt> variable.
+<tt CLASS=literal>openConnection()</tt> returns a reference to our
+<tt CLASS=literal>URLConnection</tt>, which the <tt CLASS=literal>URL</tt>
+object uses to drive the rest of the process.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6.3.3">The URLConnection</A></h4>
+
+<P CLASS=para>
+<A NAME="CH09.CONN"></A>Finally, we reach the real guts of our protocol handler, the
+<tt CLASS=literal>URLConnection</tt> class. This is the class that opens
+the socket, talks to the server on the remote host, and implements the
+protocol itself. This class doesn't have to be public, so you
+can put it in the same file as the <tt CLASS=literal>Handler</tt> class we
+just defined. We call our class <tt CLASS=literal>Crypt-URLConnection</tt>;
+it extends the abstract <tt CLASS=literal>URLConnection</tt> class. Unlike
+<tt CLASS=literal>ContentHandler</tt> and
+<tt CLASS=literal>StreamURLConnection</tt>, whose names are defined by
+convention, we can call this class anything we want; the only class
+that needs to know about the <tt CLASS=literal>URLConnection</tt> is the
+<tt CLASS=literal>URLStreamHandler</tt>, which we wrote ourselves.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class CryptURLConnection extends URLConnection { 
+    CryptInputStream cis; 
+    static int defaultPort = 80; 
+ 
+    CryptURLConnection ( URL url, String cryptype ) 
+        throws IOException { 
+        super( url ); 
+        try { 
+            String name = "net.www.protocol.crypt." + cryptype 
+                               + "CryptInputStream"; 
+            cis = (CryptInputStream)Class.forName(name).newInstance(); 
+        } 
+        catch ( Exception e ) { } 
+    } 
+ 
+    synchronized public void connect() throws IOException {  
+        int port; 
+        if ( cis == null ) 
+            throw new IOException("Crypt Class Not Found"); 
+        if ( (port = url.getPort()) == -1 ) 
+            port = defaultPort; 
+        Socket s = new Socket( url.getHost(), port ); 
+ 
+        // Send the filename in plaintext 
+        OutputStream server = s.getOutputStream(); 
+        new PrintStream( server ).println( "GET "+url.getFile() ); 
+ 
+        // Initialize the CryptInputStream 
+        cis.set( s.getInputStream(), server ); 
+        connected = true; 
+    } 
+ 
+    synchronized public InputStream getInputStream() 
+       throws IOException { 
+        if (!connected) 
+            connect(); 
+        return ( cis );  
+    } 
+ 
+    public String getContentType() { 
+        return guessContentTypeFromName( url.getFile() ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The constructor for our <tt CLASS=literal>CryptURLConnection</tt> class
+takes as arguments the destination <tt CLASS=literal>URL</tt> and the name
+of an encryption type. We pass the <tt CLASS=literal>URL</tt> on to the
+constructor of our superclass, which saves it in a protected
+<tt CLASS=literal>url</tt> instance variable. We could have saved the
+<tt CLASS=literal>URL</tt> ourselves, but calling our parent's
+constructor shields us from possible changes or enhancements to the
+base class. We use <tt CLASS=literal>cryptype</tt> to construct the name
+of an encryption class, using the convention that the encryption class
+is in the same package as the protocol handler (i.e.,
+<tt CLASS=literal>net.www.protocol.crypt</tt>); its name is the encryption
+type followed by the suffix <tt CLASS=literal>CryptInputStream</tt>.
+
+<P CLASS=para>
+Once we have a name, we need to create an instance of the
+encryption class. To do so, we use the static method
+<tt CLASS=literal>Class.forName()</tt> to turn the name into a
+<tt CLASS=literal>Class</tt> object and <tt CLASS=literal>newInstance()</tt>
+to load and instantiate the class. (This is how Java loads the content
+and protocol handlers themselves.)  <tt CLASS=literal>newInstance()</tt>
+returns an <tt CLASS=literal>Object</tt>; we need to cast it to something
+more specific before we can work with it. Therefore, we cast it to our
+<tt CLASS=literal>CryptInputStream</tt> class, the abstract class that
+<tt CLASS=literal>rot13CryptInputStream</tt> extends. If we implement any
+additional encryption types as extensions to
+<tt CLASS=literal>CryptInputStream</tt> and name them appropriately, they
+will fit into our protocol handler without modification.
+
+<P CLASS=para>
+We do the rest of our setup in the <tt CLASS=literal>connect()</tt>
+method of the <tt CLASS=literal>URLConnection</tt>. There, we make sure
+we have an encryption class and open a <tt CLASS=literal>Socket</tt>
+to the appropriate port on the remote
+host. <tt CLASS=literal>getPort()</tt> returns <tt CLASS=literal>-1</tt> if the
+<tt CLASS=literal>URL</tt> doesn't specify a port explicitly; in
+that case we use the default port for an HTTP
+connection (port 80). We ask for an <tt CLASS=literal>OutputStream</tt> on
+the socket, assemble a <tt CLASS=literal>GET</tt> command using the
+<tt CLASS=literal>getFile()</tt> method to discover the filename specified
+by the URL, and send our request by writing it into
+the <tt CLASS=literal>OutputStream</tt>. (For convenience, we wrap the
+<tt CLASS=literal>OutputStream</tt> with a <tt CLASS=literal>PrintStream</tt>
+and call <tt CLASS=literal>println()</tt> to send the message.) We then
+initialize the <tt CLASS=literal>CryptInputStream</tt> class by calling
+its <tt CLASS=literal>set()</tt> method and passing it an
+<tt CLASS=literal>InputStream</tt> from the <tt CLASS=literal>Socket</tt> and
+the <tt CLASS=literal>OutputStream</tt>.
+
+<P CLASS=para>
+The last thing <tt CLASS=literal>connect()</tt> does is set the
+<tt CLASS=literal>boolean</tt> variable <tt CLASS=literal>connected</tt> to
+<tt CLASS=literal>true</tt>. <tt CLASS=literal>connected</tt> is a
+<tt CLASS=literal>protected</tt> variable inherited from the
+<tt CLASS=literal>URLConnection</tt> class. We need to track the state of
+our connection because <tt CLASS=literal>connect()</tt> is a
+<tt CLASS=literal>public</tt> method. It's called by the
+<tt CLASS=literal>URLConnection</tt>'s
+<tt CLASS=literal>getInputStream()</tt> method, but it could also be
+called by other classes. Since we don't want to start a
+connection if one already exists, we use
+<tt CLASS=literal>connected</tt> to tell us if this is so.
+
+<P CLASS=para>
+In a more sophisticated protocol handler,
+<tt CLASS=literal>connect()</tt> would also be responsible for dealing
+with any protocol headers that come back from the server. In
+particular, it would probably stash any important information it can
+deduce from the headers (e.g., MIME type, content
+length, time stamp) in instance variables, where it's available
+to other methods. At a minimum, <tt CLASS=literal>connect()</tt>
+strips the headers from the data so the content handler won't see
+them. I'm being lazy and assuming that we'll connect
+to a minimal server, like the modified <tt CLASS=literal>TinyHttpd</tt>
+daemon I discuss below, which doesn't bother with any headers.
+
+<P CLASS=para>
+The bulk of the work has been done; a few details remain. The
+<tt CLASS=literal>URLConnection</tt>'s
+<tt CLASS=literal>getContent()</tt> method needs to figure out which
+content handler to invoke for this <tt CLASS=literal>URL</tt>. In order to
+compute the content handler's name,
+<tt CLASS=literal>getContent()</tt> needs to know the resource's
+MIME type. To find out, it calls the
+<tt CLASS=literal>URLConnection</tt>'s
+<tt CLASS=literal>getContentType()</tt> method, which returns the
+MIME type as a <tt CLASS=literal>String</tt>. Our
+protocol handler overrides <tt CLASS=literal>getContentType()</tt>,
+providing our own implementation.
+
+<P CLASS=para>
+The <tt CLASS=literal>URLConnection</tt> class provides a number of
+tools to help determine the MIME type. It's
+possible that the MIME type is conveyed explicitly
+in a protocol header; in this case, a more sophisticated version of
+<tt CLASS=literal>connect()</tt> would have stored the
+MIME type in a convenient location for us. 
+Some servers don't bother to insert the appropriate headers, though,
+so you can use the method
+<tt CLASS=literal>guessContentTypeFromName()</tt> to examine filename
+extensions, like <i CLASS=filename>.gif</i> or
+<i CLASS=filename>.html</i>, and map them to MIME
+types. In the worst case, you can use
+<tt CLASS=literal>guessContentTypeFromStream()</tt> to intuit the
+MIME type from the raw data. The Java developers
+call this method "a disgusting hack" that shouldn't
+be needed, but that is unfortunately necessary "in a world
+where HTTP servers lie about content types and
+extensions are often nonstandard." We'll take the easy way
+out and use the <tt CLASS=literal>guessContentTypeFromName()</tt> utility
+of the <tt CLASS=literal>URLConnection</tt> class to determine the
+MIME type from the filename extension of the
+URL we are retrieving.
+
+<P CLASS=para>
+Once the <tt CLASS=literal>URLConnection</tt> has found a content
+handler, it calls the content handler's
+<tt CLASS=literal>getContent()</tt> method. The content handler then needs
+to get an <tt CLASS=literal>InputStream</tt> from which to read the
+data. To find an <tt CLASS=literal>InputStream</tt>, it calls the
+<tt CLASS=literal>URLConnection</tt>'s
+<tt CLASS=literal>getInputStream()</tt>
+method. <tt CLASS=literal>getInputStream()</tt> returns an
+<tt CLASS=literal>InputStream</tt> from which its caller can read the data
+after protocol processing is finished. It checks whether a connection
+is already established; if not, it calls <tt CLASS=literal>connect()</tt>
+to make the connection. Then it returns a reference to our
+<tt CLASS=literal>CryptInputStream</tt>.
+
+<P CLASS=para>
+A final note on getting the content type: if you read the
+documentation, it's clear that the Java developers had some
+ideas about how to find the content type. The
+<tt CLASS=literal>URLConnection</tt>'s default
+<tt CLASS=literal>getContentType()</tt> calls
+<tt CLASS=literal>getHeaderField()</tt>, which is presumably supposed to
+extract the named field from the protocol headers (it would probably
+spit back information <tt CLASS=literal>connect()</tt> had stored in
+protected variables). The problem is there's no way to
+implement <tt CLASS=literal>getHeaderField()</tt> if you don't know
+the protocol, and since the Java developers were designing a general
+mechanism for working with protocols, they couldn't make any
+assumptions. Therefore, the default implementation of
+<tt CLASS=literal>getHeaderField()</tt> returns
+<tt CLASS=literal>null</tt>; you have to override it to make it do
+anything interesting. Why wasn't it an
+abstract method? I can only guess, but making
+<tt CLASS=literal>getHeaderField()</tt> abstract would
+have forced everyone building a protocol handler to implement it,
+whether or not they actually needed it.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6.3.4">The application</A></h4>
+
+<P CLASS=para>
+We're almost ready to try out a crypt
+URL! We still need an application (a mini-browser,
+if you will) to use our protocol handler, and a server to serve data
+with our protocol. If HotJava were available, we wouldn't need
+to write the application ourselves; in the meantime, writing this
+application will teach us a little about how a Java-capable browser
+works. Our application is similar to the application we wrote to test
+the <tt CLASS=literal>x_tar</tt> content handler.
+
+<P CLASS=para>
+Because we're working in a standalone application, we have to
+tell Java how to find our protocol-handler classes. Java relies on a
+<tt CLASS=literal>java.net.URLStreamHandlerFactory</tt> object to take a
+protocol name and return an instance of the appropriate handler. The
+<tt CLASS=literal>URLStreamHandlerFactory</tt> is very similar to the
+<tt CLASS=literal>ContentHandlerFactory</tt> we saw earlier. We'll
+provide a trivial implementation that knows only our particular
+handler. Again, if we were using our protocol handler with HotJava,
+this step would not be necessary; HotJava has its own stream-handler
+factory that tells it where to find handlers. To get HotJava to read
+files with our new protocol, we'd only have to put our protocol
+handler in the right place. (Note too, that an applet running in
+HotJava can use any of the methods in the <tt CLASS=literal>URL</tt> class
+and therefore can use the content- and protocol-handler mechanism;
+applets would also rely on HotJava's stream-handler and
+content-xhandler factories.)
+
+<P CLASS=para>
+Here's our <tt CLASS=literal>StreamHandlerFactory</tt> and sample 
+application: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.net.*; 
+ 
+class OurURLStreamHandlerFactory implements URLStreamHandlerFactory { 
+    public URLStreamHandler createURLStreamHandler(String protocol) { 
+        if ( protocol.equalsIgnoreCase("crypt") ) 
+            return new net.www.protocol.crypt.Handler(); 
+        else 
+            return null; 
+    } 
+} 
+ 
+class CryptURLTest {  
+    public static void main( String argv[] ) throws Exception { 
+ 
+        URL.setURLStreamHandlerFactory(
+            new OurURLStreamHandlerFactory()); 
+ 
+        URL url = new URL("crypt:rot13//foo.bar.com:1234/myfile.txt"); 
+        System.out.println( url.getContent() ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>CryptURLTest</tt> class installs our factory and
+reads a document via the new "crypt:rot13"
+URL. (In the example, we have assumed that a
+<I CLASS=emphasis>rot13</I> server is running on port 1234 on the host
+foo.bar.com.)  When the
+<tt CLASS=literal>CryptURLTest</tt> application calls the
+<tt CLASS=literal>URL</tt>'s <tt CLASS=literal>getContent()</tt> method,
+it automatically finds our protocol handler, which decodes the file.
+
+<P CLASS=para>
+<tt CLASS=literal>OurURLStreamHandlerFactory</tt> is really quite
+simple. It implements the <tt CLASS=literal>URLStreamHandlerFactory</tt>
+interface, which requires a single method called
+<tt CLASS=literal>createURLStreamHandler()</tt>. In our case, this method
+checks whether the protocol's name is
+<I CLASS=emphasis>crypt</I>&nbsp;; if so, the method returns an
+instance of our encryption protocol handler,
+<tt CLASS=literal>net.www.protocol.crypt.Handler</tt>. For any other
+protocol name, it returns <tt CLASS=literal>null</tt>. If we were writing
+a browser and needed to implement a more general factory, we would
+compute a class name from the protocol name, check to see if that
+class exists, and return an instance of that class.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-6.3.5">The server</A></h4>
+
+<P CLASS=para>
+We still need a <I CLASS=emphasis>rot13</I> server. Since the
+<I CLASS=emphasis>crypt</I> protocol is nothing more than
+HTTP with some encryption added, we can make a
+<I CLASS=emphasis>rot13</I> server by modifying one line of the
+<tt CLASS=literal>TinyHttpd</tt> server we developed earlier, so that it
+spews its files in <I CLASS=emphasis>rot13</I>. Just change the line
+that reads the data from the file:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+f.read( data ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To instead read through a <tt CLASS=literal>rot13InputStream</tt>: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+new example.io.rot13InputStream( f ).read( data ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+I assume you placed the <tt CLASS=literal>rot13InputStream</tt> 
+example in a package called <tt CLASS=literal>example.io</tt>, and that 
+it's somewhere in your class path. Now recompile and run the server. It 
+automatically encodes the files before sending them; our sample application 
+decodes them on the other end. 
+
+<P CLASS=para>
+I hope that this example and the rest of this chapter have
+given you some food for thought. Content and protocol handlers are
+among the most exciting ideas in Java. It's unfortunate that we have
+to wait for future releases of HotJava and Netscape to take full
+advantage of them. In the meantime, you can experiment and implement
+your own applications.
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Writing a Content Handler</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Understand the Abstract Windowing Toolkit</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,717 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.5 Exceptions</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:51:07 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>The Java Language</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-5">4.5 Exceptions</A></h2>
+
+<P CLASS=blockquote><BLOCKQUOTE><P>
+<P CLASS=para>
+Do, or do not... There is no try.
+
+<P CLASS=para>
+--Yoda (<i CLASS=citetitle>The Empire Strikes Back</i>)
+</BLOCKQUOTE><P>
+<P CLASS=para>
+<A NAME="CH04.EXCEPT1"></A>Java's roots are in embedded systems--software that
+runs inside specialized devices like hand-held computers, cellular
+phones, and fancy toasters. In those kinds of applications, it's
+especially important that software errors be handled properly. Most
+users would agree that it's unacceptable for their phone to simply
+crash or for their toast (and perhaps their house) to burn because
+their software failed. Given that we can't eliminate the possibility
+of software errors, a step in the right direction is to at least try
+to recognize and deal with the application-level errors that we can
+anticipate in a methodical and systematic way.
+
+<P CLASS=para>
+Dealing with errors in a language like C is the responsibility of the
+programmer. There is no help from the language itself in identifying
+error types, and there are no tools for dealing with them easily. In C
+and C++, a routine generally indicates a failure by returning an
+"unreasonable" value (e.g., the idiomatic
+<tt CLASS=literal>-1</tt> or <tt CLASS=literal>null</tt>).  As the programmer,
+you must know what constitutes a bad result, and what it
+means. It's often awkward to work around the limitations of passing
+error values in the normal path of data flow.[3]
+ 
+An even worse problem is that
+certain types of errors can legitimately occur almost anywhere, and
+it's prohibitive and unreasonable to explicitly test for them at every
+point in the software.
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+The somewhat obscure <tt CLASS=literal>setjmp()</tt> and
+<tt CLASS=literal>longjmp()</tt> statements in C can save a point in the
+execution of code and later return to it unconditionally from a deeply
+buried location.  In a limited sense, this is the functionality of
+exceptions in Java.  
+</blockquote>
+<P CLASS=para>
+Java offers an elegant solution to these problems with
+exception handling.  (Java exception handling is similar to, but not
+quite the same as, exception handling in C++.) An
+<I CLASS=emphasis>exception</I> indicates an unusual condition or an
+error condition. Program control becomes unconditionally
+transferred or thrown to a specially designated section of code where
+it's caught and handled. In this way, error handling is somewhat
+orthogonal to the normal flow of the program. We don't have to
+have special return values for all our methods; errors are handled
+by a separate mechanism. Control can be passed long distance from a
+deeply nested routine and handled in a single location when that is
+desirable, or an error can be handled immediately at its
+source. There are still a few methods that return
+<tt CLASS=literal>-1</tt> as a special value, but these are limited to
+situations in which there isn't really an error.[4]
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+For example, the <tt CLASS=literal>getHeight()</tt> method of the
+<tt CLASS=literal>Image</tt> class returns <tt CLASS=literal>-1</tt> if the
+height isn't known yet. No error has occurred; the height will be
+available in the future. In this situation, throwing an exception would be 
+inappropriate.
+</blockquote>
+<P CLASS=para>
+A Java method is required to specify the exceptions it can
+throw (i.e., the ones that it doesn't catch itself); this means
+that the compiler can make sure we handle them. In this way, the
+information about what errors a method can produce is promoted to the
+same level of importance as its argument and return types. You may
+still decide to punt and ignore obvious errors, but in Java you must
+do so explicitly.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-5.1">Exceptions and Error Classes</A></h3>
+
+<P CLASS=para>
+Exceptions are represented by instances of the class 
+<tt CLASS=literal>java.lang.Exception</tt> and its subclasses.  
+Subclasses of <tt CLASS=literal>Exception</tt> can hold specialized 
+information (and possibly behavior) for different kinds of exceptional 
+conditions.  However, more often they are simply "logical" subclasses that
+exist only to serve as a new exception type (more on that later).
+<A HREF="ch04_05.htm#EXJ-CH-4-FIG-1">Figure 4.1</A> shows the subclasses of
+<tt CLASS=literal>Exception</tt>; these classes are defined in various
+packages in the Java API, as indicated in the diagram.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-4-FIG-1">Figure 4.1: Java exception classes</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0401.gif" alt="[Graphic: Figure 4-1]" width=502 height=628 border=0>
+
+</DIV>
+
+<P CLASS=para>
+An <tt CLASS=literal>Exception</tt> object is created by the code at 
+the point where the error condition arises.  It can hold whatever information
+is necessary to describe the exceptional condition, including a full stack
+trace for debugging.  The exception object is passed, along with the 
+flow of control, to the handling block of code. This is where the terms 
+"throw" and "catch" come from: the <tt CLASS=literal>Exception</tt> object 
+is thrown from one point in the code and caught by the other, where execution
+resumes.
+
+<P CLASS=para>
+The Java API also defines the
+<tt CLASS=literal>java.lang.Error</tt> class for eggregious or 
+unrecoverable errors. The
+subclasses of <tt CLASS=literal>Error</tt> are shown in <A HREF="ch04_05.htm#EXJ-CH-4-FIG-2">Figure 4.2</A>. You needn't worry about these errors
+(i.e., you do not have to catch them); they normally indicate linkage
+problems or virtual machine errors. An error of this kind usually
+causes the Java interpreter to display a message and exit.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-4-FIG-2">Figure 4.2: Java error classes</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0402.gif" alt="[Graphic: Figure 4-2]" width=502 height=403 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-5.2">Exception Handling</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>try/catch</tt> guarding statements wrap a block of
+code and catch designated types of exceptions that occur within it:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    readFromFile("foo"); 
+    ... 
+}  
+catch ( Exception e ) { 
+    // Handle error 
+    System.out.println( "Exception while reading file: " + e ); 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above example, exceptions that occur within the body of the
+<tt CLASS=literal>try</tt> statement are directed to the
+<tt CLASS=literal>catch</tt> clause for possible handling. The
+<tt CLASS=literal>catch</tt> clause acts like a method; it
+specifies an argument of the type of exception it wants to
+handle, and, if it's invoked, the <tt CLASS=literal>Exception</tt> object
+is passed into its body as an argument. Here we receive the object in
+the variable <tt CLASS=literal>e</tt> and print it along with a message.
+
+<P CLASS=para>
+A <tt CLASS=literal>try</tt> statement can have multiple
+<tt CLASS=literal>catch</tt> clauses that specify different specific types
+(subclasses) of <tt CLASS=literal>Exception</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    readFromFile("foo"); 
+    ... 
+}  
+catch ( FileNotFoundException e ) { 
+    // Handle file not found 
+    ... 
+}  
+catch ( IOException e ) { 
+    // Handle read error 
+    ... 
+}  
+catch ( Exception e ) { 
+    // Handle all other errors 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>catch</tt> clauses are evaluated in order, and the
+first possible (assignable) match is taken. At most one
+<tt CLASS=literal>catch</tt> clause is executed, which means that the
+exceptions should be listed from most specific to least. In the above
+example, we'll assume that the hypothetical
+<tt CLASS=literal>readFromFile()</tt> can throw two different kinds of
+exceptions: one that indicates the file is not found; the other
+indicates a more general read error. Any subclass of
+<tt CLASS=literal>Exception</tt> is assignable to the parent type
+<tt CLASS=literal>Exception</tt>, so the third <tt CLASS=literal>catch</tt>
+clause acts like the <tt CLASS=literal>default</tt> clause in a
+<tt CLASS=literal>switch</tt> statement and handles any remaining
+possibilities.
+
+<P CLASS=para>
+It should be obvious, but one beauty of the
+<tt CLASS=literal>try/catch</tt> statement is that any statement in the
+<tt CLASS=literal>try</tt> block can assume that all previous statements
+in the block succeeded. A problem won't arise suddenly because a
+programmer forgot to check the return value from some method. If an
+earlier statement fails, execution jumps immediately to the
+<tt CLASS=literal>catch</tt> clause; later statements are never executed.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-5.3">Bubbling Up</A></h3>
+
+<P CLASS=para>
+What if we hadn't caught the exception? Where would it have gone? 
+Well, if there is no enclosing <tt CLASS=literal>try/catch</tt> statement, 
+the exception pops to the top of the method in which it appeared and 
+is, in turn, thrown from that method.  In this way, the exception bubbles 
+up until it's caught, or until it pops out of the top of the program, 
+terminating it with a run-time error message.  There's a bit more to it than
+that because, in this case, the compiler would have reminded us to deal with 
+it, but we'll get back to that in a moment.
+
+<P CLASS=para>
+Let's look at another example. In <A HREF="ch04_05.htm#EXJ-CH-4-FIG-3">Figure 4.3</A>, the method <tt CLASS=literal>getContent()</tt>
+invokes the method <tt CLASS=literal>openConnection()</tt> from within a
+<tt CLASS=literal>try/catch</tt>
+statement. <tt CLASS=literal>openConnection()</tt>, in turn, invokes the
+method <tt CLASS=literal>sendRequest()</tt>, which calls the method
+<tt CLASS=literal>write()</tt> to send some data.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-4-FIG-3">Figure 4.3: Exception propagation</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0403.gif" alt="[Graphic: Figure 4-3]" width=503 height=163 border=0>
+
+</DIV>
+
+<P CLASS=para>
+In this figure, the second call to
+<tt CLASS=literal>write()</tt> throws an
+<tt CLASS=literal>IOException</tt>. Since <tt CLASS=literal>sendRequest()</tt>
+doesn't contain a <tt CLASS=literal>try/catch</tt> statement to handle
+the exception, it's thrown again, from the point that it was called
+in the method <tt CLASS=literal>openConnection()</tt>. Since
+<tt CLASS=literal>openConnection()</tt> doesn't catch the exception
+either, it's thrown once more. Finally it's caught by the
+<tt CLASS=literal>try</tt> statement in <tt CLASS=literal>getContent()</tt>
+and handled by its <tt CLASS=literal>catch</tt> clause.
+
+<P CLASS=para>
+Since an exception can bubble up quite a distance before it is caught and
+handled, we may need a way to determine exactly where it was thrown. 
+All exceptions can dump a <I CLASS=emphasis>stack trace</I> that lists their
+method of origin and all of the nested method calls that it took to arrive
+there, using the printStackTrace() method.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try {
+    // complex task
+} catch ( Exception e ) {
+    // dump information about exactly where the exception ocurred
+    e.printStackTrack( System.err );
+    ...
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-5.4">The <I CLASS=emphasis>throws</I> Clause and <I CLASS=emphasis>checked</I> Exceptions</A></h3>
+
+<P CLASS=para>
+I mentioned earlier that Java makes us be explicit about our error handling.   
+But Java is programmer-friendly, and it's not possible to require that every 
+conceivable type of error be handled in every situation. 
+So, Java exceptions are divided into two categories: 
+<I CLASS=emphasis>checked exceptions</I> and <I CLASS=emphasis>unchecked exceptions</I>.
+Most application level exceptions are checked,
+which means that any method that throws one, either by generating it itself 
+(as we'll discuss below) or by passively ignoring one that occurs within it, 
+must declare that it can throw that type of exception in a 
+special <tt CLASS=literal>throws</tt> clause in its method
+declaration. We haven't yet talked in detail about declaring
+methods; we'll cover that in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>.  For now all you need know is that methods
+have to declare the checked exceptions they can throw or allow to be thrown.
+
+<P CLASS=para>
+Again in <A HREF="ch04_05.htm#EXJ-CH-4-FIG-3">Figure 4.3</A>, notice that the methods
+<tt CLASS=literal>openConnection()</tt> and
+<tt CLASS=literal>sendRequest()</tt> both specify that they can throw an
+<tt CLASS=literal>IOException</tt>.  If we had to throw multiple types 
+of exceptions we could declare them separated with commas:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+void readFile( String s ) throws IOException, InterruptedException { 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The throws clause tells the compiler that a method is a possible source
+of that type of checked exception and that anyone calling that method must be
+prepared to deal with it.  The caller may use a <I CLASS=emphasis>try/catch</I> 
+block to catch it, or it may, itself, declare that it can throw the exception.
+
+<P CLASS=para>
+Exceptions that are subclasses of the 
+<tt CLASS=literal>java.lang.RuntimeException</tt> class are
+unchecked.
+See <A HREF="ch04_05.htm#EXJ-CH-4-FIG-1">Figure 4.1</A> for the 
+subclasses of <tt CLASS=literal>RuntimeException</tt>. 
+It's not a compile-time error
+to ignore the possibility of these exceptions being thrown;
+additionally, methods don't have to declare they can throw
+them. In all other respects, run-time exceptions behave the same as
+other exceptions. We are perfectly free to catch them if we wish; we
+simply aren't required to.
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>Checked exceptions</I><br>
+<DD>
+
+<P CLASS=para>
+Exceptions a reasonable application should try to handle 
+gracefully. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Unchecked exception (Runtime exceptions)</I><br>
+<DD>
+
+<P CLASS=para>
+Exceptions from which we would not normally expect our software to 
+try to recover. </DL>
+<P CLASS=para>
+The category of checked exceptions includes application-level problems
+like missing files and unavailable hosts. As good programmers (and
+upstanding citizens), we should design software to recover gracefully
+from these kinds of conditions. The category of unchecked exceptions
+includes problems such as "out of memory" and "array index out
+of bounds." While these may indicate application-level
+programming errors, they can occur almost anywhere and aren't generally
+easy to recover from. Fortunately, because there are unchecked exceptions,
+you don't have to wrap every one of your array-index operations in a 
+<tt CLASS=literal>try/catch</tt> statement.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-5.5">Throwing Exceptions</A></h3>
+
+<P CLASS=para>
+We can throw our own exceptions: either instances of
+<tt CLASS=literal>Exception</tt> or one of its predefined subclasses, or
+our own specialized subclasses.  All we have to do is create an
+instance of the <tt CLASS=literal>Exception</tt> and throw it with the
+<tt CLASS=literal>throw</tt> statement:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+throw new Exception(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Execution stops and is transferred to the nearest enclosing
+<tt CLASS=literal>try/catch</tt> statement. (Note that there is little
+point in keeping a reference to the <tt CLASS=literal>Exception</tt>
+object we've created here.) An alternative constructor of the
+<tt CLASS=literal>Exception</tt> class lets us specify a string with an
+error message:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+throw new Exception("Something really bad happened");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+By convention, all types of Exception have a String constructor like this.
+Note that the String message above is somewhat facetious and vague.  Normally
+you won't be throwing a plain old Exception, but a more specific subclass.
+For example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public void checkRead( String s ) {  
+    if ( new File(s).isAbsolute() || (s.indexOf("..") != -1) ) 
+        throw new SecurityException(
+           x"Access to file : "+ s +" denied."); 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above, we partially implement a method to check for an illegal path.
+If we find one, we throw a SecurityException, with some information about
+the transgression.  
+
+<P CLASS=para>
+Of course, we could include whatever other information is useful in our own 
+specialized subclasses of <tt CLASS=literal>Exception</tt> (or SecurityException). 
+Often though, just having a new type of exception is good enough, because it's 
+sufficient to help direct the flow of control.  For example, if we are building
+a parser, we might want to make our own kind of exception to indicate a 
+particular kind of failure.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class ParseException extends Exception {
+    ParseException() { 
+        super(); }
+    ParseException( String desc ) { 
+        super( desc ) };
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+See <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A> for a full description of classes and class constructors.
+The body of our exception class here simply allows a ParseException to be
+created in the conventional ways that we have created exceptions above.
+Now that we have our new exception type, we we might guard for it in
+the following kind of situation:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// Somewhere in our code
+...
+try {
+    parseStream( input );
+} catch ( ParseException pe ) {
+    // Bad input...
+} catch ( IOException ioe ) {
+    // Low level communications problem
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As you can see, although our new exception doesn't currently hold any
+specialized information about the problem (it certainly could), it does let 
+us distinguish a parse error from an arbitrary communications error in the 
+same chunk of code.  You might call this kind of specialization of an
+exception to be making a "logical" exception.  
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch04-SECT3-AUTOID.1">Re-throwing exceptions</A></h4>
+
+<P CLASS=para>
+Sometimes you'll want to take some action based on an exception and then
+turn around and throw a new exception in its place.  For example, suppose
+that we want to handle an IOException by freeing up some resources
+before allowing the failure to pass on to the rest of the application.
+You can do this in the obvious way, by simply catching the exception
+and then throwing it again or throwing a new one.  
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+  *** I was going to say something about fillInStackTrack() here ***
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-5.7">Try Creep</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>try</tt> statement imposes a condition on the
+statements they guard. It says that if an exception occurs within
+it, the remaining statements will be abandoned. This has consequences
+for local variable initialization. If the compiler can't determine
+whether a local variable assignment we placed inside a
+<tt CLASS=literal>try/catch</tt> block will happen, it won't
+let us use the variable:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+void myMethod() { 
+    int foo; 
+ 
+    try { 
+        foo = getResults(); 
+    }  
+    catch ( Exception e ) { 
+        ... 
+    } 
+ 
+    int bar = foo;  // Compile time error--foo may not 
+                    // have been initialized 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above example, we can't use <tt CLASS=literal>foo</tt> in the
+indicated place because there's a chance it was never assigned a
+value. One obvious option is to move the assignment inside the
+<tt CLASS=literal>try</tt> statement:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    foo = getResults(); 
+    int bar = foo;  // Okay because we only get here 
+                    // if previous assignment succeeds 
+}  
+catch ( Exception e ) { 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Sometimes this works just fine. However, now we have the same problem
+if we want to use <tt CLASS=literal>bar</tt> later in
+<tt CLASS=literal>myMethod()</tt>.  If we're not careful, we might
+end up pulling everything into the <tt CLASS=literal>try</tt>
+statement. The situation changes if we transfer control out of the
+method in the <tt CLASS=literal>catch</tt> clause:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    foo = getResults(); 
+}  
+catch ( Exception e ) { 
+    ... 
+    return; 
+} 
+ 
+int bar = foo;  // Okay because we only get here 
+                // if previous assignment succeeds 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Your code will dictate its own needs; you should just be aware of the options.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-5.8">The finally Clause</A></h3>
+
+<P CLASS=para>
+ What if we
+have some clean up to do before we exit our method from one of the
+<tt CLASS=literal>catch</tt> clauses? To avoid duplicating the code in
+each <tt CLASS=literal>catch</tt> branch and to make the cleanup more
+explicit, Java supplies the <tt CLASS=literal>finally</tt> clause. A
+<tt CLASS=literal>finally</tt> clause can be added after a
+<tt CLASS=literal>try</tt> and any associated <tt CLASS=literal>catch</tt>
+clauses. Any statements in the body of the <tt CLASS=literal>finally</tt>
+clause are guaranteed to be executed, no matter why control leaves the
+<tt CLASS=literal>try</tt> body:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    // Do something here 
+}  
+catch ( FileNotFoundException e ) { 
+    ... 
+}  
+catch ( IOException e ) { 
+    ... 
+}  
+catch ( Exception e ) { 
+    ... 
+}  
+finally { 
+    // Cleanup here 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above example the statements at the cleanup point will be
+executed eventually, no matter how control leaves the
+<tt CLASS=literal>try</tt>.  If control transfers to one of the
+<tt CLASS=literal>catch</tt> clauses, the statements in
+<tt CLASS=literal>finally</tt> are executed after the
+<tt CLASS=literal>catch</tt> completes. If none of the
+<tt CLASS=literal>catch</tt> clauses handles the exception, the
+<tt CLASS=literal>finally</tt> statements are executed before the
+exception propagates to the next level.
+
+<P CLASS=para>
+ 
+If the statements in the <tt CLASS=literal>try</tt> execute cleanly, or
+even if we perform a <tt CLASS=literal>return</tt>,
+<tt CLASS=literal>break</tt>, or <tt CLASS=literal>continue</tt>, the
+statements in the <tt CLASS=literal>finally</tt> clause are executed. To
+perform cleanup operations, we can even use <tt CLASS=literal>try</tt> and
+<tt CLASS=literal>finally</tt> without any <tt CLASS=literal>catch</tt>
+clauses:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    // Do something here 
+    return; 
+}  
+finally { 
+    System.out.println("Whoo-hoo!"); 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Exceptions that occur in a <tt CLASS=literal>catch</tt> or
+<tt CLASS=literal>finally</tt> clause are handled normally; the search for
+an enclosing <tt CLASS=literal>try/catch</tt> begins outside the
+offending <tt CLASS=literal>try</tt> statement.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Statements and Expressions</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Arrays</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

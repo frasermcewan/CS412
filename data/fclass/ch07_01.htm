@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] Object Serialization</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:15:17 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-7">7. Object Serialization</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Object Serialization Basics<br>
+<A HREF="ch07_02.htm">Writing Classes to Work with Serialization</A><BR>
+<A HREF="ch07_03.htm">Versioning of Classes</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+The object serialization mechanism in Java 1.1 provides a way for objects 
+to be written as a stream of bytes and then later recreated from that stream 
+of bytes. This facility supports a variety of interesting applications. 
+For example, object serialization provides persistent storage 
+for objects, whereby objects are stored in a file for later use. Also, 
+a copy of an object can be sent through a socket to another Java program. 
+Object serialization forms the basis for the remote method invocation mechanism 
+in Java that facilitates distributed programs. Object serialization is 
+supported by a number of new classes in the <tt CLASS=literal>java.io</tt> 
+package in Java 1.1. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-7-SECT-1">7.1 Object Serialization Basics</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.SER1"></A><A NAME="CH07.SER2"></A>If a class is designed to work with object serialization, reading and writing 
+instances of that class is quite simple. The process of writing an object 
+to a byte stream is called <I CLASS=emphasis>serialization</I>. 
+For example, here is how you can write a <tt CLASS=literal>Color</tt> 
+object to a file: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileOutputStream out = new FileOutputStream("tmp");
+ObjectOutput objOut = new ObjectOutputStream(out);
+objOut.writeObject(Color.red);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+All you need to do is create an <tt CLASS=literal>ObjectOutputStream</tt>
+around another output stream and then pass the object to be written to
+the <tt CLASS=literal>writeObject()</tt> method. If you are writing
+objects to a socket or any other destination that is time-sensitive,
+you should call the <tt CLASS=literal>flush()</tt> method after you are
+finished passing objects to the <tt CLASS=literal>ObjectOutputStream</tt>.
+
+<P CLASS=para>
+The process of reading an object from byte stream is called
+<I CLASS=emphasis>deserialization</I>.  Here is how you can read that
+<tt CLASS=literal>Color</tt> object from its file:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream in = new FileInputStream("tmp");
+ObjectInputStream objIn = new ObjectInputStream(in);
+Color c = (Color)objIn.readObject();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here all you need to do is create an
+<tt CLASS=literal>ObjectInputStream</tt> object around another input
+stream and call its <tt CLASS=literal>readObject()</tt> method.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>File Manipulation</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Writing Classes to Work with Serialization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

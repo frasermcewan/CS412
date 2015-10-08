@@ -1,0 +1,527 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 19] FileDialog</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:12:12 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_21.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 19<br>java.awt Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch19_23.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>FileDialog</H1>
+
+<H2>Name</H2>
+
+FileDialog
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch19-REFSECT1-AUTOID.22"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/filedi2.gif" alt="[Graphic: Figure from the text]" width=502 height=92 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-1">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>FileDialog</tt> class provides 
+file selection capabilities for opening or saving files. Because <tt CLASS=literal>FileDialog</tt> 
+is a subclass of <tt CLASS=literal>Dialog</tt>, a 
+<tt CLASS=literal>FileDialog</tt> is always associated 
+with a <tt CLASS=literal>Frame</tt> and is hidden 
+by default. <tt CLASS=literal>FileDialog</tt>s are 
+always modal (i.e., they always attract all user input). In addition, <tt CLASS=literal>FileDialog</tt>s 
+have a load/save mode; the <tt CLASS=literal>LOAD</tt> 
+mode is for selecting files for an application to load, <tt CLASS=literal>SAVE</tt> 
+is for selecting a filename to save. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-2">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.awt.FileDialog
+    extends java.awt.Dialog {
+  
+  // Constants
+  public final static int LOAD;
+  public final static int SAVE;
+  
+  // Constructors
+  public FileDialog (Frame parent); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public FileDialog (Frame parent, String title);
+  public FileDialog (Frame parent, String title, int mode);
+  
+  // Instance Methods
+  public void addNotify();
+  public String getDirectory();
+  public String getFile();
+  public FilenameFilter getFilenameFilter();
+  public int getMode();
+  public synchronized void setDirectory (String directory);
+  public synchronized void setFile (String file);
+  public synchronized void setFilenameFilter (FilenameFilter filter);
+  public void setMode(int mode); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  
+  // Protected Instance Methods
+  protected String paramString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-3">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-3.1">LOAD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-3.1.1">public final static int LOAD</A></h4>
+
+<P CLASS=para>
+Constant to specify the <tt CLASS=literal>FileDialog</tt>'s 
+load mode. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-3.2">SAVE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-3.2.1">public final static int SAVE</A></h4>
+
+<P CLASS=para>
+Constant to specify the <tt CLASS=literal>FileDialog</tt>'s 
+save mode. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-4">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-4.1">FileDialog</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-4.1.1">public FileDialog (Frame parent) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>parent</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Frame</tt> that 
+is to act as parent of <tt CLASS=literal>FileDialog</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>FileDialog</tt> object 
+in <tt CLASS=literal>LOAD</tt> mode. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-4.1.2">public FileDialog (Frame parent, String title)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>parent</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Frame</tt> that 
+is to act as parent of <tt CLASS=literal>FileDialog</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>title</I><br>
+<DD>
+
+<P CLASS=para>
+Title to use for <tt CLASS=literal>FileDialog</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>FileDialog</tt> object 
+in <tt CLASS=literal>LOAD</tt> mode. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-4.1.3">public FileDialog (Frame parent, String title, int mode)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>parent</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Frame</tt> that 
+is to act as parent of <tt CLASS=literal>Dialog</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>title</I><br>
+<DD>
+
+<P CLASS=para>
+Title to use for <tt CLASS=literal>FileDialog</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>mode</I><br>
+<DD>
+
+<P CLASS=para>
+The constant <tt CLASS=literal>LOAD</tt> 
+or <tt CLASS=literal>SAVE</tt>, specifying the dialog's 
+mode. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>FileDialog</tt> object 
+in the given mode. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.1">addNotify</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.1.1">public void addNotify()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Overrides <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Dialog.addNotify()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates <tt CLASS=literal>FileDialog</tt>'s 
+peer for the native platform. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.2">getDirectory</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.2.1">public String getDirectory()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current directory for the <tt CLASS=literal>FileDialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.3">getFile</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.3.1">public String getFile()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current file selected by the <tt CLASS=literal>FileDialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.4">getFilenameFilter</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.4.1">public FilenameFilter getFilenameFilter()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current filename filter for the <tt CLASS=literal>FileDialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.5">getMode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.5.1">public int getMode()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current mode of the <tt CLASS=literal>FileDialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.6">setDirectory</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.6.1">public synchronized void setDirectory (String directory)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>directory</I><br>
+<DD>
+
+<P CLASS=para>
+Directory to be 
+displayed by the <tt CLASS=literal>FileDialog</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Changes the directory displayed in the <tt CLASS=literal>FileDialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.7">setFile</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.7.1">public synchronized void setFile (String file)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>file</I><br>
+<DD>
+
+<P CLASS=para>
+Initial file string for <tt CLASS=literal>FileDialog</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Change the default file selected by the <tt CLASS=literal>FileDialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.8">setFilenameFilter</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.8.1">public synchronized void setFilenameFilter (FilenameFilter filter)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>filter</I><br>
+<DD>
+
+<P CLASS=para>
+Initial filter for <tt CLASS=literal>FileDialog</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Changes the current filename filter of the <tt CLASS=literal>FileDialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.9">setMode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-5.9.1">public void setMode (int mode) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>mode</I><br>
+<DD>
+
+<P CLASS=para>
+The constant <tt CLASS=literal>LOAD</tt> 
+or <tt CLASS=literal>SAVE</tt>, specifying the dialog's 
+mode. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Change the mode of the file dialog. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-6">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-6.1">paramString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-6.1.1">protected String paramString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+String with current settings of <tt CLASS=literal>FileDialog</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Dialog.paramString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Helper method for <tt CLASS=literal>toString()</tt> 
+to generate string of current settings. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-FILEDIALOG-SECT-7">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Dialog</tt>, <tt CLASS=literal>FilenameFilter</tt>, 
+<tt CLASS=literal>String</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_21.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch19_23.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>EventQueue <img src="gifs/bstar.gif" alt="(New)" border=0></td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>FlowLayout</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

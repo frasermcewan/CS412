@@ -1,0 +1,880 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] 12.3 ImageProducer</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:50:43 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>Image Processing</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-3">12.3 ImageProducer</A></h2>
+
+<P CLASS=para>
+<A NAME="CH12.IMAGES2"></A><A NAME="CH12.IMAGES4"></A>The <tt CLASS=literal>ImageProducer</tt> interface 
+defines the methods that <tt CLASS=literal>ImageProducer</tt> 
+objects must implement. Image producers serve as sources for pixel data; 
+they may compute the data themselves or interpret data from some external 
+source, like a GIF file. No matter how it generates the data, an image 
+producer's job is to hand that data to an image consumer, which usually 
+renders the data on the screen. The methods in the <tt CLASS=literal>ImageProducer</tt> 
+interface let <tt CLASS=literal>ImageConsumer</tt> 
+objects register their interest in an image. The business end 
+of an <tt CLASS=literal>ImageProducer</tt>--that 
+is, the methods it uses to deliver pixel data to an image consumer--are 
+defined by the <tt CLASS=literal>ImageConsumer</tt> 
+interface. Therefore, we can summarize the way an image producer works 
+as follows: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>It waits for image consumers to register their interest in an image. 
+
+<P>
+<li CLASS=listitem>As image consumers register, it stores them in a <tt CLASS=literal>Hashtable</tt>, 
+<tt CLASS=literal>Vector</tt>, or some other collection mechanism. 
+
+<P>
+<li CLASS=listitem>As image data becomes available, it loops through all the registered consumers 
+and calls their methods to transfer the data. 
+
+<P>
+</UL>
+<P CLASS=para>
+There's a sense in which you have to take this process on 
+faith; image consumers are usually well hidden. If you call <tt CLASS=literal>createImage()</tt>, 
+an image consumer will eventually show up. 
+
+<P CLASS=para>
+Every <tt CLASS=literal>Image</tt> has an <tt CLASS=literal>ImageProducer</tt> 
+associated with it; to acquire a reference to the producer, use the <tt CLASS=literal>getSource()</tt> 
+method of <tt CLASS=literal>Image</tt>. 
+
+<P CLASS=para>
+Because an <tt CLASS=literal>ImageProducer</tt> must 
+call methods in the <tt CLASS=literal>ImageConsumer</tt> 
+interface, we won't show an example of a full-fledged producer until 
+we have discussed <tt CLASS=literal>ImageConsumer</tt>. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-3.0">ImageProducer Interface</A></h3>Methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addConsumer (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addConsumer()</tt> method registers 
+<tt CLASS=literal>ic</tt> as an <tt CLASS=literal>ImageConsumer</tt> 
+interested in the <tt CLASS=literal>Image</tt> information. 
+Once an <tt CLASS=literal>ImageConsumer</tt> is registered, 
+the <tt CLASS=literal>ImageProducer</tt> can deliver 
+<tt CLASS=literal>Image</tt> pixels immediately or 
+wait until <tt CLASS=literal>startProduction()</tt> 
+has been called. 
+
+<P CLASS=para>
+Note that one image may have many consumers; therefore, <tt CLASS=literal>addConsumer()</tt> 
+usually stores image consumers in a collection like a <tt CLASS=literal>Vector</tt> 
+or <tt CLASS=literal>Hashtable</tt>. There is one 
+notable exception: if the producer has the image data in memory, <tt CLASS=literal>addConsumer()</tt> 
+can deliver the image to the consumer immediately. When <tt CLASS=literal>addConsumer()</tt> 
+returns, it has finished with the consumer. In this case, you don't 
+need to manage a list of consumers, because there is only one image consumer 
+at a time. (In this case, <tt CLASS=literal>addConsumer()</tt> 
+should be implemented as a synchronized method.) 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isConsumer (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isConsumer()</tt> method checks 
+to see if <tt CLASS=literal>ic</tt> is 
+a registered <tt CLASS=literal>ImageConsumer</tt> 
+for this <tt CLASS=literal>ImageProducer</tt>. If 
+<tt CLASS=literal>ic</tt> is registered, <tt CLASS=literal>true</tt> is returned. 
+If <tt CLASS=literal>ic</tt> is not registered, <tt CLASS=literal>false</tt> is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeConsumer (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeConsumer()</tt> method 
+removes <tt CLASS=literal>ic</tt> as a registered 
+<tt CLASS=literal>ImageConsumer</tt> for this <tt CLASS=literal>ImageProducer</tt>. 
+If <tt CLASS=literal>ic</tt> was not a registered 
+<tt CLASS=literal>ImageConsumer</tt>, nothing should 
+happen. This is not an error that should throw an exception. Once <tt CLASS=literal>ic</tt> 
+has been removed from the registry, the <tt CLASS=literal>ImageProducer</tt> 
+should no longer send data to it. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void startProduction (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>startProduction()</tt> method 
+registers <tt CLASS=literal>ic</tt> as an <tt CLASS=literal>ImageConsumer</tt> 
+interested in the <tt CLASS=literal>Image</tt> information 
+and tells the <tt CLASS=literal>ImageProducer</tt> 
+to start sending the <tt CLASS=literal>Image</tt> 
+data immediately. The <tt CLASS=literal>ImageProducer</tt> 
+sends the image data to <tt CLASS=literal>ic</tt> 
+and all other registered <tt CLASS=literal>ImageConsumer</tt> 
+objects, through <tt CLASS=literal>addConsumer()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void requestTopDownLeftRightResend (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>requestTopDownLeftRightResend()</tt> 
+method is called by the <tt CLASS=literal>ImageConsumer</tt> 
+<tt CLASS=literal>ic</tt> requesting that the <tt CLASS=literal>ImageProducer</tt> 
+retransmit the <tt CLASS=literal>Image</tt> data in 
+top-down, left-to-right order. If the <tt CLASS=literal>ImageProducer</tt> 
+is unable to send the data in that order or always sends the data in that 
+order (like with <tt CLASS=literal>MemoryImageSource</tt>), 
+it can ignore the call. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-3.1">FilteredImageSource</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>FilteredImageSource</tt> class 
+combines an <tt CLASS=literal>ImageProducer</tt> and 
+an <tt CLASS=literal>ImageFilter</tt> to create a 
+new <tt CLASS=literal>Image</tt>. The image producer 
+generates pixel data for an original image. The <tt CLASS=literal>FilteredImageSource</tt> 
+takes this data and uses an <tt CLASS=literal>ImageFilter</tt> to produce a modified version: the image 
+may be scaled, clipped, or rotated, or the colors shifted, etc. The <tt CLASS=literal>FilteredImageSource</tt> 
+is the image producer for the new image. The <tt CLASS=literal>ImageFilter</tt> 
+object transforms the original image's data to yield the new image; 
+it implements the <tt CLASS=literal>ImageConsumer</tt> 
+interface. We cover the <tt CLASS=literal>ImageConsumer</tt> 
+interface in <A HREF="ch12_04.htm#JAWT-CH-12-SECT-4">ImageConsumer</A> and the <tt CLASS=literal>ImageFilter</tt> 
+class in <A HREF="ch12_05.htm#JAWT-CH-12-SECT-5">ImageFilter</A>. <A HREF="ch12_03.htm#JAWT-CH-12-FIG-1">Figure 12.1</A> shows the relationship between an <tt CLASS=literal>ImageProducer</tt>, <tt CLASS=literal>FilteredImageSource</tt>, <tt CLASS=literal>ImageFilter</tt>, and the <tt CLASS=literal>ImageConsumer</tt>. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-12-FIG-1">Figure 12.1: Image producers, filters, and consumers</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1201.gif" alt="[Graphic: Figure 12-1]" width=502 height=203 border=0>
+
+</DIV>
+
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public FilteredImageSource (ImageProducer original, ImageFilter filter) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>FilteredImageSource</tt> constructor 
+creates an image producer that combines an image, <tt CLASS=literal>original</tt>, 
+and a filter, <tt CLASS=literal>filter</tt>, to create 
+a new image. The <tt CLASS=literal>ImageProducer</tt> 
+of the original image is the constructor's first parameter; given 
+an <tt CLASS=literal>Image</tt>, you can acquire its 
+<tt CLASS=literal>ImageProducer</tt> by using the 
+<tt CLASS=literal>getSource()</tt> method. The following code 
+shows how to create a new image from an original. <A HREF="ch12_05.htm#JAWT-CH-12-SECT-5">ImageFilter</A> shows several extensive examples of image filters. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Image image = getImage (new URL
+      ("http://www.ora.com/graphics/headers/homepage.gif"));
+Image newOne = createImage (new FilteredImageSource
+      (image.getSource(), new SomeImageFilter()));
+</PRE>
+</DIV>
+
+ImageProducer interface methods
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageProducer</tt> interface 
+methods maintain an internal table for the image consumers. Since this 
+is private, you do not have direct access to it. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addConsumer (ImageConsumer ic)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addConsumer()</tt> method adds 
+<tt CLASS=literal>ic</tt> as an <tt CLASS=literal>ImageConsumer</tt> 
+interested in the pixels for this image. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean isConsumer (ImageConsumer ic)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isConsumer()</tt> method checks 
+to see if <tt CLASS=literal>ic</tt> is a registered 
+<tt CLASS=literal>ImageConsumer</tt> for this <tt CLASS=literal>ImageProducer</tt>. 
+If <tt CLASS=literal>ic</tt> is registered, <tt CLASS=literal>true</tt> is 
+returned. If not registered, <tt CLASS=literal>false</tt> is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void removeConsumer (ImageConsumer ic)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeConsumer()</tt> method 
+removes <tt CLASS=literal>ic</tt> as a registered 
+<tt CLASS=literal>ImageConsumer</tt> for this <tt CLASS=literal>ImageProducer</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void startProduction (ImageConsumer ic)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>startProduction()</tt> method 
+registers <tt CLASS=literal>ic</tt> as an <tt CLASS=literal>ImageConsumer</tt> 
+interested in the <tt CLASS=literal>Image</tt> information 
+and tells the <tt CLASS=literal>ImageProducer</tt> 
+to start sending the <tt CLASS=literal>Image</tt> 
+data immediately. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void requestTopDownLeftRightResend (ImageConsumer ic)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>requestTopDownLeftRightResend()</tt> 
+method registers <tt CLASS=literal>ic</tt> as an <tt CLASS=literal>ImageConsumer</tt> 
+interested in the <tt CLASS=literal>Image</tt> information 
+and requests the <tt CLASS=literal>ImageProducer</tt> 
+to retransmit the <tt CLASS=literal>Image</tt> data 
+in top-down, left-to-right order. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-12-SECT-3.2">MemoryImageSource</A></h3>
+
+<P CLASS=para>
+<A NAME="CH12.MEM2"></A><A NAME="CH12.MEM1"></A>The <tt CLASS=literal>MemoryImageSource</tt> class 
+allows you to create images completely in memory; you generate pixel data, 
+place it in an array, and hand that array and a <tt CLASS=literal>ColorModel</tt> 
+to the <tt CLASS=literal>MemoryImageSource</tt> constructor. 
+The <tt CLASS=literal>MemoryImageSource</tt> is an 
+image producer that can be used with a consumer to display the image on 
+the screen. For example, you might use a <tt CLASS=literal>MemoryImageSource</tt> 
+to display a Mandelbrot image or some other image generated by your program. 
+You could also use a <tt CLASS=literal>MemoryImageSource</tt> 
+to modify a pre-existing image; use <tt CLASS=literal>PixelGrabber</tt> 
+to get the image's pixel data, modify that data, and then use a <tt CLASS=literal>MemoryImageSource</tt> 
+as the producer for the modified image. Finally, you can use <tt CLASS=literal>MemoryImageSource</tt> 
+to simplify implementation of a new image type; you can develop a class 
+that reads an image in some unsupported format from a local file or the 
+network; interprets the image file and puts pixel data into an array; and 
+uses a <tt CLASS=literal>MemoryImageSource</tt> to 
+serve as an image producer. This is simpler than implementing an image 
+producer yourself, but it isn't quite as flexible; you lose the ability 
+to display partial images as the data becomes available. 
+
+<P CLASS=para>
+In Java 1.1, <tt CLASS=literal>MemoryImageSource</tt> 
+supports multiframe images to animate a sequence. In earlier versions, 
+it was necessary to create a dynamic <tt CLASS=literal>ImageFilter</tt> 
+to animate the image. Constructors
+
+<P CLASS=para>
+There are six constructors for <tt CLASS=literal>MemoryImageSource</tt>, 
+each with slightly different parameters. They all create an image producer 
+that delivers some array of data to an image consumer. The constructors 
+are: 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public MemoryImageSource (int w, int h, ColorModel cm, byte pix[], int off, int scan) </I><br><I CLASS=emphasis>public MemoryImageSource (int w, int h, ColorModel cm, byte pix[], int off, int scan, Hashtable props) </I><br><I CLASS=emphasis>public MemoryImageSource (int w, int h, ColorModel cm, int pix[],</I>  <I CLASS=emphasis>int off, int scan) </I><br><I CLASS=emphasis>public MemoryImageSource (int w, int h, ColorModel cm, int pix[],</I>  <I CLASS=emphasis>int off, int scan, Hashtable props) </I><br><I CLASS=emphasis>public MemoryImageSource (int w, int h, int pix[], int off, int scan) </I><br><I CLASS=emphasis>public MemoryImageSource (int w, int h, int pix[], int off, int scan,</I>  <I CLASS=emphasis>Hashtable props) </I><br>
+<DD>
+
+<P CLASS=para>
+</DL>
+<P CLASS=para>
+The parameters that might be present are: 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>w</tt><br>
+<DD>
+
+<P CLASS=para>
+Width of the image being created, in pixels.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>h</tt><br>
+<DD>
+
+<P CLASS=para>
+Height of the image being created, in pixels.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>cm</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ColorModel</tt> that describes the color 
+representation used in the pixel data. If this parameter is not present, the 
+<tt CLASS=literal>MemoryImageSource</tt> uses the default RGB color model 
+(<tt CLASS=literal>ColorModel.getRGBDefault()</tt>).
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>pix[]</tt><br>
+<DD>
+
+<P CLASS=para>
+The array of pixel information to be converted into an image. This may be either a <tt CLASS=literal>byte</tt> array or an <tt CLASS=literal>int</tt> array, depending on the color model. If you're using a direct color model (including the default RGB color model), 
+<tt CLASS=literal>pix</tt>
+ is usually an <tt CLASS=literal>int</tt> array; if it isn't, it won't be able to represent all 16 million possible colors. If you're using an indexed color model, the array should be a 
+<tt CLASS=literal>byte</tt> array. However, if you use an <tt CLASS=literal>int</tt>
+ array with an indexed color model, the <tt CLASS=literal>MemoryImageSource</tt>
+ ignores the three high-order bytes because an indexed color model has at most 256 entries in the color map. In general: if your color model requires more than 8 bits of data per pixel, use an 
+<tt CLASS=literal>int</tt> array; if it requires 8 bits or less, use a 
+<tt CLASS=literal>byte</tt> array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>off</tt><br>
+<DD>
+
+<P CLASS=para>
+The first pixel used in the array (usually 0); prior pixels are ignored.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>scan</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of pixels per line in the array (usually equal to <tt CLASS=literal>w</tt>). The number of pixels per scan line in the array may be larger than the number of pixels in the scan line. Extra pixels in the array are ignored.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>props</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Hashtable</tt> of the properties associated 
+with the image. If this argument isn't present, the constructor 
+assumes there are no properties.</DL>
+<P CLASS=para>
+The pixel at location (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>) in the image is located at <tt CLASS=literal>pix[y 
+* scan + x + off]</tt>. ImageProducer interface methods
+
+<P CLASS=para>
+In Java 1.0, the <tt CLASS=literal>ImageProducer</tt> 
+interface methods maintain a single internal variable for the image consumer 
+because the image is delivered immediately and synchronously. There is 
+no need to worry about multiple consumers; as soon as one registers, you 
+give it the image, and you're done. These methods keep track of this 
+single <tt CLASS=literal>ImageConsumer</tt>. 
+
+<P CLASS=para>
+In Java 1.1, <tt CLASS=literal>MemoryImageSource</tt> 
+supports animation. One consequence of this new feature is that it isn't 
+always possible to deliver all the image's data immediately. Therefore, 
+the class maintains a list of image consumers that are notified when each 
+frame is generated. Since this list is private, you do not have direct 
+access to it. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addConsumer (ImageConsumer ic)  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addConsumer()</tt> method adds 
+<tt CLASS=literal>ic</tt> as an <tt CLASS=literal>ImageConsumer</tt> 
+interested in the pixels for this image. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean isConsumer (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isConsumer()</tt> method checks 
+to see if <tt CLASS=literal>ic</tt> is a registered 
+<tt CLASS=literal>ImageConsumer</tt> for this <tt CLASS=literal>ImageProducer</tt>. 
+If <tt CLASS=literal>ic</tt> is registered, <tt CLASS=literal>true</tt> is 
+returned. If <tt CLASS=literal>ic</tt> is not registered, <tt CLASS=literal>false</tt> is returned. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void removeConsumer (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeConsumer()</tt> method 
+removes <tt CLASS=literal>ic</tt> as a registered 
+<tt CLASS=literal>ImageConsumer</tt> for this <tt CLASS=literal>ImageProducer</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void startProduction (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>startProduction()</tt> method 
+calls <tt CLASS=literal>addConsumer()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void requestTopDownLeftRightResend (ImageConsumer ic) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>requestTopDownLeftRightResend()</tt> 
+method does nothing since in-memory images are already in this format or 
+are multiframed, with each frame in this format. </DL>
+Animation methods
+
+<P CLASS=para>
+<A NAME="CH12.ANIM"></A>In Java 1.1, <tt CLASS=literal>MemoryImageSource</tt> 
+supports animation; it can now pass multiple frames to interested image 
+consumers. This feature mimics GIF89a's multiframe functionality. (If you have GIF89a animations, you can display them using <tt CLASS=literal>getImage()</tt> and <tt CLASS=literal>drawImage()</tt>; you don't have to build a complicated creature using <tt CLASS=literal>MemoryImageSource</tt>.)
+. An animation example 
+follows in <A HREF="ch12_03.htm#JAWT-CH-12-EX-3">Example 12.3</A> (later in this chapter). 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setAnimated(boolean animated) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setAnimated()</tt> method notifies 
+the <tt CLASS=literal>MemoryImageSource</tt> if it 
+will be in animation mode (<tt CLASS=literal>animated</tt> 
+is <tt CLASS=literal>true</tt>) or not (<tt CLASS=literal>animated</tt> is 
+<tt CLASS=literal>false</tt>). By default, animation is disabled; you must call this method to 
+generate an image sequence. To prevent losing data, call this method immediately 
+after calling the <tt CLASS=literal>MemoryImageSource</tt> 
+constructor. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setFullBufferUpdates(boolean fullBuffers) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setFullBufferUpdates()</tt> 
+method controls how image updates are done during an animation. It is ignored 
+if you are not creating an animation. If <tt CLASS=literal>fullBuffers</tt> 
+is <tt CLASS=literal>true</tt>, this method tells 
+the <tt CLASS=literal>MemoryImageSource</tt> that 
+it should always send all of an image's 
+data to the consumers whenever it received new data (by a call to <tt CLASS=literal>newPixels()</tt>). 
+If <tt CLASS=literal>fullBuffers</tt> is <tt CLASS=literal>false</tt>, 
+the <tt CLASS=literal>MemoryImageSource</tt> sends only the changed portion of the image and notifies consumers (by a call 
+to <tt CLASS=literal>ImageConsumer.setHints()</tt>) 
+that frames sent will be complete. 
+
+<P CLASS=para>
+Like <tt CLASS=literal>setAnimated()</tt>, <tt CLASS=literal>setFullBufferUpdates()</tt> 
+should be called immediately after calling the <tt CLASS=literal>MemoryImageSource</tt> 
+constructor, before the animation is started. </DL>
+<P CLASS=para>
+To do the actual animation, you update the image array <tt CLASS=literal>pix[]</tt> 
+that was specified in the constructor and call one of the overloaded <tt CLASS=literal>newPixels()</tt> 
+methods to tell the <tt CLASS=literal>MemoryImageSource</tt> 
+that you have changed the image data. The parameters to <tt CLASS=literal>newPixels()</tt> 
+determine whether you are animating the entire image or just a portion 
+of the image. You can also supply a new array to take pixel data from, 
+replacing <tt CLASS=literal>pix[]</tt>. In any case, 
+<tt CLASS=literal>pix[]</tt> supplies the initial 
+image data (i.e., the first frame of the animation). 
+
+<P CLASS=para>
+If you have not called <tt CLASS=literal>setAnimated(true)</tt>, 
+calls to any version of <tt CLASS=literal>newPixels()</tt> 
+are ignored. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void newPixels() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The version of <tt CLASS=literal>newPixels()</tt> 
+with no parameters tells the <tt CLASS=literal>MemoryImageSource</tt> 
+to send the entire pixel data (frame) to all the registered image consumers 
+again. Data is taken from the original array <tt CLASS=literal>pix[]</tt>. 
+After the data is sent, the <tt CLASS=literal>MemoryImageSource</tt> 
+notifies consumers that a frame is complete by calling <tt CLASS=literal>imageComplete(ImageConsumer.SINGLEFRAMEDONE)</tt>, 
+thus updating the display when the image is redisplayed. Remember that 
+in many cases, you don't need to update the entire image; updating 
+part of the image saves CPU time, which may be crucial for your application. 
+To update part of the image, call one of the other versions of <tt CLASS=literal>newPixels()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void newPixels(int x, int y, int w, int h) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>newPixels()</tt> method sends 
+part of the image in the array <tt CLASS=literal>pix[]</tt> 
+to the consumers. The portion of the image sent has its upper left corner 
+at the point (<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>), 
+width <tt CLASS=literal>w</tt> and height <tt CLASS=literal>h</tt>, 
+all in pixels. Changing part of the image rather than the whole thing saves 
+considerably on system resources. Obviously, it is appropriate only if 
+most of the image is still. For example, you could use this method to animate 
+the steam rising from a cup of hot coffee, while leaving the cup itself 
+static (an image that should be familiar to anyone reading JavaSoft's 
+Web site). After the data is sent, consumers are notified that a frame 
+is complete by a call to <tt CLASS=literal>imageComplete(ImageConsumer.SINGLEFRAMEDONE)</tt>, 
+thus updating the display when the image is redisplayed. 
+
+<P CLASS=para>
+If <tt CLASS=literal>setFullBufferUpdates()</tt> was 
+called, the entire image is sent, and the dimensions of the bounding box 
+are ignored. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void newPixels(int x, int y, int w, int h, boolean frameNotify) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>newPixels()</tt> method is 
+identical to the last, with one exception: consumers are notified 
+that new image data is available only when <tt CLASS=literal>frameNotify</tt> 
+is <tt CLASS=literal>true</tt>. This method allows 
+you to generate new image data in pieces, updating the consumers only once 
+when you are finished. 
+
+<P CLASS=para>
+If <tt CLASS=literal>setFullBufferUpdates()</tt> was 
+called, the entire image is sent, and the dimensions of the bounding box 
+are ignored. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void newPixels(byte[] newpix, ColorModel newmodel, 
+int offset, int scansize) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public synchronized void newPixels(int[] newpix, ColorModel newmodel, int 
+offset, int scansize) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+These <tt CLASS=literal>newPixels()</tt> methods change 
+the source of the animation to the <tt CLASS=literal>byte</tt> 
+or <tt CLASS=literal>int</tt> array <tt CLASS=literal>newpix[]</tt>, 
+with a <tt CLASS=literal>ColorModel</tt> of <tt CLASS=literal>newmodel</tt>. 
+<tt CLASS=literal>offset</tt> marks the beginning 
+of the data in <tt CLASS=literal>newpix</tt> to use, 
+while <tt CLASS=literal>scansize</tt> states the number 
+of pixels in <tt CLASS=literal>newpix</tt> per line 
+of <tt CLASS=literal>Image</tt> data. Future calls 
+to other versions of <tt CLASS=literal>newPixels()</tt> 
+should modify <tt CLASS=literal>newpix[]</tt> rather 
+than <tt CLASS=literal>pix[]</tt>. </DL>
+Using MemoryImageSource to create a static image
+
+<P CLASS=para>
+You can create an image by generating an integer or byte array in memory 
+and converting it to an image with <tt CLASS=literal>MemoryImageSource</tt>. 
+The following <tt CLASS=literal>MemoryImage</tt> applet generates two identical images that display 
+a series of color bars from left to right. Although the images look the 
+same, they were generated differently: the image on the left uses the default 
+<tt CLASS=literal>DirectColorModel</tt>; the image 
+on the right uses an <tt CLASS=literal>IndexColorModel</tt>. 
+
+<P CLASS=para>
+Because the image on the left uses a <tt CLASS=literal>DirectColorModel</tt>, 
+it stores the actual color value of each pixel in an array of integers 
+(<tt CLASS=literal>rgbPixels[]</tt>). The image on 
+the right can use a byte array (<tt CLASS=literal>indPixels[]</tt>) 
+because the <tt CLASS=literal>IndexColorModel</tt> 
+puts the color information in its color map instead of the pixel array; 
+elements of the pixel array need to be large enough only to address the 
+entries in this map. Images that are based on <tt CLASS=literal>IndexColorModel</tt> 
+are generally more efficient in their use of space (integer vs. byte arrays, although 
+<tt CLASS=literal>IndexColorModel</tt> requires small 
+support arrays) and in performance (if you filter the image). 
+
+<P CLASS=para>
+The output from this example is shown in <A HREF="ch12_03.htm#JAWT-CH-12-FIG-2">Figure 12.2</A>. 
+The source is shown in <A HREF="ch12_03.htm#JAWT-CH-12-EX-2">Example 12.2</A>. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-12-FIG-2">Figure 12.2: MemoryImage applet output</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1202.gif" alt="[Graphic: Figure 12-2]" width=338 height=216 border=0>
+
+</DIV>
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-2">Example 12.2: MemoryImage Test Program</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.image.*;
+public class MemoryImage extends Applet {
+    Image i, j;
+    int width = 200;
+    int height = 200;
+    public void init () {
+        int rgbPixels[] = new int [width*height];
+        byte indPixels[] = new byte [width*height];
+        int index = 0;
+        Color colorArray[] = {Color.red, Color.orange, Color.yellow,
+                Color.green, Color.blue, Color.magenta};
+        int rangeSize = width / colorArray.length;
+        int colorRGB;
+        byte colorIndex;
+        byte reds[]   = new byte[colorArray.length];
+        byte greens[] = new byte[colorArray.length];
+        byte blues[]  = new byte[colorArray.length];
+        for (int i=0;i&lt;colorArray.length;i++) {
+            reds[i]   = (byte)colorArray[i].getRed();
+            greens[i] = (byte)colorArray[i].getGreen();
+            blues[i]  = (byte)colorArray[i].getBlue();
+        }
+        for (int y=0;y&lt;height;y++) {
+            for (int x=0;x&lt;width;x++) {
+                if (x &lt; rangeSize) {
+                    colorRGB = Color.red.getRGB();
+                    colorIndex = 0;
+                } else if (x &lt; (rangeSize*2)) {
+                    colorRGB = Color.orange.getRGB();
+                    colorIndex = 1;
+                } else if (x &lt; (rangeSize*3)) {
+                    colorRGB = Color.yellow.getRGB();
+                    colorIndex = 2;
+                } else if (x &lt; (rangeSize*4)) {
+                    colorRGB = Color.green.getRGB();
+                    colorIndex = 3;
+                } else if (x &lt; (rangeSize*5)) {
+                    colorRGB = Color.blue.getRGB();
+                    colorIndex = 4;
+                } else {
+                    colorRGB = Color.magenta.getRGB();
+                    colorIndex = 5;
+                }
+                rgbPixels[index] = colorRGB;
+                indPixels[index] = colorIndex;
+                index++;
+            }
+        }
+        i = createImage (new MemoryImageSource (width, height, rgbPixels,
+            0, width));
+        j = createImage (new MemoryImageSource (width, height,
+            new IndexColorModel (8, colorArray.length, reds, greens, blues),
+            indPixels, 0, width));
+    }
+    public void paint (Graphics g) {
+        g.drawImage (i, 0, 0, this);
+        g.drawImage (j, width+5, 0, this);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Almost all of the work is done in <tt CLASS=literal>init()</tt> 
+(which, in a real applet, isn't a terribly good idea; ideally <tt CLASS=literal>init()</tt> 
+should be lightweight). Previously, we explained the color model's 
+use for the images on the left and the right. Toward the end of <tt CLASS=literal>init()</tt>, 
+we create the images <tt CLASS=literal>i</tt> and 
+<tt CLASS=literal>j</tt> by calling <tt CLASS=literal>createImage()</tt> 
+with a <tt CLASS=literal>MemoryImageSource</tt> as 
+the image producer. For image <tt CLASS=literal>i</tt>, 
+we used the simplest <tt CLASS=literal>MemoryImageSource</tt> 
+constructor, which uses the default RGB color model. For <tt CLASS=literal>j</tt>, 
+we called the <tt CLASS=literal>IndexColorModel</tt> 
+constructor within the <tt CLASS=literal>MemoryImageSource</tt> 
+constructor, to create a color map that has only six entries: one for each 
+of the colors we use. Using MemoryImageSource for animation
+
+<P CLASS=para>
+<A NAME="CH12.ANIM2"></A>As we've seen, Java 1.1 gives you the ability to create an animation 
+using a <tt CLASS=literal>MemoryImageSource</tt> by 
+updating the image data in memory; whenever you have finished an update, 
+you can send the resulting frame to the consumers. This technique gives 
+you a way to do animations that consume very little memory, since you keep 
+overwriting the original image. The applet in <A HREF="ch12_03.htm#JAWT-CH-12-EX-3">Example 12.3</A> demonstrates <tt CLASS=literal>MemoryImageSource</tt>'s 
+animation capability by creating a Mandelbrot image in memory, updating 
+the image as new points are added. <A HREF="ch12_03.htm#JAWT-CH-12-FIG-3">Figure 12.3</A> shows 
+the results, using four consumers to display the image four times.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-12-EX-3">Example 12.3: Mandelbrot Program</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.awt.*;
+import java.awt.image.*;
+import java.applet.*;
+public class Mandelbrot extends Applet implements Runnable {
+    Thread animator;
+    Image im1, im2, im3, im4;
+    public void start() {
+        animator = new Thread(this);
+        animator.start();
+    }
+    public synchronized void stop() {
+        animator = null;
+    }
+    public void paint(Graphics g) {
+        if (im1 != null)
+            g.drawImage(im1, 0, 0, null);
+        if (im2 != null)
+            g.drawImage(im2, 0, getSize().height / 2, null);
+        if (im3 != null)
+            g.drawImage(im3, getSize().width / 2, 0, null);
+        if (im4 != null)
+            g.drawImage(im4, getSize().width / 2, getSize().height / 2, null);
+    }
+    public void update (Graphics g) {
+        paint (g);
+    }
+    public synchronized void run() {
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        int width = getSize().width / 2;
+        int height = getSize().height / 2;
+        byte[] pixels = new byte[width * height];
+        int index = 0;
+        int iteration=0;
+        double a, b, p, q, psq, qsq, pnew, qnew;
+        byte[] colorMap = {(byte)255, (byte)255, (byte)255, // white
+                           (byte)0, (byte)0, (byte)0};      // black
+        MemoryImageSource mis = new MemoryImageSource(
+            width, height,
+            new IndexColorModel (8, 2, colorMap, 0, false, -1),
+            pixels, 0, width);
+        mis.setAnimated(true);
+        im1 = createImage(mis);
+        im2 = createImage(mis);
+        im3 = createImage(mis);
+        im4 = createImage(mis);
+        // Generate Mandelbrot
+        final int ITERATIONS = 16;
+        for (int y=0; y&lt;height; y++) {
+            b = ((double)(y-64))/32;
+            for (int x=0; x&lt;width; x++) {
+                a = ((double)(x-64))/32;
+                p=q=0;
+                iteration = 0;
+                while (iteration &lt; ITERATIONS) {
+                    psq = p*p;
+                    qsq = q*q;
+                    if ((psq + qsq) &gt;= 4.0)
+                        break;
+                    pnew = psq - qsq + a;
+                    qnew = 2*p*q+b;
+                    p = pnew;
+                    q = qnew;
+                    iteration++;
+                }
+                if (iteration == ITERATIONS) {
+                    pixels[index] = 1;
+                    mis.newPixels(x, y, 1, 1);
+                    repaint();
+                }
+                index++;
+            }
+        }
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-12-FIG-3">Figure 12.3: Mandelbrot output</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1203.gif" alt="[Graphic: Figure 12-3]" width=216 height=245 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Most of the applet in <A HREF="ch12_03.htm#JAWT-CH-12-EX-3">Example 12.3</A> should be self-explanatory. The <tt CLASS=literal>init()</tt> 
+method starts the thread in which we do our computation. <tt CLASS=literal>paint()</tt> 
+just displays the four images we create. All the work, including the computation, 
+is done in the thread's <tt CLASS=literal>run()</tt> 
+method. <tt CLASS=literal>run()</tt> starts by setting 
+up a color map, creating a <tt CLASS=literal>MemoryImageSource</tt> 
+with animation enabled and creating four images using that source as the 
+producer. It then does the computation, which I won't explain; for 
+our purposes, the interesting part is what happens when we've computed 
+a pixel. We set the appropriate byte in our data array, <tt CLASS=literal>pixels[]</tt>, 
+and then call <tt CLASS=literal>newPixels()</tt>, 
+giving the location of the new pixel and its size (1 by 1) as arguments. 
+Thus, we redraw the images for every new pixel. In a real application, 
+you would probably compute a somewhat larger chunk of new data before updating 
+the screen, but the same principles apply. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ColorModel</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ImageConsumer</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

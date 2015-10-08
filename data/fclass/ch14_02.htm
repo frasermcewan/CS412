@@ -1,0 +1,2237 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 14] BigInteger</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:16:10 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 14<br>The java.math Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>BigInteger</H1>
+
+<H2>Name</H2>
+
+BigInteger
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.10">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.math.BigInteger</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Number</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.11">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>BigInteger</tt> class represents 
+an arbitrary-precision integer value. You should use this class if a <tt CLASS=literal>long</tt> 
+is not big enough for your purposes. The number in a <tt CLASS=literal>BigInteger</tt> 
+is represented by a sign value and a magnitude, which is an arbitrarily large 
+array of bytes. A <tt CLASS=literal>BigInteger</tt> 
+cannot overflow. 
+
+<P CLASS=para>
+Most of the methods in <tt CLASS=literal>BigInteger</tt> 
+perform mathematical operations or make comparisons with other <tt CLASS=literal>BigInteger</tt> 
+objects. <tt CLASS=literal>BigInteger</tt> also defines 
+some methods for handling modular arithmetic and determining primality 
+that are needed for cryptographic purposes. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.12">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.math.BigInteger extends java.lang.Number {
+  // Constructors
+  public BigInteger(byte[] val);
+  public BigInteger(int signum, byte[] magnitude);
+  public BigInteger(String val);
+  public BigInteger(String val, int radix);
+  public BigInteger(int numBits, Random rndSrc);
+  public BigInteger(int bitLength, int certainty, Random rnd);
+  // Class Methods
+  public static BigInteger valueOf(long val);
+  // Instance Methods
+  public BigInteger abs();
+  public BigInteger add(BigInteger val);
+  public BigInteger and(BigInteger val);
+  public BigInteger andNot(BigInteger val);
+  public int bitCount();
+  public int bitLength();
+  public BigInteger clearBit(int n);
+  public int compareTo(BigInteger val);
+  public BigInteger divide(BigInteger val);
+  public BigInteger[] divideAndRemainder(BigInteger val);
+  public double doubleValue();
+  public boolean equals(Object x); 
+  public BigInteger flipBit(int n);
+  public float floatValue();
+  public BigInteger gcd(BigInteger val);
+  public int getLowestSetBit();
+  public int hashCode();
+  public int intValue();
+  public boolean isProbablePrime(int certainty);
+  public long longValue();
+  public BigInteger max(BigInteger val);
+  public BigInteger min(BigInteger val);
+  public BigInteger mod(BigInteger m);
+  public BigInteger modInverse(BigInteger m);
+  public BigInteger modPow(BigInteger exponent, BigInteger m);
+  public BigInteger multiply(BigInteger val);
+  public BigInteger negate();
+  public BigInteger not();
+  public BigInteger or(BigInteger val);
+  public BigInteger pow(int exponent);
+  public BigInteger remainder(BigInteger val);
+  public BigInteger setBit(int n);
+  public BigInteger shiftLeft(int n);
+  public BigInteger shiftRight(int n);
+  public int signum();
+  public BigInteger subtract(BigInteger val);
+  public boolean testBit(int n);
+  public byte[] toByteArray();
+  public String toString();
+  public String toString(int radix);
+  public BigInteger xor(BigInteger val);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.13">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.33">BigInteger</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.39">public BigInteger(byte[] val) throws NumberFormatException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the array does not contain any bytes. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BigInteger</tt> 
+with the given initial value. The value is expressed as a two's complement 
+signed integer, with the most significant byte in the first position (<tt CLASS=literal>val[0]</tt>) 
+of the array (big-endian). The most significant bit of the most significant 
+byte is the sign bit. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.40"><DIV CLASS=screen> <P> <PRE> public BigInteger(int signum, byte[] magnitude) throws NumberFormatException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>signum</tt><br>
+<DD>
+
+<P CLASS=para>
+The sign of the value: <tt CLASS=literal>-1</tt> indicates negative, <tt CLASS=literal>0</tt> indicates zero, and <tt CLASS=literal>1</tt>
+indicates positive.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>magnitude</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial magnitude of the value. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>signum</tt> is invalid or if 
+<tt CLASS=literal>signum</tt> is 0 but <tt CLASS=literal>magnitude</tt> is not 0. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BigInteger</tt> 
+with the given initial value and sign. The magnitude is expressed as a 
+big-endian byte array. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.41">public BigInteger(String val) throws NumberFormatException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the string cannot be parsed into a valid <tt CLASS=literal>BigInteger</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BigInteger</tt> 
+with the initial value specified by the <tt CLASS=literal>String</tt>. 
+The string can contain an optional minus sign followed by zero or more 
+decimal digits. The mapping from characters to digits is provided by the 
+<tt CLASS=literal>Character.digit()</tt> method. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.42"><DIV CLASS=screen> <P> <PRE> public BigInteger(String val, int radix) throws NumberFormatException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>radix</tt><br>
+<DD>
+
+<P CLASS=para>
+The radix to use to parse the given string. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the string cannot be parsed, or if the radix is not in the allowed range 
+(<tt CLASS=literal>Character.MIN_RADIX</tt> through 
+<tt CLASS=literal>Character.MAX_RADIX</tt>). </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>BigInteger</tt> 
+with the initial value specified by the <tt CLASS=literal>String</tt> 
+using the given radix. The string can contain an optional minus sign followed 
+by zero or more digits in the specified radix. The mapping from characters 
+to digits is provided by the <tt CLASS=literal>Character.digit()</tt> 
+method. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.43"><DIV CLASS=screen> <P> <PRE> public BigInteger(int numBits, Random rndSrc) throws IllegalArgumentException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>numBits</tt><br>
+<DD>
+
+<P CLASS=para>
+The maximum number of bits in the returned number.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>rndSrc</tt><br>
+<DD>
+
+<P CLASS=para>
+The source of the random bits. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>numBits</tt> is less than zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This constructor creates a random <tt CLASS=literal>BigInteger</tt> in the
+range <tt CLASS=literal>0</tt> to
+<tt CLASS=literal>2^numBits -1</tt>.
+</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.44">public BigInteger(int bitLength, int certainty, Random rnd)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>bitLength</tt><br>
+<DD>
+
+<P CLASS=para>
+The maximum number of bits in the returned number.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>certainty</tt><br>
+<DD>
+
+<P CLASS=para>
+The certainty that the returned value is a prime number.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>rnd</tt><br>
+<DD>
+
+<P CLASS=para>
+The source of the random bits. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>numBits</tt> is less than <tt CLASS=literal>2</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a random <tt CLASS=literal>BigInteger</tt> 
+in the range <tt CLASS=literal>0</tt> to 
+<tt CLASS=literal>2^numBits-1</tt>
+that is probably a prime number. The probability that the returned number 
+is prime is greater 
+than <tt CLASS=literal>1-.5^certainty</tt>. 
+In other words, the higher the value of <tt CLASS=literal>certainty</tt>, 
+the more likely the <tt CLASS=literal>BigInteger</tt> 
+is to be prime, and also the longer it takes for the constructor to create 
+the <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.14">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.34">valueOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.45">public static BigInteger valueOf(long val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial value. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BigInteger</tt> that represents 
+the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>BigInteger</tt> 
+from the given <tt CLASS=literal>long</tt> value. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.15">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.35">abs</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.46">public BigInteger abs()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>BigInteger</tt> that contains 
+the absolute value of this number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the absolute value of this <tt CLASS=literal>BigInteger</tt>. 
+If this <tt CLASS=literal>BigInteger</tt> is nonnegative, 
+it is returned. Otherwise, a new <tt CLASS=literal>BigInteger</tt> 
+that contains the absolute value of this <tt CLASS=literal>BigInteger</tt> 
+is returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.36">add</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.47">public BigInteger add(BigInteger val) throws ArithmeticException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be added. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the sum of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of arithmetic error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the sum of this <tt CLASS=literal>BigInteger</tt> 
+and the given <tt CLASS=literal>BigInteger</tt> as 
+a new <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.37">and</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.48">public BigInteger and(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be ANDed. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the bitwise AND of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the bitwise AND of this <tt CLASS=literal>BigInteger</tt> 
+and the supplied <tt CLASS=literal>BigInteger</tt> 
+as a new <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.38">andNot</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.49">public BigInteger andNot(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be combined 
+with this <tt CLASS=literal>BigInteger</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the bitwise AND of this number and the bitwise negation of the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the bitwise AND of this <tt CLASS=literal>BigInteger</tt> 
+and the bitwise negation of the given <tt CLASS=literal>BigInteger</tt> 
+as a new <tt CLASS=literal>BigInteger</tt>. Calling 
+this method is equivalent to calling <tt CLASS=literal>and(val.not())</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.39">bitCount</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.50">public int bitCount()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of bits that differ from this <tt CLASS=literal>BigInteger</tt>'s 
+sign bit. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of bits in the two's complement representation 
+of this <tt CLASS=literal>BigInteger</tt> that differ 
+from the sign bit of this <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.40">bitLength</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.51">public int bitLength()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of bits needed to represent this number, excluding a sign bit. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the minimum number of bits needed to represent this 
+number, not counting a sign bit. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.41">clearBit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.52">public BigInteger clearBit(int n) throws ArithmeticException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+The bit to clear. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the value of this <tt CLASS=literal>BigInteger</tt> 
+with the given bit cleared. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>n</tt> is less than 0. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that is equal to this <tt CLASS=literal>BigInteger</tt>, 
+except that the given bit is cleared, or set to zero. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.42">compareTo</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.53">public int compareTo(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to be compared. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>-1</tt> if this number is less than <tt CLASS=literal>val</tt>, 
+<tt CLASS=literal>0</tt> if this number is equal to <tt CLASS=literal>val</tt>, 
+or <tt CLASS=literal>1</tt> if this number is greater than <tt CLASS=literal>val</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method compares this <tt CLASS=literal>BigInteger</tt> 
+to the given<tt CLASS=literal> BigInteger</tt> and 
+returns a value that indicates the result of the comparison. This method 
+can be used to implement all six of the standard boolean comparison operators: 
+<tt CLASS=literal>==</tt>, <tt CLASS=literal>!=</tt>, 
+<tt CLASS=literal>&lt;=</tt>, <tt CLASS=literal>&lt;</tt>, 
+<tt CLASS=literal>&gt;=</tt>, and <tt CLASS=literal>&gt;</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.43">divide</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.54">public BigInteger divide(BigInteger val) throws ArithmeticException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The divisor. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the result (quotient) of dividing this number by the given value. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>val</tt> is zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the quotient that results from dividing this <tt CLASS=literal>BigInteger</tt> 
+by the given <tt CLASS=literal>BigInteger</tt> as 
+a new <tt CLASS=literal>BigInteger</tt>. Any fractional 
+remainder is discarded. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.44">divideAndRemainder</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.55"><DIV CLASS=screen> <P> <PRE> public BigInteger[] divideAndRemainder(BigInteger val) throws ArithmeticException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The divisor. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>BigInteger</tt> objects that contains the quotient and remainder 
+(in that order) that result from dividing this number by the given value. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>val</tt> is zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the quotient and remainder that results from dividing 
+this <tt CLASS=literal>BigInteger</tt> by the given 
+<tt CLASS=literal>BigInteger</tt> as an array of new 
+<tt CLASS=literal>BigInteger</tt> objects. The first 
+element of the array is equal to <tt CLASS=literal>divide(val)</tt>; 
+the second element is equal to <tt CLASS=literal>remainder(val)</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.45">doubleValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.56">public double doubleValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigInteger</tt> 
+as a <tt CLASS=literal>double</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Number.doubleValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigInteger</tt> 
+as a <tt CLASS=literal>double</tt>. If the value exceeds 
+the limits of a <tt CLASS=literal>double</tt>, <tt CLASS=literal>Double.POSITIVE_INFINITY</tt> 
+or <tt CLASS=literal>Double.NEGATIVE_INFINITY</tt> 
+is returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.46">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.57">public boolean equals(Object x)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>x</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be compared 
+with this object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; 
+<tt CLASS=literal>false</tt> if they are not. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt><tt CLASS=literal>.equals()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>x</tt> is an instance of <tt CLASS=literal>BigInteger</tt>, 
+and it represents the same value as this <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.47">flipBit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.58">public BigInteger flipBit(int n)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+The bit to toggle. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the value of this <tt CLASS=literal>BigInteger</tt> 
+with the given bit toggled. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>n</tt> is less than 0. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that is equal to this <tt CLASS=literal>BigInteger</tt>, 
+except that the given bit is toggled. In other words, if the given bit 
+is <tt CLASS=literal>0</tt>, it is set to one, or if it is <tt CLASS=literal>1</tt>, it is set to zero. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.48">floatValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.59">public float floatValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigInteger</tt> 
+as a <tt CLASS=literal>float</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Number.floatValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigInteger</tt> 
+as a <tt CLASS=literal>float</tt>. If the value exceeds 
+the limits of a <tt CLASS=literal>float</tt>, <tt CLASS=literal>Float.POSITIVE_INFINITY</tt> 
+or <tt CLASS=literal>Float.NEGATIVE_INFINITY</tt> 
+is returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.49">gcd</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.60">public BigInteger gcd(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be compared. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the greatest common denominator of this number and the given number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method calculates the greatest common denominator of the absolute 
+value of this <tt CLASS=literal>BigInteger</tt> and 
+the absolute value of the given <tt CLASS=literal>BigInteger</tt>, 
+and returns it as a new <tt CLASS=literal>BigInteger</tt>. 
+If both values are <tt CLASS=literal>0</tt>, the method returns a <tt CLASS=literal>BigInteger</tt> 
+that contains the value <tt CLASS=literal>0</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.50">getLowestSetBit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.61">public int getLowestSetBit()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the lowest-order bit with a value of <tt CLASS=literal>1</tt>, or <tt CLASS=literal>-1</tt> if there are 
+no bits that are <tt CLASS=literal>1</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the lowest-order, or rightmost, bit with 
+a value of <tt CLASS=literal>1</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.51">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.62">public int hashCode()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode for this object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt><tt CLASS=literal>.hashCode()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a hashcode for this <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.52">intValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.63">public int intValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigInteger</tt> 
+as an <tt CLASS=literal>int</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Number.intValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigInteger</tt> 
+as an <tt CLASS=literal>int</tt>. If the value exceeds 
+the limits of an <tt CLASS=literal>int</tt>, the excessive high-order 
+bits are discarded.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.53">isProbablePrime</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.64">public boolean isProbablePrime(int certainty)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>certainty</tt><br>
+<DD>
+
+<P CLASS=para>
+The "certainty" 
+that this number is prime, where a higher value indicates more certainty. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if this number is probably 
+prime; <tt CLASS=literal>false</tt> if it is definitely 
+not prime. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This method returns <tt CLASS=literal>true</tt> if this number has a
+probability of being prime that is greater than <tt CLASS=literal>1-.5^certainty</tt>. If the number is
+definitely not prime, <tt CLASS=literal>false</tt> is returned.
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.54">longValue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.65">public long longValue()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of this <tt CLASS=literal>BigInteger</tt> 
+as a <tt CLASS=literal>long</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Number.longValue()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the value of this <tt CLASS=literal>BigInteger</tt> 
+as a <tt CLASS=literal>long</tt>. If the value exceeds 
+the limits of a <tt CLASS=literal>long</tt>, the excessive high-order
+bits are discarded.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.55">max</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.66">public BigInteger max(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be compared. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>BigInteger</tt> that represents 
+the greater of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the greater of this <tt CLASS=literal>BigInteger</tt> 
+and the given<tt CLASS=literal> BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.56">min</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.67">public BigInteger min(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be compared. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>BigInteger</tt> that represents 
+the lesser of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the lesser of this <tt CLASS=literal>BigInteger</tt> 
+and the given<tt CLASS=literal> BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.57">mod</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.68">public BigInteger mod(BigInteger m)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>m</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the modulus of this number and the given number. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>m</tt> is less than or equal to zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that contains the value of this <tt CLASS=literal>BigInteger</tt> 
+mod <tt CLASS=literal>m</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.58">modInverse</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.69"><DIV CLASS=screen> <P> <PRE> public BigInteger modInverse(BigInteger m) throws ArithmeticException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>m</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the multiplicative inverse of the modulus of this number and the given 
+number. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>m</tt> is less than or equal 
+to zero, or if the result cannot be calculated. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that contains the multiplicative inverse of the value of this <tt CLASS=literal>BigInteger</tt> 
+mod <tt CLASS=literal>m</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.59">modPow</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.70">public BigInteger modInverse(BigInteger exponent, BigInteger m)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>exponent</tt><br>
+<DD>
+
+<P CLASS=para>
+The exponent.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>m</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the modulus of this number raised to the given power and the given number. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>m</tt> is less than or equal to zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that contains the value of this <tt CLASS=literal>BigInteger</tt> 
+raised to the given power mod <tt CLASS=literal>m</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.60">multiply</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.71">public BigInteger multiply(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be multiplied. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the product of this number and the given number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method multiplies this <tt CLASS=literal>BigInteger</tt> 
+by the given <tt CLASS=literal>BigInteger</tt> and 
+returns the product as a new <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.61">negate</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.72">public BigInteger negate()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the negative of this number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that is identical to this <tt CLASS=literal>BigInteger</tt> 
+except that its sign is reversed. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.62">not</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.73">public BigInteger not()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the bitwise negation of this number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that is calculated by inverting every bit of this<tt CLASS=literal> BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.63">or</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.74">public BigInteger or(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to be ORed. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the bitwise OR of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the bitwise OR of this <tt CLASS=literal>BigInteger</tt> 
+and the given <tt CLASS=literal>BigInteger</tt> as 
+a new <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.64">pow</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.75">public BigInteger pow(int exponent) throws ArithmeticException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>exponent</tt><br>
+<DD>
+
+<P CLASS=para>
+The exponent. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the result of raising this number to the given power. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>exponent</tt> is less than zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method raises this <tt CLASS=literal>BigInteger</tt> 
+to the given power and returns the result as a new <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.65">remainder</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.76"><DIV CLASS=screen> <P> <PRE> public BigInteger remainder(BigInteger val) throws ArithmeticException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The divisor. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the remainder that results from dividing this number by the given value. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>val</tt> is zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the remainder that results from dividing this <tt CLASS=literal>BigInteger</tt> 
+by the given <tt CLASS=literal>BigInteger</tt> as 
+a new <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.66">setBit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.77">public BigInteger setBit(int n) throws ArithmeticException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+The bit to set. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the value of this <tt CLASS=literal>BigInteger</tt> 
+with the given bit set. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>n</tt> is less than zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that is equal to this <tt CLASS=literal>BigInteger</tt>, 
+except that the given bit is set to <tt CLASS=literal>1</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.67">shiftLeft</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.78">public BigInteger shiftLeft(int n)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bits to 
+shift. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the result of shifting the bits of this number left by the given number 
+of bits. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that contains the value of this <tt CLASS=literal>BigInteger</tt> 
+left-shifted by the given number of bits. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.68">shiftRight</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.79">public BigInteger shiftRight(int n)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of bits to 
+shift. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the result of shifting the bits of this number right by the given number 
+of bits with sign extension. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>BigInteger</tt> 
+that contains the value of this <tt CLASS=literal>BigInteger</tt> 
+right-shifted by the given number of bits with sign extension. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.69">signum</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.80">public int signum()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>-1</tt> is this number is negative, <tt CLASS=literal>0</tt> if this number is zero, or <tt CLASS=literal>1</tt> if this number 
+is positive. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a value that indicates the sign of this <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.70">subtract</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.81">public BigInteger subtract(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The number to be subtracted. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigDecimal</tt> that contains 
+the result of subtracting the given number from this number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method subtracts the given <tt CLASS=literal>BigInteger</tt> 
+from this <tt CLASS=literal>BigInteger</tt> and returns 
+the result as a new <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.71">testBit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.82">public boolean testBit(int n) throws ArithmeticException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>n</tt><br>
+<DD>
+
+<P CLASS=para>
+The bit to test. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the specified bit is <tt CLASS=literal>1</tt>;
+<tt CLASS=literal>false</tt> if the specified bit is <tt CLASS=literal>0</tt>.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>n</tt> is less than zero. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns 
+<tt CLASS=literal>true</tt> if the specified bit in
+this <tt CLASS=literal>BigInteger</tt> is <tt CLASS=literal>1</tt>.
+Otherwise the method returns <tt CLASS=literal>false</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.72">toByteArray</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.83">public byte[] toByteArray()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of bytes that represents this object. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an array of bytes that contains the two's complement 
+representation of this <tt CLASS=literal>BigInteger</tt>. 
+The most significant byte is in the first position (<tt CLASS=literal>val[0]</tt>) 
+of the array. The array can be used with the <tt CLASS=literal>BigInteger(byte[])</tt> 
+constructor to reconstruct the number. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.73">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.84">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of this object in decimal form. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of this <tt CLASS=literal>BigInteger</tt> 
+in decimal form. A minus sign represents the sign if necessary. 
+The mapping from digits to characters is provided by the <tt CLASS=literal>Character.forDigit()</tt> 
+method. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.85">public String toString(int radix)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>radix</tt><br>
+<DD>
+
+<P CLASS=para>
+The radix to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of this object in the given radix. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of this <tt CLASS=literal>BigInteger</tt> 
+for the given radix. A minus sign is used to represent the sign if necessary. 
+The mapping from digits to characters is provided by the <tt CLASS=literal>Character.forDigit()</tt> 
+method. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch14-REFSECT2-AUTOID.74">xor</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch14-REFSECT3-AUTOID.86">public BigInteger xor(BigInteger val)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The value to be XORed. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>BigInteger</tt> that contains 
+the bitwise XOR of this number and the given value. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the bitwise XOR of this <tt CLASS=literal>BigInteger</tt> 
+and the given <tt CLASS=literal>BigInteger</tt> as 
+a new <tt CLASS=literal>BigInteger</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.16">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>byteValue()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Number</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>shortValue()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Number</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch14-REFSECT1-AUTOID.17">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ArithmeticException</tt>, 
+<tt CLASS=literal>BigDecimal</tt>, 
+<tt CLASS=literal>Character</tt>, 
+<tt CLASS=literal>Double</tt>, 
+<tt CLASS=literal>Float</tt>, 
+<tt CLASS=literal>IllegalArgumentException</tt>, 
+<tt CLASS=literal>Integer</tt>, 
+<tt CLASS=literal>Long</tt>, 
+<tt CLASS=literal>Number</tt>, 
+<tt CLASS=literal>NumberFormatException</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>BigDecimal</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>BindException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

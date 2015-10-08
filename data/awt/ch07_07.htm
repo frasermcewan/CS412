@@ -1,0 +1,538 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.7 GridBagConstraints</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:39:46 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Layouts</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-7">7.7 GridBagConstraints</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.BAG10"></A><A NAME="CH07.BAG11"></A><tt CLASS=literal>GridBagConstraints</tt> are the 
+meat behind the <tt CLASS=literal>GridBagLayout</tt>; 
+they specify how to display components. Unlike other layout managers, which 
+have a built-in idea about what to do with their display, the <tt CLASS=literal>GridBagLayout</tt> 
+is a blank slate. The constraints attached to each component tell the layout 
+manager how to build its display. 
+
+<P CLASS=para>
+Every <tt CLASS=literal>Component</tt> added to a 
+<tt CLASS=literal>GridBagLayout</tt> has a <tt CLASS=literal>GridBagConstraints</tt> 
+object associated with it. When an object is first added to the layout, 
+it is given a default set of constraints (described later in this section). Calling <tt CLASS=literal>setConstraints()</tt> 
+(or <tt CLASS=literal>add(Component, GridBagConstraints)</tt>) 
+applies a new set of constraints to the object. Most people create a helper 
+method to make the <tt CLASS=literal>setConstraints()</tt> 
+calls, passing constraint information as parameters. The helper method 
+used in <A HREF="ch07_06.htm#JAWT-CH-7-EX-2">Example 7.2</A> follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public static void addComponent (Container container, Component component,
+    int gridx, int gridy, int gridwidth, int gridheight, int fill,
+    int anchor) throws AWTException {
+    LayoutManager lm = container.getLayout();
+    if (!(lm instanceof GridBagLayout)) {
+        throw new AWTException ("Invalid layout" + lm);
+    } else {
+        GridBagConstraints gbc = new GridBagConstraints ();
+        gbc.gridx = gridx;
+        gbc.gridy = gridy;
+        gbc.gridwidth = gridwidth;
+        gbc.gridheight = gridheight;
+        gbc.fill = fill;
+        gbc.anchor = anchor;
+        ((GridBagLayout)lm).setConstraints(component, gbc);
+        container.add (component);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In Java 1.1, you can make this method slightly cleaner by adding the component 
+and applying the constraints in the same call to <tt CLASS=literal>add()</tt>. 
+To do so, replace the lines calling <tt CLASS=literal>setConstraints()</tt> 
+and <tt CLASS=literal>add()</tt> with this line: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+        // Java 1.1 only
+        container.add(component, gbc);
+</PRE>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-7.1">GridBagConstraints Methods</A></h3>Constants and variables
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int anchor </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>anchor</tt> specifies the direction 
+in which the component will drift in the event that it is smaller than 
+the space available for it. <tt CLASS=literal>CENTER</tt> 
+is the default. Others available are <tt CLASS=literal>NORTH</tt>, 
+<tt CLASS=literal>SOUTH</tt>, <tt CLASS=literal>EAST</tt>, 
+<tt CLASS=literal>WEST</tt>, <tt CLASS=literal>NORTHEAST</tt>, 
+<tt CLASS=literal>NORTHWEST</tt>, <tt CLASS=literal>SOUTHEAST</tt>, 
+and <tt CLASS=literal>SOUTHWEST</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static int CENTER </I><br><I CLASS=emphasis>public final static int EAST </I><br><I CLASS=emphasis>public final static int NORTH </I><br><I CLASS=emphasis>public final static int NORTHEAST </I><br><I CLASS=emphasis>public final static int NORTHWEST </I><br><I CLASS=emphasis>public final static int SOUTH </I><br><I CLASS=emphasis>public final static int SOUTHEAST </I><br><I CLASS=emphasis>public final static int SOUTHWEST </I><br><I CLASS=emphasis>public final static int WEST </I><br>
+<DD>
+
+<P CLASS=para>
+Constants used to set the <tt CLASS=literal>anchor</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int fill </I><br>
+<DD>
+
+<P CLASS=para>
+The value of <tt CLASS=literal>fill</tt> controls 
+the component's resize policy. If <tt CLASS=literal>fill</tt> 
+is <tt CLASS=literal>NONE</tt> (the default), the 
+layout manager tries to give the component its preferred size. If <tt CLASS=literal>fill</tt> 
+is <tt CLASS=literal>VERTICAL</tt>, it resizes in 
+height if additional space is available. If fill is <tt CLASS=literal>HORIZONTAL</tt>, 
+it resizes in width. If fill is <tt CLASS=literal>BOTH</tt>, 
+the layout manager takes advantage of all the space available in either 
+direction. <A HREF="ch07_07.htm#JAWT-CH-7-FIG-11">Figure 7.11</A> demonstrates <tt CLASS=literal>VERTICAL</tt> (A), 
+<tt CLASS=literal>HORIZONTAL</tt> (B), and <tt CLASS=literal>NONE</tt> 
+(C) values; <A HREF="ch07_06.htm#JAWT-CH-7-FIG-8">Figure 7.8</A> demonstrated the use of <tt CLASS=literal>BOTH</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static int NONE</I><br><I CLASS=emphasis>public final static int BOTH</I><br><I CLASS=emphasis>public final static int HORIZONTAL</I><br><I CLASS=emphasis>public final static int VERTICAL</I><br>
+<DD>
+
+<P CLASS=para>
+Constants used to set <tt CLASS=literal>fill</tt>.</DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-11">Figure 7.11: GridBagLayout with fill values of VERTICAL, HORIZONTAL, and NONE</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0711.gif" alt="[Graphic: Figure 7-11]" width=503 height=145 border=0>
+
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int gridx </I><br><I CLASS=emphasis>public int gridy </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>gridx</tt> and <tt CLASS=literal>gridy</tt> 
+variables specify the grid position where this component will be placed. 
+(<tt CLASS=literal>0,0</tt>) specifies the cell at the origin of the screen. <A HREF="ch07_07.htm#JAWT-CH-7-TAB-2">Table 7.2</A> 
+shows the <tt CLASS=literal>gridx</tt> and <tt CLASS=literal>gridy</tt> 
+values for the screen in <A HREF="ch07_06.htm#JAWT-CH-7-FIG-8">Figure 7.8</A>. 
+
+<P CLASS=para>
+It isn't necessary to set <tt CLASS=literal>gridx</tt> 
+and <tt CLASS=literal>gridy</tt> to a specific location; 
+if you set these fields to <tt CLASS=literal>RELATIVE</tt> 
+(the default), the system calculates the location for you. According to 
+the comments in the source code, if <tt CLASS=literal>gridx</tt> 
+is <tt CLASS=literal>RELATIVE</tt>, the component 
+appears to the right of the last component added to the layout. If <tt CLASS=literal>gridy</tt> 
+is <tt CLASS=literal>RELATIVE</tt>, the component 
+appears below the last component added to the layout. However, this is 
+misleadingly simple. <tt CLASS=literal>RELATIVE</tt> 
+placement works best if you are adding components along a row or a column. 
+In this case, there are four possibilities to consider: </DL>
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>gridx</tt> and <tt CLASS=literal>gridy</tt> 
+<tt CLASS=literal>RELATIVE</tt>: components are placed 
+in one row. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>gridx</tt> <tt CLASS=literal>RELATIVE</tt>, 
+<tt CLASS=literal>gridy</tt> constant: components 
+are placed in one row, each to the right of the previous component. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>gridx</tt> constant, <tt CLASS=literal>gridy</tt> 
+<tt CLASS=literal>RELATIVE</tt>: components are placed 
+in one column, each below the previous component.
+
+<P>
+<li CLASS=listitem>Varying <tt CLASS=literal>gridx</tt> or <tt CLASS=literal>gridy</tt> 
+while setting the other field to <tt CLASS=literal>RELATIVE</tt> 
+appears to start a new row, placing the component as the first element 
+in the row. 
+
+<P>
+</UL>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int gridwidth </I><br><I CLASS=emphasis>public int gridheight </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>gridwidth</tt> and <tt CLASS=literal>gridheight</tt> 
+set the number of rows (<tt CLASS=literal>gridwidth</tt>) 
+and columns (<tt CLASS=literal>gridheight</tt>) a 
+particular component occupies. If <tt CLASS=literal>gridwidth</tt> 
+or <tt CLASS=literal>gridheight</tt> is set to <tt CLASS=literal>REMAINDER</tt>, 
+the component will be the last element of the row or column occupying 
+any space that's remaining. <A HREF="ch07_07.htm#JAWT-CH-7-TAB-2">Table 7.2</A> shows 
+the <tt CLASS=literal>gridwidth</tt> and <tt CLASS=literal>gridheight</tt> 
+values for the screen in <A HREF="ch07_06.htm#JAWT-CH-7-FIG-8">Figure 7.8</A>. For the components 
+in the last column, the <tt CLASS=literal>gridwidth</tt> 
+values could be <tt CLASS=literal>REMAINDER</tt>. 
+Likewise, <tt CLASS=literal>gridheight</tt> could 
+be set to <tt CLASS=literal>REMAINDER</tt> for the 
+components in the last row. 
+
+<P CLASS=para>
+<tt CLASS=literal>gridwidth</tt> and <tt CLASS=literal>gridheight</tt> 
+may also have the value <tt CLASS=literal>RELATIVE</tt>, 
+which forces the component to be the next to last component in the row 
+or column. Looking back to <A HREF="ch07_06.htm#JAWT-CH-7-FIG-8">Figure 7.8</A>: if button 
+six has a <tt CLASS=literal>gridwidth</tt> of <tt CLASS=literal>RELATIVE</tt>, 
+button seven won't appear because button five is the last item in 
+the row, and six is already next to last. If button five has a <tt CLASS=literal>gridheight</tt> 
+of <tt CLASS=literal>RELATIVE</tt>, the layout manager 
+will reserve space below it, so the button can be the next to last item 
+in the column. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static int RELATIVE </I><br>
+<DD>
+
+<P CLASS=para>
+Constant used for <tt CLASS=literal>gridx</tt> and 
+<tt CLASS=literal>gridy</tt> to request relative placement, 
+and by <tt CLASS=literal>gridheight</tt> and <tt CLASS=literal>gridwidth</tt> 
+to specify the next to last component in a column or row. The behavior 
+of <tt CLASS=literal>RELATIVE</tt> placement can be 
+very counter intuitive; in most cases, you will be better off specifying 
+<tt CLASS=literal>gridx</tt>, <tt CLASS=literal>gridy</tt>, 
+<tt CLASS=literal>gridheight</tt>, and <tt CLASS=literal>gridwidth</tt> 
+explicitly. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final static int REMAINDER </I><br>
+<DD>
+
+<P CLASS=para>
+Constant used for <tt CLASS=literal>gridwidth</tt> 
+and <tt CLASS=literal>gridheight</tt>, to specify 
+that a component should fill the rest of the row or column. </DL>
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-7-TAB-2">Table 7.2: Demonstrating gridx/gridy/gridwidth/gridheight</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Component</TH>
+<TH ALIGN="LEFT">gridx</TH>
+<TH ALIGN="LEFT">gridy</TH>
+<TH ALIGN="LEFT">gridwidth</TH>
+<TH ALIGN="LEFT">gridheight</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">One</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">Two</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">Three</TD>
+<TD ALIGN="LEFT">2</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">Four</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">2</TD>
+<TD ALIGN="LEFT">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">Five</TD>
+<TD ALIGN="LEFT">2</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">2</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">Six</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">2</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">1</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">Seven</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">2</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">3</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Insets insets </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>insets</tt> field specifies 
+the external padding in pixels around the component (i.e., between the component 
+and the edge of the cell, or cells, allotted to it). An <tt CLASS=literal>Insets</tt> 
+object can specify different padding for the top, bottom, left, and right 
+sides of the component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int ipadx </I><br><I CLASS=emphasis>public int ipady </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ipadx</tt> and <tt CLASS=literal>ipady</tt> 
+specify the internal padding within the component. <tt CLASS=literal>ipadx</tt> 
+specifies the extra space to the right and left of the component (so the 
+minimum width increases by <tt CLASS=literal>2*ipadx</tt> 
+pixels). <tt CLASS=literal>ipady</tt> specifies the 
+extra space above and below the component (so the minimum height increases 
+by <tt CLASS=literal>2*ipady</tt> pixels). 
+
+<P CLASS=para>
+The difference between insets (external padding) and the <tt CLASS=literal>ipadx</tt>, 
+<tt CLASS=literal>ipady</tt> variables (internal padding) 
+is confusing. The insets don't add space to the component itself; 
+they are external to the component. <tt CLASS=literal>ipadx</tt> 
+and <tt CLASS=literal>ipady</tt> change the component's 
+minimum size, so they do add space to the component itself. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public double weightx </I><br><I CLASS=emphasis>public double weighty </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>weightx</tt> and <tt CLASS=literal>weighty</tt> 
+variables describe how to distribute any additional space within the container. 
+They allow you to control how components grow (or shrink) when the user 
+resizes the container. If <tt CLASS=literal>weightx</tt> 
+is 0, the component won't get any additional space available in its 
+row. If one or more components in a row have <tt CLASS=literal>weightx</tt> 
+values greater than 0, any extra space is distributed proportionally between 
+them. For example, if one component has a <tt CLASS=literal>weightx</tt> 
+value of 1 and the others are all 0, that one component will get all the 
+additional space. If four components in a row each have <tt CLASS=literal>weightx</tt> 
+values of 1 and the other components have <tt CLASS=literal>weightx</tt> 
+values of 0, the four components each get one quarter of the additional 
+space. <tt CLASS=literal>weighty</tt> behaves similarly. 
+Because <tt CLASS=literal>weightx</tt> and <tt CLASS=literal>weighty</tt> 
+control the distribution of extra space in any row or column, setting either 
+for one component may affect the position of other components. </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public GridBagConstraints () </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor creates a <tt CLASS=literal>GridBagConstraints</tt> 
+object in which all the fields have their default values. These defaults 
+are shown in the <A HREF="ch07_07.htm#JAWT-CH-7-TAB-3">Table 7.3</A>. </DL>
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-7-TAB-3">Table 7.3: GridBagConstraints Defaults.</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Variable</TH>
+<TH ALIGN="LEFT">Value</TH>
+<TH ALIGN="LEFT">Description</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>anchor</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>CENTER</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+If the component is smaller than the space available, it will be centered 
+within its region.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>fill</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>NONE</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The component should not resize itself if extra space is available 
+within its region.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>gridx</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>RELATIVE</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The component associated with this constraint will be positioned relative 
+to the last item added. If all components have <tt CLASS=literal>gridx</tt> and <tt CLASS=literal>gridy</tt> <tt CLASS=literal>RELATIVE</tt>, 
+they will be placed in a single row.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>gridy</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>RELATIVE</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The component associated with this constraint will be positioned relative 
+to the last item added.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>gridwidth</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>1</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The component will occupy a single cell within the layout.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>gridheight</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>1</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The component will occupy a single cell within the layout.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>insets</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>0x0x0x0</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+No extra space is added around the edges of the component.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>ipadx</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>0</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+There is no internal padding for the component.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>ipady</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>0</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+There is no internal padding for the component.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>weightx</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>0</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The component will not get any extra space, if it is available.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><tt CLASS=literal>weighty</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>0</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+The component will not get any extra space, if it is available.</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Object clone ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>clone()</tt> method creates 
+a clone of the <tt CLASS=literal>GridBagConstraints</tt> 
+so the same <tt CLASS=literal>GridBagConstraints</tt> 
+object can be associated with multiple components. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>GridBagLayout</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Combining Layouts</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] 12.3 BorderLayout</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:02:01 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>Layout Managers</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-12-SECT-3">12.3 BorderLayout</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.BL"></A><tt CLASS=literal>BorderLayout</tt> is a little more interesting. It tries
+to arrange objects in one of five geographical locations:
+"North," "South," "East," "West," and
+"Center," possibly with some padding
+between. <tt CLASS=literal>BorderLayout</tt> is the default layout for
+<tt CLASS=literal>Window</tt> and <tt CLASS=literal>Frame</tt>
+objects. Because each component is associated with a direction,
+<tt CLASS=literal>BorderLayout</tt> can manage at most five components; 
+it squashes or stretches those components to fit its constraints. As
+we'll see in the second example, this means that you often want
+to have <tt CLASS=literal>BorderLayout</tt> manage sets of components in
+their own panels.
+
+<P CLASS=para>
+When we add a component to a border layout, we need to specify
+both the component and the position at which to add it. To do so, we
+use an overloaded version of the <tt CLASS=literal>add()</tt> method that
+takes an additional argument as a constraint. This
+additional argument is passed to the layout manager when the new component 
+is added. In this case it specifies the name of the position for the 
+BorderLayout.  Otherwise the
+<tt CLASS=literal>LayoutManager</tt> is not consulted until it's asked to
+lay out the components.
+
+<P CLASS=para>
+The following applet sets a <tt CLASS=literal>BorderLayout</tt>
+layout and adds our five buttons again, named for their locations; the
+result is shown in <A HREF="ch12_03.htm#EXJ-CH-12-FIG-4">Figure 12.4</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-4">Figure 12.4: A border layout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1204.gif" alt="[Graphic: Figure 12-4]" width=503 height=243 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*; 
+ 
+public class Border extends java.applet.Applet {  
+    public void init() { 
+        setLayout( new java.awt.BorderLayout() ); 
+        add( new Button("North"), "North" ); 
+        add( new Button("East"), "East" ); 
+        add( new Button("South"), "South" ); 
+        add( new Button("West"), "West" ); 
+        add( new Button("Center"), "Center" ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+So, how exactly is the area divided up? Well, the objects at
+"North" and "South" get their preferred height
+and are expanded to fill the full area
+horizontally. "East" and "West" components on the other
+hand, get their preferred width, and are expanded to fill the
+remaining area between "North" and "South" vertically.
+Finally, the "Center" object takes all of the rest of the
+space. As you can see in <A HREF="ch12_03.htm#EXJ-CH-12-FIG-5">Figure 12.5</A>, our
+buttons get distorted into interesting shapes.
+
+<P CLASS=para>
+What if we don't want <tt CLASS=literal>BorderLayout</tt>
+messing with the sizes of our components? One option would be to put
+each button in its own <tt CLASS=literal>Panel</tt>. The default layout
+for a <tt CLASS=literal>Panel</tt> is <tt CLASS=literal>FlowLayout</tt>, which
+respects the preferred size of components. The preferred sizes of the
+panels are effectively the preferred sizes of the buttons, but if the
+panels are stretched, they won't pull their buttons with
+them. <tt CLASS=literal>Border2</tt> illustrates this approach as shown in
+<A HREF="ch12_03.htm#EXJ-CH-12-FIG-5">Figure 12.5</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-12-FIG-5">Figure 12.5: Another border layout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1205.gif" alt="[Graphic: Figure 12-5]" width=503 height=157 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*; 
+ 
+public class Border2 extends java.applet.Applet {  
+    public void init() { 
+        setLayout( new BorderLayout() ); 
+        Panel p = new Panel(); 
+        p.add(new Button("East") ); 
+        add( p, "East" ); 
+        p = new Panel(); 
+        p.add(new Button("West") ); 
+        add( p, "West" ; 
+        p = new Panel(); 
+        p.add(new Button("North") ); 
+        add( p, "North" ); 
+        p = new Panel(); 
+        p.add(new Button("South") ); 
+        add(p, "South" ); 
+        p = new Panel(); 
+        p.add(new Button("Center") ); 
+        add( p, "Center" ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, we create a number of panels, put our buttons inside
+the panels, and put the panels into the applet, which has the
+<tt CLASS=literal>BorderLayout</tt> manager. Now, the
+<tt CLASS=literal>Panel</tt> for the "Center" button soaks up
+the extra space that comes from the <tt CLASS=literal>BorderLayout</tt>.
+Each <tt CLASS=literal>Panel</tt>'s
+<tt CLASS=literal>FlowLayout</tt> centers the button in the panel and uses
+the button's preferred size. 
+In this case, it's all a bit awkward. (This is one of the problems
+that <tt CLASS=literal>getMaximumSize()</tt> will eventually
+solve.) We'll see how we could accomplish
+this more directly using <tt CLASS=literal>GridBagLayout</tt> shortly.
+
+<P CLASS=para>
+Finally, this version of the applet has a lot of unused space. If we wanted, 
+we could get rid of the extra space by resizing the applet:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+setSize( getPreferredSize() ); 
+</PRE>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>GridLayout</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>CardLayout</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

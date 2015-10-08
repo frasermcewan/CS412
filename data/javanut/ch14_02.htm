@@ -1,0 +1,257 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 14] 14.2 Working with System Properties</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:01:53 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 14<br>System Properties</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-14-SECT-2">14.2 Working with System Properties</A></h2>
+
+<P CLASS=para>
+The system property list is not a static.  Other properties
+can be added to it (and read from it) to allow easy
+customization of application behavior.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-14-SECT-2.1">Specifying Individual Properties</A></h3>
+
+<P CLASS=para>
+You can specify individual properties to be inserted into the
+system properties list with the <tt CLASS=literal>-D</tt> option to the
+Java interpreter.  For example, you might invoke a program
+like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+% java -Dgames.tetris.level=9 -Dgames.tetris.sound=off games.tetris
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note the format of each property specification: the property
+name, which is often a hierarchical one, followed by an
+equals sign, followed by the property value.  A property
+value may include spaces, but any <tt CLASS=literal>-D</tt> option
+specifying a property value containing spaces would have to
+be quoted when passed to <I CLASS=emphasis>java</I>, of course.
+
+<P CLASS=para>
+If you write a platform-specific script file to invoke your
+Java application, you can use this <tt CLASS=literal>-D</tt> option to
+translate native environment variable settings into Java
+system properties.  On a Unix system, for example, such a
+script might look like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+#!/bin/sh
+exec java -Dgames.tetris.level=$TETRIS_LEVEL \
+          -Dgames.tetris.sound=$TETRIS_SOUND \
+          games.tetris
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-14-SECT-2.2">Using Property Files</A></h3>
+
+<P CLASS=para>
+Properties in Java are represented by the
+<tt CLASS=literal>java.util.Properties</tt> object, which is essentially a
+hash table that can be read from and written to a file.
+A program need not limit itself to the use of system
+properties.  It can also read in its own files of
+properties to support user preferences and user
+customization.  For example, when the <I CLASS=emphasis>appletviewer</I>
+program starts up, it reads the properties from the
+<I CLASS=emphasis>lib/appletviewer.properties</I> file in the JDK
+distribution.  This file contains the various messages that
+<tt CLASS=literal>appletviewer</tt> displays to the user and provides the
+flexibility to translate those messages into other
+languages.  The following lines are an excerpt from
+<I CLASS=emphasis>appletviewer.properties</I>:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+#
+# Applet status messages
+#
+appletloader.nocode=APPLET tag missing CODE parameter.
+appletloader.notfound=load: class %0 not found.
+appletloader.nocreate=load: %0 can't be instantiated.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that comments in a properties file start with
+<tt CLASS=literal>#</tt>, and that the property specification format is the
+same as with the <tt CLASS=literal>-D</tt> option.  Also note that these
+property values do contain spaces.  Some of them also
+contain the <tt CLASS=literal>%</tt> substitution character and are intended
+for use with the <tt CLASS=literal>java.text.MessageFormat</tt> class.
+
+<P CLASS=para>
+When reading in a file of properties, it can be convenient
+to merge those properties with the standard system
+properties, so that the program need only look in one place
+to find both loaded properties and standard properties (and
+properties specifed wiht the <tt CLASS=literal>-D</tt> option).  Every
+<tt CLASS=literal>Properties</tt> object can have a "parent" properties
+object; if a property is not found in the <tt CLASS=literal>Properties</tt>
+object, it is searched for in the parent.  Thus, it is
+possible to merge in properties with code like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Create a new Properties object with system props as its parent.
+Properties props = new Properties(System.getProperties());
+// Load a file of properties into it.  We may get an exception here...
+props.load(new BufferedInputStream(new FileInputStream(propsfilename)));
+// Set these new combined properties as the system properties.
+System.setProperties(props);
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-14-SECT-2.3">Specifying Font Properties</A></h3>
+
+<P CLASS=para>
+As noted above, a program can read the string value of a
+system property with the <tt CLASS=literal>System.getProperty()</tt>
+method.  There are also some convenience methods that read a
+property value and convert that value into some other type
+of object.  One of these convenience methods is
+<tt CLASS=literal>Font.getFont()</tt>.  This method reads the value of a
+named property and attempts to parse it into a font
+specification.
+The font specification syntax it uses is:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+<I CLASS=emphasis>name</I>[-<I CLASS=emphasis>style</I>][-<I CLASS=emphasis>size</I>]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The<I CLASS=emphasis><tt CLASS=literal>style</tt></I> should be <tt CLASS=literal>italic</tt>, <tt CLASS=literal>bold</tt> or
+<tt CLASS=literal>bolditalic</tt>.  If omitted, a plain font is used.
+The <tt CLASS=literal>size</tt> should be an integer that specifies the
+font size in points.  If omitted, 12-point is used.  If the
+<I CLASS=emphasis><tt CLASS=literal>style</tt></I> is specified, the <I CLASS=emphasis><tt CLASS=literal>size</tt></I> must also
+be specified.  For example, you might specify font
+properties like the following:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+games.tetris.titlefont=sanserif-bolditalic-48
+games.tetris.mainfont=serif-14
+games.tetris.scorefont=monospaced
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-14-SECT-2.4">Specifying Color Properties</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Color.getColor()</tt> is another convenience routine that
+reads a system property and converts it into a <tt CLASS=literal>Color</tt>
+object.  To specify a color property, you specify the color
+as an integer value, typically as a hexadecimal value in the
+format <tt CLASS=literal>0x</tt><I CLASS=emphasis>RRGGBB</I>.  For example:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+# A green foreground
+games.tetris.foreground=0x00FF00
+# A light gray background
+games.tetris.background=0xD0D0D0
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Standard System Properties</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Java-Related HTML Tags</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

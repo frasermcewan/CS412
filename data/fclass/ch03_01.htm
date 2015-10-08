@@ -1,0 +1,587 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] Threads</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:09:12 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-3">3. Threads</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Using Thread Objects<br>
+<A HREF="ch03_02.htm">Synchronizing Multiple Threads</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+Threads provide a way for a Java program to do multiple tasks
+concurrently. A thread is essentially a flow of control in a program
+and is similar to the more familiar concept of a process. An operating
+system that can run more than one program at the same time uses
+processes to keep track of the various programs that it is
+running. However, processes generally do not share any state, while
+multiple threads within the same application share much of the same
+state. In particular, all of the threads in an application run in the
+same address space, sharing all resources except the stack. In
+concrete terms, this means that threads share field variables, but not
+local variables.<A NAME="CH08.THREAD"></A>
+
+<P CLASS=para>
+When multiple processes share a single processor, there are
+times when the operating system must stop the processor from running
+one process and start it running another process. The operating
+system must execute a sequence of events called a <I CLASS=emphasis>context
+switch</I> to transfer control from one process to another.
+When a context switch occurs, the operating system has to save a
+lot of information for the process that is being paused and load
+the comparable information for the process being resumed. A context
+switch between two processes can require the execution of thousands
+of machine instructions. The Java virtual machine is responsible
+for handling context switches between threads in a Java program.
+Because threads share much of the same state, a context switch between
+two threads typically requires the execution of less than 100
+machine instructions.
+
+<P CLASS=para>
+There are a number of situations where it makes sense to
+use threads in a Java program. Some programs must be able to engage
+in multiple activities and still be able to respond to additional
+input from the user. For example, a web browser should be able to
+respond to user input while fetching an image or playing a sound.
+Because threads can be suspended and resumed, they can make it easier
+to control multiple activities, even if the activities do not need
+to be concurrent. If a program models real world objects that display
+independent, autonomous behavior, it makes sense to use a separate
+thread for each object. Threads can also implement asynchronous
+methods, so that a calling method does not have to wait for the
+method it calls to complete before continuing with its own activity.
+
+<P CLASS=para>
+Java applets make considerable use of threads. For example,
+an animation is generally implemented with a separate thread. If
+an applet has to download extensive information, such as an image or
+a sound, to initialize itself, the initialization can take a long
+time. This initialization can be done in a separate thread to prevent
+the initialization from interfering with the display of the applet.
+If an applet needs to process messages from the network, that work generally
+is done in a separate thread so that the applet can continue
+painting itself on the screen and responding to mouse and keyboard
+events. In addition, if each message is processed separately,
+the applet uses a separate thread for each message.
+
+<P CLASS=para>
+For all of the reasons there are to use threads, there are
+also some compelling reasons not to use them. If a program uses
+inherently sequential logic, where one operation starts another
+operation and then must wait for the other operation to complete
+before continuing, one thread can implement the entire
+sequence. Using multiple threads in such a case results in a more
+complex program with no accompanying benefits. There is considerable
+overhead in creating and starting a thread, so if an operation involves
+only a few primitive statements, it is faster to handle it with
+a single thread. This can even be true when the operation is conceptually
+asynchronous. When multiple threads share objects, the objects must
+use synchronization mechanisms to coordinate thread access and maintain
+consistent state. Synchronization mechanisms add complexity to a
+program, can be difficult to tune for optimal performance, and can
+be a source of bugs.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1">3.1 Using Thread Objects</A></h2>
+
+<P CLASS=para>
+<A NAME="CH03.CLASS"></A>The <tt CLASS=literal>Thread</tt>
+class in the <tt CLASS=literal>java.lang</tt> package creates
+and controls threads in Java programs. The execution of Java code
+is always under the control of a <tt CLASS=literal>Thread</tt> object.
+The <tt CLASS=literal>Thread</tt> class provides a <tt CLASS=literal>static</tt>
+method called <tt CLASS=literal>currentThread()</tt> that provides a reference
+to the <tt CLASS=literal>Thread</tt> object that controls the current
+thread of execution.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1.1">Associating a Method with a Thread</A></h3>
+
+<P CLASS=para>
+<A NAME="CH08.METH1"></A>The first thing you need to do to make a <tt CLASS=literal>Thread</tt> object
+useful is to associate it with a method you want it to run.
+Java provides two ways of associating a method with a
+<tt CLASS=literal>Thread</tt>:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Declare a subclass of <tt CLASS=literal>Thread</tt> that defines
+a <tt CLASS=literal>run()</tt> method.
+
+<P>
+<li CLASS=listitem>Pass a reference to an object that implements the <tt CLASS=literal>Runnable</tt>
+interface to a <tt CLASS=literal>Thread</tt> constructor.
+
+<P>
+</UL>
+<P CLASS=para>
+For example, if you need to load the contents of a URL as part of an
+applet's initialization, but the applet can provide other functionality
+before the content is loaded, you might want to load the content in a
+separate thread. Here is a class that does just that:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.net.URL;
+class UrlData extends Thread   {
+    private Object data;
+    private URL url
+    public UrlData(String urlName) throws MalformedURLException {
+        url = new URL(urlName);
+        start();
+    }
+    public void run(){
+        try {
+            data = url.getContent();
+        } catch (java.io.IOException  e) {
+        }
+    }
+    public Object getUrlData(){
+        return data;
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>UrlData</tt> class is declared as a subclass
+of <tt CLASS=literal>Thread</tt> so that it can get the contents of
+the URL in a separate thread. The constructor creates a
+<tt CLASS=literal>java.net.URL</tt> object to fetch the
+contents of the URL, and then calls
+the <tt CLASS=literal>start()</tt> method to start the thread. Once
+the thread is started, the constructor returns; it does not wait
+for the contents of the URL to be fetched. The <tt CLASS=literal>run()</tt>
+method is executed after the thread is started; it does the real
+work of fetching the data. The <tt CLASS=literal>getUrlData()</tt> method
+is an access method that returns the value of the <tt CLASS=literal>data</tt>
+variable. The value of this variable is <tt CLASS=literal>null</tt>
+until the contents of the URL have been fetched, at which
+time it contains a reference to the actual data.
+
+<P CLASS=para>
+Subclassing the <tt CLASS=literal>Thread</tt>
+class is convenient when the method you want to run in a separate
+thread does not need to belong to a particular class. Sometimes,
+however, you need the method to be part of a particular class that
+is a subclass of a class other than <tt CLASS=literal>Thread</tt>. Say,
+for example, you want a graphical object that is displayed
+in a window to alternate its background color between red and blue
+once a second. The object that implements this behavior needs to
+be a subclass of the <tt CLASS=literal>java.awt.Canvas</tt> class. However,
+at the same time, you need a separate thread to alternate the color of
+the object once a second.
+
+<P CLASS=para>
+In this situation, you want to tell a <tt CLASS=literal>Thread</tt>
+object to run code in another object that is not a subclass of the
+<tt CLASS=literal>Thread</tt> class.
+You can accomplish this by passing a reference to an object that implements
+the <tt CLASS=literal>Runnable</tt> interface to the constructor of
+the <tt CLASS=literal>Thread</tt> class. The <tt CLASS=literal>Runnable</tt>
+interface requires that an object has a <tt CLASS=literal>public</tt> method
+called <tt CLASS=literal>run()</tt> that takes no arguments. When a
+<tt CLASS=literal>Runnable</tt> object is passed to the constructor
+of the <tt CLASS=literal>Thread</tt> class, it creates a <tt CLASS=literal>Thread</tt>
+object that calls the <tt CLASS=literal>Runnable</tt> object's
+<tt CLASS=literal>run()</tt> method when the thread is started.
+The following example
+shows part of the code that implements an object that alternates
+its background color between red and blue once a second:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class AutoColorChange extends java.awt.Canvas implements Runnable {
+    private Thread myThread;
+    AutoColorChange () {
+        myThread = new Thread(this);
+        myThread.start();
+        ...
+    }
+    public void run() {
+        while (true) {
+            setBackground(java.awt.Color.red);
+            repaint();
+            try {
+                myThread.sleep(1000);
+            } catch (InterruptedException e) {}
+            setBackground(java.awt.Color.blue);
+            repaint();
+            try {
+                myThread.sleep(1000);
+            } catch (InterruptedException e) {}
+        }
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>AutoChangeColor</tt> class extends
+<tt CLASS=literal>java.awt.Canvas</tt>,
+alternating the background color between red and blue once a second.
+The constructor creates a new <tt CLASS=literal>Thread</tt> by passing
+the current object to the <tt CLASS=literal>Thread</tt> constructor,
+which tells the <tt CLASS=literal>Thread</tt> to call the <tt CLASS=literal>run()</tt>
+method in the <tt CLASS=literal>AutoChangeColor</tt> class. The constructor
+then starts the new thread by calling its <tt CLASS=literal>start()</tt>
+method, so that the color change happens asynchronously of whatever
+else is going on. The class has an instance variable called
+<tt CLASS=literal>myThread</tt>
+that contains a reference to the <tt CLASS=literal>Thread</tt> object,
+so that can control the thread. The <tt CLASS=literal>run()</tt> method
+takes care of changing the background color, using the
+<tt CLASS=literal>sleep()</tt>
+method of the <tt CLASS=literal>Thread</tt> class to temporarily suspend
+the thread and calling <tt CLASS=literal>repaint()</tt> to redisplay
+the object after each color change.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1.2">Controlling a Thread</A></h3>
+
+<P CLASS=para>
+As shown in the previous section, you start a <tt CLASS=literal>Thread</tt>
+by calling its <tt CLASS=literal>start()</tt>
+method. Before the <tt CLASS=literal>start()</tt> method is called,
+the <tt CLASS=literal>isAlive()</tt> method of the <tt CLASS=literal>Thread</tt>
+object always returns <tt CLASS=literal>false</tt>.
+When the <tt CLASS=literal>start()</tt>
+method is called, the <tt CLASS=literal>Thread</tt> object becomes associated
+with a scheduled thread in the underlying environment. After the
+<tt CLASS=literal>start()</tt> method has returned,
+the <tt CLASS=literal>isAlive()</tt>
+method always returns <tt CLASS=literal>true</tt>. The <tt CLASS=literal>Thread</tt> is now scheduled to run until it dies, unless it is suspended
+or in another unrunnable state.
+
+<P CLASS=para>
+It is actually possible for <tt CLASS=literal>isAlive()</tt> to
+return <tt CLASS=literal>true</tt> before <tt CLASS=literal>start()</tt>
+returns, but not before <tt CLASS=literal>start()</tt> is called. This
+can happen because the <tt CLASS=literal>start()</tt> method can return
+either before the started <tt CLASS=literal>Thread</tt> begins to run
+or after it begins to run. In other words, the method that called
+<tt CLASS=literal>start()</tt> and the new thread are now running concurrently.
+On a multiprocessor system, the <tt CLASS=literal>start()</tt> method
+can even return at the same time the started <tt CLASS=literal>Thread</tt>
+begins to run.
+
+<P CLASS=para>
+<tt CLASS=literal>Thread</tt> objects have a parent-child relationship.
+The first thread created in a Java environment does not have
+a parent <tt CLASS=literal>Thread</tt>. However, after the first
+<tt CLASS=literal>Thread</tt>
+object is created, the <tt CLASS=literal>Thread</tt> object that controls
+the thread used to create another <tt CLASS=literal>Thread</tt> object
+is considered to be the parent of the newly created <tt CLASS=literal>Thread</tt>.
+This parent-child relationship is used to supply some default values
+when a <tt CLASS=literal>Thread</tt> object is created, but it has no
+further significance after a <tt CLASS=literal>Thread</tt> has been created.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1.2.1">Stopping a thread</A></h4>
+
+<P CLASS=para>
+A thread dies when one of the following things happens:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>run()</tt> method
+called by the <tt CLASS=literal>Thread</tt> returns.
+
+<P>
+<li CLASS=listitem>An exception is thrown that causes the <tt CLASS=literal>run()</tt>
+method to be exited.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>stop()</tt> method of the <tt CLASS=literal>Thread</tt> is called.
+
+<P>
+</UL>
+<P CLASS=para>
+The <tt CLASS=literal>stop()</tt> method of the <tt CLASS=literal>Thread</tt> class works by throwing a <tt CLASS=literal>ThreadDeath</tt>
+object in the <tt CLASS=literal>run()</tt> method of the thread. Normally,
+you should not catch <tt CLASS=literal>ThreadDeath</tt> objects in a
+<tt CLASS=literal>try</tt> statement. If you need to catch
+<tt CLASS=literal>ThreadDeath</tt> objects to detect that a
+<tt CLASS=literal>Thread</tt> is about to die, the <tt CLASS=literal>try</tt>
+statement that catches <tt CLASS=literal>ThreadDeath</tt>
+objects should rethrow them.
+
+<P CLASS=para>
+
+When an object (<tt CLASS=literal>ThreadDeath</tt> or otherwise) is thrown
+out of the <tt CLASS=literal>run()</tt> method for the
+<tt CLASS=literal>Thread</tt>, the <tt CLASS=literal>uncaughtException()</tt>
+method of the <tt CLASS=literal>ThreadGroup</tt> for that
+<tt CLASS=literal>Thread</tt> is called. If the thrown object is an
+instance of the <tt CLASS=literal>ThreadDeath</tt> class, the thread dies,
+and the thrown object is ignored. Otherwise, if the thrown object is
+of any other class, <tt CLASS=literal>uncaughtException()</tt> calls the
+thrown object's <tt CLASS=literal>printStackTrace()</tt> method, the
+thread dies, and the thrown object is ignored. In either case, if there
+are other nondaemon threads running in the system, the current program
+continues to run.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1.2.2">Interrupting a thread</A></h4>
+
+<P CLASS=para>
+There are a number of methods
+in the Java API, such as <tt CLASS=literal>wait()</tt> and
+<tt CLASS=literal>join()</tt>, that are declared as throwing an
+<tt CLASS=literal>InterruptedException</tt>.
+What these methods have in common is
+that they temporarily suspend the execution of a thread. In Java
+1.1, if a thread is waiting for one of these methods to return
+and another thread calls <tt CLASS=literal>interrupt()</tt> on the
+waiting thread, the method that is waiting throws
+an <tt CLASS=literal>InterruptedException</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>interrupt()</tt> method sets an internal flag in a
+<tt CLASS=literal>Thread</tt> object. Before the
+<tt CLASS=literal>interrupt()</tt> method is called, the
+<tt CLASS=literal>isInterrupted()</tt> method of the
+<tt CLASS=literal>Thread</tt> object always returns
+<tt CLASS=literal>false</tt>.  After the <tt CLASS=literal>interrupt()</tt>
+method is called, <tt CLASS=literal>isInterrupted()</tt> returns
+<tt CLASS=literal>true</tt>.
+
+<P CLASS=para>
+Prior to version 1.1, the methods in the Java API that are declared
+as throwing an <tt CLASS=literal>InterruptedException</tt> do not actually
+do so. However, the <tt CLASS=literal>isInterrupted()</tt> method
+does function as described above. Thus, if the code in the
+<tt CLASS=literal>run()</tt> method for a thread periodically calls
+<tt CLASS=literal>isInterrupted()</tt>, the thread can respond to a call to
+<tt CLASS=literal>interrupt()</tt> by shutting down in an orderly fashion.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1.2.3">Thread priority</A></h4>
+
+<P CLASS=para>
+One of the attributes that controls the behavior of a thread
+is its priority. Although Java does not guarantee much about how
+threads are scheduled, it does guarantee that a thread with a priority
+that is higher than that of another thread will be scheduled to
+run at least as often, and possibly more often, than the thread
+with the lower priority. The priority of a thread is set when
+the <tt CLASS=literal>Thread</tt> object
+is created, by passing an argument to the constructor that creates
+the <tt CLASS=literal>Thread</tt> object. If an explicit priority is
+not specified, the <tt CLASS=literal>Thread</tt> inherits the priority
+of its parent <tt CLASS=literal>Thread</tt> object.
+
+<P CLASS=para>
+You can query the priority of a <tt CLASS=literal>Thread</tt>
+object by calling its <tt CLASS=literal>getPriority()</tt>
+method. Similarly, you can set the priority of a <tt CLASS=literal>Thread</tt>
+using its <tt CLASS=literal>setPriority()</tt>
+method. The priority you specify must be greater than or equal to
+<tt CLASS=literal>Thread.MIN_PRIORITY</tt> and less than or equal to
+<tt CLASS=literal>Thread.MAX_PRIORITY</tt>.
+
+<P CLASS=para>
+Before actually setting the priority of a <tt CLASS=literal>Thread</tt>
+object, the <tt CLASS=literal>setPriority()</tt>
+method checks the maximum allowable priority
+for the <tt CLASS=literal>ThreadGroup</tt>
+that contains the <tt CLASS=literal>Thread</tt> by calling
+<tt CLASS=literal>getMaxPriority()</tt>
+on the <tt CLASS=literal>ThreadGroup</tt>. If the call to
+<tt CLASS=literal>setPriority()</tt>
+tries to set the priority to a value that is higher than the maximum
+allowable priority for the <tt CLASS=literal>ThreadGroup</tt>, the priority
+is instead set to the maximum priority. It is possible for the current
+priority of a <tt CLASS=literal>Thread</tt> to be greater than the maximum
+allowable priority for the <tt CLASS=literal>ThreadGroup</tt>. In this
+case, an attempt to raise the priority of the <tt CLASS=literal>Thread</tt>
+results in its priority being lowered to the maximum priority.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1.2.4">Daemon threads</A></h4>
+
+<P CLASS=para>
+A daemon thread is a thread that runs continuously to perform
+a service, without having any connection with the overall state
+of the program. For example, the thread that runs the garbage collector
+in Java is a daemon thread. The thread that processes mouse events
+for a Java program is also a daemon thread. In general, threads
+that run application code are not daemon threads, and threads that
+run system code are daemon threads. If a thread dies and there are
+no other threads except daemon threads alive, the Java virtual machine
+stops.
+
+<P CLASS=para>
+A <tt CLASS=literal>Thread</tt>
+object has a <tt CLASS=literal>boolean</tt> attribute that specifies whether or not a thread is a daemon thread. The daemon attribute
+of a thread is set when the <tt CLASS=literal>Thread</tt> object
+is created, by passing an argument to the constructor that creates
+the <tt CLASS=literal>Thread</tt> object. If the daemon attribute is
+not explicitly specified, the <tt CLASS=literal>Thread</tt> inherits
+the daemon attribute of its parent <tt CLASS=literal>Thread</tt> object.
+
+<P CLASS=para>
+The daemon attribute is queried using the <tt CLASS=literal>isDaemon()</tt>
+method; it is set using the <tt CLASS=literal>setDaemon()</tt> method.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1.2.5">Yielding</A></h4>
+
+<P CLASS=para>
+
+When a thread has nothing to do, it can call the
+<tt CLASS=literal>yield()</tt> method of its <tt CLASS=literal>Thread</tt>
+object. This method tells the scheduler to run a different thread. The
+value of calling <tt CLASS=literal>yield()</tt> depends largely on whether
+the scheduling mechanism for the platform on which the program is running is preemptive or nonpreemptive.
+
+<P CLASS=para>
+
+By choosing a maximum length of time a thread can continuously, a
+<I CLASS=emphasis>preemptive</I> scheduling mechanism guarantees that
+no single thread uses more than its fair share of the processor. If a
+thread runs for that amount of time without yielding control to
+another thread, the scheduler preempts the thread and causes it to
+stop running so that another thread can run.
+
+<P CLASS=para>
+
+A <I CLASS=emphasis>nonpreemptive</I> scheduling
+mechanism cannot preempt threads. A nonpreemptive scheduler relies
+on the individual threads to yield control of the processor frequently,
+so that it can provide reasonable performance. A thread explicitly
+yields control by calling the <tt CLASS=literal>Thread</tt> object's
+<tt CLASS=literal>yield()</tt> method. More often, however, a thread
+implicitly yields control when it is forced to wait for something
+to happen elsewhere.
+
+<P CLASS=para>
+Calling a <tt CLASS=literal>Thread</tt> object's <tt CLASS=literal>yield()</tt>
+method during a lengthy computation can be quite valuable on a platform
+that uses a nonpreemptive scheduling
+mechanism, as it allows other threads to run. Otherwise, the lengthy
+computation can prevent other threads from running. On a platform
+that uses a preemptive scheduling
+mechanism, calling <tt CLASS=literal>yield()</tt> does not usually make
+any noticeable difference in the responsiveness of threads.
+
+<P CLASS=para>
+Regardless of the scheduling algorithm that is being used,
+you should not make any assumptions about when a thread will be
+scheduled to run again after it has called <tt CLASS=literal>yield()</tt>.
+If you want to prevent a thread from being scheduled to run until
+a specified amount of time has elapsed, you should call
+the <tt CLASS=literal>sleep()</tt>
+method of the <tt CLASS=literal>Thread</tt> object. The <tt CLASS=literal>sleep()</tt>
+method takes an argument that specifies a
+minimum number of milliseconds
+that must elapse before the thread can be scheduled to run again.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JFC-CH-3-SECT-1.2.6">Controlling groups of threads</A></h4>
+
+<P CLASS=para>
+
+Sometimes is it necessary to control multiple threads at the same
+time. Java provides the <tt CLASS=literal>ThreadGroup</tt> class for this
+purpose. Every <tt CLASS=literal>Thread</tt> object belongs to a
+<tt CLASS=literal>ThreadGroup</tt> object.  By passing an argument to the
+constructor that creates the <tt CLASS=literal>Thread</tt> object, the
+<tt CLASS=literal>ThreadGroup</tt> of a thread can be set when the
+<tt CLASS=literal>Thread</tt> object is created. If an explicit
+<tt CLASS=literal>ThreadGroup</tt> is not specified, the
+<tt CLASS=literal>Thread</tt> belongs to the same
+<tt CLASS=literal>ThreadGroup</tt> as its parent <tt CLASS=literal>Thread</tt>
+object.
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>StringTokenizer</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Synchronizing Multiple Threads</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

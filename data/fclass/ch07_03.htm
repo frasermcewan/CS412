@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.3 Versioning of Classes</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:15:23 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Object Serialization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-7-SECT-3">7.3 Versioning of Classes</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.VERS1"></A><A NAME="CH07.VERS2"></A>One you have written a class that works with serialization, the next concern 
+is that serialized instances of that class can be deserialized by programs 
+that use a different version of the same class. 
+
+<P CLASS=para>
+After a class is written, it is often necessary to modify its
+definition as requirements change or new features are
+needed. Deserialization may fail if the definition of a class in use
+when an instance was serialized is different than the definition in
+use when the instance is deserialized.  If you do not take any
+measures to assure the serialization mechanism that the two classes
+are different versions of the same class, deserialization fails by
+throwing an <tt CLASS=literal>InvalidClassException</tt>.  And even if the
+serialization mechanism is satisfied that the two class definitions
+represent different versions of the same class, it may find
+incompatible differences between the definitions.
+
+<P CLASS=para>
+The following changes to the definition of a class are noticed by the
+serialization mechanism:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Adding or deleting instance variables. 
+
+<P>
+<li CLASS=listitem>Moving a class up or down the inheritance hierarchy. 
+
+<P>
+<li CLASS=listitem>Making a non-<tt CLASS=literal>static</tt>, non-<tt CLASS=literal>transient</tt> 
+variable either <tt CLASS=literal>static</tt> or <tt CLASS=literal>transient</tt> 
+has the same effect as deleting the variable. Similarly, changing a variable 
+that is <tt CLASS=literal>static</tt> or <tt CLASS=literal>transient</tt> 
+to be non-<tt CLASS=literal>static</tt> or non-<tt CLASS=literal>transient</tt> 
+has the same effect as adding the variable. 
+
+<P>
+<li CLASS=listitem>Changing the data type of a <tt CLASS=literal>transient</tt> 
+variable from a primitive data type to an object reference type or from 
+an object reference type to a primitive data type. 
+
+<P>
+<li CLASS=listitem>Changing the <tt CLASS=literal>readObject()</tt> 
+or <tt CLASS=literal>writeObject()</tt> method of 
+a class so that it calls <tt CLASS=literal>defaultReadObject()</tt> 
+or <tt CLASS=literal>defaultWriteObject()</tt> when 
+it did not previously, or so that it does not call one of these methods 
+when it did previously. The removal or addition of a <tt CLASS=literal>readObject()</tt> 
+or <tt CLASS=literal>writeObject()</tt> method that 
+does not call <tt CLASS=literal>defaultReadObject()</tt> 
+or <tt CLASS=literal>defaultWriteObject()</tt> has 
+a similar effect. 
+
+<P>
+<li CLASS=listitem>Changing a class from <tt CLASS=literal>Serializable</tt> 
+to <tt CLASS=literal>Externalizable</tt> or from <tt CLASS=literal>Externalizable</tt> 
+to <tt CLASS=literal>Serializable</tt>. 
+
+<P>
+</UL>
+<P CLASS=para>
+It's possible to code around some of these problems if you can first
+convince the serialization mechanism that the two class definitions
+are different versions of the same class. In order to convince the
+serialization mechanism of such a thing, the class definition used for
+deserialization of an object must define a <tt CLASS=literal>static</tt>
+<tt CLASS=literal>final</tt>  <tt CLASS=literal>long</tt> variable named
+<tt CLASS=literal>serialVersionUID</tt>.  If the class used for
+serialization also defined that variable with the same value, the two
+class definitions are assumed to define different versions of the same
+class.
+
+<P CLASS=para>
+If the class used for serialization does not define
+<tt CLASS=literal>serialVersionUID</tt>, the serialization mechanism
+performs the comparison using a value that is computed by calling the
+<tt CLASS=literal>ObjectStreamClass.getSerialVersionUID()</tt>
+method. That computation is based on the fields defined by the
+class. To take advantage of this automatic computation when you define
+<tt CLASS=literal>serialVersionUID</tt>, you should use the
+<I CLASS=emphasis>serialver</I> program that comes with the JDK to
+determine the appropriate value for
+<tt CLASS=literal>serialVersionUID</tt>. The
+<I CLASS=emphasis>serialver</I> program computes a value for
+<tt CLASS=literal>serialVersionUID</tt> by calling the
+<tt CLASS=literal>ObjectStreamClass.getSerialVersionUID()</tt> method.
+
+<P CLASS=para>
+Assuming you've convinced the serialization mechanism that the two
+class definitions represent different versions of the same class, here
+is some advice on how to deal with the differences that can be worked
+around:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>Missing variables</I><br>
+<DD>
+
+<P CLASS=para>
+If the class used to deserialize an object defines variables the class 
+used to serialize the object did not define, the serialized object does 
+not contain any values for those variables. This situation can also arise 
+if the class used to serialize the object defined a variable as <tt CLASS=literal>static</tt> 
+or <tt CLASS=literal>transient</tt>, while the class 
+used to deserialize the object defines it as non-<tt CLASS=literal>static</tt> 
+or non-<tt CLASS=literal>transient</tt>.
+
+<P CLASS=para>
+When an object is deserialized and there are variables missing in its
+serialized form, the variables in the deserialized object are set to
+default values. In other words, the value of such a variable is
+<tt CLASS=literal>true</tt> if it has an arithmetic data type,
+<tt CLASS=literal>false</tt> if it has a <tt CLASS=literal>boolean</tt> data
+type, or <tt CLASS=literal>null</tt> if it has an object reference
+type. Deserialization ignores intializers in variable declarations.
+<P CLASS=para>
+When you add variables to a <tt CLASS=literal>Serializable</tt> 
+class, consider the possibility that the new version of the class will deserialize an object serialized with an older version of the 
+class. If that happens and it is unacceptable for the new variables to 
+have default values after deserialization, you can define a <tt CLASS=literal>validateObject()</tt> 
+method for the class to check for the default values and provide acceptable 
+values or throw an <tt CLASS=literal>InvalidObjectException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Extra variables</I><br>
+<DD>
+
+<P CLASS=para>
+If the serialized form of an object contains values for variables that
+are not defined by the class used to deserialize that object, the values 
+are read and then ignored. If the value of such a variable is an object, 
+the object is created and immediately becomes a candidate for garbage collection. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Missing classes</I><br>
+<DD>
+
+<P CLASS=para>
+
+If the class used to deserialize an object inherits from an ancestor
+class that the class used to serialize the object did not inherit
+from, the serialized object does not contain any values for the
+variables of the additional ancestor class. Just as with missing
+variables, those variables are deserialized with their default values.
+<P CLASS=para>
+When you add an ancestor class to a <tt CLASS=literal>Serializable</tt> 
+class, consider the possibility that the new version of the class will deserialize an object serialized with an older version of the 
+class. If that happens and it is unacceptable for instance variables in 
+the new ancestor class to have default values after deserialization, you 
+can define a <tt CLASS=literal>validateObject()</tt> 
+method for the class to check for the default values and provide acceptable 
+values or throw an <tt CLASS=literal>InvalidObjectException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Extra classes</I><br>
+<DD>
+
+<P CLASS=para>
+If the class used to serialize an object inherits from an ancestor class 
+that the class used to deserialize the object does not inherit from, the 
+values for the variables defined by that extra ancestor class are read 
+but not used. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Adding writeObject() and
+readObject() methods</I><br>
+<DD>
+
+<P CLASS=para>
+You can add <tt CLASS=literal>writeObject()</tt> and 
+<tt CLASS=literal>readObject()</tt> methods to a class 
+that did not have them. In order to deserialize objects that were serialized 
+using the older class definition, the new methods must begin by calling 
+<tt CLASS=literal>defaultWriteObject()</tt> and <tt CLASS=literal>defaultReadObject()</tt>. 
+That ensures that information written out using default logic is still 
+processed using default logic.
+
+<P CLASS=para>
+
+If the <tt CLASS=literal>writeObject()</tt> and
+<tt CLASS=literal>readObject()</tt> methods write and read additional
+information to and from the byte stream, you should also add an
+additional variable to the class to serve as a version indicator. For
+example, you might declare an <tt CLASS=literal>int</tt> variable and
+initialize it to one. If, after <tt CLASS=literal>defaultReadObject()</tt>
+returns, the value of that variable is <tt CLASS=literal>0</tt>, you know
+the object was serialized using the old class definition and that any
+additional information that would have been written by the
+<tt CLASS=literal>writeObject()</tt> method will not be there.
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Removing writeObject() and 
+readObject() methods</I><br>
+<DD>
+
+<P CLASS=para>
+
+If you remove <tt CLASS=literal>writeObject()</tt> and
+<tt CLASS=literal>readObject()</tt> methods from a class and deserialize
+an object using the new class definition, the information written by a
+call to <tt CLASS=literal>writeObject()</tt> is simply read by the default
+logic and any additional information is ignored.
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Changing a class so that it implements Serializable</I><br>
+<DD>
+
+<P CLASS=para>
+If a superclass of an object did not implement
+<tt CLASS=literal>Serializable</tt> when the object was serialized, and
+that superclass does implement <tt CLASS=literal>Serializable</tt> when
+the object is deserialized, the result is similar to the missing class
+situation. There is no information about the variables of the newly
+<tt CLASS=literal>Serializable</tt> superclass in the byte stream, so its
+instance variables are initialized to default values.
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Changing a class so that it does not implement
+Serializable</I><br>
+<DD>
+
+<P CLASS=para>
+
+If a superclass of an object implemented
+<tt CLASS=literal>Serializable</tt> when the object was serialized, and
+that superclass does not implement <tt CLASS=literal>Serializable</tt>
+when the object is deserialized, the result is similar to the extra
+class situation. The information in the byte stream for that class is
+read and discarded.
+</DL>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Writing Classes to Work with Serialization</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Networking</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] 10.4 Custom Events</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:57:48 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>Java Beans</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-10-SECT-4">10.4 Custom Events</A></h2>
+
+<P CLASS=para>
+Beans can use the standard AWT event
+types defined in the <tt CLASS=literal>java.awt.event</tt> package, but
+they do not have to.  Our
+<tt CLASS=literal>YesNoDialog</tt> class defines its own event type,
+<tt CLASS=literal>AnswerEvent</tt>.  Defining a new event class is really quite
+simple; <tt CLASS=literal>AnswerEvent</tt> is shown in
+<A HREF="ch10_04.htm#JNUT2-CH-10-EX-3">Example 10.3</A>.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-10-EX-3">Example 10.3: The AnswerEvent Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package oreilly.beans.yesno;
+public class AnswerEvent extends java.util.EventObject {
+  protected int id;
+  public static final int YES = 0, NO = 1, CANCEL = 2;
+  public AnswerEvent(Object source, int id) {
+    super(source);
+    this.id = id;
+  }
+  public int getID() { return id; }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Along with the <tt CLASS=literal>AnswerEvent</tt> class,
+<tt CLASS=literal>YesNoDialog</tt> also defines a new type of event
+listener interface, <tt CLASS=literal>ActionListener</tt>, that
+defines the methods that must be implemented by any object
+that wants to receive notification from a
+<tt CLASS=literal>YesNoDialog</tt>.  The definition of <tt CLASS=literal>AnswerListener</tt> is
+shown in <A HREF="ch10_04.htm#JNUT2-CH-10-EX-4">Example 10.4</A>.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-10-EX-4">Example 10.4: The AnswerListener Interface</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package oreilly.beans.yesno;
+public interface AnswerListener extends java.util.EventListener {
+  public void yes(AnswerEvent e);
+  public void no(AnswerEvent e);
+  public void cancel(AnswerEvent e);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>A More Complex Bean</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Specifying Bean Information</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

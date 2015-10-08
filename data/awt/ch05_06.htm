@@ -1,0 +1,314 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.6 Creating Your Own Component</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:34:38 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Components</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-6">5.6 Creating Your Own Component</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.DESIGN"></A>If you find that no AWT component satisfies your needs, you 
+can create your own. This is usually done either by extending an existing 
+component or by starting from scratch. When extending an existing component, 
+you start with the base functionality of an existing object and add to 
+it. The users will not see anything new or different about the object until 
+they start to interact with it, since it is not a new component. For example, 
+a <tt CLASS=literal>TextField</tt> could be subclassed 
+to convert all letters input to uppercase. On the other hand, if you create 
+a new component from scratch, it will appear the same on all platforms 
+(regardless of what the platform's native components look like), and 
+you have to make sure the user can fairly 
+easily figure out how to work with it. <A HREF="ch05_06.htm#JAWT-CH-5-EX-3">Example 5.3</A> shows how to create your own <tt CLASS=literal>Component</tt> 
+by creating a <tt CLASS=literal>Label</tt> that displays 
+vertically, as opposed to the standard <tt CLASS=literal>Label</tt> 
+<tt CLASS=literal>Component</tt> that displays horizontally. 
+The whole process is fairly easy. 
+
+<P CLASS=para>
+The third possibility for creating your own components involves adding 
+functionality to containers. This is fairly easy to do and can be useful 
+if you are constantly grouping components together. For example, if you 
+are always adding a <tt CLASS=literal>TextField</tt> 
+or <tt CLASS=literal>Label</tt> to go with a <tt CLASS=literal>Scrollbar</tt> 
+to display the value, do it once, and call it something meaningful like 
+<tt CLASS=literal>LabeledScrollbarPanel</tt>. Then 
+whenever you need it again, reuse your <tt CLASS=literal>LabeledScrollbarPanel</tt>. 
+Think about reusability whenever you can. 
+
+<P CLASS=para>
+With Java 1.1, the colors for these new components should be set to color 
+values consistent to the user's platform. This is done through color 
+constants provided in the <tt CLASS=literal>SystemColor</tt> 
+class introduced in <A HREF="ch02_01.htm">Chapter 2, <i>Simple Graphics</i></A>. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-6.1">VerticalLabel</A></h3>
+
+<P CLASS=para>
+When you create new components, they must meet three requirements:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>In Java 1.0, you must extend a subclass of <tt CLASS=literal>Component</tt>, usually <tt CLASS=literal>Canvas</tt>. In Java 1.1, you can 
+extend <tt CLASS=literal>Component</tt> itself, creating a lightweight component. In many cases, this alternative is more efficient.
+
+<P>
+<li CLASS=listitem>You must provide a constructor for the new component so that you can create new instances of it; if you really don't need a constructor, you can use the default 
+constructor that you inherit from <tt CLASS=literal>Canvas</tt> 
+or <tt CLASS=literal>Component</tt>.
+
+<P>
+<li CLASS=listitem>You must 
+provide a way to draw the object on the screen by overriding the <tt CLASS=literal>paint()</tt> 
+method. 
+
+<P>
+</UL>
+<P CLASS=para>
+If initializing the component requires information about display characteristics 
+(for example, you need to know the default <tt CLASS=literal>Font</tt>), 
+you must wait until the object is displayed on the screen before you initialize 
+it. This is done by overriding the <tt CLASS=literal>addNotify()</tt> 
+method. First, call <tt CLASS=literal>super.addNotify()</tt> 
+to create the peer; you can now ask for platform-dependent information 
+and initialize your component accordingly. Remember to override <tt CLASS=literal>getPreferredSize()</tt> 
+and <tt CLASS=literal>getMinimumSize()</tt> (the Java 
+1.0 names are <tt CLASS=literal>preferredSize()</tt> 
+and <tt CLASS=literal>minimumSize()</tt>) to return 
+the proper dimensions for the new component, so that layout management 
+works properly. There can be other support methods, depending upon the 
+requirements of the object. For example, it is helpful, but not required, 
+to provide a <tt CLASS=literal>toString()</tt> or 
+<tt CLASS=literal>paramString()</tt> method. 
+
+<P CLASS=para>
+Creating a new component sounds a lot harder than it is. <A HREF="ch05_06.htm#JAWT-CH-5-EX-3">Example 5.3</A> 
+contains the source for a new component called <tt CLASS=literal>VerticalLabel</tt>. 
+It displays a label that reads from top to bottom, instead of from left 
+to right, and can be configured to display its text right or left justified 
+or centered. <A HREF="ch05_06.htm#JAWT-CH-5-FIG-5">Figure 5.5</A> displays the new component <tt CLASS=literal>VerticalLabel</tt> 
+in action. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-5-EX-3">Example 5.3: Source for VerticalLabel Component</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class VerticalLabel extends Canvas {
+   public static final int LEFT = 0;
+   public static final int CENTER = 1;
+   public static final int RIGHT = 2;
+   private String text;
+   private int    vgap;
+   private int    alignment;
+   Dimension      mySize;
+   int            textLength;
+   char           chars[];
+   // constructors
+   public VerticalLabel () {
+        this (null, 0, CENTER);
+   }
+   public VerticalLabel (String text) {
+        this (text, 0, CENTER);
+   }
+   public VerticalLabel (String text, int vgap, int alignment) {
+      this.text = text;
+      this.vgap = vgap;
+      this.alignment = alignment;
+   }
+   void init () {
+      textLength = text.length();
+      chars = new char[textLength];
+      text.getChars (0, textLength, chars, 0);
+      Font f = getFont();
+      FontMetrics fm = getFontMetrics (f);
+      mySize = new Dimension(0,0);
+      mySize.height = (fm.getHeight() * textLength) + (vgap * 2);
+      for (int i=0; i &lt; textLength; i++) {
+          mySize.width = Math.max (mySize.width, fm.charsWidth(chars, i, 1));
+      }
+   }
+   public int getAlignment () {
+      return alignment;
+   }
+   public void addNotify () {
+       super.addNotify();
+       init();  // Component must be visible for init to work
+   }
+   public void setText (String text)    {this.text = text; init();}
+   public String getText ()             {return text; }
+   public void setVgap (int vgap)       {this.vgap = vgap; init();}
+   public int getVgap ()                {return vgap; }
+   public Dimension preferredSize ()    {return mySize; }
+   public Dimension minimumSize ()      {return mySize; }
+   public void paint (Graphics g) {
+      int x,y;
+      int xPositions[];
+      int yPositions[];
+// Must redo this each time since font/screen area might change
+// Use actual width for alignment
+      Font f = getFont();
+      FontMetrics fm = getFontMetrics (f);
+      xPositions = new int[textLength];
+      for (int i=0; i &lt; textLength; i++) {
+         if (alignment == RIGHT) {
+            xPositions[i] = size().width - fm.charWidth (chars[i]);
+         } else if (alignment == LEFT) {
+            xPositions[i] = 0;
+         } else {// CENTER
+            xPositions[i] = (size().width - fm.charWidth (chars[i])) / 2;
+         }
+      }
+      yPositions = new int[textLength];
+      for (int i=0; i &lt; textLength; i++) {
+         yPositions[i] = (fm.getHeight() * (i+1)) + vgap;
+      }
+      for (int i = 0; i &lt; textLength; i++) {
+         x = xPositions[i];
+         y = yPositions[i];
+         g.drawChars (chars, i, 1, x, y);
+      }
+   }
+   protected String paramString () {
+      String str=",align=";
+      switch (alignment) {
+         case LEFT:    str += "left"; break;
+         case CENTER:  str += "center"; break;
+         case RIGHT:   str += "right"; break;
+      }
+      if (vgap!=0) str+= ",vgap=" + vgap;
+      return super.paramString() + str + ",label=" + text;
+   }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-5-FIG-5">Figure 5.5: Using VerticalLabel</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0505.gif" alt="[Graphic: Figure 5-5]" width=105 height=281 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The following code is a simple applet using the <tt CLASS=literal>VerticalLabel</tt>. 
+It creates five instances of <tt CLASS=literal>VerticalLabel</tt> 
+within a <tt CLASS=literal>BorderLayout</tt> panel, 
+with gaps (see <A HREF="ch07_01.htm">Chapter 7, <i>Layouts</i></A> for more on <tt CLASS=literal>BorderLayout</tt>). The top and bottom labels are justified 
+to the left and right, respectively, to demonstrate justification. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+public class vlabels extends Applet {
+   public void init () {
+        setLayout (new BorderLayout (10, 10));
+        setFont (new Font ("TimesRoman", Font.BOLD, 12));
+        add ("North",  new VerticalLabel ("One", 10, VerticalLabel.LEFT));
+        add ("South",  new VerticalLabel ("Two", 10, VerticalLabel.RIGHT));
+        add ("West",   new VerticalLabel ("Three"));
+        add ("East",   new VerticalLabel ("Four"));
+        add ("Center", new VerticalLabel ("Five"));
+        resize (preferredSize());
+   }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-6.2">Lightweight VerticalLabel</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>VerticalLabel</tt> in <A HREF="ch05_06.htm#JAWT-CH-5-EX-3">Example 5.3</A>
+ works in both Java 1.0 and 1.1 but is relatively inefficient. When you create one, the system must create a <tt CLASS=literal>Canvas</tt> and the peer of the <tt CLASS=literal>Canvas</tt>. This work doesn't gain you anything; since this is a new component, it doesn't have to match the native appearance of any other component.
+
+<P CLASS=para>
+In Java 1.1, there's a way to avoid the overhead if you are creating a component that doesn't have to match a native object. This is called a <I CLASS=emphasis>lightweight component</I>. To create one, you just subclass <tt CLASS=literal>Component</tt> itself. To make a lightweight version of our <tt CLASS=literal>VerticalLabel</tt>, we have to change only one line of code.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+public class VerticalLabel extends Component
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Everything else remains unchanged.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Canvas</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Cursor</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

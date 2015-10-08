@@ -1,0 +1,1161 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] StreamTokenizer</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:41:56 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_60.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_62.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>StreamTokenizer</H1>
+
+<H2>Name</H2>
+
+StreamTokenizer
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.416">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.StreamTokenizer</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.417">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>StreamTokenizer</tt> class performs 
+a lexical analysis on an <tt CLASS=literal>InputStream</tt> 
+object and breaks the stream into tokens. Although <tt CLASS=literal>StreamTokenizer</tt> 
+is not a general-purpose parser, it recognizes tokens that 
+are similar to those used in the Java language. A <tt CLASS=literal>StreamTokenizer</tt> recognizes identifiers, numbers, quoted strings, and various comment 
+styles. 
+
+<P CLASS=para>
+A <tt CLASS=literal>StreamTokenizer</tt> object can be wrapped around an
+<tt CLASS=literal>InputStream</tt>. In this case, when the
+<tt CLASS=literal>StreamTokenizer</tt> reads bytes from the stream, the
+bytes are converted to Unicode characters by simply zero-extending the
+byte values to 16 bits. As of Java 1.1, a
+<tt CLASS=literal>StreamTokenizer</tt> can be wrapped around a
+<tt CLASS=literal>Reader</tt> to eliminate this problem.
+
+<P CLASS=para>
+The <tt CLASS=literal>nextToken()</tt> method returns 
+the next token from the stream. The rest of the methods in <tt CLASS=literal>StreamTokenizer</tt> 
+control how the object interprets the characters that it reads and tokenizes 
+them. 
+
+<P CLASS=para>
+The parsing functionality of <tt CLASS=literal>StreamTokenizer</tt> is
+controlled by a table and a number of flags. Each character that is
+read from the <tt CLASS=literal>InputStream</tt> is in the range
+<tt CLASS=literal>'\u0000'</tt> to
+<tt CLASS=literal>'\uFFFF'</tt>.  The character value
+looks up attributes of the character in the table. A character can
+have zero or more of the following attributes: whitespace, alphabetic,
+numeric, string quote, and comment character.
+
+<P CLASS=para>
+By default, a <tt CLASS=literal>StreamTokenizer</tt> 
+recognizes the following: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Whitespace characters between <tt CLASS=literal>'\u0000'</tt> 
+and <tt CLASS=literal>'\u0020'</tt> 
+
+<P>
+<li CLASS=listitem>Alphabetic characters from <tt CLASS=literal>'a'</tt> 
+through <tt CLASS=literal>'z'</tt>, <tt CLASS=literal>'A'</tt> 
+through <tt CLASS=literal>'Z'</tt>, and 
+<tt CLASS=literal>'\u00A0'</tt> and 
+<tt CLASS=literal>'\u00FF'</tt>. 
+
+<P>
+<li CLASS=listitem>Numeric characters <tt CLASS=literal>'1'</tt>, 
+<tt CLASS=literal>'2'</tt>, <tt CLASS=literal>'3'</tt>, 
+<tt CLASS=literal>'4'</tt>, <tt CLASS=literal>'5'</tt>, 
+<tt CLASS=literal>'6'</tt>, <tt CLASS=literal>'7'</tt>, 
+<tt CLASS=literal>'8'</tt>, <tt CLASS=literal>'9'</tt>, 
+<tt CLASS=literal>'0'</tt>, <tt CLASS=literal>'.'</tt>, 
+and <tt CLASS=literal>'-'</tt> 
+
+<P>
+<li CLASS=listitem>String quote characters "<tt CLASS=literal>'</tt>" 
+and "<tt CLASS=literal>'</tt>" 
+
+<P>
+<li CLASS=listitem>Comment character "<tt CLASS=literal>/</tt>" 
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.418">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.io.StreamTokenizer extends java.lang.Object {
+  // Variables
+  public double nval;
+  public String sval;
+  public int ttype;
+  public final static int TT_EOF;
+  public final static int TT_EOL;
+  public final static int TT_NUMBER;
+  public final static int TT_WORD;
+  // Constructors 
+  public StreamTokenizer(InputStream in);           // Deprecated in 1.1
+  public StreamTokenizer(Reader in);                // New in 1.1
+  // Instance Methods
+  public void commentChar(int ch);
+  public void eolIsSignificant(boolean flag);
+  public int lineno();
+  public void lowerCaseMode(boolean flag);
+  public int nextToken();
+  public void ordinaryChar(int ch);
+  public void ordinaryChars(int low, int hi);
+  public void parseNumbers();
+  public void pushBack();
+  public void quoteChar(int ch);
+  public void resetSyntax();
+  public void slashSlashComments(boolean flag);
+  public void slashStarComments(boolean flag);
+  public String toString();
+  public void whitespaceChars(int low, int hi);
+  public void wordChars(int low, int hi);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.419">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.421">nval</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.569">public double nval</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This variable contains the value of a <tt CLASS=literal>TT_NUMBER</tt> 
+token. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.422">sval</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.570">public String sval</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This variable contains the value of a <tt CLASS=literal>TT_WORD</tt> 
+token. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.423">ttype</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.571">public int ttype</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This variable indicates the token type. The value is either one of the 
+<tt CLASS=literal>TT_</tt> constants defined below 
+or the character that has just been parsed from the input stream. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.424">TT_EOF</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.572">public final static int TT_EOF = -1</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This token type indicates that the end of the stream has been reached. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.425">TT_EOL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.573">public final static int TT_EOL = '\n'</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This token type indicates that the end of a line has been reached. The 
+value is not returned by <tt CLASS=literal>nextToken()</tt> 
+unless <tt CLASS=literal>eolIsSignificant(true)</tt> 
+has been called. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.426">TT_NUMBER</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.574">public final static int TT_NUMBER = -2</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This token type indicates that a number has been parsed. The number is 
+placed in <tt CLASS=literal>nval</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.427">TT_WORD</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.575">public final static int TT_WORD = -3</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This token type indicates that a word has been parsed. The word is placed 
+in <tt CLASS=literal>sval</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.420">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.428">StreamTokenizer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.576">public StreamTokenizer(InputStream in)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>in</tt><br>
+<DD>
+
+<P CLASS=para>
+The input stream to 
+tokenize. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>StreamTokenizer</tt> 
+that reads from the given <tt CLASS=literal>InputStream</tt>. 
+As of JDK 1.1, this method is deprecated and 
+<tt CLASS=literal>StreamTokenizer(Reader)</tt> should be
+used instead.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.577">public StreamTokenizer(Reader in)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>in</tt><br>
+<DD>
+
+<P CLASS=para>
+The reader to tokenize. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>StreamTokenizer</tt> 
+that reads from the given <tt CLASS=literal>Reader</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.421">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.429">commentChar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.578">public void commentChar(int ch)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+The character to use 
+to indicate comments. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>StreamTokenizer </tt>to 
+treat the given character as the beginning of a comment that ends at the 
+end of the line. The <tt CLASS=literal>StreamTokenizer</tt> 
+ignores all of the characters from the comment character to the end of 
+the line. By default, a <tt CLASS=literal>StreamTokenizer</tt> 
+treats the <tt CLASS=literal>'/'</tt> 
+character as a comment character. This method may be called multiple times 
+if there are multiple characters that begin comment lines.
+
+<P CLASS=para>
+To specify that a character is not a comment character, 
+use <tt CLASS=literal>ordinaryChar()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.430">eolIsSignificant</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.579">public void eolIsSignificant(boolean flag)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>flag</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies whether or not this <tt CLASS=literal>StreamTokenizer</tt> 
+returns <tt CLASS=literal>TT_EOL</tt> 
+tokens. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>StreamTokenizer</tt> recognizes
+<tt CLASS=literal>"\n"</tt>, <tt CLASS=literal>"\r"</tt>, and
+<tt CLASS=literal>"\r\n"</tt> as the end of a line. By default,
+end-of-line characters are treated as whitespace and thus, the
+<tt CLASS=literal>StreamTokenizer</tt> does not return
+<tt CLASS=literal>TT_EOL</tt> tokens from
+<tt CLASS=literal>nextToken()</tt>. Call
+<tt CLASS=literal>eolIsSignificant(true)</tt> to tell the
+<tt CLASS=literal>StreamTokenizer</tt> to return <tt CLASS=literal>TT_EOL</tt>
+tokens.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.431">lineo</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.580">public int lineno()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current line number. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current line number. Line numbers begin at 1. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.432">lowerCaseMode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.581">public void lowerCaseMode(boolean flag)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>flag</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value that specifies 
+whether or not this <tt CLASS=literal>StreamTokenizer</tt> 
+returns <tt CLASS=literal>TT_WORD</tt> 
+tokens in lowercase. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+By default, a <tt CLASS=literal>StreamTokenizer</tt> 
+does not change the case of the words that it parses. However if you call 
+<tt CLASS=literal>lowerCaseMode(true)</tt>, 
+whenever <tt CLASS=literal>nextToken()</tt> returns 
+a <tt CLASS=literal>TT_WORD</tt> token, the word in 
+<tt CLASS=literal>sval</tt> is converted to lowercase. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.433">nextToken</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.582">public int nextToken() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+One of the token types (<tt CLASS=literal>TT_EOF</tt>, 
+<tt CLASS=literal>TT_EOL</tt>, <tt CLASS=literal>TT_NUMBER</tt>, 
+or <tt CLASS=literal>TT_WORD</tt>) or a character 
+code. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt> <br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reads the next token from the stream. The value returned is 
+the same as the value of the variable <tt CLASS=literal>ttype</tt>. 
+The <tt CLASS=literal>nextToken()</tt> method parses 
+the following tokens: 
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>TT_EOF</tt><br>
+<DD>
+
+<P CLASS=para>
+The end of the input stream has been reached. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>TT_EOL</tt><br>
+<DD>
+
+<P CLASS=para>
+The end of a line has been reached. The <tt CLASS=literal>eolIsSignificant()</tt> 
+method controls whether end-of-line characters are treated as whitespace 
+or returned as <tt CLASS=literal>TT_EOL</tt> tokens. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>TT_NUMBER</tt><br>
+<DD>
+
+<P CLASS=para>
+A number has been parsed. The value can be found in the variable <tt CLASS=literal>nval</tt>. 
+The <tt CLASS=literal>parseNumbers()</tt> method tells 
+the <tt CLASS=literal>StreamTokenizer</tt> to recognize 
+numbers distinct from words. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>TT_WORD</tt><br>
+<DD>
+
+<P CLASS=para>
+A word has been parsed. The word can be found in the variable
+<tt CLASS=literal>sval</tt>.
+
+<p>
+<DT CLASS=varlistentry>Quoted string<br>
+<DD>
+
+<P CLASS=para>
+A quoted string has been parsed. The variable <tt CLASS=literal>ttype</tt>
+is set to the quote character, and <tt CLASS=literal>sval</tt> contains the
+string itself. You can tell the <tt CLASS=literal>StreamTokenizer</tt>
+what characters to use as quote characters using
+<tt CLASS=literal>quoteChar()</tt>.
+
+<p>
+<DT CLASS=varlistentry>Character<br>
+<DD>
+
+<P CLASS=para>
+A single character has been parsed. The variable <tt CLASS=literal>ttype</tt> 
+is set to the character value. </DL>
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.434">ordinaryChar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.583">public void ordinaryChar(int ch)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+The character to treat 
+normally. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This method causes this <tt CLASS=literal>StreamTokenizer</tt> to treat
+the given character as an <I CLASS=emphasis>ordinary</I>
+character. This means that the character has no special significance
+as a comment, string quote, alphabetic, numeric, or whitespace
+character. For example, to tell the <tt CLASS=literal>StreamTokenizer</tt>
+that the slash does not start a single-line comment, use
+<tt CLASS=literal>ordinaryChar('/')</tt>.
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.435">ordinaryChars</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.584">public void ordinaryChars(int low, int hi)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>low</tt><br>
+<DD>
+
+<P CLASS=para>
+The beginning of a range of character values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>hi</tt><br>
+<DD>
+
+<P CLASS=para>
+The end of a range of character values. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>StreamTokenizer</tt> 
+to treat all of the characters in the given range as ordinary 
+characters. See the description of <tt CLASS=literal>ordinaryChar()</tt> 
+above for more information. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.436">parseNumbers</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.585">public void parseNumbers()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>StreamTokenizer</tt> 
+to recognize numbers. The <tt CLASS=literal>StreamTokenizer</tt> 
+constructor calls this method, so the default behavior of a <tt CLASS=literal>StreamTokenizer</tt> 
+is to recognize numbers. This method modifies the syntax table of the <tt CLASS=literal>StreamTokenizer</tt> 
+so that the following characters have the numeric attribute:
+<tt CLASS=literal>'1'</tt>, 
+<tt CLASS=literal>'2'</tt>, <tt CLASS=literal>'3'</tt>, 
+<tt CLASS=literal>'4'</tt>, <tt CLASS=literal>'5'</tt>, 
+<tt CLASS=literal>'6'</tt>, <tt CLASS=literal>'7'</tt>, 
+<tt CLASS=literal>'8'</tt>, <tt CLASS=literal>'9'</tt>, 
+<tt CLASS=literal>'0'</tt>, <tt CLASS=literal>'.'</tt>, 
+and <tt CLASS=literal>'-'</tt> 
+
+<P CLASS=para>
+When the parser encounters a token that has the format of a double-precision 
+floating-point number, the token is treated as a number rather than a word. 
+The <tt CLASS=literal>ttype</tt> variable is set to 
+<tt CLASS=literal>TT_NUMBER</tt>, and <tt CLASS=literal>nval</tt> 
+is set to the value of the number.
+
+<P CLASS=para>
+To use a <tt CLASS=literal>StreamTokenizer</tt> that does
+not parse numbers, make the above characters ordinary using
+<tt CLASS=literal>ordinaryChar()</tt> or
+<tt CLASS=literal>ordinaryChars()</tt>:</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.437">pushBack</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.586">public void pushBack()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method has the effect of pushing the current token back onto the stream. 
+In other words, after a call to this method, the next call to the <tt CLASS=literal>nextToken()</tt> 
+method returns the same result as the previous call to the <tt CLASS=literal>nextToken()</tt>method 
+without reading any input. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.438">quoteChar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.587">public void quoteChar(int ch)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+The character to use 
+as a delimiter for quoted strings. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>StreamTokenizer</tt> 
+to treat the given character as the beginning or end of a quoted string. 
+By default, the single-quote character and the double-quote character are 
+string-quote characters. When the parser encounters a string-quote character, 
+the <tt CLASS=literal>ttype</tt> variable is set to 
+the quote character, and <tt CLASS=literal>sval</tt> 
+is set to the actual string. The string consists of all the characters 
+after (but not including) the string-quote character up to (but not including) 
+the next occurrence of the same string-quote character, a line terminator, 
+or the end of the stream.
+
+<P CLASS=para>
+To specify that a character is not a string-quote character, use <tt CLASS=literal>ordinaryChar()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.439">resetSyntax</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.588">public void resetSyntax()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method resets this <tt CLASS=literal>StreamTokenizer</tt>, 
+which causes it to treat all characters as ordinary characters. 
+See the description of <tt CLASS=literal>ordinaryChar()</tt> 
+above for more information. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.440">slashSlashComments</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.589">public void slashSlashComments(boolean flag)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>flag</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies whether or not this <tt CLASS=literal>StreamTokenizer</tt> 
+recognizes double-slash comments (<tt CLASS=literal>//</tt>). </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+By default, a <tt CLASS=literal>StreamTokenizer</tt> 
+does not recognize double-slash comments. However, if you call <tt CLASS=literal>slashSlashComments(true)</tt>, 
+the <tt CLASS=literal>nextToken()</tt> method recognizes 
+and ignores double-slash comments. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.441">slashStarComments</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.590">public void slashStarComments(boolean flag)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>flag</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies whether or not this <tt CLASS=literal>StreamTokenizer</tt> 
+recognizes slash-star (<tt CLASS=literal>/* ... */</tt>) comments. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+By default, a <tt CLASS=literal>StreamTokenizer</tt> 
+does not recognize slash-star comments. However, if you call <tt CLASS=literal>slashStarComments(true)</tt>, 
+the <tt CLASS=literal>nextToken()</tt> method recognizes 
+and ignores slash-star comments. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.442">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.591">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> representation of 
+the current token. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of the current token recognized 
+by the <tt CLASS=literal>nextToken()</tt> method. This 
+string representation consists of the value of <tt CLASS=literal>ttype</tt>, 
+the value of <tt CLASS=literal>sval</tt> if the token 
+is a word or the value of <tt CLASS=literal>nval</tt> 
+if the token is a number, and the current line number. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.443">whitespaceChars</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.592">public void whitespaceChars(int low, int hi)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>low</tt><br>
+<DD>
+
+<P CLASS=para>
+The beginning of a range of character values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>hi</tt><br>
+<DD>
+
+<P CLASS=para>
+The end of a range of character values. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes this <tt CLASS=literal>StreamTokenizer</tt> 
+to treat characters in the specified range as whitespace. The only function 
+of whitespace characters is to separate tokens in the stream. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.444">wordChars</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.593">public void wordChars(int low, int hi)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>low</tt><br>
+<DD>
+
+<P CLASS=para>
+The beginning of a range of character values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>hi</tt><br>
+<DD>
+
+<P CLASS=para>
+The end of a range of character values. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes this <tt CLASS=literal>StreamTokenizer</tt> 
+to treat characters in the specified range as characters that are part 
+of a word token, or, in other words, consider the characters to be alphabetic. 
+A word token consists of a sequence of characters that begins with 
+an alphabetic character and is followed by zero or more numeric or alphabetic 
+characters. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.422">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.423">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>Reader</tt>, 
+<tt CLASS=literal>StringTokenizer</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_60.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_62.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>StreamCorruptedException</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>StringBufferInputStream</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

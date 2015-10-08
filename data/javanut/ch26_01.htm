@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 26] The java.lang.reflect Package</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:28:49 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_69.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 26</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch26_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-26">26. The java.lang.reflect Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+java.lang.reflect.Array (JDK 1.1)<br>
+<A HREF="ch26_02.htm">java.lang.reflect.Constructor (JDK 1.1)</A><BR>
+<A HREF="ch26_03.htm">java.lang.reflect.Field (JDK 1.1)</A><BR>
+<A HREF="ch26_04.htm">java.lang.reflect.InvocationTargetException (JDK 1.1)</A><BR>
+<A HREF="ch26_05.htm">java.lang.reflect.Member (JDK 1.1)</A><BR>
+<A HREF="ch26_06.htm">java.lang.reflect.Method (JDK 1.1)</A><BR>
+<A HREF="ch26_07.htm">java.lang.reflect.Modifier (JDK 1.1)</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.lang.reflect</tt> package contains the classes
+and interfaces that, along with <tt CLASS=literal>java.lang.Class</tt>,
+comprise the Java Reflection API.  This package is new in
+Java 1.1.  <A NAME="CH26.JAVA.LANG.RE2"></A><A NAME="CH26.REFLECTION-1"></A>
+<A HREF="ch26_01.htm#JNUT2-CH-26-FIG-1">Figure 26.1</A>
+shows the class hierarchy.
+
+<P CLASS=para>
+The <tt CLASS=literal>Constructor</tt>, <tt CLASS=literal>Field</tt>, and <tt CLASS=literal>Method</tt>
+classes represent constructors, fields, and methods of a
+class.  Because these types all represent members of a
+class, they each implement the <tt CLASS=literal>Member</tt> interface,
+which defines a simple set of methods that can be invoked
+for any class member.  These classes allow information about
+the class members to be obtained, and allow methods and
+constructors to be invoked and fields to be queried and set.
+
+<P CLASS=para>
+Class member modifiers are represented as integers
+that specify a number of bit flags.  The <tt CLASS=literal>Modifier</tt> class
+defines static methods that are useful in interpreting the meanings of
+these flags.  The <tt CLASS=literal>Array</tt> class defines static methods
+for creating arrays and reading and writing array elements.
+
+<P CLASS=para>
+See <A HREF="ch12_01.htm">Chapter 12, <i>Reflection</i></A> for examples of using
+these classes.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-26-FIG-1">Figure 26.1: The java.lang.reflect package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_2601.gif" alt="[Graphic: Figure 26-1]" width=464 height=242 border=0>
+
+</DIV>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-26-SECT-1">26.1 java.lang.reflect.Array (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-26-SECT-1.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class contains methods that allow you to set and query
+the values of array elements, to determine the length of an
+array, and to create new instances of arrays.  Note that the
+<tt CLASS=literal>Array</tt> class is used for manipulating array values,
+not array types; Java data types, including array types, are
+represented by <tt CLASS=literal>java.lang.Class</tt>.  Since the
+<tt CLASS=literal>Array</tt> class represents a Java value, unlike the
+<tt CLASS=literal>Field</tt>, <tt CLASS=literal>Method</tt>, and <tt CLASS=literal>Constructor</tt>
+classes which represent class members, the <tt CLASS=literal>Array</tt> class
+is significantly different (despite some surface
+similarities) from those other classes in this package.
+Most notably, all the methods of <tt CLASS=literal>Array</tt> are static
+and apply to all array values, rather than applying only to
+a specific field, method, or constructor.
+
+<P CLASS=para>
+The <tt CLASS=literal>get()</tt> method returns the value of the specified
+element of the specified array as an <tt CLASS=literal>Object</tt>.  If the
+array elements are of a primitive type, the value is
+converted to a wrapper object before being returned.  You
+can also use <tt CLASS=literal>getInteger()</tt> and related methods to
+query array elements and return them as specific primitive
+types.  The <tt CLASS=literal>set()</tt> method and its primitive type
+variants perform the opposite operation.  Also, the
+<tt CLASS=literal>getLength()</tt> method returns the length of the array.
+
+<P CLASS=para>
+The <tt CLASS=literal>newInstance()</tt> methods create new arrays.  One
+version of this method is passed the number of elements in
+the array and the type of those elements.  The other version
+of this method creates multidimensional arrays.  Besides just
+specifying the component type of the array, it is passed an
+array of numbers.  The length of this array specifies the
+number of dimensions for the array to be created, and the
+values of each array element specify the size of each
+dimension of the created array.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final class <tt CLASS=literal>Array</tt> extends Object {
+    // <tt CLASS=literal>No Constructor</tt>
+    // <tt CLASS=literal>Class Methods</tt>
+            public static native Object <tt CLASS=literal>get</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native boolean <tt CLASS=literal>getBoolean</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native byte <tt CLASS=literal>getByte</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native char <tt CLASS=literal>getChar</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native double <tt CLASS=literal>getDouble</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native float <tt CLASS=literal>getFloat</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native int <tt CLASS=literal>getInt</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native int <tt CLASS=literal>getLength</tt>(Object <tt CLASS=literal>array</tt>) throws IllegalArgumentException;
+            public static native long <tt CLASS=literal>getLong</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native short <tt CLASS=literal>getShort</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static Object <tt CLASS=literal>newInstance</tt>(Class <tt CLASS=literal>componentType</tt>, int <tt CLASS=literal>length</tt>) throws NegativeArraySizeException;
+            public static Object <tt CLASS=literal>newInstance</tt>(Class <tt CLASS=literal>componentType</tt>, int[] <tt CLASS=literal>dimensions</tt>) throws IllegalArgumentException, NegativeArraySizeException;
+            public static native void <tt CLASS=literal>set</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, Object <tt CLASS=literal>value</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native void <tt CLASS=literal>setBoolean</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, boolean <tt CLASS=literal>z</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native void <tt CLASS=literal>setByte</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, byte <tt CLASS=literal>b</tt>) Xsthrows IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native void <tt CLASS=literal>setChar</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, char <tt CLASS=literal>c</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native void <tt CLASS=literal>setDouble</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, double <tt CLASS=literal>d</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native void <tt CLASS=literal>setFloat</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, float <tt CLASS=literal>f</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native void <tt CLASS=literal>setInt</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, int <tt CLASS=literal>i</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native void <tt CLASS=literal>setLong</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, long <tt CLASS=literal>l</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+            public static native void <tt CLASS=literal>setShort</tt>(Object <tt CLASS=literal>array</tt>, int <tt CLASS=literal>index</tt>, short <tt CLASS=literal>s</tt>) throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_69.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch26_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.lang.Void (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.lang.reflect.Constructor (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

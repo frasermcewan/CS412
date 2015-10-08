@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.3 String Concatenation</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:07:55 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>Strings and Related Classes</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-2-SECT-3">2.3 String Concatenation</A></h2>
+
+<P CLASS=para>
+<A NAME="CH02.CONC1"></A><A NAME="CH02.CONC2"></A>Java's string concatenation operator (<tt CLASS=literal>+</tt>) 
+provides special support for the <tt CLASS=literal>String</tt> 
+and <tt CLASS=literal>StringBuffer</tt> classes. If 
+either operand of the binary <tt CLASS=literal>+</tt> 
+operator is a reference to a <tt CLASS=literal>String</tt> 
+or <tt CLASS=literal>StringBuffer</tt> object, the 
+operator is the string concatenation operator instead of the arithmetic 
+addition operator. The string concatenation operator produces a new <tt CLASS=literal>String</tt> 
+object that contains the concatenation of its operands; the characters 
+of the left operand precede the characters of the right operand in the 
+newly created string. 
+
+<P CLASS=para>
+If one of the operands of the <tt CLASS=literal>+</tt> 
+operator is a reference to a string object and the other is not, the operator 
+converts the nonstring operand to a string object using the following 
+rules: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>A <tt CLASS=literal>null</tt> operand is converted 
+to the string literal <tt CLASS=literal>"null"</tt>. 
+
+<P>
+<li CLASS=listitem>If the operand is a non-<tt CLASS=literal>null</tt>
+reference to an object that is not a string, the object's
+<tt CLASS=literal>toString()</tt> method is called. The result of the
+conversion is the value returned by the object's
+<tt CLASS=literal>toString()</tt> method, unless the return value is
+<tt CLASS=literal>null</tt>, in which case the result of the conversion is
+the string literal <tt CLASS=literal>"null"</tt>.
+
+<P>
+<li CLASS=listitem>A <tt CLASS=literal>char</tt> operand is converted 
+to a reference to a string object that has a length of one and contains 
+that character. 
+
+<P>
+<li CLASS=listitem>An integer operand (other than
+<tt CLASS=literal>char</tt>) is converted to a string object that contains
+the base 10 string representation of its value. If the value is
+negative, the string starts with a minus sign; if it is positive there
+is no sign character. If the value is zero, the result of the
+conversion is <tt CLASS=literal>"0"</tt>.  Otherwise, the string
+representation of the integer does not have any leading zeros.
+
+<P>
+<li CLASS=listitem>If the operand is a floating-point value, the exact string representation 
+depends on the value being converted. If its absolute value is greater 
+than or equal to 10^-3 or 
+less than or equal to 10^7, 
+it is converted to a string with an optional minus sign (if the value is 
+negative) followed by up to eight digits before the decimal point, a decimal 
+point, and the necessary number of digits after the decimal point (but 
+no trailing zero if there is more than one significant digit). There is 
+always a minimum of one digit after the decimal point. 
+
+<P>
+<li CLASS=listitem>Otherwise, the value is converted to a string with an optional minus sign 
+(if the value is negative), followed by a single digit, a decimal point, 
+the necessary number of digits after the decimal point (but no trailing 
+zero if there is more than one significant digit), and the letter <tt CLASS=literal>E</tt> 
+followed by a plus or a minus sign and a base 10 exponent of at least one 
+digit. Again, there is always a minimum of one digit after the decimal 
+point. 
+
+<P>
+<li CLASS=listitem>The values <tt CLASS=literal>NaN</tt>, <tt CLASS=literal>NEGATIVE_INFINITY</tt>, 
+<tt CLASS=literal>POSITIVE_INFINITY</tt>, <tt CLASS=literal>-0.0</tt>, 
+and <tt CLASS=literal>+0.0</tt> are represented by 
+the strings <tt CLASS=literal>"NaN"</tt>, <tt CLASS=literal>"--Infinity"</tt>, 
+<tt CLASS=literal>"Infinity"</tt>, <tt CLASS=literal>"--0.0"</tt>, 
+and <tt CLASS=literal>"0.0"</tt>, respectively. 
+
+<P>
+<li CLASS=listitem>A <tt CLASS=literal>boolean</tt> operand is converted 
+to either the string literal <tt CLASS=literal>"true"</tt> 
+or the string literal <tt CLASS=literal>"false"</tt>. 
+
+<P>
+</UL>
+<P CLASS=para>
+The following is a code example that uses the string concatenation 
+operator: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// format seconds into hours, minutes, and seconds
+String formatTime(int t) {
+    int minutes, seconds;
+    seconds = t%60;
+    t /= 60;
+    minutes = t%60;
+    return t/60 + ":" + minutes + ":" + seconds;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java uses <tt CLASS=literal>StringBuffer</tt> objects 
+to implement string concatenation. Consider the following code: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+String s, s1, s2;
+s = s1 + s2
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To compute the string concatenation, Java's compiler generates this code: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+s = new StringBuffer().append(s1).append(s2).toString()
+</PRE>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>StringBuffer</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>StringTokenizer</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

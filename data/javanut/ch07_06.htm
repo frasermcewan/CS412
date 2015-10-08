@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.6 Inside the Java 1.1 Event Model</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:55:14 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Events</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-6">7.6 Inside the Java 1.1 Event Model</A></h2>
+
+<P CLASS=para>
+<A NAME="CH7.EVENTS-JAVA.3"></A>The listener-based event model we've seen in the sections
+above is ideal for creating a GUI out of pre-defined AWT
+components or out of Java Beans.  It becomes a little
+cumbersome, however, when developing custom AWT components.
+AWT components (but not beans) provide a lower-level
+interface to this event model that is sometimes more
+convenient to use.
+
+<P CLASS=para>
+When an <tt CLASS=literal>AWTEvent</tt> is delivered to a component, there
+is some default processing that goes on before the event is
+dispatched to the appropriate event listeners.  When you
+define a custom component (by subclassing), you have the
+opportunity to override methods and intercept the event
+before it is sent to listener objects.  When an
+<tt CLASS=literal>AWTEvent</tt> is delivered to a component, it is passed to the
+<tt CLASS=literal>processEvent()</tt> method.
+
+<P CLASS=para>
+By default, <tt CLASS=literal>processEvent()</tt> simply checks the class
+of the event object and dispatches the event to a
+class-specific method.  For example, if the event object is
+an instance of <tt CLASS=literal>FocusEvent</tt>, it dispatches it to a
+method named <tt CLASS=literal>processFocusEvent()</tt>.  Or, if the event
+is of type <tt CLASS=literal>ActionEvent</tt>, it is dispatched to
+<tt CLASS=literal>processActionEvent()</tt>.  In other words, any event type
+<I CLASS=emphasis>X</I><tt CLASS=literal>Event</tt> is dispatched to a corresponding 
+<tt CLASS=literal>process</tt><I CLASS=emphasis>X</I><tt CLASS=literal>Event()</tt>
+method.  The exception is
+for <tt CLASS=literal>MouseEvent</tt> events, which are dispatched either
+to <tt CLASS=literal>processMouseEvent()</tt> or
+<tt CLASS=literal>processMouseMotionEvent()</tt>, depending on the type of
+the mouse event that occurred.  For any given component, it
+is the individual 
+<tt CLASS=literal>process</tt><I CLASS=emphasis>X</I><tt CLASS=literal>Event()</tt> methods 
+that are responsible for invoking the appropriate methods of
+all registered event listener objects.  The
+<tt CLASS=literal>processMouseEvent()</tt> method, for example, invokes the
+appropriate method for each registered <tt CLASS=literal>MouseListener</tt>
+object.  There is a one-to-one mapping between
+these methods and the event listener interfaces defined in
+<tt CLASS=literal>java.awt.event</tt>.  Each
+<tt CLASS=literal>process</tt><I CLASS=emphasis>X</I><tt CLASS=literal>Event()</tt> method
+corresponds to an <I CLASS=emphasis>X</I><tt CLASS=literal>Listener</tt> interface.
+
+<P CLASS=para>
+As you can see, there is a clear analogy between the Java
+1.0 event model and this Java 1.1 low-level event model.
+<tt CLASS=literal>processEvent()</tt> is analogous to the Java 1.0
+<tt CLASS=literal>handleEvent()</tt> method, and methods like
+<tt CLASS=literal>processKeyEvent()</tt> are analogous to the Java 1.0
+<tt CLASS=literal>keyDown()</tt> and <tt CLASS=literal>keyUp()</tt> methods.  As with the
+Java 1.0 model, there are two levels at which you can intercept
+events: you can override <tt CLASS=literal>processEvent()</tt> itself
+or you can rely on the default version of
+<tt CLASS=literal>processEvent()</tt> to dispatch the events based on their
+class and instead override the individual event methods, such
+as <tt CLASS=literal>processFocusEvent()</tt> and
+<tt CLASS=literal>processActionEvent()</tt>.
+
+<P CLASS=para>
+There is one additional requirement to make this low-level
+Java 1.1 event model work.  In order to receive events of a
+particular type for a component, you must tell the component
+that you are interested in receiving that type of event.
+If you do not do this, for efficiency, the component
+does not bother to deliver that type of event.  When using
+event listeners, the act of registering a listener is enough
+to notify the component that you are interested in receiving
+events of that type.  But when you use the low-level model,
+you must register your interest explicitly.  You do this by
+calling the <tt CLASS=literal>enableEvents()</tt> method of the component
+and passing a bit mask that specifies each of the event
+types you are interested in.  The bit mask is formed by
+ORing together various <tt CLASS=literal>EVENT_MASK</tt> constants defined
+by the <tt CLASS=literal>AWTEvent</tt> class.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-6.1">Scribbling with Low-Level Event Handling</A></h3>
+
+<P CLASS=para>
+<A HREF="ch07_06.htm#JNUT2-CH-7-EX-4">Example 7.4</A>
+is another variation on the <tt CLASS=literal>Scribble</tt> applet.  This
+one uses the Java 1.1 low-level event-handling model.  It
+overrides the event-specific methods
+<tt CLASS=literal>processMouseEvent()</tt>, 
+<tt CLASS=literal>processMouseMotionEvent()</tt>, and <tt CLASS=literal>processKeyEvent()</tt>.  Note how it calls
+<tt CLASS=literal>enableEvents()</tt> in its <tt CLASS=literal>init()</tt> method to
+register interest in events of that type.  Furthermore, it
+calls <tt CLASS=literal>requestFocus()</tt> to ask that it be given the
+keyboard focus, so that it can receive key events.  Notice
+also that it passes events it is not interested in to the
+superclass event-processing method.  In this case, the
+superclass is not going to use those events, but this is
+still a good practice.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-7-EX-4">Example 7.4: Scribble: Using the Low-Level Event Model</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class Scribble4 extends Applet {
+  private int lastx, lasty;
+  /** Tell the system we're interested in mouse events, mouse motion events,
+   *  and keyboard events.  This is required or events won't be sent.
+   */
+  public void init() {
+    this.enableEvents(AWTEvent.MOUSE_EVENT_MASK |
+                      AWTEvent.MOUSE_MOTION_EVENT_MASK |
+                      AWTEvent.KEY_EVENT_MASK);
+    this.requestFocus();  // Ask for keyboard focus so we get key events.
+  }
+  /** Invoked when a mouse event of some type occurs */
+  public void processMouseEvent(MouseEvent e) {
+    if (e.getID() == MouseEvent.MOUSE_PRESSED) {  // Check the event type.
+      lastx = e.getX(); lasty = e.getY();
+    }
+    else super.processMouseEvent(e); // Pass unhandled events to superclass.
+  }
+  /** Invoked when a mouse motion event occurs */
+  public void processMouseMotionEvent(MouseEvent e) {
+    if (e.getID() == MouseEvent.MOUSE_DRAGGED) {  // check type
+      int x = e.getX(), y = e.getY();
+      Graphics g = this.getGraphics();
+      g.drawLine(lastx, lasty, x, y);
+      lastx = x; lasty = y;
+    }
+    else super.processMouseMotionEvent(e);
+  }
+  /** Called on key events:  clear the screen when 'c' is typed. */
+  public void processKeyEvent(KeyEvent e) {
+    if ((e.getID() == KeyEvent.KEY_TYPED) &amp;&amp; (e.getKeyChar() == 'c')) {
+      Graphics g = this.getGraphics();
+      g.setColor(this.getBackground());
+      g.fillRect(0, 0, this.getSize().width, this.getSize().height);
+    }
+    else super.processKeyEvent(e);  // Pass unhandled events to our superclass.
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Another way to implement this example would be to override
+<tt CLASS=literal>processEvent()</tt> directly instead of overriding the
+various methods that it invokes.  If we did this, we'd
+end up with a large <tt CLASS=literal>switch</tt> statement that
+separated events by type.  When overriding
+<tt CLASS=literal>processEvent()</tt>, it is particularly important to
+remember to pass unhandled events to
+<tt CLASS=literal>super.processEvent()</tt> so that they can be dispatched
+correctly.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Scribbling with Inner Classes</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>New AWT Features</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

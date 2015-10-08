@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.2 Comments</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:50:49 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>The Java Language</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-4-SECT-2">4.2 Comments</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.COMM"></A>Java supports both C-style block comments delimited by
+<tt CLASS=literal>/*</tt> and <tt CLASS=literal>*/</tt> and C++-style line
+comments indicated by <tt CLASS=literal>//</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+/*  This is a 
+        multiline 
+            comment.    */ 
+ 
+// This is a single line comment 
+// and so // is this 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As in C, block comments can't be nested. Single-line comments are
+delimited by the end of a line; extra <tt CLASS=literal>//</tt> indicators
+inside a single line have no effect. Line comments are useful for
+short comments within methods because you can still wrap block
+comments around large chunks of code during development.
+
+<P CLASS=para>
+<A NAME="CH04.DOC1"></A><A NAME="CH04.DOC2"></A>By convention, a block comment beginning with
+<tt CLASS=literal>/**</tt> indicates a special "doc comment."
+A doc comment is commentary that is extracted by automated
+documentation generators, such as Sun's
+<i CLASS=command>javadoc</i> program that comes with the Java
+Development Kit. A doc comment is terminated by the next
+<tt CLASS=literal>*/</tt>, just as with a regular block comment. Leading
+spacing up to a <tt CLASS=literal>*</tt> on each line is ignored; lines
+beginning with <tt CLASS=literal>@</tt> are interpreted as special tags
+for the documentation generator:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+/** 
+ * I think this class is possibly the most amazing thing you will 
+ * ever see. Let me tell you about my own personal vision and
+ * motivation in creating it. 
+ * &lt;p&gt; 
+ * It all began when I was a small child, growing up on the 
+ * streets of Idaho. Potatoes were the rage, and life was good... 
+ * 
+ * @see PotatoPeeler 
+ * @see PotatoMasher 
+ * @author John 'Spuds' Smith 
+ * @version 1.00, 19 Dec 1996 
+ */ 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+ 
+<i CLASS=command>javadoc</i> creates HTML class
+documentation by reading the source code and the embedded
+comments. The author and version information is presented in the
+output and the <tt CLASS=literal>@see</tt> tags make hypertext links to
+the appropriate class documentation. The compiler also looks at the
+doc comments; in particular, it is interested in the
+<tt CLASS=literal>@deprecated</tt> tag, which means that the
+method has been declared obsolete and should be avoided in new
+programs. The compiler generates a warning message whenever it sees
+you use a deprecated feature in your code.
+
+<P CLASS=para>
+Doc comments can appear above class, method, and variable
+definitions, but some tags may not be applicable to all. For example,
+a variable declaration can contain only a <tt CLASS=literal>@see</tt>
+tag. <A HREF="ch04_02.htm#EXJ-CH-4-TAB-1">Table 4.1</A> summarizes the tags used in doc
+comments.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-4-TAB-1">Table 4.1: Doc Comment Tags</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Tag</TH>
+<TH ALIGN="left">Description</TH>
+<TH ALIGN="left">Applies to</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>@see</tt></TD>
+<TD ALIGN="left">Associated class name</TD>
+<TD ALIGN="left">Class, method, or variable</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>@author</tt></TD>
+<TD ALIGN="left">Author name</TD>
+<TD ALIGN="left">Class</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>@version</tt></TD>
+<TD ALIGN="left">Version string</TD>
+<TD ALIGN="left">Class</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>@param</tt></TD>
+<TD ALIGN="left">Parameter name and description</TD>
+<TD ALIGN="left">Method</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>@return</tt></TD>
+<TD ALIGN="left">Description of return value</TD>
+<TD ALIGN="left">Method</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>@exception</tt></TD>
+<TD ALIGN="left">Exception name and description</TD>
+<TD ALIGN="left">Method</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>@deprecated</tt></TD>
+<TD ALIGN="left">Declares an item obsolete</TD>
+<TD ALIGN="left">Class, method, or variable</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Text Encoding</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Types</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

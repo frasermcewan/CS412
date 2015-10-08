@@ -1,0 +1,862 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 15] ServerSocket</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:22:33 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_14.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 15<br>The java.net Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_16.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ServerSocket</H1>
+
+<H2>Name</H2>
+
+ServerSocket
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.93">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.net.ServerSocket</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.94">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>ServerSocket</tt> class represents 
+a socket that listens for connection requests from clients on a specified 
+port. When a connection is requested, a <tt CLASS=literal>Socket</tt> 
+object is created to handle the communication. 
+
+<P CLASS=para>
+The low-level network access in <tt CLASS=literal>ServerSocket</tt> 
+is provided by a subclass of the <tt CLASS=literal>abstract</tt> 
+class <tt CLASS=literal>SocketImpl</tt>. An application 
+can change the server socket factory that creates the <tt CLASS=literal>SocketImpl</tt> 
+subclass by supplying a <tt CLASS=literal>SocketImplFactory</tt> 
+using the <tt CLASS=literal>setSocketFactory()</tt> 
+method. This feature allows an application to create sockets that are appropriate 
+for the local network configuration and accommodate such things as firewalls. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.95">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.net.ServerSocket extends java.lang.Object {
+  // Constructors
+  public ServerSocket(int port);
+  public ServerSocket(int port, int backlog);
+  public ServerSocket(int port, int backlog, 
+                      InetAddress bindAddr);              // New in 1.1
+  // Class Methods
+  public static synchronized void setSocketFactory(SocketImplFactory fac);
+  // Instance Methods
+  public Socket accept();
+  public void close();
+  public InetAddress getInetAddress();
+  public int getLocalPort();
+  public synchronized int getSoTimeout()                  // New in 1.1
+  public synchronized void setSoTimeout(int timeout);     // New in 1.1
+  public String toString();
+  // Protected Instance Methods
+  protected final void implAccept(Socket s);              // New in 1.1
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.96">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.105">ServerSocket</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.114">public ServerSocket(int port) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number, or 0 for any available port. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to listen on the given port. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a server socket that listens for a connection on the 
+given port. A default of 50 pending connections can be queued by the <tt CLASS=literal>ServerSocket</tt>. 
+Calling <tt CLASS=literal>accept()</tt> removes a 
+pending connections from the queue. If the queue is full, additional connection 
+requests are refused.
+
+<P CLASS=para>
+If an application has specified a server socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.115">public ServerSocket(int port, int backlog) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number, or 0 for any available port.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>backlog</tt><br>
+<DD>
+
+<P CLASS=para>
+The maximum length of the pending connections queue. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to listen on the given port. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a server socket that listens for a connection on the 
+given port. The <tt CLASS=literal>backlog</tt> parameter 
+specifies how many pending connections can be queued by the <tt CLASS=literal>ServerSocket</tt>. 
+Calling <tt CLASS=literal>accept()</tt> removes a 
+pending connection from the queue. If the queue is full, additional connection 
+requests are refused.
+
+<P CLASS=para>
+If an application has specified a server socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.116"><DIV CLASS=screen> <P> <PRE> public ServerSocket(int port, int backlog, InetAddress bindAddr) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number, or 0 for any available port.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>backlog</tt><br>
+<DD>
+
+<P CLASS=para>
+The maximum length of the pending connections queue.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>bindAddr</tt><br>
+<DD>
+
+<P CLASS=para>
+A local address. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to listen on the given port. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a server socket that listens for a connection on the 
+given port of <tt CLASS=literal>bindAddr</tt>. On 
+machines with multiple addresses, <tt CLASS=literal>bindAddr</tt> 
+specifies the address on which this <tt CLASS=literal>ServerSocket</tt> 
+listens. The <tt CLASS=literal>backlog</tt> parameter 
+specifies how many pending connections can be queued by the <tt CLASS=literal>ServerSocket</tt>. 
+Calling <tt CLASS=literal>accept()</tt> removes 
+pending connections from the queue. If the queue is full, additional connection 
+requests are refused.
+
+<P CLASS=para>
+If an application has specified a server socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.97">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.106">setSocketFactory</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.117"><DIV CLASS=screen> <P> <PRE> public static synchronized void setSocketFactory( SocketImplFactory fac) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>fac</tt><br>
+<DD>
+
+<P CLASS=para>
+An object that implements <tt CLASS=literal>SocketImplFactory</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the factory has already been defined.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application does not have permission to set the factory. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is used to set the <tt CLASS=literal>SocketImplFactory</tt>. 
+This factory object
+produces instances of subclasses of <tt CLASS=literal>SocketImpl</tt> 
+that do the low-level work of server sockets. When a <tt CLASS=literal>ServerSocket</tt> 
+constructor is called, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of the factory is called to create the server socket implementation. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.98">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.107">accept</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.118">public Socket accept() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Socket</tt> 
+object for the connection. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to accept the connection. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method accepts a connection and returns a <tt CLASS=literal>Socket</tt> 
+object to handle communication. If there are pending connections, the method 
+accepts a pending connection from the queue and returns immediately. Otherwise, 
+the method may block until a connection is requested. If a time-out value 
+has been specified using the <tt CLASS=literal>setSoTimeout()</tt> 
+method, <tt CLASS=literal>accept()</tt> may time out 
+and throw an <tt CLASS=literal>InterruptedIOException</tt> 
+if no connection is requested in the time-out period. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.108">close</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.119">public void close() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method closes this server socket, releasing any system resources it 
+holds. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.109">getInetAddress</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.120">public InetAddress getInetAddress()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The IP address to which this <tt CLASS=literal>ServerSocket</tt> 
+is listening. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Generally, this method returns the address of the local host. However, 
+a <tt CLASS=literal>ServerSocket</tt> can be constructed 
+with an alternate address using <tt CLASS=literal>ServerSocket(int, int, 
+InetAddress)</tt>. The method returns <tt CLASS=literal>null</tt> 
+if the socket is not yet connected. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.110">getLocalPort</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.121">public int getLocalPort()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The port number to which this <tt CLASS=literal>ServerSocket</tt> 
+is listening. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the port number to which this object is connected. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.111">getSoTimeout</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.122">public synchronized int getSoTimeout() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The receive timeout value for the socket. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the receive time-out value for this socket. A value 
+of zero indicates that <tt CLASS=literal>accept()</tt> 
+waits indefinitely for an incoming packet, while a non-zero value indicates 
+the number of milliseconds it waits. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.112">setSoTimeout</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.123"><DIV CLASS=screen> <P> <PRE> public synchronized void setSoTimeout(int timeout) throws SocketException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>timeout</tt><br>
+<DD>
+
+<P CLASS=para>
+The new time-out value, in milliseconds, for this socket. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is used to set the time-out value that is used for <tt CLASS=literal>accept()</tt>. 
+A nonzero value is the length of time, in milliseconds, the <tt CLASS=literal>ServerSocket</tt> 
+should wait for a connection. A value of zero indicates that the <tt CLASS=literal>ServerSocket</tt> 
+should wait indefinitely. If a time-out value is needed, this method must 
+be called before <tt CLASS=literal>accept()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.113">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.124">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The string representation of this <tt CLASS=literal>ServerSocket</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>String</tt> 
+that contains the address and port of this <tt CLASS=literal>ServerSocket</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.99">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.114">implAccept</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.125">protected final void implAccept(Socket s) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>s</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Socket</tt> object to be connected. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to accept the connection. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is a helper method for <tt CLASS=literal>accept()</tt>. 
+It can be overridden in subclasses of <tt CLASS=literal>ServerSocket</tt> 
+to support new subclasses of <tt CLASS=literal>Socket</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.100">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.101">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>InetAddress</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>SecurityException</tt>, 
+<tt CLASS=literal>Socket</tt>, 
+<tt CLASS=literal>SocketException</tt>, 
+<tt CLASS=literal>SocketImpl</tt>, 
+<tt CLASS=literal>SocketImplFactory</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_14.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_16.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ProtocolException</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Socket</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

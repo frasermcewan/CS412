@@ -1,0 +1,733 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] 8.3 TextArea</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:41:53 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8<br>Input Fields</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-3">8.3 TextArea</A></h2>
+
+<P CLASS=para>
+<A NAME="CH08.AREA1"></A><tt CLASS=literal>TextArea</tt> is the <tt CLASS=literal>TextComponent</tt> 
+for multiline input. Some constructors permit you to set the rows and 
+columns of the <tt CLASS=literal>TextArea</tt> on 
+the screen. However, the <tt CLASS=literal>LayoutManager</tt> 
+may change your settings. As with <tt CLASS=literal>TextField</tt>, 
+the only way to limit the number of characters that a user can enter is 
+to override the <tt CLASS=literal>keyDown()</tt> method. 
+The text in a <tt CLASS=literal>TextArea</tt> appears 
+left justified, and the justification is not customizable. 
+
+<P CLASS=para>
+In Java 1.1, you can control the appearance of a <tt CLASS=literal>TextArea</tt> scrollbar; earlier versions gave you no control over the scrollbars. When 
+visible, the vertical scrollbar is on the right of the <tt CLASS=literal>TextArea</tt>, 
+and the horizontal scrollbar is on the bottom. You can remove either scrollbar 
+with the help of several new <tt CLASS=literal>TextArea</tt> 
+constants; you can't move them to another side. When the horizontal 
+scrollbar is not present, the text wraps automatically when the user reaches 
+the right side of the <tt CLASS=literal>TextArea</tt>. 
+Prior to Java 1.1, there was no way to enable word wrap. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-3.1">TextArea Variables</A></h3>Constants
+
+<P CLASS=para>
+The constants for <tt CLASS=literal>TextArea</tt> 
+are new to Java 1.1; they allow you to control the visibility and word wrap policy of a <tt CLASS=literal>TextArea</tt> 
+scrollbar. There is no way to listen for 
+the events when a user scrolls a <tt CLASS=literal>TextArea</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLLBARS_BOTH <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCROLLBARS_BOTH</tt> mode is 
+the default for <tt CLASS=literal>TextArea</tt>. It 
+shows both scrollbars all the time and does no word wrap. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLLBARS_HORIZONTAL_ONLY <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCROLLBARS_HORIZONTAL_ONLY</tt> 
+mode displays a scrollbar along the bottom of the <tt CLASS=literal>TextArea</tt>. 
+When this scrollbar is present, word wrap is disabled. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLLBARS_NONE <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCROLLBARS_NONE</tt> mode displays 
+no scrollbars around the <tt CLASS=literal>TextArea</tt> 
+and enables word wrap. If the text is too long, the <tt CLASS=literal>TextArea</tt> 
+displays the lines surrounding the cursor. You can use the cursor to move 
+up and down within the <tt CLASS=literal>TextArea</tt>, 
+but you cannot use a scrollbar to navigate. Because this mode has no horizontal 
+scrollbar, word wrap is enabled. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLLBARS_VERTICAL_ONLY <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCROLLBARS_VERTICAL_ONLY</tt> 
+mode displays a scrollbar along the right edge of the <tt CLASS=literal>TextArea</tt>. 
+If the text is too long to display, you can scroll within the area. Because 
+this mode has no horizontal scrollbar, word wrap is enabled. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-3.2">TextArea Methods</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextArea () </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>TextArea</tt> 
+with both scrollbars. The <tt CLASS=literal>TextArea</tt> 
+is 0 rows high and 0 columns wide. Depending upon the platform, the <tt CLASS=literal>TextArea</tt> 
+could be really small (and useless) or rather large. It is a good idea 
+to use one of the other constructors to control the size of the <tt CLASS=literal>TextArea</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextArea (int rows, int columns) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>TextArea</tt> 
+with both scrollbars. The <tt CLASS=literal>TextArea</tt> 
+is <tt CLASS=literal>rows</tt> high and <tt CLASS=literal>columns</tt> 
+wide. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextArea (String text) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>TextArea</tt> 
+with an initial content of <tt CLASS=literal>text</tt> 
+and both scrollbars. The <tt CLASS=literal>TextArea</tt> 
+is 0 rows high and 0 columns wide. Depending upon the platform, the <tt CLASS=literal>TextArea</tt> 
+could be really small (and useless) or rather large. It is a good idea 
+to use one of the other constructors to control the size of the <tt CLASS=literal>TextArea</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextArea (String text, int rows, int columns) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>TextArea</tt> 
+with an initial content of <tt CLASS=literal>text</tt>. 
+The <tt CLASS=literal>TextArea</tt> is <tt CLASS=literal>rows</tt> 
+high and <tt CLASS=literal>columns</tt> wide and has 
+both scrollbars. </DL>
+<P CLASS=para>
+The following example uses the first four constructors. 
+The results are shown in <A HREF="ch08_03.htm#JAWT-CH-8-FIG-3">Figure 8.3</A>. With the size-less 
+constructors, notice that Windows 95 creates a rather large <tt CLASS=literal>TextArea</tt>. 
+UNIX systems create a much smaller area. Depending upon the <tt CLASS=literal>LayoutManager</tt>, 
+the <tt CLASS=literal>TextArea</tt>s could be resized 
+automatically. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.TextArea;
+public class textas extends java.applet.Applet {
+    public void init () {
+        add (new TextArea ());                     // A
+        add (new TextArea (3, 10));                // B
+        add (new TextArea ("Empty Area"));         // C
+        add (new TextArea ("Empty Area", 3, 10));  // D
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-8-FIG-3">Figure 8.3: TextArea constructor</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0803.gif" alt="[Graphic: Figure 8-3]" width=428 height=361 border=0>
+
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public TextArea (String text, int rows, int columns, int scrollbarPolicy) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The final constructor creates a <tt CLASS=literal>TextArea</tt> 
+with an initial content of <tt CLASS=literal>text</tt>. 
+The <tt CLASS=literal>TextArea</tt> is <tt CLASS=literal>rows</tt> 
+high and <tt CLASS=literal>columns</tt> wide. The 
+initial scrollbar display policy is designated by the <tt CLASS=literal>scrollbarPolicy</tt> 
+parameter and is one of the <tt CLASS=literal>TextArea</tt> 
+constants in the previous example. This constructor is the only way provided to change the 
+scrollbar visibility; there is no <tt CLASS=literal>setScrollbarVisibility()</tt> 
+method. <A HREF="ch08_03.htm#JAWT-CH-8-FIG-4">Figure 8.4</A> displays the different settings. </DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-8-FIG-4">Figure 8.4: TextArea policies</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0804.gif" alt="[Graphic: Figure 8-4]" width=184 height=196 border=0>
+
+</DIV>
+
+Setting text
+
+<P CLASS=para>
+The text-setting methods are usually called in response to an external 
+event. When you handle the insertion position, you must translate it from 
+the visual row and column to a one-dimensional position. It is easier to 
+position the insertion point based upon the beginning, end, or current selection 
+(<tt CLASS=literal>getSelectionStart()</tt> and <tt CLASS=literal>getSelectionEnd()</tt>). 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void insert (String string, int position) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void insertText (String string, int position) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>insert()</tt> method inserts 
+<tt CLASS=literal>string</tt> at <tt CLASS=literal>position</tt> 
+into the <tt CLASS=literal>TextArea</tt>. If <tt CLASS=literal>position</tt> 
+is beyond the end of the <tt CLASS=literal>TextArea</tt>, 
+<tt CLASS=literal>string</tt> is appended to the end 
+of the <tt CLASS=literal>TextArea</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>insertText()</tt> is the Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void append (String string) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void appendText (String string) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>append()</tt> method inserts 
+<tt CLASS=literal>string</tt> at the end of the <tt CLASS=literal>TextArea</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>appendText()</tt> is 
+the Java 1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void replaceRange (String string, int startPosition, int endPosition) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void replaceText (String string, int startPosition, int endPosition) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>replaceRange()</tt> method replaces 
+the text in the current <tt CLASS=literal>TextArea</tt> 
+from <tt CLASS=literal>startPosition</tt> to <tt CLASS=literal>endPosition</tt> 
+with <tt CLASS=literal>string</tt>. If <tt CLASS=literal>endPosition</tt> 
+is before <tt CLASS=literal>startPosition</tt>, it 
+may or may not work as expected. (For instance, on a Windows 95 platform, 
+it works fine when the <tt CLASS=literal>TextArea</tt> 
+is displayed on the screen. However, when the <tt CLASS=literal>TextArea</tt> 
+is not showing, unexpected results happen. Other platforms may vary.) If 
+<tt CLASS=literal>startPosition</tt> is 0 and <tt CLASS=literal>endPosition</tt> 
+is the length of the contents, this method functions the same as <tt CLASS=literal>TextComponent.setText()</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>replaceText()</tt> is 
+the Java 1.0 name for this method. </DL>
+Sizing
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getRows () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getRows()</tt> method returns 
+the number of rows set by the constructor or a subsequent call to <tt CLASS=literal>setRows()</tt>. 
+This could be different from the displayed height of the <tt CLASS=literal>TextArea</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setRows (int rows) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setRows()</tt> method changes 
+the preferred number of rows to display for the <tt CLASS=literal>TextField</tt> 
+to <tt CLASS=literal>rows</tt>. Because the current 
+<tt CLASS=literal>LayoutManager</tt> will do what 
+it wants, the new setting may be ignored. If rows &lt; 0, <tt CLASS=literal>setRows()</tt> 
+throws the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getColumns () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getColumns()</tt> method returns 
+the number of columns set by the constructor or a subsequent call to <tt CLASS=literal>setColumns()</tt>. 
+This could be different from the displayed width of the <tt CLASS=literal>TextArea</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setColumns (int columns) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setColumns()</tt> method changes 
+the preferred number of columns to display for the <tt CLASS=literal>TextArea</tt> 
+to <tt CLASS=literal>columns</tt>. Because the current 
+<tt CLASS=literal>LayoutManager</tt> will do what 
+it wants, the new setting may be ignored. If <tt CLASS=literal>columns</tt> 
+&lt; 0, <tt CLASS=literal>setColumns()</tt> throws 
+the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getPreferredSize (int rows, int columns) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension preferredSize (int rows, int columns) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPreferredSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (width 
+and height) for the preferred size of the <tt CLASS=literal>TextArea</tt> 
+with a preferred height of <tt CLASS=literal>rows</tt> 
+and width of <tt CLASS=literal>columns</tt>. The <tt CLASS=literal>rows</tt> 
+and <tt CLASS=literal>columns</tt> specified may be 
+different from the current settings. 
+
+<P CLASS=para>
+<tt CLASS=literal>preferredSize()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getPreferredSize (int rows, int columns) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension preferredSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPreferredSize()</tt> method 
+returns the <tt CLASS=literal>Dimension</tt> (width 
+and height) for the preferred size of the <tt CLASS=literal>TextArea</tt>. 
+Without the rows and columns parameters, this <tt CLASS=literal>getPreferredSize()</tt> 
+uses the constructor's number of rows and columns to calculate the 
+<tt CLASS=literal>TextArea</tt>'s preferred 
+size. 
+
+<P CLASS=para>
+<tt CLASS=literal>preferredSize()</tt> is the Java 
+1.0 name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMinimumSize (int rows, int columns) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension minimumSize (int rows, int columns) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0>  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimumSize()</tt> method 
+returns the minimum <tt CLASS=literal>Dimension</tt> 
+(width and height) for the size of the <tt CLASS=literal>TextArea</tt> 
+with a height of <tt CLASS=literal>rows</tt> and width 
+of <tt CLASS=literal>columns</tt>. The <tt CLASS=literal>rows</tt> 
+and <tt CLASS=literal>columns</tt> specified may be 
+different from the current settings. 
+
+<P CLASS=para>
+<tt CLASS=literal>minimumSize()</tt> is the Java 1.0 
+name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getMinimumSize () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public Dimension minimumSize () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMinimumSize()</tt> method 
+returns the minimum <tt CLASS=literal>Dimension</tt> 
+(width and height) for the size of the <tt CLASS=literal>TextArea</tt>. 
+Without the rows and columns parameters, this <tt CLASS=literal>getMinimumSize()</tt> 
+uses the current settings for rows and columns to calculate the <tt CLASS=literal>TextArea</tt>'s 
+minimum size. 
+
+<P CLASS=para>
+<tt CLASS=literal>minimumSize()</tt> is the Java 1.0 
+name for this method. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>TextArea</tt> peer. 
+If you override this method, call <tt CLASS=literal>super.addNotify()</tt> 
+first, then add your customizations for the new class. You will then be 
+able to do everything you need with the information about the newly created 
+peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getScrollbarVisibility() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getScrollbarVisibility()</tt> 
+method retrieves the scrollbar visibility setting, which is set by the 
+constructor. There is no <tt CLASS=literal>setScollbarVisibility()</tt> 
+method to change the setting. The return value is one of the <tt CLASS=literal>TextArea</tt> 
+constants: <tt CLASS=literal>SCROLLBARS_BOTH</tt>, 
+<tt CLASS=literal>SCROLLBARS_HORIZONTAL_ONLY</tt>, 
+<tt CLASS=literal>SCROLLBARS_NONE</tt>, or <tt CLASS=literal>SCROLLBARS_VERTICAL_ONLY</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString ()  </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>TextArea</tt>, the default 
+<tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Component</tt> 
+is called. This in turn calls <tt CLASS=literal>paramString()</tt>, 
+which builds up the string to display. The <tt CLASS=literal>TextArea</tt> 
+level adds the number of rows and columns for the <tt CLASS=literal>TextArea</tt>, 
+and Java 1.1 adds the scrollbar visibility policy. Using <tt CLASS=literal>new 
+TextArea(`Empty Area`, 3, 10)</tt>, the results displayed 
+could be: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.TextArea[text0,0,0,0x0,invalid,text="Empty Area",
+editable,selection=0-0, rows=3,columns=10, scrollbarVisibility=both]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-3.3">TextArea Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH08.EVENTAREA"></A>With the 1.0 event model, the <tt CLASS=literal>TextArea</tt> 
+component can generate <tt CLASS=literal>KEY_PRESS</tt> 
+and <tt CLASS=literal>KEY_ACTION</tt> (which calls 
+<tt CLASS=literal>keyDown()</tt>) along with <tt CLASS=literal>KEY_RELEASE</tt> 
+and <tt CLASS=literal>KEY_ACTION_RELEASE</tt> (which 
+called <tt CLASS=literal>keyUp()</tt>). There is no 
+<tt CLASS=literal>ACTION_EVENT</tt> generated for 
+<tt CLASS=literal>TextArea</tt>. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>GOT_FOCUS</tt> and <tt CLASS=literal>LOST_FOCUS</tt> 
+events can be generated by this component but not reliably across platforms. 
+Currently, they are generated on most UNIX platforms but not on Microsoft 
+Windows NT/95 under Java 1.0. These events are generated under Java 1.1. 
+
+<P CLASS=para>
+Similarly, the mouse events are not generated with JDK 1.0.2. See 
+Appendix C for more information about platform dependencies. 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+With the Java 1.1 event model, there are no listeners specific to <tt CLASS=literal>TextArea</tt>. 
+You can register key, mouse, and focus listeners through the <tt CLASS=literal>Component</tt> 
+methods of <tt CLASS=literal>addKeyListener()</tt>, 
+<tt CLASS=literal>addMouseListener()</tt>, and <tt CLASS=literal>addFocusListener()</tt>, 
+respectively. To register listeners for text events, call <tt CLASS=literal>TextComponent.addTextListener()</tt>. Action
+
+<P CLASS=para>
+The <tt CLASS=literal>TextArea</tt> component has 
+no way to trigger the action event, since carriage return is a valid character. 
+You would need to put something like a <tt CLASS=literal>Button</tt> 
+on the screen to cause an action for a <tt CLASS=literal>TextArea</tt>. 
+The following <tt CLASS=literal>Rot13</tt> program 
+demonstrates this technique. The user enters text in the <tt CLASS=literal>TextArea</tt> 
+and selects the Rotate Me button to rotate the text. If the 
+user selects Rotate Me again, it rotates again, back to the 
+original position. Without the button, there would be no way to trigger the event. 
+<A HREF="ch08_03.htm#JAWT-CH-8-FIG-5">Figure 8.5</A> shows this example in action. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class Rot13 extends Frame {
+    TextArea ta;
+    Component rotate, done;
+    public Rot13 () {
+        super ("Rot-13 Example");
+        add ("North", new Label ("Enter Text to Rotate:"));
+        ta = (TextArea)(add ("Center", new TextArea (5, 40)));
+        Panel p = new Panel ();
+        rotate = p.add (new Button ("Rotate Me"));
+        done = p.add (new Button ("Done"));
+        add ("South", p);
+    }
+    public static void main (String args[]) {
+        Rot13 rot = new Rot13();
+        rot.pack();
+        rot.show();
+    }
+    public boolean handleEvent (Event e) {
+        if (e.id == Event.WINDOW_DESTROY) {
+            hide();
+            dispose();
+            System.exit (0);
+            return true;
+        }
+        return super.handleEvent (e);
+    }
+    public boolean action (Event e, Object o) {
+        if (e.target == rotate) {
+            ta.setText (rot13Text (ta.getText()));
+            return true;
+        } else if (e.target == done) {
+            hide();
+            dispose();
+            System.exit (0);
+        }
+        return false;
+    }
+    String rot13Text (String s) {
+        int len = s.length();
+        StringBuffer returnString = new StringBuffer (len);
+        char c;
+        for (int i=0;i&lt;len;i++) {
+            c = s.charAt (i);
+            if (((c &gt;= 'A') &amp;&amp; (c &lt;= 'M')) ||
+                ((c &gt;= 'a') &amp;&amp; (c &lt;= 'm')))
+                c += 13;
+            else if (((c &gt;= 'N') &amp;&amp; (c &lt;= 'Z')) ||
+                ((c &gt;= 'n') &amp;&amp; (c &lt;= 'z')))
+                c -= 13;
+            returnString.append (c);
+        }
+        return returnString.toString();
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-8-FIG-5">Figure 8.5: TextArea with activator button</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0805.gif" alt="[Graphic: Figure 8-5]" width=284 height=136 border=0>
+
+</DIV>
+
+Keyboard
+
+<P CLASS=para>
+Ordinarily, the <tt CLASS=literal>TextArea</tt> component 
+generates all the key events. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyDown (Event e, int key) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyDown()</tt> method is called 
+whenever the user presses a key. <tt CLASS=literal>keyDown()</tt> 
+may be called many times in succession if the key remains 
+pressed. <tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) for <tt CLASS=literal>keyDown()</tt> 
+could be either <tt CLASS=literal>Event.KEY_PRESS</tt> 
+for a regular key or <tt CLASS=literal>Event.KEY_ACTION</tt> 
+for an action-oriented key (i.e., an arrow or function key). Some of the 
+things you can do through this method are validate input, convert each 
+character to
+uppercase, and limit
+the number or type of characters entered. 
+The technique is simple: you just need to remember that the user's 
+keystroke is actually displayed by the <tt CLASS=literal>TextArea</tt> 
+peer, which receives the event after the <tt CLASS=literal>TextArea</tt> 
+itself. Therefore, a <tt CLASS=literal>TextArea</tt> 
+subclass can modify the character displayed by modifying the <tt CLASS=literal>key</tt> 
+field (<tt CLASS=literal>e.key</tt>) of the <tt CLASS=literal>Event</tt> 
+and returning <tt CLASS=literal>false</tt>, which 
+passes the <tt CLASS=literal>Event</tt> on down the 
+chain; remember that returning <tt CLASS=literal>false</tt> 
+indicates that the <tt CLASS=literal>Event</tt> has 
+not been completely processed. The following method uses this technique 
+to convert all alphabetic characters to the opposite case: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean keyDown (Event e, int key) {
+    if (Character.isUpperCase ((char)key)) {
+        e.key = Character.toLowerCase ((char)key);
+    } else if (Character.isLowerCase ((char)key)) {
+        e.key = Character.toUpperCase ((char)key);
+    }
+    return false;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If <tt CLASS=literal>keyDown()</tt> returns <tt CLASS=literal>true</tt>, 
+it indicates that the <tt CLASS=literal>Event</tt> 
+has been completely processed. In this case, the <tt CLASS=literal>Event</tt> 
+never propagates to the peer, and the keystroke is never displayed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyUp (Event e, int key) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyUp()</tt> method is called 
+whenever the user releases a key. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>key</tt> is 
+the integer representation of the character pressed. The identifier for 
+the event (<tt CLASS=literal>e.id</tt>) for <tt CLASS=literal>keyUp()</tt> 
+could be either <tt CLASS=literal>Event.KEY_RELEASE</tt> 
+for a regular key, or <tt CLASS=literal>Event.KEY_ACTION_RELEASE</tt> 
+for an action-oriented key (i.e., an arrow or function key). </DL>
+Mouse
+
+<P CLASS=para>
+Ordinarily, the <tt CLASS=literal>TextArea</tt> component 
+does not trigger any mouse events. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Mouse events are not generated for <tt CLASS=literal>TextArea</tt> 
+with JDK 1.0.2. See Appendix C for more information about platform dependencies. 
+</blockquote><P>
+</DIV>
+
+Focus
+
+<P CLASS=para>
+The <tt CLASS=literal>TextArea</tt> component does 
+not reliably generate focus events. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>GOT_FOCUS</tt> and <tt CLASS=literal>LOST_FOCUS</tt> 
+events can be generated by this component but not reliably across platforms. 
+With the JDK, they are generated on most UNIX platforms but not on Microsoft 
+Windows NT/95 under JDK 1.0. These events are generated with JDK 1.1. See Appendix 
+C for more information about platform dependencies. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean gotFocus (Event e, Object o)   </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>gotFocus()</tt> method is triggered 
+when the <tt CLASS=literal>TextArea</tt> gets the 
+input focus. <tt CLASS=literal>e</tt> is the <tt CLASS=literal>Event</tt> 
+instance for the specific event, while <tt CLASS=literal>o</tt> 
+is a <tt CLASS=literal>String</tt> representation 
+of the current contents (<tt CLASS=literal>getText()</tt>). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean lostFocus (Event e, Object o)   </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>lostFocus()</tt> method is 
+triggered when the input focus leaves the <tt CLASS=literal>TextArea</tt>. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>o</tt> is 
+a <tt CLASS=literal>String</tt> representation of 
+the current contents (<tt CLASS=literal>getText()</tt>). </DL>
+Listeners and 1.1 event handling
+
+<P CLASS=para>
+There are no listeners specific to the <tt CLASS=literal>TextArea</tt> 
+class. You can register Key, mouse, and focus listeners through the <tt CLASS=literal>Component</tt> 
+methods of <tt CLASS=literal>addKeyListener()</tt>, 
+<tt CLASS=literal>addMouseListener()</tt>, and <tt CLASS=literal>addFocusListener()</tt>, 
+respectively. Also, you register listeners for text events by calling <tt CLASS=literal>TextComponent.addTextListener()</tt>. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>TextField</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Extending TextField</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

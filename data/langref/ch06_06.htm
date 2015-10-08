@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.6 The switch Statement</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:14:29 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Statements and Control Structures</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-6">6.6 The switch Statement</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.SWITCH"></A><A NAME="CH06.SWITCH2"></A>A <tt CLASS=literal>switch</tt>
+statement selects a specially labeled statement in its block as
+the next statement to be executed, based on the value of an expression:
+
+
+<p>
+<img align=middle src="./figs/jlr0610.gif" alt="[Graphic: Figure from the text]" width=450 height=81 border=0>
+
+<P CLASS=para>
+In Java, the type of the expression in parentheses must be
+<tt CLASS=literal>byte</tt>,
+<tt CLASS=literal>char</tt>, <tt CLASS=literal>short</tt>, or <tt CLASS=literal>int</tt>.
+This is unlike C/C++, which allows the type of a <tt CLASS=literal>switch</tt>
+statement to be any integer type, including <tt CLASS=literal>long</tt>.
+
+<P CLASS=para>
+The body of a <tt CLASS=literal>switch</tt> statement must be
+a block. The top-level statements inside a <tt CLASS=literal>switch</tt>
+may contain <tt CLASS=literal>case</tt> labels. The expression following
+a <tt CLASS=literal>case</tt> label must be a constant expression that
+is assignable to the type of the <tt CLASS=literal>switch</tt> expression.
+No two <tt CLASS=literal>case</tt> labels in a <tt CLASS=literal>switch</tt>
+can contain the same value. At most one of the top-level statements
+in a <tt CLASS=literal>switch</tt> can contain a <tt CLASS=literal>default</tt>
+label.
+
+<P CLASS=para>
+A <tt CLASS=literal>switch</tt> statement does the following:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Evaluates the expression in parentheses.
+If the type of the expression is not <tt CLASS=literal>int</tt>, the
+value produced by the expression is converted to <tt CLASS=literal>int</tt>.
+
+<P>
+<li CLASS=listitem>Compares the value produced by the expression to the values
+in the <tt CLASS=literal>case</tt> labels. Prior to comparison, the
+value in the <tt CLASS=literal>case</tt> label is converted to
+<tt CLASS=literal>int</tt> if it is not already <tt CLASS=literal>int</tt>.
+
+<P>
+<li CLASS=listitem>If a <tt CLASS=literal>case</tt> label is found that has the same value as the expression,
+that label's statement is the next statement to be executed.
+
+<P>
+<li CLASS=listitem>If no <tt CLASS=literal>case</tt> label is found with the same
+value as the expression, and a statement in the block has a
+<tt CLASS=literal>default</tt> label, that statement is the
+next one to be executed.
+
+<P>
+<li CLASS=listitem>If there is no statement in the block that has a <tt CLASS=literal>default</tt> 
+label, the statement after the <tt CLASS=literal>switch</tt>
+statement is the next statement to be executed.
+
+<P>
+</UL>
+<P CLASS=para>
+Here's an example of a <tt CLASS=literal>switch</tt> statement:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+switch (rc) {
+  case 1:
+    msg = "Syntax error";
+    break;
+  case 2:
+    msg = "Undefined variable";
+    break;
+  default:
+    msg = "Unknown error";
+    break;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+After the <tt CLASS=literal>switch</tt> statement has transferred control
+to a <tt CLASS=literal>case</tt>-labeled statement, statements are executed
+sequentially in the normal manner. Any <tt CLASS=literal>case</tt> labels
+and the <tt CLASS=literal>default</tt> label have no further effect
+on the flow of control. If no statement inside the block alters
+the flow of control, each statement is executed in sequence with
+control flowing past each <tt CLASS=literal>case</tt> label and out
+the bottom of the block. The following example illustrates this
+behavior:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+void doInNTimes(int n){
+    switch (n &gt; 5 ? 5 : n) {
+      case 5:
+        doIt();
+      case 4:
+        doIt();
+      case 3:
+        doIt();
+      case 2:
+        doIt();
+      case 1:
+        doIt();
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The above method calls the <tt CLASS=literal>doIt()</tt> method
+up to 5 times.
+
+<P CLASS=para>
+To prevent control from flowing through
+<tt CLASS=literal>case</tt> labels, it is common to end each
+<tt CLASS=literal>case</tt> with a flow-altering statement such as a
+<tt CLASS=literal>break</tt>
+statement. Other statements used for this purpose include the
+<tt CLASS=literal>continue</tt>
+statement and the <tt CLASS=literal>return</tt> statement.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_16.htm#JLR2-CH-4-SECT-16">Constant Expressions</A>;
+<I CLASS=emphasis>Expression</I> 4;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.1.1">Integer types</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2">Local Classes</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.1">Local Variables</A>;
+<I CLASS=emphasis>Statement</I> 6;
+<A HREF="ch06_08.htm#JLR2-CH-6-SECT-8">The break Statement</A>;
+<A HREF="ch06_09.htm#JLR2-CH-6-SECT-9">The continue Statement</A>;
+<A HREF="ch06_10.htm#JLR2-CH-6-SECT-10">The return Statement</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The if Statement</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Iteration Statements</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

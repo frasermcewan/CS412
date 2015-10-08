@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.8 Objects</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:47:55 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>How Java Differs from C</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-8">2.8 Objects</A></h2>
+
+<P CLASS=para>
+<A NAME="OBJECTS"></A>Now that you know objects are passed by reference, 
+we should discuss how they are created, used, and
+destroyed.  The following subsections provide a very brief
+overview of objects.  <A HREF="ch03_01.htm">Chapter 3, <i>Classes and Objects in Java</i></A> explains
+classes and objects in much greater detail.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-8.1">Creating Objects</A></h3>
+
+<P CLASS=para>
+Declaring a variable to hold
+an object does not create the object itself; the 
+variable only holds the reference to the object. 
+To actually create an object, you must use the
+<tt CLASS=literal>new</tt> keyword.  This is followed by the object's class
+(i.e., its type) and an optional argument list in
+parentheses.  These arguments are passed to the constructor
+method for the class, which serves to initialize internal
+fields in the new object.  For example:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Button b = new java.awt.Button();
+ComplexNumber c = new ComplexNumber(1.0, 1.414);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+There are actually two other ways to create an object.
+First, you can create a <tt CLASS=literal>String</tt> object simply by
+enclosing characters in double quotes:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+String s = "This is a test";
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Because strings are used so frequently, the Java compiler
+provides this technique as a shortcut.
+Another way to create objects is by calling the
+<tt CLASS=literal>newInstance()</tt> method of a <tt CLASS=literal>Class</tt> object.
+This technique is generally used only when dynamically
+loading classes, so we won't discuss it here.  In Java 1.1,
+objects can also be created by "de-serializing"
+them--i.e., recreating an object that had its state saved
+through "serialization."
+
+<P CLASS=para>
+The memory for newly created objects is dynamically
+allocated.  Creating an object with <tt CLASS=literal>new</tt> in Java is
+like calling <tt CLASS=literal>malloc()</tt> in C to allocate memory for an
+instance of a <tt CLASS=literal>struct</tt>.  It is also, of course, a lot
+like using the <tt CLASS=literal>new</tt> operator in C++.  (Below,
+we'll see where this analogy to <tt CLASS=literal>malloc()</tt> in C and
+<tt CLASS=literal>new</tt> in C++ breaks down.)
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-8.2">Accessing Objects</A></h3>
+
+<P CLASS=para>
+As you've probably noticed in various example code fragments
+by now, the way you access the fields of an object is with a
+dot:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+ComplexNumber c = new ComplexNumber();
+c.x = 1.0;
+c.y = -1.414;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This syntax is reminiscent of accessing the fields of a
+<tt CLASS=literal>struct</tt> in C.  Recall, though, that Java
+objects are always accessed by reference, and that Java
+performs any necessary dereferencing for you.  Thus, the dot
+in Java is more like <tt CLASS=literal>-&gt;</tt> in C.  Java hides the fact
+that there is a reference here in an attempt to make your
+programming easier.
+The other difference between C and Java when accessing
+objects is that in Java you refer to an object's methods 
+with the same syntax used for fields:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+ComplexNumber c = new ComplexNumber(1.0, -1.414);
+double magnitude = c.magnitude();
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-8.3">Garbage Collection</A></h3>
+
+<P CLASS=para>
+Objects in Java are created with the <tt CLASS=literal>new</tt> keyword,
+but there is no corresponding <tt CLASS=literal>old</tt> or <tt CLASS=literal>delete</tt>
+keyword or <tt CLASS=literal>free()</tt> method to get rid of them when
+they are no longer needed.  If creating an object with
+<tt CLASS=literal>new</tt> is like calling <tt CLASS=literal>malloc()</tt> in C or using
+<tt CLASS=literal>new</tt> in C++, then it would seem that Java is full of
+memory leaks, because we never call <tt CLASS=literal>free()</tt> or use
+the <tt CLASS=literal>delete</tt> operator.
+
+<P CLASS=para>
+In fact, this isn't the case.  Java uses a technique called
+<I CLASS=emphasis>garbage collection</I> to automatically detect objects that are
+no longer being used (an object is no longer in use when
+there are no more references to it) and to free them.  This
+means that in our programs, we never need to worry about
+freeing memory or destroying objects--the garbage collector
+takes care of that.
+
+<P CLASS=para>
+If you are a C or C++ programmer, it may take some getting
+used to to just let allocated objects go without
+worrying about reclaiming their memory.  Once you get used
+to it, however, you'll begin to appreciate what a nice
+feature this is.  We'll discuss garbage collection in more
+detail in the next chapter.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Reference Data Types</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Arrays</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

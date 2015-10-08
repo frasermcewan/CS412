@@ -1,0 +1,357 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 1] 1.7 Java and the World Wide Web</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:47:24 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 1<br>Yet Another Language?</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch01_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-7">1.7 Java and the World Wide Web</A></h2>
+
+<P CLASS=blockquote><BLOCKQUOTE><P>
+<P CLASS=para>
+Alice was beginning to get very tired of sitting by her sister on the
+bank, and of having nothing to do: once or twice she had peeped into
+the book her sister was reading, but it had no pictures or
+conversations in it, "and what is the use of a book,"
+thought Alice, "without pictures or conversations?"
+
+<P CLASS=para>
+--<I CLASS=emphasis>Alice in Wonderland</I>
+</BLOCKQUOTE><P>
+<P CLASS=para>
+<A NAME="CH01.WWW"></A>The application-level safety features of Java make it possible
+to develop new kinds of applications not necessarily feasible
+before now. A Web browser that implements the Java run-time system can
+incorporate Java applets as executable content inside of
+documents. This means that Web pages can contain not only static
+hypertext information but also full-fledged interactive
+applications. The added potential for use of the
+WWW is enormous.  A user can retrieve and use
+software simply by navigating with a Web browser.  Formerly static
+information can be paired with portable software for interpreting and
+using the information. Instead of just providing some data for a
+spreadsheet, for example, a Web document might contain a fully
+functional spreadsheet application embedded within it that allows
+users to view and manipulate the information.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-7.1">Applets</A></h3>
+
+<P CLASS=para>
+<A NAME="CH01.APPLETS"></A>The term <I CLASS=emphasis>applet</I> is used to mean a small,
+subordinate, or embeddable application. By embeddable, I mean it's
+designed to be run and used within the context of a larger system. In
+that sense, most programs are embedded within a computer's operating
+system. An operating system manages its native applications in a
+variety of ways: it starts, stops, suspends, and synchronizes
+applications; it provides them with certain standard resources; and it
+protects them from one another by partitioning their environments.
+
+<P CLASS=para>
+In this book, I'll be describing Java applets, which are
+Java applications meant to be embedded in and controlled by a
+larger application, such as a Java-enabled Web browser or an applet
+viewer. To include an applet as executable content in a Web document,
+you use a special HTML tag. The
+<tt CLASS=literal>&lt;applet&gt;</tt> tag points to an applet and provides
+configuration information about the applet.
+
+<P CLASS=para>
+As far as the Web browser model is concerned, an applet is just
+another type of object to display. Browsers make a distinction between
+items presented inline and items anchored via
+hypertext links and made available by external means, such as a viewer
+or helper application.  If you download an MPEG
+video clip, for instance, and your browser doesn't natively
+understand MPEG, it will look for a helper
+application (an MPEG player) to pass the
+information to. Java-enabled Web browsers generally execute applets
+inline, in the context of a particular document, as shown in <A HREF="ch01_07.htm#EXJ-CH-1-FIG-4">Figure 1.4</A>. However, less capable browsers could
+initially provide some support for Java applets through an external
+viewer.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-1-FIG-4">Figure 1.4: Applets in a Web document</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0104.gif" alt="[Graphic: Figure 1-4]" width=503 height=303 border=0>
+
+</DIV>
+
+<P CLASS=para>
+A Java applet is a compiled Java program, composed of classes
+just like any Java program. While a simple applet may consist of only
+a single class, most large applets should be broken into many
+classes. Each class is stored in a separate class file. The class
+files for an applet are retrieved from the network as they are
+needed. A large applet doesn't need to retrieve all its parts or
+all its data before beginning to interact with the
+user. Well-designed applets can take advantage of multithreading to
+wait for certain resources in the background, while performing other
+activities.
+
+<P CLASS=para>
+An applet has a four-part life cycle. When an applet is
+initially loaded by a Web browser, it's asked to initialize
+itself. The applet is then informed each time it's displayed and each
+time it's no longer visible to the user. Finally, the applet is told
+when it's no longer needed, so that it can clean up after
+itself. During its lifetime, an applet may start and suspend itself,
+do work, communicate with other applications, and interact with the
+Web browser.
+
+<P CLASS=para>
+Applets are autonomous programs, but they are confined within
+the walls of a Web browser or applet viewer, and have to play by its
+rules. I'll be discussing the details of what applets can and
+can't do as we explore features of the Java language. However, under
+the most conservative security policies, an applet can interact only
+with the user and can only communicate over the network with the host from
+which it originated. Other types of activities, like accessing files
+or interacting directly with outside applications, are typically
+prevented by the security manager that is part of the Web browser or
+applet viewer. But aside from these restrictions, there is no
+fundamental difference between a Java applet and a standalone Java
+application.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-7.2">New Kinds of Applications</A></h3>
+
+<P CLASS=para>
+Sun's HotJava Web browser is written entirely in Java. Because
+it's a Java application, HotJava is immediately available on any
+platform with the Java run-time system. This goes a long way towards
+the goal of a Web browser serving as a universal access point for
+resources on the Net. And where one Web browser leads the way, more
+will surely follow.
+
+<P CLASS=para>
+In addition to displaying Java applets as executable content in
+Web pages, the HotJava application dynamically extends itself by
+loading Java code from the Net. HotJava uses <I CLASS=emphasis>protocol
+handlers</I> and <I CLASS=emphasis>content handlers</I> to
+provide this functionality.[7]
+Protocol handlers and content handlers
+are classes in the Java API that let an application implement new
+types of URLs and interpret the objects retrieved from them. A Web
+browser that supports this functionality can load handlers from a
+remote location and effectively upgrade itself on the fly to use new
+protocols and access new kinds of information.
+
+<blockquote class=footnote>
+<P CLASS=para>[7] 
+Downloadable content and protocol handlers are not supported in
+HotJava 1.0, but will be supported in a future release.
+</blockquote>
+<P CLASS=para>
+Like applets, content handlers and protocol handlers can be
+served by a Web site, along with the information they
+interpret. As an example, consider the new Portable Network Graphics
+(PNG) format, a freely distributable alternative to
+GIF. By supplying a PNG content
+handler along with PNG images on our server, we
+give users the ability to use the new image format, just as they would
+a built-in format. We don't have to create a new standard
+and force every Web browser to support the new format. Instead, the
+first time a user loads a document referencing a
+PNG image from our site, the Web browser will
+realize it doesn't understand the object and will ask the server if
+it has a content handler for it. Since we've provided a content
+handler, the browser can load it and then use it to interpret and
+display the image dynamically.
+
+<P CLASS=para>
+In a similar manner, protocol handlers allow a Web browser to
+start speaking a new protocol with the server. This is especially
+useful for things like security protocols. If we invent a
+revolutionary new cryptographic protocol late one night, all we have
+to do is implement it in the form of a protocol handler and place it
+on our server. We can then start using URLs that
+point through our new protocol at objects on our server, and people can
+immediately begin using it.
+
+<P CLASS=para>
+These scenarios describe just a few things that safe,
+transportable code will allow. We will undoubtedly see many other new
+breeds of application we can't even begin to anticipate.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch01-SECT2-AUTOID.1">New Kinds of Media</A></h3>
+
+<P CLASS=para>
+When it was first released, Java quickly achieved a reputation for
+multimedia capabilities. Frankly, this wasn't really deserved. At
+that point, Java provided facilities for doing simple animations and
+playing audio. You could even animate and play audio simultaneously,
+though you couldn't synchronize the two. Still, this was a significant
+advance for the Web, and people thought it was pretty impressive. 
+
+<P CLASS=para>
+JavaSoft is now working on real media features, which go far beyond
+anything that has yet been seen on the Web. This includes CD quality
+sound, 3D animation, media players that synchronize
+audio and video, speech synthesis
+and recognition, and more. These new
+features aren't yet in Java 1.1, but 
+will make their way into Java over the next eighteen months.
+In short, if you were impressed by Java 1.0, you haven't seen anything
+yet. Java's multimedia capabilities will be taking shape over the next
+two years. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch01-SECT2-AUTOID.2">New Software Development Models</A></h3>
+
+<P CLASS=para>
+For some time now, people have been using visual development
+environments to develop user interfaces. These environments let you
+generate applications by moving components around on the screen,
+connecting components to each other, and so on. In short, designing a
+user interface is a lot more like drawing a picture than like writing
+code. 
+
+<P CLASS=para>
+For visual development environments to work well, you need to be able
+to create reusable software components. That's what Java Beans are all
+about. The JavaBeans architecture defines a way to package software as
+reusable building blocks. A graphical development tool can figure out
+a component's capabilities, customize the component, and connect it to
+other components to build applications. JavaBeans takes the idea of
+graphical development a step further. Beans aren't limited to visible,
+user interface components: you can have Beans that are entirely
+invisible, and whose job is purely computational. For example, you
+could have a Bean that did database access; you could connect this to
+a Bean that let the user request information from the database; and
+you could use another Bean to display the result. Or you could 
+have a set of Beans that implemented the functions in a mathematical
+library; you could then do numerical analysis by connecting different
+functions to each other. In either case, you could "write" programs
+without writing a single line of code. Granted, someone would have to
+write the Beans in the first place; but that's a much smaller task,
+and we expect markets to develop for "off the shelf" Bean collections.
+
+<P CLASS=para>
+Before it can use a Bean, an application builder must find out the
+Bean's capabilities. There are a few ways it can do this; the simplest
+is called "reflection". To write a Bean that uses reflection, all you
+need to do is follow some simple design patterns. Let's say that
+you're writing a Bean that is capable of changing its color. Then you
+would write two methods that report the current color and change its
+value:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+...
+private Color c;
+public Color getMyColor() { return c; }
+public void setMyColor( Color c) { this.c = c; }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+These methods follow some well defined conventions (design patterns)
+that let the graphical interface builder (or any other tool that wants
+to do the work) analyze the Bean, and discover that it has a property
+called <tt CLASS=literal>MyColor</tt>, that the value of this
+property is a <tt CLASS=literal>Color</tt> object,
+and that the methods
+<tt CLASS=literal>getMyColor()</tt> and
+<tt CLASS=literal>setMyColor()</tt> should be used to change its
+value. 
+
+<P CLASS=para>
+If they
+need to, Beans can provide additional information using a process
+called "introspection". But even without introspection, you can see
+that a graphical development tool can easily analyze a Bean, figure
+out what it can do, and let a user change the Bean's properties
+without writing any code. 
+
+<P CLASS=para>
+Of course, once a development tool has customized a Bean and connected it
+to other Beans, it needs a way to save the result. A process called
+"serialization" lets a tool save the Bean's current state, along with
+any extra code it has written to stitch Beans together in an
+application. 
+
+<P CLASS=para>
+Visual development tools that support Java Beans include Borland's
+JBuilder (<A HREF="http://www.borland.com">http://www.borland.com</A>), Symantec's Visual Cafe
+(<A HREF="http://www.symantec.com">http://www.symantec.com</A>), and SunSoft's Java Workshop. By
+using a "bridge", Java Beans will be able to interact with other
+component environments, including ActiveX, OpenDoc, and LiveConnect. A
+beta version of the ActiveX bridge is currently available. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch01_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Application and User Level Security</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Java as a General Application Language</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

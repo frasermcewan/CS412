@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 29] 29.7 java.text.DateFormat (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:33:01 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch29_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 29<br>The java.text Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch29_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-7">29.7 java.text.DateFormat (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-7.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class formats and parses dates and times in a
+locale-specific way.  As an abstract class, it cannot be
+instantiated directly, but it provides a number of static
+methods that return instances of a concrete subclass which
+you can use to format dates in a variety of ways.  The
+<tt CLASS=literal>getDateInstance()</tt> methods return a
+<tt CLASS=literal>DateFormat</tt> object suitable for formatting dates in
+either the default locale or a specified locale.  A
+formatting style may also optionally be specified--the
+constants <tt CLASS=literal>FULL</tt>, <tt CLASS=literal>LONG</tt>, <tt CLASS=literal>MEDIUM</tt>,
+<tt CLASS=literal>SHORT</tt>, and <tt CLASS=literal>DEFAULT</tt> specify this style.
+Similarly, the <tt CLASS=literal>getTimeInstance()</tt> methods return a
+<tt CLASS=literal>DateFormat</tt> object that formats and parses times, and
+the <tt CLASS=literal>getDateTimeInstance()</tt> methods return a
+<tt CLASS=literal>DateFormat</tt> object that formats both dates and times.
+These methods also optionally take a format style constant
+and a <tt CLASS=literal>Locale</tt>.  Finally, <tt CLASS=literal>getInstance()</tt>
+returns a default <tt CLASS=literal>DateFormat</tt> object that formats
+both dates and times in the <tt CLASS=literal>SHORT</tt> format.
+
+<P CLASS=para>
+Once you have created a <tt CLASS=literal>DateFormat</tt> object, you can
+use the <tt CLASS=literal>setCalendar()</tt> and <tt CLASS=literal>setTimeZone()</tt>
+methods if you want to format the date using a calendar or
+time zone other than the default.
+
+<P CLASS=para>
+The various <tt CLASS=literal>format()</tt> methods convert
+<tt CLASS=literal>java.util.Date</tt> objects to strings, using whatever
+format is encapsulated in the <tt CLASS=literal>DateFormat</tt> object.  The
+<tt CLASS=literal>parse()</tt> and <tt CLASS=literal>parseObject()</tt> methods perform
+the reverse operation--they parse a string formatted
+according to the rules of the <tt CLASS=literal>DateFormat</tt> object and convert
+it into a <tt CLASS=literal>Date</tt> object.
+
+<P CLASS=para>
+The <tt CLASS=literal>DEFAULT</tt>, <tt CLASS=literal>FULL</tt>, <tt CLASS=literal>MEDIUM</tt>,
+<tt CLASS=literal>LONG</tt>, and <tt CLASS=literal>SHORT</tt> constants are used to
+specify how verbose or compact the formatted date or time
+should be.  The remaining constants, which all end with
+<tt CLASS=literal>_FIELD</tt>, specify various fields of formatted dates and
+times and are used with the <tt CLASS=literal>FieldPosition</tt> object
+that is optionally passed to <tt CLASS=literal>format()</tt>.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class <tt CLASS=literal>DateFormat</tt> extends Format implements Cloneable {
+    // <tt CLASS=literal>Protected Constructor</tt>
+            protected <tt CLASS=literal>DateFormat</tt>();
+    // <tt CLASS=literal>Format Style Constants</tt>
+            public static final int <tt CLASS=literal>DEFAULT</tt>;
+            public static final int <tt CLASS=literal>FULL</tt>;
+            public static final int <tt CLASS=literal>LONG</tt>;
+            public static final int <tt CLASS=literal>MEDIUM</tt>;
+            public static final int <tt CLASS=literal>SHORT</tt>;
+    // <tt CLASS=literal>Date and Time Field Constants</tt>
+            public static final int <tt CLASS=literal>ERA_FIELD</tt>;
+            public static final int <tt CLASS=literal>YEAR_FIELD</tt>;
+            public static final int <tt CLASS=literal>MONTH_FIELD</tt>;
+            public static final int <tt CLASS=literal>WEEK_OF_MONTH_FIELD</tt>, <tt CLASS=literal>WEEK_OF_YEAR_FIELD</tt>;
+            public static final int <tt CLASS=literal>DATE_FIELD</tt>, <tt CLASS=literal>DAY_OF_YEAR_FIELD</tt>;
+            public static final int <tt CLASS=literal>DAY_OF_WEEK_FIELD</tt>, <tt CLASS=literal>DAY_OF_WEEK_IN_MONTH_FIELD</tt>;
+            public static final int <tt CLASS=literal>TIMEZONE_FIELD</tt>;
+            public static final int <tt CLASS=literal>AM_PM_FIELD</tt>;
+            public static final int <tt CLASS=literal>HOUR0_FIELD</tt>, <tt CLASS=literal>HOUR1_FIELD</tt>;
+            public static final int <tt CLASS=literal>HOUR_OF_DAY0_FIELD</tt>, <tt CLASS=literal>HOUR_OF_DAY1_FIELD</tt>;
+            public static final int <tt CLASS=literal>MINUTE_FIELD</tt>;
+            public static final int <tt CLASS=literal>SECOND_FIELD</tt>;
+            public static final int <tt CLASS=literal>MILLISECOND_FIELD</tt>;
+    // <tt CLASS=literal>Protected Instance Variables</tt>
+            protected Calendar <tt CLASS=literal>calendar</tt>;
+            protected NumberFormat <tt CLASS=literal>numberFormat</tt>;
+    // <tt CLASS=literal>Class Methods</tt>
+            public static Locale[] <tt CLASS=literal>getAvailableLocales</tt>();
+            public static final DateFormat <tt CLASS=literal>getDateInstance</tt>();
+            public static final DateFormat <tt CLASS=literal>getDateInstance</tt>(int <tt CLASS=literal>style</tt>);
+            public static final DateFormat <tt CLASS=literal>getDateInstance</tt>(int <tt CLASS=literal>style</tt>, Locale <tt CLASS=literal>aLocale</tt>);
+            public static final DateFormat <tt CLASS=literal>getDateTimeInstance</tt>();
+            public static final DateFormat <tt CLASS=literal>getDateTimeInstance</tt>(int <tt CLASS=literal>dateStyle</tt>, int <tt CLASS=literal>timeStyle</tt>);
+            public static final DateFormat <tt CLASS=literal>getDateTimeInstance</tt>(int <tt CLASS=literal>dateStyle</tt>, int <tt CLASS=literal>timeStyle</tt>, Locale <tt CLASS=literal>aLocale</tt>);
+            public static final DateFormat <tt CLASS=literal>getInstance</tt>();
+            public static final DateFormat <tt CLASS=literal>getTimeInstance</tt>();
+            public static final DateFormat <tt CLASS=literal>getTimeInstance</tt>(int <tt CLASS=literal>style</tt>);
+            public static final DateFormat <tt CLASS=literal>getTimeInstance</tt>(int <tt CLASS=literal>style</tt>, Locale <tt CLASS=literal>aLocale</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public Object <tt CLASS=literal>clone</tt>();  //<tt CLASS=literal> Overrides Format</tt>
+            public boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>obj</tt>);  //<tt CLASS=literal> Overrides Object</tt>
+            public final StringBuffer <tt CLASS=literal>format</tt>(Object <tt CLASS=literal>obj</tt>, StringBuffer <tt CLASS=literal>toAppendTo</tt>, FieldPosition <tt CLASS=literal>fieldPosition</tt>);  //<tt CLASS=literal> Defines Format</tt>
+            public abstract StringBuffer <tt CLASS=literal>format</tt>(Date <tt CLASS=literal>date</tt>, StringBuffer <tt CLASS=literal>toAppendTo</tt>, FieldPosition <tt CLASS=literal>fieldPosition</tt>);
+            public final String <tt CLASS=literal>format</tt>(Date <tt CLASS=literal>date</tt>);
+            public Calendar <tt CLASS=literal>getCalendar</tt>();
+            public NumberFormat <tt CLASS=literal>getNumberFormat</tt>();
+            public TimeZone <tt CLASS=literal>getTimeZone</tt>();
+            public int <tt CLASS=literal>hashCode</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public boolean <tt CLASS=literal>isLenient</tt>();
+            public Date <tt CLASS=literal>parse</tt>(String <tt CLASS=literal>text</tt>) throws ParseException;
+            public abstract Date <tt CLASS=literal>parse</tt>(String <tt CLASS=literal>text</tt>, ParsePosition <tt CLASS=literal>pos</tt>);
+            public Object <tt CLASS=literal>parseObject</tt>(String <tt CLASS=literal>source</tt>, ParsePosition <tt CLASS=literal>pos</tt>);  //<tt CLASS=literal> Defines Format</tt>
+            public void <tt CLASS=literal>setCalendar</tt>(Calendar <tt CLASS=literal>newCalendar</tt>);
+            public void <tt CLASS=literal>setLenient</tt>(boolean <tt CLASS=literal>lenient</tt>);
+            public void <tt CLASS=literal>setNumberFormat</tt>(NumberFormat <tt CLASS=literal>newNumberFormat</tt>);
+            public void <tt CLASS=literal>setTimeZone</tt>(TimeZone <tt CLASS=literal>zone</tt>);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-7.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+Object->Format(Serializable, Cloneable)->DateFormat(Cloneable)
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-7.3">Extended By:</A></h3>
+
+<P CLASS=para>
+SimpleDateFormat
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-7.4">Returned By:</A></h3>
+
+<P CLASS=para>
+DateFormat.getDateInstance(), 
+DateFormat.getDateTimeInstance(), 
+DateFormat.getInstance(), 
+DateFormat.getTimeInstance()
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch29_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch29_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.text.Collator (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.text.DateFormatSymbols (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

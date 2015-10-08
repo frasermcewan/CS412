@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.2 Declaring Exceptions</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:17:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Exception Handling</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-2">9.2 Declaring Exceptions</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.DEC"></A><A NAME="CH09.DEC1"></A>If a method is expected to throw any exceptions, the method
+declaration must declare that fact in a <tt CLASS=literal>throws</tt>
+clause. If a method implementation contains a <tt CLASS=literal>throw</tt>
+statement, it is possible that an exception will be thrown
+from within the method. In addition, if a method calls another method
+declared with a <tt CLASS=literal>throws</tt> clause, there is the possibility
+that an exception will be thrown from within the method. If the
+exception is not caught inside the method with a <tt CLASS=literal>try</tt>
+statement, it will be thrown out of the method to its caller. Any
+exception that can be thrown out of a method in this way must be
+listed in a <tt CLASS=literal>throws</tt> clause in the method declaration.
+The classes listed in a <tt CLASS=literal>throws</tt> clause must be
+<tt CLASS=literal>Throwable</tt> or
+any of its subclasses; the <tt CLASS=literal>Throwable</tt> class is
+the superclass of all objects that can be thrown in Java.
+
+<P CLASS=para>
+However, there are certain types of exceptions that do not
+have to be listed in a <tt CLASS=literal>throws</tt> clause. Specifically,
+if the exception is an instance of <tt CLASS=literal>Error</tt>,
+<tt CLASS=literal>RuntimeException</tt>,
+or a subclass of one of those classes, it does not have to be listed
+in a <tt CLASS=literal>throws</tt> clause. Subclasses
+of the <tt CLASS=literal>Error</tt>
+class correspond to situations that are not easily predicted,
+such as the system running out of memory. Subclasses
+of <tt CLASS=literal>RuntimeException</tt>
+correspond to many common run-time problems, such as illegal casts
+and array index problems. The reason that these types of exceptions
+are treated specially is that they can be thrown from such a large
+number of places that essentially every method would have to declare
+them.
+
+<P CLASS=para>
+Consider the following example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.io.IOException;
+class throwsExample {
+    char[] a;
+    int position;
+    ...
+    // Method explicitly throws an exception
+    int read() throws IOException {
+        if (position &gt;= a.length)
+            throw new IOException();
+        return a[position++];
+    }
+    // Method implicitly throws an exception
+    String readUpTo(char terminator) throws IOException {
+        StringBuffer s = new StringBuffer();
+        while (true) {
+            int c = read(); // Can throw IOException
+            if (c == -1 || c == terminator) {
+                return s.toString();
+            }
+            s.append((char)c);
+        }
+        return s.toString();
+    }
+    // Method catches an exception internally
+    int getLength() {
+        String s;
+        try {
+            s = readUpTo(':');
+        } catch (IOException e) {
+            return 0;
+        }
+        return s.length();
+    }
+    // Method can throw a RuntimeException
+    int getAvgLength() {
+        int count = 0;
+        int total = 0;
+        int len;
+        while (true){
+            len = getLength();
+            if (len == 0)
+                break;
+            count++;
+            total += len;
+        }
+        return total/count; // Can throw ArithmeticException
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The method <tt CLASS=literal>read()</tt> can throw an
+<tt CLASS=literal>IOException</tt>,
+so it declares that fact in its <tt CLASS=literal>throws</tt> clause.
+Without that <tt CLASS=literal>throws</tt> clause, the compiler would
+complain that the method must either declare <tt CLASS=literal>IOException</tt>
+in its <tt CLASS=literal>throws</tt> clause or catch it. Although the
+<tt CLASS=literal>readUpTo()</tt> method does not explicitly throw any
+exceptions, it calls the <tt CLASS=literal>read()</tt> method that does
+throw an <tt CLASS=literal>IOException</tt>, so it declares that fact
+in its <tt CLASS=literal>throws</tt> clause. Whether explicitly or implicitly
+thrown, the requirement to catch or declare an exception is the
+same. The <tt CLASS=literal>getLength()</tt> method catches the
+<tt CLASS=literal>IOException</tt> thrown by <tt CLASS=literal>readUpTo()</tt>,
+so it does not have to declare the exception. The final method,
+<tt CLASS=literal>getAvgLength()</tt>, can throw an
+<tt CLASS=literal>ArithmeticException</tt> if <tt CLASS=literal>count</tt>
+is zero. Because <tt CLASS=literal>ArithmeticException</tt> is a subclass
+of <tt CLASS=literal>RuntimeException</tt>, the fact that it can be
+thrown out of <tt CLASS=literal>getAvgLength()</tt> does not need to be declared in a <tt CLASS=literal>throws</tt> clause.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch09_04.htm#JLR2-CH-9-SECT-4.2">Errors</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch09_04.htm#JLR2-CH-9-SECT-4.1.1">Runtime exceptions</A>;
+<A HREF="ch06_11.htm#JLR2-CH-6-SECT-11">The throw Statement</A>;
+<A HREF="ch06_12.htm#JLR2-CH-6-SECT-12">The try Statement</A>;
+<A HREF="ch10_25.htm">Throwable</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Handling Exceptions</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Generating Exceptions</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

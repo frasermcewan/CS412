@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] Reflection</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:59:47 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-12">12. Reflection</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Obtaining Class and Member Information<br>
+<A HREF="ch12_02.htm">Invoking a Named Method</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+As noted in <A HREF="ch04_01.htm">Chapter 4, <i>What's New in Java 1.1</i></A>, the
+Reflection API allows a Java program to inspect and
+manipulate itself.  The Reflection API comprises the
+much-expanded <tt CLASS=literal>Class</tt> class in <tt CLASS=literal>java.lang</tt> and
+the <tt CLASS=literal>java.lang.reflect</tt> package, which represents the
+members of a class with
+<tt CLASS=literal>Method</tt>, <tt CLASS=literal>Constructor</tt>, and <tt CLASS=literal>Field</tt> objects.
+
+<P CLASS=para>
+<A NAME="CH12.REFLECTION-1"></A><A NAME="CH12.JAVA.LANG.RE1"></A>Reflection can be used to obtain information about
+a class and its members.  This is the technique that the JavaBeans
+"introspection" mechanism uses to determine the properties,
+events, and methods that are supported by a bean, for example.
+Reflection can also be used to manipulate objects in Java.
+You can use the <tt CLASS=literal>Field</tt> class to query and set the values of
+fields, the <tt CLASS=literal>Method</tt> class to invoke methods,
+and the <tt CLASS=literal>Constructor</tt> class to create new
+objects.  The examples in this chapter demonstrate both techniques
+for using the Reflection API.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-12-SECT-1">12.1 Obtaining Class and Member Information</A></h2>
+
+<P CLASS=para>
+<A HREF="ch12_01.htm#JNUT2-CH-12-EX-1">Example 12.1</A>
+shows a program that uses the <tt CLASS=literal>Class</tt>,
+<tt CLASS=literal>Constructor</tt>, <tt CLASS=literal>Field</tt>, and <tt CLASS=literal>Method</tt>
+classes to display information about a specified class.  The
+program's output is similar to the class synopses that
+appear in the reference section of this book.  (You might notice
+that the names of method arguments are not shown;
+argument names are not stored in class files,
+so they are not available through the Reflection API.)
+
+<P CLASS=para>
+Here is the output from using <tt CLASS=literal>ShowClass</tt> on itself:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+% java ShowClass ShowClass
+public class ShowClass extends java.lang.Object {
+ // Constructors
+  public ShowClass();
+ // Fields
+ // Methods
+  public static void main(java.lang.String[]);
+  public static void print_class(java.lang.Class);
+  public static java.lang.String typename(java.lang.Class);
+  public static java.lang.String modifiers(int);
+  public static void print_field(java.lang.reflect.Field);
+  public static void print_method_or_constructor(java.lang.reflect.Member);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The code for this example is quite straightforward.  It uses
+the <tt CLASS=literal>Class.forName()</tt> method to dynamically load the
+named class, and calls various methods of
+<tt CLASS=literal>Class</tt> object to look up the superclass, interfaces, and
+members of the class.  The example uses <tt CLASS=literal>Constructor</tt>,
+<tt CLASS=literal>Field</tt>, and <tt CLASS=literal>Method</tt> objects to obtain
+information about each member of the class.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-12-EX-1">Example 12.1: Obtaining Class and Member Information with the Reflection API</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.lang.reflect.*;
+/** A program that displays a class synopsis for the named class. */
+public class ShowClass {
+  /** The main method.  Print info about the named class. */
+  public static void main(String[] args) throws ClassNotFoundException {
+    Class c = Class.forName(args[0]);
+    print_class(c);
+  }
+  /** Display the modifiers, name, superclass, and interfaces of a class
+   *  or interface. Then go and list all constructors, fields, and methods. */
+  public static void print_class(Class c)
+  {
+    // Print modifiers, type (class or interface), name, and superclass.
+    if (c.isInterface()) {
+      // The modifiers will include the "interface" keyword here...
+      System.out.print(Modifier.toString(c.getModifiers()) +  c.getName());
+    }
+    else
+      System.out.print(Modifier.toString(c.getModifiers()) + " class " +
+                       c.getName() +
+                       " extends " + c.getSuperclass().getName());
+    // Print interfaces or super-interfaces of the class or interface.
+    Class[] interfaces = c.getInterfaces();
+    if ((interfaces != null) &amp;&amp; (interfaces.length &gt; 0)) {
+      if (c.isInterface()) System.out.println(" extends ");
+      else System.out.print(" implements ");
+      for(int i = 0; i &lt; interfaces.length; i++) {
+        if (i &gt; 0) System.out.print(", ");
+        System.out.print(interfaces[i].getName());
+      }
+    }
+    System.out.println(" {");            // Begin class member listing.
+    // Now look up and display the members of the class.
+    System.out.println(" // Constructors");
+    Constructor[] constructors = c.getDeclaredConstructors();
+    for(int i = 0; i &lt; constructors.length; i++)      // Display constructors.
+      print_method_or_constructor(constructors[i]);
+    System.out.println(" // Fields");
+    Field[] fields = c.getDeclaredFields();           // Look up fields.
+    for(int i = 0; i &lt; fields.length; i++)            // Display them.
+      print_field(fields[i]);
+    System.out.println(" // Methods");
+    Method[] methods = c.getDeclaredMethods();        // Look up methods.
+    for(int i = 0; i &lt; methods.length; i++)           // Display them.
+      print_method_or_constructor(methods[i]);
+    System.out.println("}");             // End class member listing.
+  }
+  /** Return the name of an interface or primitive type, handling arrays. */
+  public static String typename(Class t) {
+    String brackets = "";
+    while(t.isArray()) {
+      brackets += "[]";
+      t = t.getComponentType();
+    }
+    return t.getName() + brackets;
+  }
+  /** Return a string version of modifiers, handling spaces nicely. */
+  public static String modifiers(int m) {
+    if (m == 0) return "";
+    else return Modifier.toString(m) + " ";
+  }
+  /** Print the modifiers, type, and name of a field. */
+  public static void print_field(Field f) {
+    System.out.println("  " +
+                       modifiers(f.getModifiers()) +
+                       typename(f.getType()) + " " + f.getName() + ";");
+  }
+  /** Print the modifiers, return type, name, parameter types, and exception
+   *  type of a method or constructor.  Note the use of the Member interface
+   *  to allow this method to work with both Method and Constructor objects. */
+  public static void print_method_or_constructor(Member member) {
+    Class returntype=null, parameters[], exceptions[];
+    if (member instanceof Method) {
+      Method m = (Method) member;
+      returntype = m.getReturnType();
+      parameters = m.getParameterTypes();
+      exceptions = m.getExceptionTypes();
+    } else {
+      Constructor c = (Constructor) member;
+      parameters = c.getParameterTypes();
+      exceptions = c.getExceptionTypes();
+    }
+    System.out.print("  " + modifiers(member.getModifiers()) +
+                     ((returntype!=null)? typename(returntype)+" " : "") +
+                     member.getName() + "(");
+    for(int i = 0; i &lt; parameters.length; i++) {
+      if (i &gt; 0) System.out.print(", ");
+      System.out.print(typename(parameters[i]));
+    }
+    System.out.print(")");
+    if (exceptions.length &gt; 0) System.out.print(" throws ");
+    for(int i = 0; i &lt; exceptions.length; i++) {
+      if (i &gt; 0) System.out.print(", ");
+      System.out.print(typename(exceptions[i]));
+    }
+    System.out.println(";");
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Formatted Messages</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Invoking a Named Method</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

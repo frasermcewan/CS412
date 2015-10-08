@@ -1,0 +1,1112 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] ChoiceFormat</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:29:49 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>The java.text Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ChoiceFormat</H1>
+
+<H2>Name</H2>
+
+ChoiceFormat
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.16">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.ChoiceFormat</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.NumberFormat</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.17">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>ChoiceFormat</tt> class is a 
+concrete subclass of <tt CLASS=literal>NumberFormat</tt> 
+that maps numerical ranges to strings, or formats. <tt CLASS=literal>ChoiceFormat</tt> 
+objects are used most often by <tt CLASS=literal>MessageFormat</tt> 
+objects to handle plurals, verb agreement, and other such issues. 
+
+<P CLASS=para>
+The ranges in a <tt CLASS=literal>ChoiceFormat</tt> 
+are specified as an ascending array of <tt CLASS=literal>double</tt> 
+values, where each number is the bottom end of a range. A value is mapped 
+to a format when it falls within the range for that format. If the value 
+does not fall in any of the ranges, it is mapped to the first or the last 
+format, depending on whether the value is too low or too high. For example, 
+consider the following code: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+double[] limits = {1, 10, 100};
+String[] labels = {"small", "medium", "large"}
+ChoiceFormat cf = new ChoiceFormat(limits, labels);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Any number greater than or equal to one and less than 10 is mapped to the 
+format <tt CLASS=literal>"small"</tt>. Any number greater than or equal to 10 and 
+less than 100 is mapped to <tt CLASS=literal>"medium"</tt>. Numbers greater than or 
+equal to 100 are mapped to <tt CLASS=literal>"large"</tt>.
+Furthermore, numbers less 
+than one are also mapped to <tt CLASS=literal>"small"</tt>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>nextDouble()</tt> and <tt CLASS=literal>previousDouble()</tt> 
+methods can generate <tt CLASS=literal>double</tt> 
+values that are higher or lower than other <tt CLASS=literal>double</tt> 
+values. These methods provide another way to specify the limits used by 
+a <tt CLASS=literal>ChoiceFormat</tt> object. 
+
+<P CLASS=para>
+As shown above, you can create a <tt CLASS=literal>ChoiceFormat</tt> 
+object by specifying the limits and formats in two separate arrays. You 
+can also create a <tt CLASS=literal>ChoiceFormat</tt> 
+object using a pattern string that specifies the limits and formats. The 
+string is of the form: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+[limit1]#[format1]|[limit2]#[format2]|...
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>&lt;</tt> character 
+can be used in place of the <tt CLASS=literal>#</tt> 
+to indicate that the next higher number, as determined by <tt CLASS=literal>nextDouble()</tt>, 
+should be used as the limit. The <tt CLASS=literal>toPattern()</tt> 
+method can be used to generate the pattern string for an existing <tt CLASS=literal>ChoiceFormat</tt> 
+object. 
+
+<P CLASS=para>
+Note that you create <tt CLASS=literal>ChoiceFormat</tt> 
+objects directly, rather than through factory methods. This is because 
+<tt CLASS=literal>ChoiceFormat</tt> does not implement 
+any locale-specific behavior. To produce properly internationalized output, 
+the formats for a <tt CLASS=literal>ChoiceFormat</tt> 
+should come from a <tt CLASS=literal>ResourceBundle</tt> 
+instead of being embedded in the code. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.18">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.text.ChoiceFormat extends java.text.NumberFormat {
+  // Constructors
+  public ChoiceFormat(String newPattern);
+  public ChoiceFormat(double[] limits, String[] formats);
+  // Class Methods
+  public static final double nextDouble(double d);
+  public static double nextDouble(double d, boolean positive);
+  public static final double previousDouble(double d);
+  // Instance Methods
+  public void applyPattern(String newPattern);
+  public Object clone();
+  public boolean equals(Object obj);
+  public StringBuffer format(double number, 
+                      StringBuffer toAppendTo, FieldPosition status);
+  public StringBuffer format(long number, 
+                      StringBuffer toAppendTo, FieldPosition status);
+  public Object[] getFormats();
+  public double[] getLimits();
+  public int hashCode();
+  public Number parse(String text, ParsePosition status);
+  public void setChoices(double[] limits, String[] formats);
+  public String toPattern();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.19">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.28">ChoiceFormat</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.34">public ChoiceFormat(String newPattern)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newPattern</tt><br>
+<DD>
+
+<P CLASS=para>
+The pattern string. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>ChoiceFormat</tt> 
+that uses the limits and formats represented by the given pattern string. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.35">public ChoiceFormat(double[] limits, String[] formats)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>limits</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of limits. 
+Each element is the lower end of a range that runs up through, but not 
+including, the next element.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>formats</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of format strings that correspond to the limit ranges. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>ChoiceFormat</tt> 
+that uses the given limits and format strings </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.20">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.29">nextDouble</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.36">public static final double nextDouble(double d)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>d</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>double</tt> value. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The least <tt CLASS=literal>double</tt> that 
+is greater than <tt CLASS=literal>d</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the least <tt CLASS=literal>double</tt> 
+greater than <tt CLASS=literal>d</tt>. Calling this method is 
+equivalent to <tt CLASS=literal>nextDouble(d,</tt> 
+<tt CLASS=literal>true)</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.37">public static double nextDouble(double d, boolean positive)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>d</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>double</tt> value.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>positive</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies whether to return the next higher or next lower value. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>positive</tt> is <tt CLASS=literal>true</tt>,
+the least <tt CLASS=literal>double</tt> that is greater than <tt CLASS=literal>d</tt>.
+If <tt CLASS=literal>positive</tt> is <tt CLASS=literal>false</tt>,
+the greatest <tt CLASS=literal>double</tt> that is less than <tt CLASS=literal>d</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the next higher or next lower <tt CLASS=literal>double</tt> 
+value from <tt CLASS=literal>d</tt>, depending on 
+the value of <tt CLASS=literal>positive</tt>. 
+If <tt CLASS=literal>positive</tt> is <tt CLASS=literal>true</tt>,
+the method returns the least <tt CLASS=literal>double</tt> 
+greater than <tt CLASS=literal>d</tt>. Otherwise, the method returns
+the greatest <tt CLASS=literal>double</tt> less than <tt CLASS=literal>d</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.30">previousDouble</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.38">public static final double previousDouble(double d)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>d</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>double</tt> value. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The greatest <tt CLASS=literal>double</tt> 
+that is less than <tt CLASS=literal>d</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the greatest <tt CLASS=literal>double</tt> 
+less than <tt CLASS=literal>d</tt>.
+Calling this method is 
+equivalent to <tt CLASS=literal>nextDouble(d,</tt> 
+<tt CLASS=literal>false)</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.21">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.31">applyPattern</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.39">public void applyPattern(String newPattern)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newPattern</tt><br>
+<DD>
+
+<P CLASS=para>
+The pattern string. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method tells this <tt CLASS=literal>ChoiceFormat</tt> 
+to use the limits and formats represented by the given formatting pattern 
+string. Pattern strings for <tt CLASS=literal>ChoiceFormat</tt> objects
+are described above in the class description.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.32">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.40">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this <tt CLASS=literal>ChoiceFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>ChoiceFormat</tt> 
+and returns it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.33">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.41">public boolean equals(Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be compared with this object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; 
+<tt CLASS=literal>false</tt> if they are not. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Format.equals()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>obj</tt> is an instance of <tt CLASS=literal>ChoiceFormat</tt> 
+and is equivalent to this <tt CLASS=literal>ChoiceFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.34">format</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.42"><DIV CLASS=screen> <P> <PRE> public StringBuffer format(double number, StringBuffer toAppendTo, FieldPosition status) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>number</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>double</tt> value to be formatted.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>toAppendTo</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>StringBuffer</tt> 
+on which to append the formatted information.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>status</tt><br>
+<DD>
+
+<P CLASS=para>
+Ignored. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The given <tt CLASS=literal>StringBuffer</tt> 
+with the <tt CLASS=literal>String</tt> corresponding to
+the given number appended to it.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.format(double,</tt> <tt CLASS=literal>StringBuffer,</tt> <tt CLASS=literal>FieldPosition)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method formats the given number and appends the result to the given 
+<tt CLASS=literal>StringBuffer</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.43"><DIV CLASS=screen> <P> <PRE> public StringBuffer format(long number, StringBuffer toAppendTo, FieldPosition status) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>number</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>long</tt> 
+value to be formatted.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>toAppendTo</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>StringBuffer</tt> 
+on which to append the formatted information.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>status</tt><br>
+<DD>
+
+<P CLASS=para>
+Ignored. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The given <tt CLASS=literal>StringBuffer</tt> 
+with the <tt CLASS=literal>String</tt> corresponding to
+the given number appended to it.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.format(long, 
+StringBuffer, FieldPosition)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method formats the given number and appends the result to the given 
+<tt CLASS=literal>StringBuffer</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.35">getFormats</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.44">public Object[] getFormats()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array that contains the format strings. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an array containing the current set of format strings. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.36">getLimits</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.45">public double[] getLimits()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array that contains the limit values. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an array that contains the current set of limits. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.37">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.46">public int hashCode()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode for this object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.hashCode()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a hashcode for this <tt CLASS=literal>ChoiceFormat</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.38">parse</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.47">public Number parse(String text, ParsePosition status)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>text</tt><br>
+<DD>
+
+<P CLASS=para>
+The string to be parsed.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>status</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>ParsePosition</tt> 
+object that can specify a position in the string. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Number</tt> object that encapsulates the value
+that corresponds to the longest format string that matches the 
+text that starts at the given position. If there is no
+matching format string, the value <tt CLASS=literal>Double.NaN</tt>
+is returned.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat.parse(String, 
+ParsePosition)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method parses a number from the given string, starting from the given 
+position. The method returns a <tt CLASS=literal>Number</tt> object that encapsulates the value
+that corresponds to the longest format string that matches the 
+text starting at the given position. If there is no
+matching format string, the method returns the 
+value <tt CLASS=literal>Double.NaN</tt>.
+
+<P CLASS=para>
+If there is a matching format string, the index value of
+the given <tt CLASS=literal>ParsePosition</tt> 
+object is incremented by the length of that format string.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.39">setChoices</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.48">public void setChoices(double[] limits, String[] formats)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>limits</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of limits. 
+Each element is the lower end of a range that runs up through, but not 
+including, the next element.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>formats</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of format strings that correspond to the limit ranges. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the limits and format strings that this <tt CLASS=literal>ChoiceFormat</tt> 
+uses. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.40">toPattern</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.49">public String toPattern()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The pattern string of this <tt CLASS=literal>ChoiceFormat</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string that represents the limits and format strings 
+of this <tt CLASS=literal>ChoiceFormat</tt>. Pattern strings for <tt CLASS=literal>ChoiceFormat</tt> objects
+are described above in the class description.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.22">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>format(double)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>format(long number)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>format(Object, StringBuffer, FieldPosition)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMaximumFractionDigits()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMaximumIntegerDigits()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMinimumFractionDigits()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getMinimumIntegerDigits()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>isGroupingUsed()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>isParseIntegerOnly()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>parse(String)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>parseObject(String)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Format</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>parseObject(String, ParsePosition)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setGroupingUsed(boolean)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setMaximumFractionDigits(int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setMaximumIntegerDigits(int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setMinimumFractionDigits(int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setMinimumIntegerDigits(int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>setParseIntegerOnly(boolean)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>NumberFormat</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.23">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>FieldPosition</tt>, 
+<tt CLASS=literal>MessageFormat</tt>, 
+<tt CLASS=literal>Number</tt>, 
+<tt CLASS=literal>NumberFormat</tt>, 
+<tt CLASS=literal>ParsePosition</tt>, 
+<tt CLASS=literal>ResourceBundle</tt>, 
+<tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>StringBuffer</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>CharacterIterator</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>CollationElementIterator</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

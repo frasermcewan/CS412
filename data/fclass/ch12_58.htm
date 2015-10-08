@@ -1,0 +1,1664 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] StringBuffer</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:05:52 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_57.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_59.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>StringBuffer</H1>
+
+<H2>Name</H2>
+
+StringBuffer
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.378">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.StringBuffer</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.Serializable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.379">Description</A></h2>
+
+<P CLASS=para>
+<A NAME="MAN.STRBUF.1"></A>The <tt CLASS=literal>StringBuffer</tt> class represents a variable-length
+sequence of characters. <tt CLASS=literal>StringBuffer</tt> objects
+are used in computations that involve creating new <tt CLASS=literal>String</tt>
+objects. The <tt CLASS=literal>StringBuffer</tt> class provides a number
+of utility methods for working with <tt CLASS=literal>StringBuffer</tt> objects,
+including <tt CLASS=literal>append()</tt> and <tt CLASS=literal>insert()</tt> methods
+that add characters to a <tt CLASS=literal>StringBuffer</tt> and methods
+that fetch the contents of <tt CLASS=literal>StringBuffer</tt> objects.
+
+<P CLASS=para>
+When a <tt CLASS=literal>StringBuffer</tt>
+object is created, the constructor determines the initial contents
+and capacity of the <tt CLASS=literal>StringBuffer</tt>. The capacity
+of a <tt CLASS=literal>StringBuffer</tt> is the number of characters
+that its internal data structure can hold. This is distinct from
+the length of the contents of a <tt CLASS=literal>StringBuffer</tt>,
+which is the number of characters that are actually stored in the
+<tt CLASS=literal>StringBuffer</tt> object. The capacity of a <tt CLASS=literal>StringBuffer</tt>
+can vary. When
+a <tt CLASS=literal>StringBuffer</tt> object is asked to hold more characters
+than its current capacity allows, the <tt CLASS=literal>StringBuffer</tt>
+enlarges its internal data structure. However, it is more costly
+in terms of execution time and memory when a <tt CLASS=literal>StringBuffer</tt>
+has to repeatedly increase its capacity than when a <tt CLASS=literal>StringBuffer</tt>
+object is created with sufficient capacity.
+
+<P CLASS=para>
+Because the intended use of <tt CLASS=literal>StringBuffer</tt>
+objects involves modifying their contents, all methods of the <tt CLASS=literal>StringBuffer</tt>
+class that modify <tt CLASS=literal>StringBuffer</tt> objects are <tt CLASS=literal>synchronized</tt>.
+This means that is it safe for multiple threads to try to modify
+a <tt CLASS=literal>StringBuffer</tt> object at the same time.
+
+<P CLASS=para>
+<tt CLASS=literal>StringBuffer</tt> objects are used implicitly
+by the string concatenation operator. Consider the following code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+String s, s1, s2;
+s = s1 + s2;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To compute the string concatenation, the Java compiler generates
+code like:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+s = new StringBuffer().append(s1).append(s2).toString();
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.380">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.lang.StringBuffer extends java.lang.Object {
+    // Constructors
+    public StringBuffer();
+    public StringBuffer(int length);
+    public StringBuffer(String str);
+    // Instance Methods
+    public StringBuffer append(boolean b);
+    public synchronized StringBuffer append(char c);
+    public synchronized StringBuffer append(char[] str);
+    public synchronized StringBuffer append(char[] str, int offset, int len);
+    public StringBuffer append(double d);
+    public StringBuffer append(float f);
+    public StringBuffer append(int i);
+    public StringBuffer append(long l);
+    public synchronized StringBuffer append(Object obj);
+    public synchronized StringBuffer append(String str);
+    public int capacity();
+    public synchronized char charAt(int index);
+    public synchronized void ensureCapacity(int minimumCapacity);
+    public synchronized void getChars(int srcBegin, int srcEnd, 
+                             char[] dst, int dstBegin);
+    public StringBuffer insert(int offset, boolean b);
+    public synchronized StringBuffer insert(int offset, char c);
+    public synchronized StringBuffer insert(int offset, char[] str);
+    public StringBuffer insert(int offset, double d);
+    public StringBuffer insert(int offset, float f);
+    public StringBuffer insert(int offset, int i);
+    public StringBuffer insert(int offset, long l);
+    public synchronized StringBuffer insert(int offset, Object obj);
+    public synchronized StringBuffer insert(int offset, String str);
+    public int length();
+    public synchronized StringBuffer reverse();
+    public synchronized void setCharAt(int index, char ch);
+    public synchronized void setLength(int newLength);
+    public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.381">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.404">StringBuffer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.519"><tt CLASS=literal>public StringBuffer()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>StringBuffer</tt> object that does
+not contain any characters and has a capacity of 16 characters.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.520"><tt CLASS=literal>public StringBuffer(int capacity)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>capacity</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial capacity of this <tt CLASS=literal>StringBufffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NegativeArraySizeException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>capacity</tt> is negative.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>StringBuffer</tt> object that does
+not contain any characters and has the specified capacity.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.521"><tt CLASS=literal>public StringBuffer(String str)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>StringBuffer</tt> object that contains
+the same sequence of characters as the given <tt CLASS=literal>String</tt>
+object and has a capacity 16 greater than the length of the <tt CLASS=literal>String</tt>.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.382">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.405">append</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.522"><tt CLASS=literal>public StringBuffer append(boolean b)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value.<A NAME="MAN.STRBUF.2"></A></DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method appends either <tt CLASS=literal>"true"</tt> or 
+<tt CLASS=literal>"false"</tt> to the end of
+the sequence of characters stored in ths <tt CLASS=literal>StringBuffer</tt>
+object, depending on the value of <tt CLASS=literal>b</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.523"><tt CLASS=literal>public synchronized StringBuffer append(char c)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>c</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method appends the given character to the end of the
+sequence of characters stored in this <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.524"><tt CLASS=literal>public synchronized StringBuffer append(char str[])</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method appends the characters in the given array to the
+end of the sequence of characters stored in this <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.525"><DIV CLASS=screen> <P> <PRE> public synchronized StringBuffer append(char str[], int offset, int len) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>len</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of characters from the array to be appended.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> or <tt CLASS=literal>len</tt> are
+out of range.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method appends the specified portion of the given array
+to the end of the character sequence stored in this <tt CLASS=literal>StringBuffer</tt>
+object. The portion of the array that is appended starts <tt CLASS=literal>offset</tt>
+elements from the beginning of the array and is <tt CLASS=literal>len</tt>
+elements long.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.526"><tt CLASS=literal>public StringBuffer append(double d)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>d</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>double</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the given <tt CLASS=literal>double</tt> value
+to a string using <tt CLASS=literal>Double.toString(d)</tt> and appends
+the resulting string to the end of the sequence of characters stored
+in this <tt CLASS=literal>StringBuffer</tt> object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.527"><tt CLASS=literal>public StringBuffer append(float f)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>f</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>float</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the given <tt CLASS=literal>float</tt> value
+to a string using <tt CLASS=literal>Float.toString(f)</tt> and appends
+the resulting string to the end of the sequence of characters stored
+in this <tt CLASS=literal>StringBuffer</tt> object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.528"><tt CLASS=literal>public StringBuffer append(int i)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>i</tt><br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>int</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the given <tt CLASS=literal>int</tt> value
+to a string using <tt CLASS=literal>Integer.toString(i)</tt> and appends
+the resulting string to the end of the sequence of characters stored
+in this <tt CLASS=literal>StringBuffer</tt> object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.529"><tt CLASS=literal>public StringBuffer append(long l)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>l</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>long</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the given <tt CLASS=literal>long</tt> value
+to a string using <tt CLASS=literal>Long.toString(l)</tt> and appends
+the resulting string to the end of the sequence of characters stored
+in this <tt CLASS=literal>StringBuffer</tt> object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.530"><tt CLASS=literal>public synchronized StringBuffer append(Object obj)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method gets the string representation of the given object
+by calling <tt CLASS=literal>String.valueOf(obj)</tt> and appends
+the resulting string to the end of the character sequence stored
+in this <tt CLASS=literal>StringBuffer</tt> object.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.531"><tt CLASS=literal>public synchronized StringBuffer append(String str)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method appends the sequence of characters represented
+by the given <tt CLASS=literal>String</tt> to the characters in this
+<tt CLASS=literal>StringBuffer</tt> object. If <tt CLASS=literal>str</tt>
+is <tt CLASS=literal>null</tt>, the string <tt CLASS=literal>"null"</tt> is appended.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.406">capacity</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.532"><tt CLASS=literal>public int capacity()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The capacity of this <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current capacity of this object. The
+capacity of a <tt CLASS=literal>StringBuffer</tt> object is the number
+of characters that its internal data structure can hold. A <tt CLASS=literal>StringBuffer</tt>
+object automatically increases its capacity when it is asked to
+hold more characters than its current capacity allows.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.407">charAt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.533"><tt CLASS=literal>public synchronized char charAt(int index)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+An index into the <tt CLASS=literal>StringBuffer</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The character stored at the specified position in this
+<tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>index</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the character at the specified position
+in the <tt CLASS=literal>StringBuffer</tt> object. The first character
+in the <tt CLASS=literal>StringBuffer</tt> is at index <tt CLASS=literal>0</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.408">ensureCapacity</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.534"><tt CLASS=literal>public synchronized void ensureCapacity(int minimumCapacity)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>minimumCapacity</tt><br>
+<DD>
+
+<P CLASS=para>
+The minimum desired capacity.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method ensures that the capacity of this <tt CLASS=literal>StringBuffer</tt>
+object is at least the specified number of characters. If necessary,
+the capacity of this object is increased to the greater of <tt CLASS=literal>minimumCapacity</tt>
+or double its current capacity plus two.
+
+<P CLASS=para>
+It is more efficient to ensure that the capacity of a <tt CLASS=literal>StringBuffer</tt>
+object is sufficient to hold all of the additions that will be made
+to its contents, rather than let the <tt CLASS=literal>StringBuffer</tt>
+increase its capacity in multiple increments.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.409">getChars</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.535"><DIV CLASS=screen> <P> <PRE> public synchronized void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>srcBegin</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the first character to be copied.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>srcEnd</tt><br>
+<DD>
+
+<P CLASS=para>
+The index after the last character to be copied.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>dst</tt><br>
+<DD>
+
+<P CLASS=para>
+The destination <tt CLASS=literal>char</tt> array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>dstBegin</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the destination array.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>srcBegin</tt>, <tt CLASS=literal>srcEnd</tt>,
+or <tt CLASS=literal>dstBegin</tt> is out of range.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method copies each character in the specified range of
+this <tt CLASS=literal>StringBuffer</tt> object to the given array of
+<tt CLASS=literal>char</tt> values. More specifically, the first character
+to be copied is at index <tt CLASS=literal>srcBegin</tt>; the last character
+to be copied is at index <tt CLASS=literal>srcEnd-1</tt>.
+
+<P CLASS=para>
+These characters
+are copied into <tt CLASS=literal>dst</tt>, starting at index <tt CLASS=literal>dstBegin</tt>
+and ending at index:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+dstBegin + (srcEnd-srcBegin) - 1
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.410">insert</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.536">public StringBuffer insert(int offset, boolean b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="MAN.STRBUF.3"></A> 
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>b</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is out of range.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method inserts either <tt CLASS=literal>"true"</tt> or 
+<tt CLASS=literal>"false"</tt> into the sequence
+of characters stored in this <tt CLASS=literal>StringBuffer</tt> object,
+depending on the value of <tt CLASS=literal>b</tt>. The string is inserted
+at a position <tt CLASS=literal>offset</tt> characters from the beginning
+of the sequence. If <tt CLASS=literal>offset</tt> is <tt CLASS=literal>0</tt>,
+the string is inserted before the first character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.537"><tt CLASS=literal>public synchronized StringBuffer insert(int offset, char c)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>c</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method inserts the given character into the sequence
+of characters stored in this <tt CLASS=literal>StringBuffer</tt> object.
+The character is inserted at a position <tt CLASS=literal>offset</tt>
+characters from the beginning of the sequence. If <tt CLASS=literal>offset</tt>
+is <tt CLASS=literal>0</tt>, the character is inserted before the first
+character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.538">public synchronized StringBuffer insert(int offset, char str[])</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>char</tt> values.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method inserts the characters in the given array into
+the sequence of characters stored in this <tt CLASS=literal>StringBuffer</tt>
+object. The characters are inserted at a position <tt CLASS=literal>offset</tt>
+characters from the beginning of the sequence. If <tt CLASS=literal>offset</tt>
+is <tt CLASS=literal>0</tt>, the characters are inserted before the
+first character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.539"><tt CLASS=literal>public StringBuffer insert(int offset, double d)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>d</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>double</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the given <tt CLASS=literal>double</tt> value
+to a string using <tt CLASS=literal>Double.toString(d)</tt> and inserts
+the resulting string into the sequence of characters stored in this
+<tt CLASS=literal>StringBuffer</tt> object. The string is inserted at
+a position <tt CLASS=literal>offset</tt> characters from the beginning
+of the sequence. If <tt CLASS=literal>offset</tt> is <tt CLASS=literal>0</tt>,
+the string is inserted before the first character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.540"><tt CLASS=literal>public StringBuffer insert(int offset, float f)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>f</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>float</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the given <tt CLASS=literal>float</tt> value
+to a string using <tt CLASS=literal>Float.toString(f)</tt> and inserts
+the resulting string into the sequence of characters stored in this
+<tt CLASS=literal>StringBuffer</tt> object. The string is inserted at
+a position <tt CLASS=literal>offset</tt> characters from the beginning
+of the sequence. If <tt CLASS=literal>offset</tt> is <tt CLASS=literal>0</tt>,
+the string is inserted before the first character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.541"><tt CLASS=literal>public StringBuffer insert(int offset, int i)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>i</tt><br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>int</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the given <tt CLASS=literal>int</tt> value
+to a string using <tt CLASS=literal>Integer.toString(i)</tt> and inserts
+the resulting string into the sequence of characters stored in this
+<tt CLASS=literal>StringBuffer</tt> object. The string is inserted at
+a position <tt CLASS=literal>offset</tt> characters from the beginning
+of the sequence. If <tt CLASS=literal>offset</tt> is <tt CLASS=literal>0</tt>,
+the string is inserted before the first character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.542"><tt CLASS=literal>public StringBuffer insert(int offset, long l)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>l</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>long</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method converts the given <tt CLASS=literal>long</tt> value
+to a string using <tt CLASS=literal>Long.toString(l)</tt> and inserts
+the resulting string into the sequence of characters stored in this
+<tt CLASS=literal>StringBuffer</tt> object. The string is inserted at
+a position <tt CLASS=literal>offset</tt> characters from the beginning
+of the sequence. If <tt CLASS=literal>offset</tt> is <tt CLASS=literal>0</tt>,
+the string is inserted before the first character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.543">public synchronized StringBuffer insert(int offset, Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method gets the string representation of the given object
+by calling <tt CLASS=literal>String.valueOf(obj)</tt> and inserts
+the resulting string into the sequence of characters stored in this
+<tt CLASS=literal>StringBuffer</tt> object. The string is inserted at
+a position <tt CLASS=literal>offset</tt> characters from the beginning
+of the sequence. If <tt CLASS=literal>offset</tt> is <tt CLASS=literal>0</tt>,
+the string is inserted before the first character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.544">public synchronized StringBuffer insert(int offset, String str)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+An offset into the <tt CLASS=literal>StringBuffer</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>str</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>offset</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method inserts the sequence of characters represented
+by the given <tt CLASS=literal>String</tt> into the sequence of characters
+stored in this <tt CLASS=literal>StringBuffer</tt> object. If <tt CLASS=literal>str</tt>
+is <tt CLASS=literal>null</tt>, the string <tt CLASS=literal>"null"</tt> is inserted. The string
+is inserted at a position <tt CLASS=literal>offset</tt> characters from
+the beginning of the sequence. If <tt CLASS=literal>offset</tt> is <tt CLASS=literal>0</tt>,
+the string is inserted before the first character in the <tt CLASS=literal>StringBuffer</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.411">length</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.545"><tt CLASS=literal>public int length()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of characters stored in this <tt CLASS=literal>StringBuffer</tt>
+object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of characters stored in this
+<tt CLASS=literal>StringBuffer</tt> object. The length is distinct from
+the capacity of a <tt CLASS=literal>StringBuffer</tt>, which is the
+number of characters that its internal data structure can hold.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.412">reverse</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.546"><tt CLASS=literal>public synchronized StringBuffer reverse()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method reverses the sequence of characters stored in
+this <tt CLASS=literal>StringBuffer</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.413">setCharAt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.547"><tt CLASS=literal>public synchronized void setCharAt(int index, char ch)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the character to be set.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ch</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>char</tt> value.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>index</tt> is less than zero or
+greater than or equal to the length of the <tt CLASS=literal>StringBuffer</tt>
+object.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method modifies the character located <tt CLASS=literal>index</tt>
+characters from the beginning of the sequence of characters stored
+in this <tt CLASS=literal>StringBuffer</tt> object. The current character
+at this position is replaced by the character <tt CLASS=literal>ch</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.414">setLength</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.548"><tt CLASS=literal>public synchronized void setLength(int newLength)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newLength</tt><br>
+<DD>
+
+<P CLASS=para>
+The new length for this <tt CLASS=literal>StringBuffer</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>index</tt> is less than zero.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the length of the sequence of characters
+stored in this <tt CLASS=literal>StringBuffer</tt> object. If the length
+is set to be less than the current length, characters are lost from
+the end of the character sequence. If the length is set to be more
+than the current length, NUL characters (<tt CLASS=literal>\u0000</tt>)
+are added to the end of the character sequence.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.415">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.549"><tt CLASS=literal>public String toString()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A new <tt CLASS=literal>String</tt> object that represents the
+same sequence of characters as the sequence of characters stored
+in this <tt CLASS=literal>StringBuffer</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a new <tt CLASS=literal>String</tt> object
+that represents the same sequence of characters as the sequence
+of characters stored in this <tt CLASS=literal>StringBuffer</tt> object.
+Note that any subsequent changes to the contents of this <tt CLASS=literal>StringBuffer</tt>
+object do not affect the contents of the <tt CLASS=literal>String</tt>
+object created by this method.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.383">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.384">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Class</tt>, 
+<tt CLASS=literal>Double</tt>, 
+<tt CLASS=literal>Float</tt>, 
+<tt CLASS=literal>Integer</tt>, 
+<tt CLASS=literal>Long</tt>, 
+<tt CLASS=literal>Object</tt>, 
+<tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>StringIndexOutOfBoundsException</tt>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_57.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_59.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>String</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>StringIndexOutOfBoundsException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

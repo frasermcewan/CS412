@@ -1,0 +1,1102 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] ClassLoader</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:00:07 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ClassLoader</H1>
+
+<H2>Name</H2>
+
+ClassLoader
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.77">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.ClassLoader</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.78">Description</A></h2>
+
+<P CLASS=para>
+<A NAME="MAN.CLASSLOADER.1"></A>The <tt CLASS=literal>ClassLoader</tt> class provides a mechanism
+for Java to load classes over a network or from any source other
+than the local filesystem. The default class-loading mechanism
+loads classes from files found relative to directories specified
+by the <tt CLASS=literal>CLASSPATH</tt>
+environment variable. This default mechanism does not use an instance
+of the <tt CLASS=literal>ClassLoader</tt> class.
+
+<P CLASS=para>
+An application can implement another mechanism for loading
+classes by declaring a subclass of the <tt CLASS=literal>abstract</tt>
+<tt CLASS=literal>ClassLoader</tt> class. A subclass of <tt CLASS=literal>ClassLoader</tt>
+must override the <tt CLASS=literal>loadClass()</tt> to define a class-loading
+policy. This method implements any sort of security that
+is necessary for the class-loading mechanism. The other methods
+of <tt CLASS=literal>ClassLoader</tt> are <tt CLASS=literal>final</tt>,
+so they cannot be overridden.
+
+<P CLASS=para>
+A <tt CLASS=literal>ClassLoader</tt> object is typically used
+by calling its <tt CLASS=literal>loadClass()</tt> method to explicitly
+load a top-level class, such as a subclass of <tt CLASS=literal>Applet</tt>.
+The <tt CLASS=literal>ClassLoader</tt> that loads the class becomes
+associated with the class; it can be obtained by calling the <tt CLASS=literal>getClassLoader()</tt> method of the <tt CLASS=literal>Class</tt> object that represents
+the class.
+
+<P CLASS=para>
+Once a class is loaded, it must be resolved before it can
+be used. Resolving a class
+means ensuring that all of the other classes it references
+are loaded. In addition, all of the classes that they reference
+must be loaded, and so on, until all of the needed classes have been
+loaded. Classes are resolved using the <tt CLASS=literal>resolveClass()</tt> method
+of the <tt CLASS=literal>ClassLoader</tt> object that loaded the initial
+class. This means that when a <tt CLASS=literal>ClassLoader</tt> object
+is explicitly used to load a class, the same <tt CLASS=literal>ClassLoader</tt>
+is used to load all of the classes that it references, directly
+or indirectly.
+
+<P CLASS=para>
+Classes loaded using a <tt CLASS=literal>ClassLoader</tt> object may
+attempt to load additional classes without explicitly using a
+<tt CLASS=literal>ClassLoader</tt> object. They can do this by calling the
+<tt CLASS=literal>Class</tt> class' <tt CLASS=literal>forName() </tt>
+method. However, in such a situation, a <tt CLASS=literal>ClassLoader</tt>
+object is implicitly used. See the description of
+<tt CLASS=literal>Class.forName()</tt> for more information.
+
+<P CLASS=para>
+
+Java identifies a class by a combination of its fully
+qualified name and the class loader that was used to load the
+class. If you write a subclass of <tt CLASS=literal>ClassLoader</tt>,
+it should not attempt to directly load local classes. Instead,
+it should call <tt CLASS=literal>findSystemClass()</tt>. A local class
+that is loaded directly by a <tt CLASS=literal>ClassLoader</tt> is 
+considered to be a different class than the same class loaded by
+<tt CLASS=literal>findSystemClass()</tt>. This can lead to having two
+copies of the same class loaded, which can cause a number 
+of inconsistencies. For example, the class' <tt CLASS=literal>equals()</tt> 
+method may decide that the same object is not equal to itself.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.79">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.lang.ClassLoader extends java.lang.Object {
+    // Constructors
+    protected ClassLoader();
+    // Class Methods
+    public static final URL 
+           getSystemResource(String name);                  // New in 1.1
+    public static final InputStream 
+           getSystemResourceAsStream(String name);          // New in 1.1
+    // Public Instance Methods
+    public URL getResource(String name);                    // New in 1.1
+    public InputStream getResourceAsStream(String name);    // New in 1.1
+    public Class loadClass(String name);                    // New in 1.1
+    
+    // Protected Instance Methods
+    protected final Class defineClass(byte data[], 
+              int offset, int length);               // Deprecated in 1.1
+    protected final Class defineClass(String name, 
+              byte[] data, int offset, int length);         // New in 1.1
+    protected final Class findLoadedClass(String name);     // New in 1.1
+    protected final Class findSystemClass(String name);
+    protected abstract Class loadClass(String name, boolean resolve);
+    protected final void resolveClass(Class c);
+    protected final void setSigners(Class cl, 
+              Object[] signers);                            // New in 1.1
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.80">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.130">ClassLoader</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.142"><tt CLASS=literal>protected ClassLoader()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If there is a <tt CLASS=literal>SecurityManager</tt>
+object installed and its <tt CLASS=literal>checkCreateClassLoader()</tt>
+method throws a <tt CLASS=literal>SecurityException</tt> when called
+by this constructor.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Initializes a <tt CLASS=literal>ClassLoader</tt> object. Because
+<tt CLASS=literal>ClassLoader</tt> is an <tt CLASS=literal>abstract</tt> class,
+only subclasses of the class can access this constructor.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.81">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.131">getSystemResource</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.143"><tt CLASS=literal>public static final URL getSystemResource(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A system resource name.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>URL</tt> object that is connected to the specified
+system resource or <tt CLASS=literal>null</tt> if the resource cannot be found.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds a system resource with the given name and returns a
+<tt CLASS=literal>URL</tt> object that is connected to the resource.
+The resource name can be any system resource.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.132">getSystemResourceAsStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.144"><tt CLASS=literal>public static final InputStream getSystemResourceAsStream(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A system resource name.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>InputStream</tt> object that is connected to the specified
+system resource or <tt CLASS=literal>null</tt> if the resource cannot be found.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds a system resource with the given name and returns an
+<tt CLASS=literal>InputStream</tt> object that is connected to the resource.
+The resource name can be any system resource.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.82">Public Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.133">getResource</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.145"><tt CLASS=literal>public URL getResource(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A resource name.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>URL</tt> object that is connected to the specified
+resource or <tt CLASS=literal>null</tt> if the resource cannot be found.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds a resource with the given name and returns a
+<tt CLASS=literal>URL</tt> object that is connected to the resource.
+
+<P CLASS=para>
+A resource is a file that contains data (e.g., sound, images, text) 
+and it can be part of a package. The name of a resource is
+a sequence of identifiers separated by "<tt CLASS=literal>/</tt>". For example, a
+resource might have the name <I CLASS=emphasis>help/american/logon.html</I> .
+System resources are found on the host machine using the
+conventions of the host implementation.  For example, 
+the "<tt CLASS=literal>/</tt>" in the resource name may be treated as a 
+path separator, with the entire resource name treated as a relative path 
+to be found under a directory in <tt CLASS=literal>CLASSPATH</tt>.
+
+<P CLASS=para>
+The implementation of <tt CLASS=literal>getResource()</tt> in 
+<tt CLASS=literal>ClassLoader</tt> simply returns <tt CLASS=literal>null</tt>.
+A subclass can override this method to provide more useful
+functionality.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.134">getResourceAsStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.146"><tt CLASS=literal>public InputStream getResourceAsStream(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+A resource name.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>InputStream</tt> object that is connected to the specified
+resource or <tt CLASS=literal>null</tt> if the resource cannot be found.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds a resource with the given name and returns an
+<tt CLASS=literal>InputStream</tt> object that is connected to the resource.
+
+<P CLASS=para>
+A resource is a file that contains data (e.g., sound, images, text) 
+and it can be part of a package. The name of a resource is
+a sequence of identifiers separated by `<tt CLASS=literal>/</tt>'. For example, a
+resource might have the name <I CLASS=emphasis>help/american/logon.html</I>.
+System resources are found on the host machine using the
+conventions of the host implementation.  For example, 
+the `<tt CLASS=literal>/</tt>' in the resource name may be treated as a 
+path separator, with the entire resource name treated as a relative path 
+to be found under a directory in <tt CLASS=literal>CLASSPATH</tt>.
+
+<P CLASS=para>
+The implementation of <tt CLASS=literal>getResourceAsStream()</tt> in 
+<tt CLASS=literal>ClassLoader</tt> simply returns <tt CLASS=literal>null</tt>.
+A subclass can override this method to provide more useful
+functionality.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.135">loadClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.147">public Class loadClass(String name) throws ClassNotFoundException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of the class to be returned. The class
+name should be qualified by its package name. The lack of an explicit
+package name specifies that the class is part of the default package.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> object for the specified class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassNotFoundException</tt><br>
+<DD>
+
+<P CLASS=para>
+If it cannot find a definition for the named class.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method loads the named class by calling 
+<tt CLASS=literal>loadClass(name,</tt> <tt CLASS=literal>true)</tt>.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.83">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.136">defineClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.148"><DIV CLASS=screen> <P> <PRE> protected final Class defineClass(byte data[], int offset, int length) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>data</tt><br>
+<DD>
+
+<P CLASS=para>
+An array that contains the byte codes that define
+a class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+The offset in the array of byte codes.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>length</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of byte codes in the array.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The newly created <tt CLASS=literal>Class</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassFormatError</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>data</tt> array does not constitute
+a valid class definition.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>Class</tt> object from the byte codes that
+define the class. Before the class can be used, it must be resolved.
+The method is intended to be called from an implementation
+of the <tt CLASS=literal>loadClass()</tt> method.  
+
+<P CLASS=para>
+Note that this method is deprecated as of Java 1.1.  You should use
+the version of <tt CLASS=literal>defineClass()</tt> that takes a 
+<tt CLASS=literal>name</tt> parameter and is therefore more secure.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.149"><DIV CLASS=screen> <P> <PRE> protected final Class defineClass(String name, byte data[], int offset, int length) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The expected name of the class to be defined or <tt CLASS=literal>null</tt> if
+it is not known.  The class name
+should be qualified by its package name.  The lack of an explicit package
+name specifies that the class is part of the default package.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>data</tt><br>
+<DD>
+
+<P CLASS=para>
+An array that contains the byte codes that define
+a class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>offset</tt><br>
+<DD>
+
+<P CLASS=para>
+The offset in the array of byte codes.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>length</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of byte codes in the array.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The newly created <tt CLASS=literal>Class</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassFormatError</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>data</tt> array does not constitute
+a valid class definition.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>Class</tt> object from the byte codes that
+define the class. Before the class can be used, it must be resolved.
+The method is intended to be called from an implementation
+of the <tt CLASS=literal>loadClass()</tt> method.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.137">findLoadedClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.150"><DIV CLASS=screen> <P> <PRE> protected final Class findLoadedClass(String name) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of the class to be returned. The class
+name should be qualified by its package name. The lack of an explicit
+package name specifies that the class is part of the default package.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> object for the specified loaded class or
+<tt CLASS=literal>null</tt> if the class cannot be found.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds the specified class that has already been loaded.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.138">findSystemClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.151"><DIV CLASS=screen> <P> <PRE> protected final Class findSystemClass(String name) throws ClassNotFoundException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of the class to be returned. The class
+name should be qualified by its package name. The lack of an explicit
+package name specifies that the class is part of the default package.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> object for the specified system
+class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassNotFoundException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the default class-loading mechanism cannot find
+a definition for the class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NoClassDefFoundError</tt><br>
+<DD>
+
+<P CLASS=para>
+If the
+default class-loading mechanism cannot find the class.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method finds and loads a system class if it has not already
+been loaded. A <I CLASS=emphasis>system class</I>
+is a class that is loaded by the default
+class-loading mechanism from the local filesystem. An implementation
+of the <tt CLASS=literal>loadClass()</tt> method typically calls this
+method to attempt to load a class from the locations specified by
+the <tt CLASS=literal>CLASSPATH</tt> environment variable.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.139">loadClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.152"><DIV CLASS=screen> <P> <PRE> protected abstract Class loadClass(String name, boolean resolve) throws ClassNotFoundException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of the class to be returned. The class
+name should be qualified by its package name. The lack of an explicit
+package name specifies that the class is part of the default package.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>resolve</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies whether or not the class should be resolved
+by calling the <tt CLASS=literal>resolveClass()</tt> method.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> object for the specified class.
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassNotFoundException</tt><br>
+<DD>
+
+<P CLASS=para>
+If it cannot find a definition for the named class.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+An implementation of this <tt CLASS=literal>abstract</tt> method
+loads the named class and returns its <tt CLASS=literal>Class</tt> object.
+It is permitted and encouraged for an implementation to cache the
+classes it loads, rather than load one each time the method is called.
+An implementation of this method should do at least the following:
+
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>Load the byte codes that comprise
+the class definition into a <tt CLASS=literal>byte[]</tt>.
+
+<P>
+<li CLASS=listitem>Call the <tt CLASS=literal>defineClass()</tt> method
+to create a <tt CLASS=literal>Class</tt> object to represent the class
+definition.
+
+<P>
+<li CLASS=listitem>If the <tt CLASS=literal>resolve</tt> parameter is <tt CLASS=literal>true</tt>,
+call the <tt CLASS=literal>resolveClass()</tt> method to resolve the
+class.
+
+<P>
+</OL>
+<P CLASS=para>
+If an implementation of this method caches the classes that
+it loads, it is recommended that it use an instance of the <tt CLASS=literal>java.util.Hashtable</tt>
+to implement the cache.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.140">resolveClass</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.153"><tt CLASS=literal>protected final void resolveClass(Class c)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>c</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> object for the class to be resolved.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method resolves the given <tt CLASS=literal>Class</tt> object.
+Resolving a class means ensuring
+that all of the other classes that the <tt CLASS=literal>Class</tt>
+object references are loaded. In
+addition, all of the classes that they reference must be loaded,
+and so on, until all of the needed classes have been loaded.
+
+<P CLASS=para>
+The <tt CLASS=literal>resolveClass()</tt> method should be called
+by an implementation of the <tt CLASS=literal>loadClass()</tt> method
+when the value of the <tt CLASS=literal>loadClass()</tt> method's
+<tt CLASS=literal>resolve</tt> parameter is <tt CLASS=literal>true</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.141">setSigners</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.154"><DIV CLASS=screen> <P> <PRE> protected final void setSigners(Class cl, Object[] signers) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>cl</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Class</tt> object for the class to be signed.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>signers</tt><br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Object</tt>s that represents the signers
+of this class.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method specifies the objects that represent the digital
+signatures for this class.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.84">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.85">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Class</tt>, 
+<tt CLASS=literal>ClassNotFoundException</tt>, 
+<tt CLASS=literal>InputStream</tt>, 
+<tt CLASS=literal>NoClassDefFoundError</tt>, 
+<tt CLASS=literal>Object</tt>,
+<tt CLASS=literal>SecurityException</tt>, 
+<tt CLASS=literal>SecurityManager</tt>, 
+<tt CLASS=literal>URL</tt>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ClassFormatError</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ClassNotFoundException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

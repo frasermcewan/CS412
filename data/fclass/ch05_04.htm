@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.4 Hashtables</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:11:58 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Collections</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-5-SECT-4">5.4 Hashtables</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.HASH"></A>The <tt CLASS=literal>Dictionary</tt> class is an 
+<tt CLASS=literal>abstract</tt> class that defines 
+methods for associating key objects with value objects. Given a key, an 
+instance of <tt CLASS=literal>Dictionary</tt> is able 
+to return its associated value. The <tt CLASS=literal>Hashtable</tt> 
+class is a concrete subclass of <tt CLASS=literal>Dictionary</tt> 
+that uses a data structure called a <I CLASS=emphasis>hashtable</I> and a technique called <I CLASS=emphasis>chained 
+hashing</I> to allow values associated with keys to be fetched with minimal 
+searching. You might use a <tt CLASS=literal>Hashtable</tt> 
+object to associate weather reports with the names of cities and towns, 
+for example. 
+
+<P CLASS=para>
+Before explaining hashtables or chained hashing, consider the problem 
+of finding a key/value pair in an array that contains references 
+to key/value pairs in no particular order. The array might look 
+something like what is shown in <A HREF="ch05_04.htm#JFC-CH-5-FIG-1">Figure 5.1</A>. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JFC-CH-5-FIG-1">Figure 5.1: An array of key/value pairs</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jfc_0501.gif" alt="[Graphic: Figure 5-1]" width=502 height=223 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Since we cannot make any assumptions about where in the array a key is
+to be found, the most reasonable search strategy is a linear search
+that starts at one end of the array and looks at each array element
+until it finds what it is looking for or reaches the other end of the
+array. For an array with just a few elements, a linear search is a
+reasonable strategy, but for an array with hundreds of elements it is
+not. If we know where in the array to look for a key, however, we can
+eliminate most of the searching effort. Knowing where to look for a
+key is the idea behind a hashtable.
+
+<P CLASS=para>
+With a hashtable, each key object has a relatively unique integer
+value that is called a <I CLASS=emphasis>hashcode</I>.  The
+<tt CLASS=literal>Object</tt> class defines a
+<tt CLASS=literal>hashCode()</tt> method, so every object in Java has such
+a method. The hashcode returned by this method computes an array index
+for a key object as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+array.length % hashCode()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This array index, or hash index, stores the key/value pair
+in a hashtable array. If there is nothing stored at that index, the
+key/value pair is placed at that position in the
+array. However, if there is already a key/value pair at that hash
+index, the <tt CLASS=literal>Hashtable</tt> stores the key/value pair in a
+linked list at that position in the array. This strategy for managing
+multiple keys with the same hash index is called <I CLASS=emphasis>chained hashing</I>. The
+array for hashtable that uses this strategy might look like <A HREF="ch05_04.htm#JFC-CH-5-FIG-2">Figure 5.2</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JFC-CH-5-FIG-2">Figure 5.2: An array of key/value pairs that uses chained hashing</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jfc_0502.gif" alt="[Graphic: Figure 5-2]" width=502 height=282 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Now, when we want to fetch a key/value pair, all we have to do is 
+recalculate the hash index for the key object and look at that position 
+in the hashtable array. If the key stored at that hash index is the right 
+key, then we have found what we are looking for by examining only one array 
+element instead of searching. However, if the key is not the right key, 
+all we have to do is search the items in the linked list at that position 
+to find our key/value pair. 
+
+<P CLASS=para>
+You can create a <tt CLASS=literal>Hashtable</tt> 
+object using the constructor that takes no arguments: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Hashtable h = new Hashtable()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>Hashtable</tt>.  There
+are other constructors that take parameters to allow you to tune the
+performance of a <tt CLASS=literal>Hashtable</tt> object. The first
+parameter you can specify is the capacity of the hash table, which is
+the length of the array used to implement it. The longer the array,
+the less likely it is that multiple keys will share the same hash
+index. The default array length is 101. To create a
+<tt CLASS=literal>Hashtable</tt> object with an array length of 1009,
+use the following constructor:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Hashtable h = new Hashtable(1009);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The number that you choose for the array length should be a prime number. 
+If it is not, the key/value pairs stored in the array will tend 
+to be less evenly distributed. 
+
+<P CLASS=para>
+The load factor of a hashtable is the ratio of the number of key/value 
+pairs in the hashtable to the array length. A load factor of 0 means that 
+the <tt CLASS=literal>Hashtable</tt> is empty. As 
+the load factor increases, so does the likelihood that multiple key/value 
+pairs will share the same hash index. When the load factor becomes greater 
+than 1, it means that the number of key/value pairs in a hashtable 
+is greater than the array length, so that at least one hash index is being 
+shared by multiple key/value pairs. Clearly, a low load factor is 
+better than a high load factor in terms of performance. You can specify 
+the maximum permissible load factor for a <tt CLASS=literal>Hashtable</tt> 
+object when you create it. For example: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Hashtable h = new Hashtable(1009, .62);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If not specified, the maximum load factor for a <tt CLASS=literal>Hashtable</tt> 
+object is .75. When a key/value pair is added to a <tt CLASS=literal>Hashtable</tt> 
+that would otherwise cause the load factor to exceed the maximum value, 
+the <tt CLASS=literal>Hashtable</tt> performs a rehash. 
+This means that the <tt CLASS=literal>Hashtable</tt> 
+creates a new array with a length one greater than double the length of 
+the old array. It then recomputes the hash index for each key/value 
+pair in the old array and stores each key/value pair in the new 
+array at the new hash index. Obviously, this is an undesirable performance 
+hit, so if you know approximately how many items you will add to a <tt CLASS=literal>Hashtable</tt>, 
+you should create one with an appropriate initial capacity. 
+
+<P CLASS=para>
+After you have created a <tt CLASS=literal>Hashtable</tt> 
+object, you can add new key/value pairs to it, or modify the value 
+in an existing key/value pair, by calling the <tt CLASS=literal>put()</tt> 
+method. The <tt CLASS=literal>put()</tt> method takes 
+two arguments: a reference to a key object and a reference to a value object. 
+It first looks for a key/value pair in the hashtable with the key 
+equal to the specified key. If there is such a key/value pair, the 
+<tt CLASS=literal>put()</tt> method replaces the previous 
+value with the specified value and returns a reference to the previous 
+value object. If, however, there is no such key/value pair, the 
+<tt CLASS=literal>put()</tt> method creates a new 
+key/value pair, adds it to the hashtable and returns <tt CLASS=literal>null</tt>. 
+Here is a fragment of a class that uses a <tt CLASS=literal>Hashtable</tt> 
+to store weather forecasts. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.util.Hashtable;
+class WeatherForecastDictionary {
+    private Hashtable ht = new Hashtable(13291);
+    public void putForecast(String locale, WeatherForecast forecast) {
+        ht.put(locale, forecast);
+    }
+...
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>get()</tt> method returns the 
+value associated with a given key in a <tt CLASS=literal>Hashtable</tt> 
+object. It takes one argument that is a reference to the key it should 
+search for. If the <tt CLASS=literal>get()</tt> method 
+does not find a key/value pair with a key equal to the specified 
+key, it returns <tt CLASS=literal>null</tt>. Here 
+is a method that uses the <tt CLASS=literal>get()</tt> 
+method to retrieve a weather forecast: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public WeatherForecast getForecast(String locale) {
+    return (WeatherForecast)ht.get(locale);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The various equality tests done by a <tt CLASS=literal>Hashtable</tt> 
+use a given key object's <tt CLASS=literal>equals()</tt> 
+method. Because of the way that an object's <tt CLASS=literal>hashCode()</tt> 
+and <tt CLASS=literal>equals()</tt> methods are used 
+by the <tt CLASS=literal>Hashtable</tt> class, it 
+is important that if you override the definition of either of these methods, 
+you do so in a consistent way. In other words, if two objects are considered 
+equal by the <tt CLASS=literal>equals()</tt> method 
+for the class, then the <tt CLASS=literal>hashCode()</tt> 
+method for each object must return the same hashcode value. If that is 
+not the case, when those objects are used as keys in a <tt CLASS=literal>Hashtable</tt> 
+object, the <tt CLASS=literal>Hashtable</tt> will 
+produce inconsistent results. 
+
+<P CLASS=para>
+Once you have added key/value pairs to a <tt CLASS=literal>Hashtable</tt>, 
+you can use the <tt CLASS=literal>keys()</tt> and 
+<tt CLASS=literal>elements()</tt> methods to get <tt CLASS=literal>Enumeration</tt> 
+objects that iterate through the key and value objects, respectively. The 
+<tt CLASS=literal>containsKey()</tt> method allows 
+you to search the <tt CLASS=literal>Hashtable</tt> 
+for a particular key object, while <tt CLASS=literal>contains()</tt> 
+searches for a particular value object. The <tt CLASS=literal>Hashtable</tt> 
+class also defines a <tt CLASS=literal>remove()</tt> 
+method for removing key/value pairs from a <tt CLASS=literal>Hashtable</tt>. 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Stacks</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>I/O</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

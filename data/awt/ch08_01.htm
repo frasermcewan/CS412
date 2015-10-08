@@ -1,0 +1,539 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] Input Fields</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:41:37 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-8">8. Input Fields</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Text Component<br>
+<A HREF="ch08_02.htm">TextField</A><BR>
+<A HREF="ch08_03.htm">TextArea</A><BR>
+<A HREF="ch08_04.htm">Extending TextField</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+There are two fundamental ways for users to provide input to a program: 
+they can type on a keyboard, or they can select something (a button, a 
+menu item, etc.) using a mouse. When you want a user to provide input 
+to your program, you can display a list of choices to choose from or allow 
+the user to interact with your program by typing with the keyboard. Presenting 
+choices to the user is covered in <A HREF="ch09_01.htm">Chapter 9, <i>Pick Me</i></A>. As far as 
+keyboard input goes, the <tt CLASS=literal>java.awt</tt> 
+package provides two options. The <tt CLASS=literal>TextField</tt> 
+class is a single line input field, while the <tt CLASS=literal>TextArea</tt> 
+class is a multiline one. Both <tt CLASS=literal>TextField</tt> 
+and <tt CLASS=literal>TextArea</tt> are subclasses 
+of the class <tt CLASS=literal>TextComponent</tt>, which contains 
+all the common functionality of the two. <tt CLASS=literal>TextComponent</tt> 
+is a subclass of <tt CLASS=literal>Component</tt>, 
+which is a subclass of <tt CLASS=literal>Object</tt>. 
+So you inherit all of these methods when you work with either <tt CLASS=literal>TextField</tt> 
+or <tt CLASS=literal>TextArea</tt>. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-1">8.1 Text Component</A></h2>
+
+<P CLASS=para>
+<A NAME="CH08.TEXT1"></A>By themselves, the <tt CLASS=literal>TextField</tt> 
+and <tt CLASS=literal>TextArea</tt> classes are fairly 
+robust. However, in order to reduce duplication between the classes, they 
+both inherit a number of methods from the <tt CLASS=literal>TextComponent</tt> 
+class. The constructor for <tt CLASS=literal>TextComponent</tt> 
+is package private, so you cannot create an instance of it yourself. Some 
+of the activities shared by <tt CLASS=literal>TextField</tt> 
+and <tt CLASS=literal>TextArea</tt> through the <tt CLASS=literal>TextComponent</tt> 
+methods include setting the text, getting the text, selecting the text, 
+and making it read-only. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-1.1">TextComponent Methods</A></h3>Contents
+
+<P CLASS=para>
+Both <tt CLASS=literal>TextField</tt> and <tt CLASS=literal>TextArea</tt> 
+contain a set of characters whose content determines the current value 
+of the <tt CLASS=literal>TextComponent</tt>. The following 
+methods are usually called in response to an external event. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getText () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getText()</tt> method returns 
+the current contents of the <tt CLASS=literal>TextComponent</tt> 
+as a <tt CLASS=literal>String</tt> object. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setText (String text) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setText()</tt> method sets the 
+content of the <tt CLASS=literal>TextComponent</tt> 
+to <tt CLASS=literal>text</tt>. If the <tt CLASS=literal>TextComponent</tt> 
+is a <tt CLASS=literal>TextArea</tt>, you can embed 
+newline characters (<tt CLASS=literal>\n</tt>) 
+in the <tt CLASS=literal>text</tt> so that it will 
+appear on multiple lines. </DL>
+Text selection
+
+<P CLASS=para>
+<A NAME="CH08.TEXT3"></A><A NAME="CH08.TEXT2"></A>Users can select text in <tt CLASS=literal>TextComponents</tt> 
+by pressing a mouse button at a starting point and dragging the cursor 
+across the text. The selected text is displayed in reverse video. Only 
+one block of text can be selected at any given time within a single <tt CLASS=literal>TextComponent</tt>. 
+Once selected, this block could be used to provide the user with some text-related 
+operation such as cut and paste (on a <tt CLASS=literal>PopupMenu</tt>). 
+
+<P CLASS=para>
+Depending on the platform, you might or might not be able to get selected 
+text when a <tt CLASS=literal>TextComponent</tt> does 
+not have the input focus. In general, the component with selected text 
+must have input focus in order for you to retrieve any information about 
+the selection. However, in some environments, the text remains selected 
+when the component no longer has the input focus. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getSelectionStart () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectionStart()</tt> method 
+returns the initial position of any selected text. The position can be 
+considered the number of characters preceding the first selected character. 
+If there is no selected text, <tt CLASS=literal>getSelectionStart()</tt> 
+returns the current cursor position. If the start of the selection is at 
+beginning of the text, the return value is 0. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getSelectionEnd () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectionEnd()</tt> method 
+returns the ending cursor position of any selected text--that is, 
+the number of characters preceding the end of the selection. If there is 
+no selected text, <tt CLASS=literal>getSelectionEnd()</tt> 
+returns the current cursor position. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getSelectedText () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedText()</tt> method 
+returns the currently selected text of the <tt CLASS=literal>TextComponent</tt> 
+as a <tt CLASS=literal>String</tt>. If nothing is 
+selected, <tt CLASS=literal>getSelectedText()</tt> 
+returns an empty <tt CLASS=literal>String</tt>, not 
+<tt CLASS=literal>null</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setSelectionStart (int position) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setSelectionStart()</tt> method 
+changes the beginning of the current selection to <tt CLASS=literal>position</tt>. 
+If <tt CLASS=literal>position</tt> is after <tt CLASS=literal>getSelectionEnd()</tt>, 
+the cursor position moves to <tt CLASS=literal>getSelectionEnd()</tt>, 
+and nothing is selected. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setSelectionEnd (int position) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setSelectionEnd()</tt> method 
+changes the end of the current selection to <tt CLASS=literal>position</tt>. 
+If <tt CLASS=literal>position</tt> is before <tt CLASS=literal>getSelectionStart()</tt>, 
+the cursor position moves to <tt CLASS=literal>position</tt>, 
+and nothing is selected. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void select (int selectionStart, int selectionEnd) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>select()</tt> method selects 
+the text in the <tt CLASS=literal>TextComponent</tt> 
+from <tt CLASS=literal>selectionStart</tt> to <tt CLASS=literal>selectionEnd</tt>. 
+If <tt CLASS=literal>selectionStart</tt> is after 
+<tt CLASS=literal>selectionEnd</tt>, the cursor position 
+moves to <tt CLASS=literal>selectionEnd</tt>. Some 
+platforms allow you to use <tt CLASS=literal>select()</tt> 
+to ensure that a particular position is visible on the screen. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void selectAll () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>selectAll()</tt> method selects 
+all the text in the <tt CLASS=literal>TextComponent</tt>. 
+It basically does a <tt CLASS=literal>select()</tt> 
+call with a <tt CLASS=literal>selectionStart</tt> 
+position of 0 and a <tt CLASS=literal>selectionEnd</tt> 
+position of the length of the contents. </DL>
+Carets
+
+<P CLASS=para>
+Introduced in Java 1.1 is the ability to set and get the current insertion 
+position within the text object. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getCaretPosition () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getCaretPosition()</tt> method 
+returns the current text insertion position (often called the "cursor") 
+of the <tt CLASS=literal>TextComponent</tt>. You can 
+use this position to paste text from the clipboard with the <tt CLASS=literal>java.awt.datatransfer</tt> 
+package described in <A HREF="ch16_01.htm">Chapter 16, <i>Data Transfer</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setCaretPosition (int position) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setCaretPosition()</tt> method 
+moves the current text insertion location of the <tt CLASS=literal>TextComponent</tt> 
+to <tt CLASS=literal>position</tt>. If the <tt CLASS=literal>TextComponent</tt> 
+does not have a peer yet, <tt CLASS=literal>setCaretPosition()</tt> 
+throws the <tt CLASS=literal>IllegalComponentStateException</tt> run-time exception. 
+If <tt CLASS=literal>position</tt> &lt; 0, this method 
+throws the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+If <tt CLASS=literal>position</tt> is too big, the 
+text insertion point is positioned at the end. 
+
+<P CLASS=para>
+Prior to Java version 1.1, the insertion location was usually set by calling <tt CLASS=literal>select(position, 
+position)</tt>. </DL>
+Read-only text
+
+<P CLASS=para>
+By default, a <tt CLASS=literal>TextComponent</tt> 
+is editable. If a user types while the component has input focus, its 
+contents will change. A <tt CLASS=literal>TextComponent</tt> 
+can also be used in an output-only (read-only) mode. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setEditable (boolean state) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setEditable()</tt> method allows 
+you to change the current editable state of the <tt CLASS=literal>TextComponent</tt> 
+to <tt CLASS=literal>state</tt>. <tt CLASS=literal>true</tt> 
+means the component is editable; <tt CLASS=literal>false</tt> 
+means read-only. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isEditable () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isEditable()</tt> method tells 
+you if the <tt CLASS=literal>TextComponent</tt> is 
+editable (<tt CLASS=literal>true</tt>) or read-only 
+(<tt CLASS=literal>false</tt>). </DL>
+<P CLASS=para>
+The following listing is an applet that toggles the editable status for 
+a <tt CLASS=literal>TextArea</tt> and sets a label 
+to show the current status. As you can see in <A HREF="ch08_01.htm#JAWT-CH-8-FIG-1">Figure 8.1</A>, 
+platforms can change the display characteristics of the <tt CLASS=literal>TextComponent</tt> 
+to reflect whether the component is editable. (Windows 95 darkens the background. 
+Motif and Windows NT do nothing.) 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+public class readonly extends Applet {
+    TextArea area;
+    Label label;
+    public void init () {
+        setLayout (new BorderLayout (10, 10));
+        add ("South", new Button ("toggleState"));
+        add ("Center", area = new TextArea ("Help Me", 5, 10));
+        add ("North", label = new Label ("Editable", Label.CENTER));
+    }
+    public boolean action (Event e, Object o) {
+        if (e.target instanceof Button) {
+            if ("toggleState".equals(o)) {
+               area.setEditable (!area.isEditable ());
+               label.setText ((area.isEditable () ? "Editable" : "Read-only"));
+               return true;
+            }
+        }
+        return false;
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-8-FIG-1">Figure 8.1: Editable and read-only TextAreas</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0801.gif" alt="[Graphic: Figure 8-1]" width=503 height=227 border=0>
+
+</DIV>
+
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void removeNotifiy ()  </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeNotify()</tt> method destroys 
+the peer of the <tt CLASS=literal>TextComponent</tt> 
+and removes it from the screen. Prior to the <tt CLASS=literal>TextComponent</tt> 
+peer's destruction, the current state is saved so that a subsequent 
+call to <tt CLASS=literal>addNotify()</tt> will put 
+it back. (<tt CLASS=literal>TextArea</tt> and <tt CLASS=literal>TextField</tt> 
+each have their own <tt CLASS=literal>addNotify()</tt> 
+methods.) These methods deal with the peer object, which hides the native 
+platform's implementation of the component. If you override this 
+method for a specific <tt CLASS=literal>TextComponent</tt>, 
+put in the customizations for your new class first, and call <tt CLASS=literal>super.removeNotify()</tt> 
+last. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString ()  </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of a <tt CLASS=literal>TextField</tt> or <tt CLASS=literal>TextArea</tt>, 
+the default <tt CLASS=literal>toString()</tt> method 
+of <tt CLASS=literal>Component</tt> is called. This 
+in turn calls <tt CLASS=literal>paramString()</tt>, 
+which builds up the string to display. The <tt CLASS=literal>TextComponent</tt> 
+level potentially adds four items. The first is the current contents of 
+the <tt CLASS=literal>TextComponent</tt> (<tt CLASS=literal>getText()</tt>). 
+If the text is editable, <tt CLASS=literal>paramString()</tt> adds the word <I CLASS=emphasis>editable</I> to the string. The last two items included are 
+the current selection range (<tt CLASS=literal>getSelectionStart()</tt> 
+and <tt CLASS=literal>getSelectionEnd()</tt>). </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-8-SECT-1.2">TextComponent Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH08.EVENT"></A>With the 1.1 event model, you can register listeners for text events. A 
+text event occurs when the component's content changes, either because 
+the user typed something or because the program called a method like <tt CLASS=literal>setText()</tt>. 
+Listeners are registered with the <tt CLASS=literal>addTextListener()</tt> 
+method. When the content changes, the <tt CLASS=literal>TextListener.textValueChanges()</tt> 
+method is called through the protected method <tt CLASS=literal>processTextEvent()</tt>. 
+There is no equivalent to <tt CLASS=literal>TextEvent</tt> 
+in Java 1.0; you would have to direct keyboard changes and all programmatic 
+changes to a common method yourself. 
+
+<P CLASS=para>
+In addition to <tt CLASS=literal>TextEvent</tt> listeners, 
+Key, mouse, and focus listeners are registered through the <tt CLASS=literal>Component</tt> 
+methods <tt CLASS=literal>addKeyListener()</tt>, <tt CLASS=literal>addMouseListener()</tt>, 
+<tt CLASS=literal>addMouseMotionListener()</tt>, and 
+<tt CLASS=literal>addFocusListener()</tt>, respectively. Listeners and 1.1 event handling
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addTextListener(TextListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+<A NAME="CH08.EVENT2"></A>The <tt CLASS=literal>addTextListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in receiving notifications when a <tt CLASS=literal>TextEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>TextComponent</tt> as 
+its target. The <tt CLASS=literal>listener.textValueChanged()</tt> 
+method is called when these events occur. Multiple listeners can be registered. 
+
+<P CLASS=para>
+The following applet, <tt CLASS=literal>text13</tt>, 
+demonstrates how to use a <tt CLASS=literal>TextListener</tt> 
+to handle the events that occur when a <tt CLASS=literal>TextField</tt> 
+is changed. Whenever the user types into the <tt CLASS=literal>TextField</tt>, 
+a <tt CLASS=literal>TextEvent</tt> is delivered to 
+the <tt CLASS=literal>textValueChanged()</tt> method, 
+which prints a message on the Java console. The applet includes a button 
+that, when pressed, modifies the text field <tt CLASS=literal>tf</tt> 
+by calling <tt CLASS=literal>setText()</tt>. These 
+changes also generate a <tt CLASS=literal>TextEvent</tt>. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+class TextFieldSetter implements ActionListener {
+    TextField tf;
+    TextFieldSetter (TextField tf) {
+        this.tf = tf;
+    }
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals ("Set")) {
+            tf.setText ("Hello");
+        }
+    }
+}
+public class text13 extends Applet implements TextListener {
+    TextField tf;
+    int i=0;
+    public void init () {
+        Button b;
+        tf = new TextField ("Help Text", 20);
+        add (tf);
+        tf.addTextListener (this);
+        add (b = new Button ("Set"));
+        b.addActionListener (new TextFieldSetter (tf));
+    }
+    public void textValueChanged(TextEvent e) {
+        System.out.println (++i + ": " + e);
+    }
+}
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeTextListener(TextListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeTextListener()</tt> method 
+removes <tt CLASS=literal>listener</tt> as an interested 
+listener. If <tt CLASS=literal>listener</tt> is not 
+registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+all <tt CLASS=literal>AWTEvent</tt>s with this <tt CLASS=literal>TextComponent</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes the events along to any listeners for processing. When you 
+subclass <tt CLASS=literal>TextComponent</tt>, overriding 
+<tt CLASS=literal>processEvent()</tt> allows you to 
+process all events yourself, before sending them to any listeners. In a 
+way, overriding <tt CLASS=literal>processEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processEvent()</tt>, 
+remember to call <tt CLASS=literal>super.processEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processTextEvent(TextEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processTextEvent()</tt> method 
+receives all <tt CLASS=literal>TextEvent</tt>s with 
+this <tt CLASS=literal>TextComponent</tt> as its target. 
+<tt CLASS=literal>processTextEvent()</tt> then passes 
+them along to any listeners for processing. When you subclass <tt CLASS=literal>TextField</tt> 
+or <tt CLASS=literal>TextArea</tt>, overriding the <tt CLASS=literal>processTextEvent()</tt> 
+method allows you to process all text events yourself, before sending them to 
+any listeners. There is no equivalent to <tt CLASS=literal>processTextEvent()</tt> 
+within the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processTextEvent()</tt>, 
+remember to call the method <tt CLASS=literal>super.processTextEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. </DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Other Layouts Available on the Net</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>TextField</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

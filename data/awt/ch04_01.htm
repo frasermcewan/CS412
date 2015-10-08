@@ -1,0 +1,480 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] Events</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:30:23 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-4">4. Events</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Java 1.0 Event Model<br>
+<A HREF="ch04_02.htm">The Event Class</A><BR>
+<A HREF="ch04_03.htm">The Java 1.1 Event Model</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+This chapter covers Java's event-driven programming model. Unlike 
+procedural programs, windows-based programs require an event-driven model 
+in which the underlying environment tells your program when something happens. 
+For example, when the user clicks on the mouse, the environment generates 
+an event that it sends to the program. The program must then figure out 
+what the mouse click means and act accordingly. 
+
+<P CLASS=para>
+<A NAME="CH04.EVENTS"></A>This chapter covers two different event models, or ways of handling events. 
+In Java 1.0.2 and earlier, events were passed to all components that could 
+possibly have an interest in them. Events themselves were encapsulated 
+in a single <tt CLASS=literal>Event</tt> class. Java 
+1.1 implements a "delegation" model, in which events are 
+distributed only to objects that have been registered to receive the event. 
+While this is somewhat more complex, it is much more efficient and also 
+more flexible, because it allows any object to receive the events generated 
+by a component. In turn, this means that you can separate the user interface 
+itself from the event-handling code. 
+
+<P CLASS=para>
+In the Java 1.1 event model, all event functionality is contained in a 
+new package, <tt CLASS=literal>java.awt.event</tt>. 
+Within this package, subclasses of the abstract class <tt CLASS=literal>AWTEvent</tt> 
+represent different kinds of events. The package also includes a number 
+of <tt CLASS=literal>EventListener</tt> interfaces 
+that are implemented by classes that want to receive different kinds of 
+events; they define the methods that are called when events of the appropriate 
+type occur. A number of adapter classes are also included; they correspond 
+to the <tt CLASS=literal>EventListener</tt> interfaces 
+and provide null implementations 
+of the methods in the corresponding listener. The adapter classes aren't 
+essential but provide a convenient shortcut for developers; rather than 
+declaring that your class implements a particular <tt CLASS=literal>EventListener</tt> 
+interface, you can declare that your class extends the appropriate adapter. 
+
+<P CLASS=para>
+The old and new event models are incompatible. Although Java 1.1 supports 
+both, you should not use both models in the same program. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-1">4.1 Java 1.0 Event Model</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.JAVA1"></A><A NAME="CH04.JAVA4"></A>The event model used in versions 1.0 through 1.0.2 of Java is fairly simple. 
+Upon receiving a user-initiated event, like a mouse click, the system generates 
+an instance of the <tt CLASS=literal>Event</tt> class 
+and passes it along to the program. The program identifies the event's 
+target (i.e., the component in which the event occurred) and asks that 
+component to handle the event. If the target can't handle this event, 
+an attempt is made to find a component that can, and the process repeats. 
+That is all there is to it. Most of the work takes place behind the scenes; 
+you don't have to worry about identifying potential targets or delivering 
+events, except in a few special circumstances. Most Java programs only 
+need to provide methods that deal with the specific events they care about. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-1.1">Identifying the Target</A></h3>
+
+<P CLASS=para>
+All events occur within a Java <tt CLASS=literal>Component</tt>. 
+The program decides which component gets the event by starting at the outermost 
+level and working in. In <A HREF="ch04_01.htm#JAWT-CH-4-FIG-1">Figure 4.1</A>, assume that 
+the user clicks at the location (156, 70) within the enclosing <tt CLASS=literal>Frame</tt>'s 
+coordinate space. This action results in a call to the <tt CLASS=literal>Frame</tt>'s 
+<tt CLASS=literal>deliverEvent()</tt> method, which 
+determines which component within the frame should receive the event and 
+calls that component's <tt CLASS=literal>deliverEvent()</tt> 
+method. In this case, the process continues until it reaches the <tt CLASS=literal>Button</tt> 
+labeled Blood, which occupies 
+the rectangular space from (135, 60) to (181, 80). Blood doesn't 
+contain any internal components, so it must be the component for which 
+the event is intended. Therefore, an action event is delivered to Blood, 
+with its coordinates translated to fit within the button's coordinate 
+space--that is, the button receives an action event with the coordinates 
+(21, 10). If the user clicked at the location (47, 96) within the Frame's 
+coordinate space, the <tt CLASS=literal>Frame</tt> 
+itself would be the target of the event because there is no other component 
+at this location. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-4-FIG-1">Figure 4.1: deliverEvent</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0401.gif" alt="[Graphic: Figure 4-1]" width=185 height=185 border=0>
+
+</DIV>
+
+<P CLASS=para>
+To reach Blood, 
+the event follows the component/container hierarchy shown 
+in <A HREF="ch04_01.htm#JAWT-CH-4-FIG-2">Figure 4.2</A>. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-4-FIG-2">Figure 4.2: deliverEvent screen model</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0402.gif" alt="[Graphic: Figure 4-2]" width=502 height=271 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-1.2">Dealing With Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.HANDLE"></A>Once <tt CLASS=literal>deliverEvent()</tt> identifies 
+a target, it calls that target's <tt CLASS=literal>handleEvent()</tt> 
+method (in this case, the <tt CLASS=literal>handleEvent()</tt> 
+method of Blood) to deliver 
+the event for processing. If Blood 
+has not overridden <tt CLASS=literal>handleEvent()</tt>, 
+its default implementation would call Blood's 
+<tt CLASS=literal>action()</tt> method. If Blood 
+has not overridden <tt CLASS=literal>action()</tt>, 
+its default implementation (which is inherited from <tt CLASS=literal>Component</tt>) 
+is executed and does nothing. For your program to respond to the event, 
+you would have to provide your own implementation of <tt CLASS=literal>action()</tt> 
+or<tt CLASS=literal> handleEvent()</tt>. 
+
+<P CLASS=para>
+<tt CLASS=literal>handleEvent() </tt>plays a particularly 
+important role in the overall scheme. It is really a dispatcher, which 
+looks at the type of event and calls an appropriate method to do the actual 
+work: <tt CLASS=literal>action()</tt> for action events, 
+<tt CLASS=literal>mouseUp()</tt> for mouse up events, 
+and so on. <A HREF="ch04_01.htm#JAWT-CH-4-TAB-1">Table 4.1</A> shows the event-handler methods 
+you would have to override when using the default <tt CLASS=literal>handleEvent()</tt> 
+implementation. If you create your own <tt CLASS=literal>handleEvent()</tt>, 
+either to handle an event without a default handler or to process events 
+differently, it is best to leave these naming conventions in place. Whenever 
+you override an event-handler method, it is a good idea to call the overridden 
+method to ensure that you don't lose any functionality. All of the 
+event handler methods return a boolean, which determines whether there is any further event processing; this is described in the next section, 
+"Passing the Buck." 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-4-TAB-1">Table 4.1: Event Types and Event Handlers</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Event Type</TH>
+<TH ALIGN="left">Event Handler</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_ENTER</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseEnter()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_EXIT</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseExit()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_MOVE</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseMove()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_DRAG</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseDrag()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_DOWN</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseDown()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_UP</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseUp()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KEY_PRESS</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>keyDown()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>keyDown()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KEY_RELEASE</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>keyUp()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION_RELEASE</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>keyUp()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>GOT_FOCUS</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>gotFocus()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>LOST_FOCUS</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>lostFocus()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ACTION_EVENT</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>action()</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-1.3">Passing the Buck</A></h3>
+
+<P CLASS=para>
+In actuality, <tt CLASS=literal>deliverEvent()</tt> 
+does not call <tt CLASS=literal>handleEvent()</tt> 
+directly. It calls the <tt CLASS=literal>postEvent()</tt> 
+method of the target component. In turn, <tt CLASS=literal>postEvent()</tt> 
+manages the calls to <tt CLASS=literal>handleEvent()</tt>. <tt CLASS=literal>postEvent()</tt> provides this additional 
+level of indirection to monitor the return value of <tt CLASS=literal>handleEvent()</tt>. 
+If the event handler returns <tt CLASS=literal>true</tt>, 
+the handler has dealt with the event completely. All processing has been 
+completed, and the system can move on to the next event. If the event handler 
+returns <tt CLASS=literal>false</tt>, the handler 
+has not completely processed the event, and <tt CLASS=literal>postEvent()</tt> 
+will contact the component's <tt CLASS=literal>Container</tt> 
+to finish processing the event. Using the screen in <A HREF="ch04_01.htm#JAWT-CH-4-FIG-1">Figure 4.1</A> 
+as the basis, <A HREF="ch04_01.htm#JAWT-CH-4-EX-1">Example 4.1</A> traces the calls through 
+<tt CLASS=literal>deliverEvent()</tt>, <tt CLASS=literal>postEvent()</tt>, 
+and <tt CLASS=literal>handleEvent()</tt>. The action 
+starts when the user clicks on the Blood 
+button at coordinates (156, 70). In short, Java dives into the depths of 
+the screen's component hierarchy to find the target of the event 
+(by way of the method <tt CLASS=literal>deliverEvent()</tt>). 
+Once it locates the target, it tries to find something to deal with the 
+event by working its way back out (by way of <tt CLASS=literal>postEvent()</tt>, 
+<tt CLASS=literal>handleEvent()</tt>, and the convenience 
+methods). As you can see, there's a lot of overhead, even in this 
+relatively simple example. When we discuss the Java 1.1 event model, 
+you will see that it has much less overhead, primarily because it doesn't 
+need to go looking for a component to process each event. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-4-EX-1">Example 4.1: The deliverEvent, postEvent, and handleEvent Methods</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+DeliverEvent.deliverEvent (Event e) called
+    DeliverEvent.locate (e.x, e.y)
+    Finds Panel1
+    Translate Event Coordinates for Panel1
+    Panel1.deliverEvent (Event e)
+        Panel1.locate (e.x, e.y)
+        Finds Panel3
+        Translate Event Coordinates for Panel3
+        Panel3.deliverEvent (Event e)
+            Panel3.locate (e.x, e.y)
+            Finds Blood
+            Translate Event Coordinates for Blood
+            Blood.deliverEvent (Event e)
+                Blood.postEvent (Event e)
+                    Blood.handleEvent (Event e)
+                        Blood.mouseDown   (Event e, e.x, e.y)
+                            returns false
+                        return false
+                    Get parent Container Panel3
+                    Translate Event Coordinates for Panel3
+                    Panel3.postEvent (Event e)
+                        Panel3.handleEvent (Event e)
+                            Component.mouseDown (Event e, e.x, e.y)
+                                returns false
+                            return false
+                        Get parent Container Panel1
+                        Translate Event Coordinates for Panel1
+                        Panel1.postEvent (Event e)
+                            Panel1.handleEvent (Event e)
+                                Component.action (Event e, e.x, e.y)
+                                    return false
+                                return false
+                            Get parent Container DeliverEvent
+                            Translate Event Coordinates for DeliverEvent
+                            DeliverEvent.postEvent (Event e)
+                                DeliverEvent.handleEvent
+                                    DeliverEvent.action (Event e, e.x, e.y)
+                                        return true
+                                    return true
+                                return true
+                            return true
+                        return true
+                    return true
+                return true
+            return true
+        return true
+    return true
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-1.4">Overriding handleEvent()</A></h3>
+
+<P CLASS=para>
+In many programs, you only need to override convenience methods like <tt CLASS=literal>action()</tt> 
+and <tt CLASS=literal>mouseUp()</tt>; you usually 
+don't need to override <tt CLASS=literal>handleEvent()</tt>, 
+which is the high level event handler that calls the convenience methods. 
+However, convenience methods don't exist for all event types. To 
+act upon an event that doesn't have a convenience method (for example, 
+<tt CLASS=literal>LIST_SELECT</tt>), you need to override 
+<tt CLASS=literal>handleEvent()</tt> itself. Unfortunately, 
+this presents a problem. Unlike the convenience methods, for which the 
+default versions don't take any action, <tt CLASS=literal>handleEvent()</tt> 
+does quite a lot: as we've seen, it's the dispatcher that calls 
+the convenience methods. Therefore, when you override <tt CLASS=literal>handleEvent()</tt>, 
+either you should reimplement all the features of the method you are overriding 
+(a very bad idea), or you must make sure that the original <tt CLASS=literal>handleEvent()</tt>is 
+still executed to ensure that the remaining events get handled properly. 
+The simplest way for you to do this is for your new <tt CLASS=literal>handleEvent()</tt> 
+method to act on any events that it is interested in and return <tt CLASS=literal>true</tt> 
+if it has handled those events completely. If the incoming event is not 
+an event that your <tt CLASS=literal>handleEvent()</tt> 
+is interested in, you should call <tt CLASS=literal>super.handleEvent()</tt> 
+and return its return value. The following code shows how you might override 
+<tt CLASS=literal>handleEvent()</tt> to deal with 
+a <tt CLASS=literal>LIST_SELECT</tt> event: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean handleEvent (Event e) {
+    if (e.id == Event.LIST_SELECT) {   // take care of LIST_SELECT
+        System.out.println ("Selected item: " + e.arg);
+        return true;    // LIST_SELECT handled completely; no further action
+    } else {   // make sure we call the overridden method to ensure
+                // that other events are handled correctly
+        return super.handleEvent (e);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-1.5">Basic Event Handlers</A></h3>
+
+<P CLASS=para>
+The convenience event handlers like <tt CLASS=literal>mouseDown()</tt>, 
+<tt CLASS=literal>keyUp()</tt>, and <tt CLASS=literal>lostFocus()</tt> 
+are all implemented by the <tt CLASS=literal>Component</tt> 
+class. The default versions of these methods do nothing and return <tt CLASS=literal>false</tt>. 
+Because these methods do nothing by default, when overriding them you do 
+not have to ensure that the overridden method gets called. This simplifies 
+the programming task, since your method only needs to return <tt CLASS=literal>false</tt> 
+if it has not completely processed the event. However, if you start to 
+subclass nonstandard components (for example, if someone has created a 
+fancy <tt CLASS=literal>AudioButton</tt>, and you're 
+subclassing that, rather than the standard <tt CLASS=literal>Button</tt>), 
+you probably should explicitly call the overridden method. For example, 
+if you are overriding <tt CLASS=literal>mouseDown()</tt>, 
+you should include a call to <tt CLASS=literal>super.mouseDown()</tt>, 
+just as we called <tt CLASS=literal>super.handleEvent()</tt> 
+in the previous example. This call is "good housekeeping"; 
+most of the time, your program will work without it. However, your program 
+will break as soon as someone changes the behavior of the <tt CLASS=literal>AudioButton</tt> 
+and adds some feature to its <tt CLASS=literal>mouseDown()</tt> 
+method. Calling the super class's event handler helps you write "bulletproof&nbsp;" 
+code. 
+
+<P CLASS=para>
+The code below overrides the <tt CLASS=literal>mouseDown()</tt> 
+method. I'm assuming that we're extending a standard component, 
+rather than extending some custom component, and can therefore dispense 
+with the call to <tt CLASS=literal>super.mouseDown()</tt>. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean mouseDown (Event e, int x, int y) {
+    System.out.println ("Coordinates: " + x + "-" + y);
+    if ((x &gt; 100) || (y &lt; 100))
+        return false;    // we're not interested in this event; pass it on
+    else                 // we're interested;
+        ...              // this is where event-specific processing goes
+        return true;     // no further event processing
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here's a debugging hint: when overriding an event handler, make sure 
+that the parameter types are correct--remember that each convenience method 
+has different parameters. If your overriding method has parameters that 
+don't match the original method, the program will still compile correctly. 
+However, it won't work. Because the parameters don't match, 
+your new method simply overloads the original, rather than overriding it. 
+As a result, your method will never be called. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Using Desktop Colors</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Event Class</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

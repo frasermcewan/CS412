@@ -1,0 +1,1203 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] Events</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:54:46 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-7">7. Events</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+The Java 1.0 Event Model<br>
+<A HREF="ch07_02.htm">Scribbling in Java 1.0</A><BR>
+<A HREF="ch07_03.htm">The Java 1.1 Event Model</A><BR>
+<A HREF="ch07_04.htm">Scribbling in Java 1.1</A><BR>
+<A HREF="ch07_05.htm">Scribbling with Inner Classes</A><BR>
+<A HREF="ch07_06.htm">Inside the Java 1.1 Event Model</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+The heart of any applet or graphical user interface is the
+event processing code.  Graphical applications are
+event-driven: they do nothing until the user moves the mouse
+or clicks a button or types a key.  An event-driven program
+is structured around its event-processing model, so a
+solid understanding of event handling mechanisms is
+crucial for good programming.
+
+<P CLASS=para>
+Unfortunately, the Java event handling model has changed
+between Java 1.0 and Java 1.1.  The Java 1.0 model is a
+simple one, well suited to writing basic applets.  It has a
+number of shortcomings, however, and does not scale well to
+complicated interfaces.  Although the 1.0 event model is
+deprecated in Java 1.1, you'll still need to use it for any
+applets that you want to run on Web browsers based on Java 1.0.
+The Java 1.1 event model solves many of the shortcomings of
+the 1.0 model it replaces, but would be quite cumbersome to
+use if it were not for the new inner class features also
+introduced in Java 1.1.  This chapter covers both event models
+and provides examples of each.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-1">7.1 The Java 1.0 Event Model</A></h2>
+
+<P CLASS=para>
+<A NAME="CH7.EVENTS-JAVA.1"></A>In Java 1.0, all events are represented by the <tt CLASS=literal>Event</tt>
+class.  This class has a number of instance variables that
+describe the event.  One of these variables, <tt CLASS=literal>id</tt>,
+specifies the type of the event.  <tt CLASS=literal>Event</tt> defines a
+number of constants that are the possible values for the
+<tt CLASS=literal>id</tt> field.  The <tt CLASS=literal>target</tt> field specifies the
+object (typically a <tt CLASS=literal>Component</tt>) that generated the
+event, or on which the event occurred (i.e., the source of the
+event).  The other fields may or may not be used, depending
+on the type of the event.  For example, the <tt CLASS=literal>x</tt> and
+<tt CLASS=literal>y</tt> fields are defined when <tt CLASS=literal>id</tt> is
+<tt CLASS=literal>BUTTON_EVENT</tt>, but not when it is <tt CLASS=literal>ACTION_EVENT</tt>.
+The <tt CLASS=literal>arg</tt> field can provide additional type-dependent data.
+
+<P CLASS=para>
+Java 1.0 events are dispatched first to the
+<tt CLASS=literal>handleEvent()</tt> method of the
+<tt CLASS=literal>Component</tt> on which they occurred.  The default
+implementation of this method checks the <tt CLASS=literal>id</tt> field of
+the <tt CLASS=literal>Event</tt> object and dispatches the most commonly
+used types of events to various type-specific methods,
+listed in <A HREF="ch07_01.htm#JNUT2-CH-7-TAB-1">Table 7.1</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-7-TAB-1">Table 7.1: Java 1.0 Event Processing Methods of Component</A></CAPTION>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>action()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>lostFocus()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseExit()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>gotFocus()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseDown()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseMove()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>keyDown()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseDrag()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseUp()</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>keyUp()</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>mouseEnter()</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+The methods listed in <A HREF="ch07_01.htm#JNUT2-CH-7-TAB-1">Table 7.1</A>
+are defined by the <tt CLASS=literal>Component</tt> class.  One of the
+primary characteristics of the Java 1.0 event model is that
+you must override these methods in order to process events.
+This means that you must create a subclass to define
+custom event-handling behavior, which is exactly what we do
+when we write an applet, for example.  Notice, however, that not all
+of the event types are dispatched by <tt CLASS=literal>handleEvent()</tt>
+to more specific methods.  So, if you are interested in
+<tt CLASS=literal>LIST_SELECT</tt> or
+<tt CLASS=literal>WINDOW_ICONIFY</tt> events, for example, you have to override
+<tt CLASS=literal>handleEvent()</tt> itself, rather than one of the more
+specific methods.  If you do this, you should usually invoke
+<tt CLASS=literal>super.handleEvent()</tt> to continue dispatching events
+of other types in the default way.
+
+<P CLASS=para>
+The <tt CLASS=literal>handleEvent()</tt> method, and all of the
+type-specific methods, return <tt CLASS=literal>boolean</tt> values.
+If an event-handling method returns
+<tt CLASS=literal>false</tt>, as they all do by default, it means that the
+event was not handled, so it should be passed to the container
+of the current component to see if that container is
+interested in processing it.  If a method returns
+<tt CLASS=literal>true</tt>, on the other hand, it is a signal that the
+event <I CLASS=emphasis>has</I> been handled and no further processing is
+needed.
+
+<P CLASS=para>
+The fact that unhandled events are passed up the
+containment hierarchy is important.  It means that we can
+override the <tt CLASS=literal>action()</tt> method (for example) in an
+applet in order to handle the <tt CLASS=literal>ACTION_EVENT</tt> events that are
+generated by the buttons within the applet.  If they were
+not propagated up as they are, we would have to create a
+custom subclass of <tt CLASS=literal>Button</tt> for every button we wanted
+to add to an interface!
+
+<P CLASS=para>
+In programs that use the Java 1.0 event model, it is typical
+to handle events at the top-level component. In an applet,
+for example, you override the <tt CLASS=literal>handleEvent()</tt> method, or
+some of the other type-specific
+methods, of the <tt CLASS=literal>Applet</tt> subclass you create.
+Or, in a stand-alone program that creates its own window,
+you subclass <tt CLASS=literal>Frame</tt> to provide definitions of the
+event-handling methods.  When a program displays a dialog
+box, it subclasses <tt CLASS=literal>Dialog</tt> to define the methods.
+With complex interfaces, the event-handling methods of
+the containers at the top of the hierarchy can become long and
+somewhat convoluted, so you need to be careful when writing
+them.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-1.1">Components and Their Events</A></h3>
+
+<P CLASS=para>
+In the Java 1.0 model, there is no defacto way to know what
+types of events are generated by what GUI components.  You
+simply have to look this information up in the
+documentation. Additionally, different components use
+different fields of the <tt CLASS=literal>Event</tt> object, and pass
+different values in the <tt CLASS=literal>arg</tt> field of that object.
+<A HREF="ch07_01.htm#JNUT2-CH-7-TAB-2">Table 7.2</A>
+lists each of the AWT components, and for each one, lists
+the type of events it generates.  The first column of the
+table specifies both the type of the component and the type
+of the event.  The event type is the constant stored in the
+<tt CLASS=literal>id</tt> field of the <tt CLASS=literal>Event</tt>.
+
+<P CLASS=para>
+The second
+through sixth columns indicate whether the <tt CLASS=literal>when</tt>
+(timestamp), <tt CLASS=literal>x</tt> (mouse x coordinate), <tt CLASS=literal>y</tt>
+(mouse y coordinate), <tt CLASS=literal>key</tt> (the key that was pressed),
+and <tt CLASS=literal>modifiers</tt> (modifier keys that were down) fields are
+set for a given event.  If a dot appears in this column,
+the event sets a value for the corresponding field.
+The seventh column explains what occurred to trigger the
+event, and what the value of the <tt CLASS=literal>arg</tt> field of the
+<tt CLASS=literal>Event</tt> object is.
+
+<P CLASS=para>
+Events listed for the <tt CLASS=literal>Component</tt> component type
+apply to all <tt CLASS=literal>java.awt Component</tt> subclasses.
+The events listed for the <tt CLASS=literal>Window</tt> component type also
+apply to the <tt CLASS=literal>Window</tt> subclasses, <tt CLASS=literal>Dialog</tt> and
+<tt CLASS=literal>Frame</tt>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-7-TAB-2">Table 7.2: AWT Components and the Java 1.0 Events They Generate</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Component</TH>
+<TH ROWSPAN=2 ALIGN="left">when</TH>
+<TH ROWSPAN=2 ALIGN="left">x</TH>
+<TH ROWSPAN=2 ALIGN="left">y</TH>
+<TH ROWSPAN=2 ALIGN="left">key</TH>
+<TH ROWSPAN=2 ALIGN="left">mods</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Event Meaning</TH>
+</TR>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Event Type (<tt CLASS=literal>id</tt>)</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>arg</tt> (Type: value)</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Button</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User clicked on the button</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ACTION_EVENT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>String</tt>: the button label</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Checkbox</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User clicked on checkbox</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ACTION_EVENT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Boolean</tt>: new checkbox state</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Choice</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User selected an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ACTION_EVENT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>String</tt>: label of selected item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Got input focus</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>GOT_FOCUS</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User pressed a function key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I>--<tt CLASS=literal>key</tt> contains key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+constant</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User released a function key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION_RELEASE</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I>--<tt CLASS=literal>key</tt> contains key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal></tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+constant</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User pressed a key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KEY_PRESS</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I>--<tt CLASS=literal>key</tt> contains ASCII</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal></tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+key value</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User released a key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>KEY_RELEASE</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I>--<tt CLASS=literal>key</tt> contains ASCII</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal></tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+key value</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lost input focus</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>LOST_FOCUS</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Mouse entered the Component</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_ENTER</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Mouse left the Component</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_EXIT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User pressed mouse button</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_DOWN</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User released mouse button</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_UP</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User moved mouse</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_MOVE</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Component</tt></TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User dragged mouse</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MOUSE_DRAG</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>List</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User double-clicked on an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ACTION_EVENT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>String</tt>: label of activated item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>List</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User selected an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>LIST_SELECT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Integer</tt>: index of selected item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>List</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User deselected an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>LIST_DESELECT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Integer</tt>: index of deselected item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MenuItem</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User selected an item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ACTION_EVENT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>String</tt>: label of selected item</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Scrollbar</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User requested scroll</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_LINE_UP</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Integer</tt>: position to scroll to</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Scrollbar</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User requested scroll</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_LINE_DOWN</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Integer</tt>: position to scroll to</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Scrollbar</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User requested scroll</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_PAGE_UP</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Integer</tt>: position to scroll to</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Scrollbar</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User requested scroll</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_PAGE_DOWN</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Integer</tt>: position to scroll to</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Scrollbar</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User requested scroll</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_ABSOLUTE</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Integer</tt>: position to scroll to</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>TextField</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+User struck &lt;Return&gt;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>ACTION_EVENT</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>String</tt>: user's input text</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Window</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Window was destroyed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>WINDOW_DESTROY</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Window</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Window was iconified</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>WINDOW_ICONIFY</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Window</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Window was deiconified</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>WINDOW_DEICONIFY</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Window</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">*</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Window was moved</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>WINDOW_MOVED</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<I CLASS=emphasis>unused</I></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-1.2">Key and Modifier Constants</A></h3>
+
+<P CLASS=para>
+<A NAME="CH7.KEYBOARD-EVE1"></A><A NAME="CH7.EVENTS-KEYBO1"></A>The <tt CLASS=literal>java.awt.Event</tt> class contains the field
+<tt CLASS=literal>key</tt>, which is filled in when a keyboard event has
+occurred, and the field <tt CLASS=literal>modifiers</tt>, which list the
+keyboard modifier keys currently in effect for key and mouse
+events.
+
+<P CLASS=para>
+Four modifier constants are defined by the
+<tt CLASS=literal>java.awt.Event</tt> class; they are listed in
+<A HREF="ch07_01.htm#JNUT2-CH-7-TAB-3">Table 7.3</A>.
+They are mask values that are ORed into the <tt CLASS=literal>modifiers</tt>
+field.  You can test for them using AND.  You can also check
+a given event for the first three of the modifiers with the
+<tt CLASS=literal>Event</tt> methods <tt CLASS=literal>shiftDown()</tt>,
+<tt CLASS=literal>controlDown()</tt>, and <tt CLASS=literal>metaDown()</tt>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-7-TAB-3">Table 7.3: Java Keyboard Modifiers</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Modifier Constant</TH>
+<TH ALIGN="left">Meaning</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.SHIFT_MASK</tt></TD>
+<TD ALIGN="left">SHIFT key is held down (or CAPS LOCK on)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.CTRL_MASK</tt></TD>
+<TD ALIGN="left">CONTROL key is held down</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.META_MASK</tt></TD>
+<TD ALIGN="left">META key is held down</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.ALT_MASK</tt></TD>
+<TD ALIGN="left">ALT key is held down</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+When a <tt CLASS=literal>KEY_PRESS</tt> or <tt CLASS=literal>KEY_RELEASE</tt> event
+occurs, it means that the user pressed a key that is a
+normal printing character, a control character, or a
+non-printing character with a standard ASCII value--one of
+RETURN (ASCII 10 or '<tt CLASS=literal>\n</tt>'), TAB (ASCII 9
+or '<tt CLASS=literal>\t</tt>'), ESCAPE (ASCII 27),
+BACKSPACE (ASCII 8), or DELETE (ASCII 127).  In
+this case, the value of the <tt CLASS=literal>key</tt> field in the event
+is simply the ASCII value of the key that was pressed or
+released.
+
+<P CLASS=para>
+When a <tt CLASS=literal>KEY_ACTION</tt> or <tt CLASS=literal>KEY_ACTION_RELEASE</tt>
+event occurs, it means that the user pressed some sort of
+function key, one which does not have an ASCII
+representation. 
+
+<P CLASS=para>
+<tt CLASS=literal>java.awt.Event</tt> defines constants
+for each of these function keys, which are listed in
+<A HREF="ch07_01.htm#JNUT2-CH-7-TAB-4">Table 7.4</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-7-TAB-4">Table 7.4: Java Function Key Constants</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Key Constant</TH>
+<TH ALIGN="left">Meaning</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.HOME</tt></TD>
+<TD ALIGN="left">HOME key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.END</tt></TD>
+<TD ALIGN="left">END key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.PGUP</tt></TD>
+<TD ALIGN="left">PAGE UP key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.PGDN</tt></TD>
+<TD ALIGN="left">PAGE DOWN key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.UP</tt></TD>
+<TD ALIGN="left">UP arrow key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.DOWN</tt></TD>
+<TD ALIGN="left">DOWN arrow key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.LEFT</tt></TD>
+<TD ALIGN="left">LEFT arrow key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.RIGHT</tt></TD>
+<TD ALIGN="left">RIGHT arrow key</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>Event.F1 to Event.F12</tt></TD>
+<TD ALIGN="left">Function keys 1 through 12</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-1.3">Mouse Buttons</A></h3>
+
+<P CLASS=para>
+In order to maintain platform independence, Java only
+recognizes a single mouse button--the <tt CLASS=literal>Event</tt> class
+does not have any kind of <tt CLASS=literal>mouseButton</tt> field to
+indicate which button has been pressed on a multi-button mouse.
+
+<P CLASS=para>
+On platforms that support two- or three-button mouses, the
+right and center buttons generate mouse down, mouse drag,
+and mouse up events as if the user were holding down modifier
+keys, as shown in
+<A HREF="ch07_01.htm#JNUT2-CH-7-TAB-5">Table 7.5</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-7-TAB-5">Table 7.5: Mouse Button Modifiers</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Mouse Button</TH>
+<TH ALIGN="left">Flag Set in Event.modifiers Field</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Left button</TD>
+<TD ALIGN="left"><I CLASS=emphasis>none</I></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Right button</TD>
+<TD ALIGN="left"><tt CLASS=literal>Event.META_MASK</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Middle button</TD>
+<TD ALIGN="left"><tt CLASS=literal>Event.ALT_MASK</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Using keyboard modifiers to indicate the mouse button that has been
+pressed maintains compatibility with platforms that only
+have one-button mouses, but still allows programs to use the
+right and middle buttons on platforms that support them.
+Suppose, for example, you want to write a program that allows
+the user to draw lines with the mouse using two different
+colors.  You might draw in the primary color if there are no
+modifier flags set, and draw in the secondary color when the
+<tt CLASS=literal>META_MASK</tt> modifier is set.  In this way, users with a two- or
+three-button mouse can simply use the left and right mouse
+buttons to draw in the two colors; and users with a one-button
+mouse can use the META key, in conjunction with the
+mouse, to draw in the secondary color.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Signed Applets</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Scribbling in Java 1.0</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

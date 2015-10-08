@@ -1,0 +1,468 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] 11.4 ScrollPane</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:48:15 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>Scrolling</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-11-SECT-4">11.4 ScrollPane</A></h2>
+
+<P CLASS=para>
+<A NAME="CH11.SCR5"></A>A <tt CLASS=literal>ScrollPane</tt> is a <tt CLASS=literal>Container</tt> 
+with built-in scrollbars that can be used to scroll its contents. In the 
+current implementation, a <tt CLASS=literal>ScrollPane</tt> 
+can hold only one <tt CLASS=literal>Component</tt> 
+and has no layout manager. The component within a <tt CLASS=literal>ScrollPane</tt> 
+is always given its preferred size. While the scrollpane's 
+inability to hold multiple components sounds like a deficiency, it isn't; 
+there's no reason you can't put a <tt CLASS=literal>Panel</tt> 
+inside a <tt CLASS=literal>ScrollPane</tt>, put as 
+many components as you like inside the <tt CLASS=literal>Panel</tt>, 
+and give the <tt CLASS=literal>Panel</tt> any layout 
+manager you wish. 
+
+<P CLASS=para>
+Scrolling is handled by the <tt CLASS=literal>ScrollPane</tt> 
+peer, so processing is extremely fast. In <A HREF="ch11_02.htm#JAWT-CH-11-EX-1">Example 11.1</A>, 
+the user moves a <tt CLASS=literal>Scrollbar</tt> 
+to trigger a scrolling event, and the peer sends the event to the Java 
+program to find someone to deal with it. Once it identifies the target, 
+it posts the event, then tries to find a handler. Eventually, the applet's 
+<tt CLASS=literal>handleEvent()</tt> method is called 
+to reposition the <tt CLASS=literal>ImageCanvas</tt>. 
+The new position is then given to the peer, which finally redisplays the 
+<tt CLASS=literal>Canvas</tt>. Although most of the 
+real work is behind the scenes, it is still happening. With <tt CLASS=literal>ScrollPane</tt>, 
+the peer generates and handles the event itself, which is much more efficient. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-11-SECT-4.1">ScrollPane Methods</A></h3>Constants
+
+<P CLASS=para>
+The <tt CLASS=literal>ScrollPane</tt> class contains 
+three constants that can be used to control its scrollbar display policy. 
+The constants are fairly self-explanatory. The constants are used in the 
+constructor for a <tt CLASS=literal>ScrollPane</tt> 
+instance. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLLBARS_AS_NEEDED <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>SCROLLBARS_AS_NEEDED</tt> is the 
+default scrollbar display policy. With this policy, the <tt CLASS=literal>ScrollPane</tt> 
+displays each scrollbar only if the <tt CLASS=literal>Component</tt> 
+is too 
+large in the scrollbar's direction. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLLBARS_ ALWAYS <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+With the <tt CLASS=literal>SCROLLBARS_ALWAYS</tt> 
+display policy, the <tt CLASS=literal>ScrollPane</tt> 
+should always display both scrollbars, whether or not they are needed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLLBARS_ NEVER <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+With the <tt CLASS=literal>SCROLLBARS_NEVER</tt> display 
+policy, the <tt CLASS=literal>ScrollPane</tt> should 
+never display scrollbars, even when the object is bigger than the <tt CLASS=literal>ScrollPane</tt>'s 
+area. When using this mode, you should provide some means for the user 
+to scroll, either through a button outside the container or by listening 
+for events happening within the container. </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public ScrollPane () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The first constructor creates an instance of <tt CLASS=literal>ScrollPane</tt> 
+with the default scrollbar display policy setting, <tt CLASS=literal>SCROLLBARS_AS_NEEDED</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public ScrollPane (int scrollbarDisplayPolicy) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The other constructor creates an instance of <tt CLASS=literal>ScrollPane</tt> 
+with a scrollbar setting of <tt CLASS=literal>scrollbarDisplayPolicy</tt>. 
+If <tt CLASS=literal>scrollbarDisplayPolicy</tt> is 
+not one of the class constants, this constructor throws the <tt CLASS=literal>IllegalArgumentException</tt> run-time exception. </DL>
+Layout methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final void setLayout(LayoutManager mgr) <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setLayout()</tt> method of <tt CLASS=literal>ScrollPane</tt> 
+throws an <tt CLASS=literal>AWTError</tt>. It overrides the <tt CLASS=literal>setLayout()</tt> method of <tt CLASS=literal>Container</tt> to prevent you from changing a <tt CLASS=literal>ScrollPane</tt>'s layout manager.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void doLayout () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public void layout () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>doLayout()</tt> method of <tt CLASS=literal>ScrollPane</tt> 
+shapes the contained object to its preferred size. 
+
+<P CLASS=para>
+<tt CLASS=literal>layout()</tt> is another name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public final void addImpl(Component comp, Object constraints, int index) <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addImpl()</tt> method of <tt CLASS=literal>ScrollPane</tt> 
+permits only one object to be added to the <tt CLASS=literal>ScrollPane</tt>. It overides the <tt CLASS=literal>addImpl()</tt> method of <tt CLASS=literal>Container</tt> to enforce the <tt CLASS=literal>ScrollPane</tt>'s limitations on adding components. If <tt CLASS=literal>index &gt; 0</tt>, <tt CLASS=literal>addImpl()</tt> throws the run-time exception 
+<tt CLASS=literal>IllegalArgumentException</tt>. If a component is already within the <tt CLASS=literal>ScrollPane</tt>, it is removed before <tt CLASS=literal>comp</tt> is added. The <tt CLASS=literal>constraints</tt> parameter is ignored.</DL>
+Scrolling methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getScrollbarDisplayPolicy() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getScrollbarDisplayPolicy()</tt> 
+method retrieves the current display policy, as set by the constructor. 
+You cannot change the policy once it has been set. The return value is 
+one of the class constants: <tt CLASS=literal>SCROLLBARS_AS_NEEDED</tt>, 
+<tt CLASS=literal>SCROLLBARS_ALWAYS</tt>, or <tt CLASS=literal>SCROLLBARS_NEVER</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension getViewportSize() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getViewportSize()</tt> method 
+returns the current size of the <tt CLASS=literal>ScrollPane</tt>, 
+less any <tt CLASS=literal>Insets</tt>, as a <tt CLASS=literal>Dimension</tt> 
+object. The size is given in pixels and has an initial value of 100 x 100. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getHScrollbarHeight() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getHScrollbarHeight()</tt> method 
+retrieves the height in pixels of a horizontal scrollbar. The value returned 
+is without regard to the display policy; that is, you may be given a height 
+even if the scrollbar is not displayed. This method may return 0 if the 
+scrollbar's height cannot be calculated at this time (no peer) or 
+if you are using the <tt CLASS=literal>SCROLLBARS_NEVER</tt> 
+display policy. 
+
+<P CLASS=para>
+The width of a horizontal scrollbar is just <tt CLASS=literal>getViewportSize().width</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getVScrollbarWidth() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getVScrollbarWidth()</tt> method 
+retrieves the width in pixels of a vertical scrollbar. The value returned 
+is without regard to the display policy; that is, you may be given a width 
+even if the scrollbar is not displayed. This method may return 0 if the 
+scrollbar's width cannot be calculated at this time (no peer) or 
+if you are using the <tt CLASS=literal>SCROLLBARS_NEVER</tt> 
+display policy. 
+
+<P CLASS=para>
+The height of a vertical scrollbar is just <tt CLASS=literal>getViewportSize().height</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Adjustable getHAdjustable() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getHAdjustable()</tt> method 
+returns the adjustable object representing the horizontal scrollbar (or 
+<tt CLASS=literal>null</tt> if it is not present). Through the methods of <tt CLASS=literal>Adjustable</tt>, 
+you can get the different settings of the scrollbar. 
+
+<P CLASS=para>
+The object that this method returns is an instance of the package private class <tt CLASS=literal>ScrollPaneAdjustable</tt>, which implements the <tt CLASS=literal>Adjustable</tt> interface. this class allows you to register listeners for the scrollpane's events and inquire about various properties of the pane's scrollbars. It does not let you set some scrollbar properties; the <tt CLASS=literal>setMinimum()</tt>, <tt CLASS=literal>setMaximum()</tt>, and <tt CLASS=literal>setVisibleAmount()</tt> methods throw an <tt CLASS=literal>AWTError</tt> when called.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Adjustable getVAdjustable() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getVAdjustable()</tt> method 
+returns the adjustable object representing the vertical scrollbar (or <tt CLASS=literal>null </tt>if it is not present). Through the methods of <tt CLASS=literal>Adjustable</tt>, 
+you can get the different settings of the scrollbar. 
+
+<P CLASS=para>
+The object that this method returns is an instance of the package private class <tt CLASS=literal>ScrollPaneAdjustable</tt>, which implements the <tt CLASS=literal>Adjustable</tt> interface. this class allows you to register listeners for the scrollpane's events and inquire about various properties of the pane's scrollbars. It does not let you set some scrollbar properties; the <tt CLASS=literal>setMinimum()</tt>, <tt CLASS=literal>setMaximum()</tt>, and <tt CLASS=literal>setVisibleAmount()</tt> methods throw an <tt CLASS=literal>AWTError</tt> when called.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setScrollPosition(int x, int y) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>setScrollPosition()</tt> method 
+moves the <tt CLASS=literal>ScrollPane</tt> to the 
+designated location if possible. The <tt CLASS=literal>x</tt> 
+and <tt CLASS=literal>y</tt> arguments are scrollbar 
+settings, which should be interpreted in terms of the minimum and maximum 
+values given to you by the horizontal and vertical <tt CLASS=literal>Adjustable</tt> 
+objects (returned by the previous two methods). If the <tt CLASS=literal>ScrollPane</tt> 
+does not have a child component, this method throws the run-time exception <tt CLASS=literal>NullPointerException</tt>. 
+You can also move the <tt CLASS=literal>ScrollPane</tt> 
+by calling the <tt CLASS=literal>Adjustable.setValue()</tt> 
+method of one of the scrollpane's <tt CLASS=literal>Adjustable</tt> 
+objects. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setScrollPosition(Point p) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>setScrollPosition()</tt> method 
+calls the previous with parameters of <tt CLASS=literal>p.x</tt>, 
+and <tt CLASS=literal>p.y</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Point getScrollPosition() <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getScrollPosition()</tt> method 
+returns the current position of both the scrollpane's 
+<tt CLASS=literal>Adjustable</tt> objects as a <tt CLASS=literal>Point</tt>. 
+If there is no component within the <tt CLASS=literal>ScrollPane</tt>, 
+<tt CLASS=literal>getScrollPosition()</tt> throws 
+the <tt CLASS=literal>NullPointerException</tt> run-time exception. 
+Another way to get this information is by calling the <tt CLASS=literal>Adjustable.getValue()</tt> 
+method of each <tt CLASS=literal>Adjustable</tt> object. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void printComponents (Graphics g) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>printComponents()</tt> method 
+of <tt CLASS=literal>ScrollPane</tt> prints the single 
+component it contains. This is done by clipping the context <tt CLASS=literal>g</tt> 
+to the size of the display area and calling the contained component's 
+<tt CLASS=literal>printAll()</tt> method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>ScrollPane</tt> peer. 
+If you override this method, call <tt CLASS=literal>super.addNotify()</tt> 
+first, then add your customizations for the new class. You will then be 
+able to do everything you need with the information about the newly created 
+peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ScrollPane</tt> doesn't have 
+its own <tt CLASS=literal>toString()</tt> method; 
+so when you call the <tt CLASS=literal>toString()</tt> 
+method of a <tt CLASS=literal>ScrollPane</tt>, you 
+are actually calling the <tt CLASS=literal>Component.toString()</tt> 
+method. This in turn calls <tt CLASS=literal>paramString()</tt>, 
+which builds the string to display. For a <tt CLASS=literal>ScrollPane</tt>, 
+<tt CLASS=literal>paramString()</tt> adds the current 
+scroll position, insets, and scrollbar display policy. For example: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.ScrollPane[scrollpane0,0,0,0x0,invalid,ScrollPosition=(0,0),
+         Insets=(0,0,0,0),ScrollbarDisplayPolicy=always]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-11-SECT-4.2">ScrollPane Events</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>ScrollPane</tt> peer 
+deals with the scrolling events for you. It is not necessary to catch or 
+listen for these events. As with any other <tt CLASS=literal>Container</tt>, 
+you can handle the 1.0 events of the object you contain or listen for 1.1 
+events that happen within you. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-11-SECT-4.3">Using a ScrollPane</A></h3>
+
+<P CLASS=para>
+The following applet demonstrates one way to use a <tt CLASS=literal>ScrollPane</tt>. 
+Basically, you place the object you want to scroll in the <tt CLASS=literal>ScrollPane</tt> 
+by calling the <tt CLASS=literal>add()</tt> method. 
+This can be a <tt CLASS=literal>Panel</tt> with many 
+objects on it or a <tt CLASS=literal>Canvas</tt> with 
+an image drawn on it. You then add as many objects as you want to the <tt CLASS=literal>Panel</tt> 
+or scribble on the <tt CLASS=literal>Canvas</tt> to 
+your heart's delight. No scrolling event handling is necessary. That 
+is all there is to it. To make this example a little more interesting, 
+whenever you select a button, the <tt CLASS=literal>ScrollPane</tt> 
+scrolls to a randomly selected position. <A HREF="ch11_04.htm#JAWT-CH-11-FIG-4">Figure 11.4</A> 
+displays the screen. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-11-FIG-4">Figure 11.4: A ScrollPane containing many buttons</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt1105.gif" alt="[Graphic: Figure 11-4]" width=221 height=174 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Here's the code: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.awt.*;
+import java.awt.event.*;
+import java.applet.*;
+public class scroll extends Applet implements ActionListener, ContainerListener {
+    ScrollPane sp = new ScrollPane (ScrollPane.SCROLLBARS_ALWAYS);
+    public void init () {
+        setLayout (new BorderLayout ());
+        Panel p = new Panel(new GridLayout (7, 8));
+        p.addContainerListener (this);
+        for (int j=0;j&lt;50;j++)
+            p.add (new Button ("Button-" + j));
+        sp.add (p);
+        add (sp, "Center");
+    }
+    public void componentAdded(ContainerEvent e) {
+        if (e.getID() == ContainerEvent.COMPONENT_ADDED) {
+            if (e.getChild() instanceof Button) {
+                Button b = (Button)e.getChild();
+                b.addActionListener(this);
+            }
+        }
+    }
+    public void componentRemoved(ContainerEvent e) {
+    }
+    public void actionPerformed (ActionEvent e) {
+        Component c = sp.getComponent();
+            Dimension d = c.getSize();
+            sp.setScrollPosition ((int)(Math.random()*d.width),
+                (int)(Math.random()*d.height));
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Working with the <tt CLASS=literal>ScrollPane</tt> 
+itself is easy; we just create one, add a <tt CLASS=literal>Panel</tt> 
+to it, set the <tt CLASS=literal>Panel</tt>'s 
+layout manager to <tt CLASS=literal>GridLayout</tt>, 
+and add a lot of buttons to the <tt CLASS=literal>Panel</tt>. 
+The applet itself is the action listener for all the buttons; when anybody 
+clicks a button, <tt CLASS=literal>actionPerformed()</tt> 
+is called, which generates a new random position based on the viewport 
+size and sets the new scrolling position accordingly by calling <tt CLASS=literal>setScrollPosition()</tt>.
+
+<P CLASS=para>
+The more interesting part of this applet is the way it works with buttons. 
+Instead of directly adding a listener for each button, we add a <tt CLASS=literal>ContainerListener</tt> 
+to the containing panel and let it add listeners. Although this may seem 
+like extra work here, it demonstrates how you can use container events to take actions whenever someone adds or removes a component. At first glance, you might ask why I didn't just call 
+<tt CLASS=literal>enableEvents(AWTEvent.CONTAINER_EVENT_MASK)</tt> 
+and override the applet's <tt CLASS=literal>processContainerEvent()</tt> 
+to attach the listeners. If we were only adding our components to the applet, 
+that would work great. Unfortunately, the applet is not notified when buttons 
+are added to an unrelated panel. It would be notified only when the panel 
+was added to the applet. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Adjustable Interface</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Image Processing</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

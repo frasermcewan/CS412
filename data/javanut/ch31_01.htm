@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 31] The java.util.zip Package</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:36:24 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch31_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch30_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 31</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch31_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-31">31. The java.util.zip Package</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch31_02.htm'>java.util.zip.CheckedInputStream (JDK 1.1)</a><br>
+<a href='ch31_03.htm'>java.util.zip.CheckedOutputStream (JDK 1.1)</a><br>
+<a href='ch31_04.htm'>java.util.zip.Checksum (JDK 1.1)</a><br>
+<a href='ch31_05.htm'>java.util.zip.CRC32 (JDK 1.1)</a><br>
+<a href='ch31_06.htm'>java.util.zip.DataFormatException (JDK 1.1)</a><br>
+<a href='ch31_07.htm'>java.util.zip.Deflater (JDK 1.1)</a><br>
+<a href='ch31_08.htm'>java.util.zip.DeflaterOutputStream (JDK 1.1)</a><br>
+<a href='ch31_09.htm'>java.util.zip.GZIPInputStream (JDK 1.1)</a><br>
+<a href='ch31_10.htm'>java.util.zip.GZIPOutputStream (JDK 1.1)</a><br>
+<a href='ch31_11.htm'>java.util.zip.Inflater (JDK 1.1)</a><br>
+<a href='ch31_12.htm'>java.util.zip.InflaterInputStream (JDK 1.1)</a><br>
+<a href='ch31_13.htm'>java.util.zip.ZipEntry (JDK 1.1)</a><br>
+<a href='ch31_14.htm'>java.util.zip.ZipException (JDK 1.1)</a><br>
+<a href='ch31_15.htm'>java.util.zip.ZipFile (JDK 1.1)</a><br>
+<a href='ch31_16.htm'>java.util.zip.ZipInputStream (JDK 1.1)</a><br>
+<a href='ch31_17.htm'>java.util.zip.ZipOutputStream (JDK 1.1)</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.util.zip</tt> package contains classes for data
+compression and decompression. It is new in Java
+1.1.
+<A HREF="ch31_01.htm#JNUT2-CH-31-FIG-1">Figure 31.1</A>
+shows the class hierarchy of the package.<A NAME="CH31.JAVA.UTIL.ZI1"></A>
+
+<P CLASS=para>
+The <tt CLASS=literal>Deflater</tt> and <tt CLASS=literal>Inflater</tt> classes perform
+data compression and decompression.
+<tt CLASS=literal>DeflaterOutputStream</tt> and <tt CLASS=literal>InflaterInputStream</tt>
+apply that functionality to byte streams; the subclasses
+of these streams implement both the GZIP and ZIP compression
+formats.  The <tt CLASS=literal>Adler32</tt> and <tt CLASS=literal>CRC32</tt> classes
+implement the <tt CLASS=literal>Checksum</tt> interface and compute the
+checksums required for data compression.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-31-FIG-1">Figure 31.1: The java.util.zip package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_3101.gif" alt="[Graphic: Figure 31-1]" width=464 height=313 border=0>
+
+</DIV>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-31-SECT-1">31.1 java.util.zip.Adler32 (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-31-SECT-1.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class implements the <tt CLASS=literal>Checksum</tt> interface and
+computes a checksum on a stream of data using the Adler-32
+algorithm.  This algorithm is significantly faster than the
+CRC-32 algorithm and is almost as reliable.  
+
+<P CLASS=para>
+The <tt CLASS=literal>CheckedInputStream</tt> and
+<tt CLASS=literal>CheckedOutputStream</tt> classes provide a higher-level
+interface to computing checksums on streams of data.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>Adler32</tt> extends Object implements Checksum {
+    // <tt CLASS=literal>Default Constructor: public Adler32()</tt>
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public long <tt CLASS=literal>getValue</tt>();  //<tt CLASS=literal> From Checksum</tt>
+            public void <tt CLASS=literal>reset</tt>();  //<tt CLASS=literal> From Checksum</tt>
+            public void <tt CLASS=literal>update</tt>(int <tt CLASS=literal>b</tt>);  //<tt CLASS=literal> From Checksum</tt>
+            public native void <tt CLASS=literal>update</tt>(byte[] <tt CLASS=literal>b</tt>, int <tt CLASS=literal>off</tt>, int <tt CLASS=literal>len</tt>);  //<tt CLASS=literal> From Checksum</tt>
+            public void <tt CLASS=literal>update</tt>(byte[] <tt CLASS=literal>b</tt>);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch30_26.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch31_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.util.Vector (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.util.zip.CheckedInputStream (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

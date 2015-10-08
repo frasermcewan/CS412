@@ -1,0 +1,792 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.9 Inner Classes</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:53:03 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="ch05-SECT1-AUTOID.1">5.9 Inner Classes</A></h2>
+
+<P CLASS=para>
+We've left out something important in our discussion of Java classes
+so far: a large and relatively recent heap of syntactic sugar called
+<I CLASS=emphasis>inner classes</I>.  Simply put, classes in Java can
+be declared at any level of scope.  That is, you can declare a class
+within any set of curly braces (that is, almost anywhere that you
+could put any other Java statement) and its visibility is limited to
+that scope in the same way that the name of a variable or method would
+be.  Inner classes are a powerful and aesthetically pleasing facility
+for structuring code.[7]
+Their even sweeter cousins,
+<I CLASS=emphasis>anonymous inner classes</I>, are another powerful
+shorthand that make it seem like you can create classes dynamically
+within Java's statically typed environment.
+
+<blockquote class=footnote>
+<P CLASS=para>[7] 
+The implementation of Java's inner classes draws on experience from the 
+language Beta, and other block structured languages such as Pascal,
+and Scheme.
+</blockquote>
+<P CLASS=para>
+However, if you delve into the inner workings of Java, inner classes
+are not quite as aesthetically pleasing or dynamic.  We said that they
+are syntactic sugar; by this we mean that they let you leverage the
+compiler by writing a few lines of code that trigger a lot of
+behind-the-scenes work somewhere between the compiler's front end and
+the byte-code.  Inner classes rely on code-generation; they are a
+feature of the Java language, but not of the Java virtual machine.  As
+a programmer you may never need be aware of this; you can simply rely
+on inner classes like any other language construct.  However, you
+should know a little about how inner classes work, to better
+understand the results and a few potential side effects.
+<P CLASS=para>
+To this point, all of our classes have been <I CLASS=emphasis>top level</I> classes.
+We have declared them, free standing, at the package level. Inner
+classes are essentially nested classes, like this:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    Class Animal {
+        Class Brain { 
+            ...
+        }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here the class <tt CLASS=literal>Brain</tt> is an inner class: it
+is a class declared inside the scope of class
+<tt CLASS=literal>Animal</tt>.  Although the details of what that
+means require a fair bit of explanation, we'll start by saying that
+the Java language tries to make the meaning, as much as possible, the
+same as for the other Java entities (methods and variables) living at
+that level of scope.  For example, let's add a method to the
+<tt CLASS=literal>Animal</tt> class:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    Class Animal {
+        Class Brain { 
+            ...
+        }
+        void performBehavior() { ... }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Both the inner class <tt CLASS=literal>Brain</tt> and the method
+<tt CLASS=literal>performBehavior()</tt> are within the scope of
+<tt CLASS=literal>Animal</tt>.  Therefore, anywhere within
+<tt CLASS=literal>Animal</tt> we can refer to <tt CLASS=literal>Brain</tt> and
+<tt CLASS=literal>performBehavior()</tt> directly, by name.  Within
+<tt CLASS=literal>Animal</tt> we can call the constructor for
+<tt CLASS=literal>Brain</tt> (<tt CLASS=literal>new Brain()</tt>) to get a
+<tt CLASS=literal>Brain</tt> object, or invoke
+<tt CLASS=literal>performBehavior()</tt> to carry out that method's
+function.  But neither <tt CLASS=literal>Brain</tt> nor
+<tt CLASS=literal>performBehavior()</tt> are accessible outside of the
+class <tt CLASS=literal>Animal</tt> without some additional qualification.
+
+<P CLASS=para>
+Within the body of the <tt CLASS=literal>Brain</tt> class and the
+body of the <tt CLASS=literal>performBehavior()</tt> method, we
+have direct access to all of the 
+other methods and variables of the <tt CLASS=literal>Animal</tt>
+class.  So, just as
+the <tt CLASS=literal>performBehavior()</tt> method could work
+with the <tt CLASS=literal>Brain</tt> class and create
+instances of <tt CLASS=literal>Brain</tt>, code within the
+<tt CLASS=literal>Brain</tt> class can invoke the
+<tt CLASS=literal>performBehavior()</tt> method of
+<tt CLASS=literal>Animal</tt> as well as work with any other
+methods and variables declared in <tt CLASS=literal>Animal</tt>.
+
+<P CLASS=para>
+That last bit has important consequences.  From within 
+<tt CLASS=literal>Brain</tt> we can invoke the method
+<tt CLASS=literal>performBehavior()</tt>; that is--from within
+an
+instance of <tt CLASS=literal>Brain</tt> we can invoke the
+<tt CLASS=literal>performBehavior()</tt> method of an instance 
+of <tt CLASS=literal>Animal</tt>.  Well, which instance of
+<tt CLASS=literal>Animal</tt>?   If we have several 
+<tt CLASS=literal>Animal</tt> objects around (say, a few
+<tt CLASS=literal>Cat</tt>s and
+<tt CLASS=literal>Dog</tt>s), we need to know whose
+<tt CLASS=literal>performBehavior()</tt> method we are calling.
+What does it mean for a class
+definition to be "inside" another class definition?
+The answer is that a <tt CLASS=literal>Brain</tt> object 
+always lives within a single instance of
+<tt CLASS=literal>Animal</tt>: the one that it was
+told about when it was created.  We'll call the object that contains
+any instance of <tt CLASS=literal>Brain</tt> its <I CLASS=emphasis>enclosing
+instance</I>.
+
+<P CLASS=para>
+A <tt CLASS=literal>Brain</tt> object cannot live outside of an
+enclosing instance of an
+<tt CLASS=literal>Animal</tt> object.  Anywhere you see an
+instance of <tt CLASS=literal>Brain</tt>, it will be tethered 
+to an instance of <tt CLASS=literal>Animal</tt>.
+Although it is possible to construct a
+<tt CLASS=literal>Brain</tt> object from 
+elsewhere (i.e., another class), <tt CLASS=literal>Brain</tt>
+always requires an enclosing instance of
+<tt CLASS=literal>Animal</tt> to "hold" it.  We'll also say now
+that if <tt CLASS=literal>Brain</tt> is to be referred to
+from outside of <tt CLASS=literal>Animal</tt> it acts something
+like an <tt CLASS=literal>Animal.Brain</tt> class.  And
+just as with the <tt CLASS=literal>performBehavior()</tt> method,
+modifiers can be applied to
+restrict its visibility.  There is even an interpretation of the
+<tt CLASS=literal>static</tt> modifier, which we'll talk about a
+bit later.  However, the details
+are somewhat boring and not immediately useful, so you should consult
+a full language reference for more info (like O'Reilly's <i CLASS=citetitle>Java
+Language Reference</i>, Second Edition).
+So before we get too far afield, let's turn to a more compelling example.
+
+<P CLASS=para>
+
+A particularly important use of inner classes is to make 
+<I CLASS=emphasis>adapter classes</I>.  An adapter class is a "helper" class
+that ties one class to another in a very specific way.  Using adapter classes
+you can write your classes more naturally, without having to
+anticipate 
+every conceivable user's needs in advance.  Instead, you provide
+adapter classes that
+marry your class to a particular interface.   
+
+<P CLASS=para>
+As an example, let's say that we have an
+<tt CLASS=literal>EmployeeList</tt> object: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public class EmployeeList {
+    private Employee [] employees = ... ;
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>EmployeeList</tt> holds information about a set
+of employees, representing some view of our database. Let's say that we
+would like to have <tt CLASS=literal>EmployeeList</tt> provide
+its elements as an enumeration (see <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A>).  An enumeration is a
+simple interface to a set of objects that looks like this:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// the java.util.Enumeration interface
+public interface Enumeration {
+    boolean hasMoreElements();
+    Object nextElement();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It lets us iterate through its elements, asking for the next one and 
+testing to see if more remain.  The enumeration is a good candidate for
+an adapter class because it is an interface that our
+<tt CLASS=literal>EmployeeList</tt> can't readily implement
+itself.  That's because an enumeration
+is a "one way", disposable view of our data.  It isn't intended to be 
+reset and used again, and therefore should be kept separate from the
+<tt CLASS=literal>EmployeeList</tt> itself.  This is crying out
+for a simple class to provide 
+the enumeration capability.  But what should that class
+look like?
+
+<P CLASS=para>
+Well, before we knew about inner classes, our only recourse would have been
+to make a new "top level" class.  We would probably feel obliged to call it
+<tt CLASS=literal>EmployeeListEnumeration</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class EmployeeListEnumeration implements Enumeration {
+    // lots of knowledge about EmployeeList
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we have a comment representing the machinery that the 
+<tt CLASS=literal>EmployeeListEnumeration</tt> requires.  Think
+for just a second about what you'd
+have to do to implement that machinery. The resulting class would be
+completely coupled to the <tt CLASS=literal>EmployeeList</tt>,
+and unusable in other situations. Worse, to function it must have 
+access to the inner workings of
+<tt CLASS=literal>EmployeeList</tt>.  We would have to allow
+<tt CLASS=literal>EmployeeListEnumeration</tt> access to the
+private array in <tt CLASS=literal>EmployeeList</tt>, exposing
+this data more widely than it should be. This is less than ideal.
+
+<P CLASS=para>
+  
+This sounds like a job for inner classes. We already said that
+<tt CLASS=literal>EmployeeListEnumeration</tt> was useless
+without the <tt CLASS=literal>EmployeeList</tt>; this sounds a
+lot like the "lives inside" relationship we described earlier.
+Furthermore, an inner class lets us avoid the encapsulation problem,
+because it can access all the members of its enclosing instance.
+Therefore, if we use an inner class to implement the enumeration, 
+the array <tt CLASS=literal>employees</tt> can remain
+<tt CLASS=literal>private</tt>, invisible outside the
+<tt CLASS=literal>EmployeeList</tt>. So let's just shove that 
+helper class inside the scope of our
+<tt CLASS=literal>EmployeeList</tt>: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+public class EmployeeList {
+    private Employee [] employees = ... ;
+    
+    // ...
+    
+    class Enumerator implements java.util.Enumeration {
+        int element = 0;
+        boolean hasMoreElements() {
+            return  element &lt; employees.length ;
+        }
+        Object nextElement() {
+            if ( hasMoreElements() )
+                return employees[ element++ ];
+            else 
+                throw NoSuchElementException();
+        }
+    }
+    
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now <tt CLASS=literal>EmployeeList</tt> can provide an accessor
+method like the following to let other classes work with the list:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    ...
+    Enumeration getEnumeration() {
+        return new Enumerator();
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+One effect of the move is that we are free to be a little more familiar in 
+the naming of our enumeration class.  Since it is no longer a top
+level class, we can give it a name that is only appropriate within the
+<tt CLASS=literal>EmployeeList</tt>. In this case, we've
+named it <tt CLASS=literal>Enumerator</tt> to emphasize what it
+does--but we don't need a name like
+<tt CLASS=literal>EmployeeEnumerator</tt> that shows the
+relationship to the <tt CLASS=literal>EmployeeList</tt> class,
+because that's implicit. We've also filled
+in the guts of the <tt CLASS=literal>Enumerator</tt> class.  As
+you can see, now that it is inside 
+the scope of <tt CLASS=literal>EmployeeList</tt>,
+<tt CLASS=literal>Enumerator</tt> has 
+direct 
+access to its private members, 
+so it can directly access the <tt CLASS=literal>employees</tt>
+array.  This greatly simplifies 
+the code and maintains the compile-time safety. 
+
+<P CLASS=para>
+
+Before we move on, we should note that inner classes can have
+constructors, even though we didn't need one in this example.  They
+are in all respects real classes.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch05-SECT2-AUTOID.1">Inner Classes within methods</A></h3>
+
+<P CLASS=para>
+Inner classes may also be declared withing the body of a method.
+Returning to the <tt CLASS=literal>Animal</tt> class, we could
+put <tt CLASS=literal>Brain</tt> inside the
+<tt CLASS=literal>performBehavior()</tt> method if we decided
+that the class was only useful inside of that method.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    Class Animal {
+        void performBehavior() { 
+            Class Brain { 
+                ...
+            }
+        }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this situation, the rules governing what
+<tt CLASS=literal>Brain</tt> can see are the same as in our
+earlier example. 
+The body of <tt CLASS=literal>Brain</tt> can see anything in 
+the scope of <tt CLASS=literal>performBehavior()</tt> and, of
+course, above it.  This includes
+local variables of <tt CLASS=literal>performBehavior()</tt>, and
+its arguments. This raises a few questions.  
+
+<P CLASS=para>
+<tt CLASS=literal>performBehavior()</tt> is a method, and methods
+have limited lifetimes.  When they
+exit their local variables normally disappear into the stacky abyss.  But an 
+instance of <tt CLASS=literal>Brain</tt> (like any object)
+lives on as long as it is referenced.
+So Java makes sure that any local variables used by instances of
+<tt CLASS=literal>Brain</tt> 
+created within an invocation of
+<tt CLASS=literal>performBehavior()</tt> also live on.
+Furthermore, 
+all of the instances of <tt CLASS=literal>Brain</tt> that we make
+within a single invocation of
+<tt CLASS=literal>performBehavior()</tt> will see the same local
+variables.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch05-SECT3-AUTOID.6">Static Inner Classes</A></h4>
+
+<P CLASS=para>
+We mentioned earlier that the inner class
+<tt CLASS=literal>Brain</tt> of the class
+<tt CLASS=literal>Animal</tt> could in
+some ways be considered an <tt CLASS=literal>Animal.Brain</tt> class.
+That is, it is possible to work with a
+<tt CLASS=literal>Brain</tt> from outside the
+<tt CLASS=literal>Animal</tt> class,
+using just such a qualified name:
+<tt CLASS=literal>Animal.Brain</tt>.  But given that our
+<tt CLASS=literal>Animal.Brain</tt> class always requires an
+instance of an <tt CLASS=literal>Animal</tt> as 
+its enclosing instance, some explicit setup is needed.[8]
+
+<blockquote class=footnote>
+<P CLASS=para>[8] 
+Specifically, we would have to follow a design pattern and pass a reference 
+to the enclosing instance of <tt CLASS=literal>Animal</tt> into
+the <tt CLASS=literal>Animal.Brain</tt> constructor. See a
+language reference for more information. We don't expect you to run
+into this situation very often.
+</blockquote>
+<P CLASS=para>
+But there is another situation where we might use inner classes by name.
+An inner class that lives within the body of a top level class 
+(not within a method or another inner class) can be declared
+<tt CLASS=literal>static</tt>.
+For example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    class Animal  {
+        static class MigrationPattern { 
+            ...
+        }
+        ...
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+ 
+A static inner class such as this acts just like a new top
+level class called <tt CLASS=literal>Animal.MigrationPattern</tt>; we can
+use it without regard to any enclosing instances. Although this seems
+strange, it is not inconsistent since a static member never has an
+object instance associated with it. The requirement that the inner
+class be defined directly inside a top level class ensures that an
+enclosing instance won't be needed.  If we have permission, we can
+create an instance of the class using the qualified name:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    Animal.MigrationPattern stlToSanFrancisco = new Animal.MigrationPattern();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As you see, the effect is that <tt CLASS=literal>Animal</tt> acts
+something like a mini-package, holding the
+<tt CLASS=literal>MigrationPattern</tt> class. We can use all of the
+standard visibility modifiers on inner classes, so a static inner
+class could be private, protected, default, or publicly visible.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch05-SECT3-AUTOID.7">Anonymous Inner Classes</A></h4>
+
+<P CLASS=para>
+Now we get to the best part.  
+
+<P CLASS=para>
+As a general rule, the more deeply encapsulated and limited in scope 
+our classes are, the more freedom we have in naming them.   We saw this
+in our enumeration example.  This is not just a purely aesthetic issue.  
+Naming is an important part of writing readable and maintainable 
+code.   We generally want to give things the most concise and meaningful
+names possible.  A corollary to this is that we prefer to avoid doling out
+names for purely ephemeral objects that are only going to be used once.
+
+<P CLASS=para>
+Anonymous inner classes are an extension of the syntax of the 
+<tt CLASS=literal>new</tt> operation. When you create an
+anonymous inner class, you combine the class's declaration
+with the allocation of an instance of that class (much like the way 
+you can declare a variable of the type of an un-named structure in C).
+After the <tt CLASS=literal>new</tt>
+operator, you specify either the name of a class or an interface, followed
+by a class body.  The class body becomes an inner class, which either extends
+the specified class or, in the case of an interface, is expected to implement 
+the specified interface.  A single instance of the class is created and 
+returned as the value.
+
+<P CLASS=para>
+For example, we could do away with the declaration of the
+<tt CLASS=literal>Enumerator</tt> class in the
+<tt CLASS=literal>EmployeeList</tt> example by
+using an anonymous 
+inner class in the <tt CLASS=literal>getEnumeration()</tt> method:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    ...
+        
+    Enumeration getEnumeration() {
+    
+        return new Enumeration() {
+            int element = 0;
+            boolean hasMoreElements() {
+                return  element &lt; employees.length ;
+            }
+            Object nextElement() {
+                if ( hasMoreElements() )
+                    return employees[ element++ ];
+                else 
+                    throw NoSuchElementException();
+            }
+        };
+    }
+    
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we have simply moved the guts of <tt CLASS=literal>Enumerator</tt>
+into the body of an anonymous inner class.  The call to
+<tt CLASS=literal>new</tt> implicitly constructs the class and returns an
+instance of the class as its result.  Note the extent of the curly
+braces, and the semi-colon at the end.  It is a single statement.
+
+<P CLASS=para>
+But the code above certainly does not improve readability.  Inner classes
+are best used when you want to implement a few lines of code,
+where the verbiage and conspicuousness of declaring a separate class detracts
+from the task at hand.  Here's a better example:  Suppose that we want to 
+start a new thread to execute the
+<tt CLASS=literal>performBehavior()</tt> method of our
+<tt CLASS=literal>Animal</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    new Thread ( new Runnable() {
+        public void run() {  performBehavior();  }
+    } ).start();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we have gone over to the terse side.  We've allocated and started
+a new <tt CLASS=literal>Thread</tt>, providing an anonymous inner
+class that implements the <tt CLASS=literal>Runnable</tt>
+interface by calling our <tt CLASS=literal>performBehavior()</tt>
+method. The effect is similar to using a method pointer in some other
+language; the inner class effectively substitutes the method we want
+called (<tt CLASS=literal>performBehavior()</tt>) for 
+the method the system
+wants to call (<tt CLASS=literal>run()</tt>). However, the inner
+class allows the compiler to check type consistency, which would be
+difficult (if not impossible) with a true method pointer. At the same
+time, our anonymous adapter class with its three lines of code is much
+more efficient and readable than creating a new, top level adapter
+class named <tt CLASS=literal>AnimalBehaviorThreadAdapter</tt>.
+
+<P CLASS=para>
+While we're getting a bit ahead of the story, anonymous adapter
+classes are a perfect fit for event handling (which we'll cover fully
+in <A HREF="ch10_01.htm">Chapter 10, <i>Understand the Abstract Windowing Toolkit</i></A>). Skipping a lot of explanation, let's say you want the
+method <tt CLASS=literal>handleClicks()</tt> to be called
+whenever the user clicks the mouse. You would write code like this:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+addMouseListener(new MouseAdapter() {
+    public void mouseClicked(MouseEvent e) { handleClicks(e); }
+});
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this case, the anonymous class extends the AWT's
+<tt CLASS=literal>MouseAdapter</tt> class, by overriding its
+<tt CLASS=literal>mouseClicked()</tt> method to call our method.
+A lot is going on in a very small space, but the result is clean,
+readable code. You get to assign method names that are meaningful to
+you, while allowing Java to do its job of type checking. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch05-SECT2-AUTOID.2"><tt CLASS=literal>this</tt> and scoping</A></h3>
+
+<P CLASS=para>
+Sometimes an inner class may want to get a handle on its "parent" enclosing
+instance.  It might want to pass a reference to its parent, or to
+refer to one of the parent's variables or methods that has been hidden
+by one of its own. For example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+        class Animal {
+            int size;
+            class Brain {
+                int size;
+            }
+        }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here, as far as <tt CLASS=literal>Brain</tt> is concerned, the
+variable <tt CLASS=literal>size</tt> in
+<tt CLASS=literal>Animal</tt> is hidden by its own version.
+
+<P CLASS=para>
+Normally an object refers to itself using the special
+<tt CLASS=literal>this</tt> reference (implicitly or explicitly).
+But what is the meaning of <tt CLASS=literal>this</tt> for an
+object with one or more enclosing instances?  The answer is that an
+inner class has multiple <tt CLASS=literal>this</tt> references.
+You can specify which <tt CLASS=literal>this</tt> you want by
+prepending the name of the class.
+So, for instance (no pun intended), we can get a reference to our
+<tt CLASS=literal>Animal</tt> from within
+<tt CLASS=literal>Brain</tt> like so:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+        ...
+        class Brain {
+            Animal ourAnimal = Animal.this;
+            ...
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Similarly, we could refer to the <tt CLASS=literal>size</tt> variable in
+<tt CLASS=literal>Animal</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+        ...
+        class Brain {
+            int animalSize = Animal.this.size;
+            ...
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch05-SECT2-AUTOID.3">How do inner classes really work?</A></h3>
+
+<P CLASS=para>
+Finally, we'll get our hands dirty and take a look at what's really going
+on when we use an inner class.  We've said that the compiler is doing all 
+of the things that we had hoped to forget about.  Let's see what's actually
+happening. Try compiling our simple example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    class Animal {
+        class Brain {
+        }
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+(Oh, come on, do it...)
+
+<P CLASS=para>
+What you'll find is that the compiler generates two <i CLASS=filename>.class</i> files:
+
+<DIV CLASS=simplelist>
+
+<P>
+Animal.class<br>
+Animal$Brain.class<br>
+</DIV>
+
+<P CLASS=para>
+The second file is the class file for our inner class.  Yes, as we feared, 
+inner classes are really just compiler magic.  The compiler has created
+the inner class for us as a normal, top level class and named it by combining
+the class names with a dollar sign.  The dollar sign is a valid
+character in class names, but is intended for use only by automated tools
+in this way.  (Please don't start naming your classes with dollar signs).
+Had our class been more deeply nested, the intervening inner class names
+would have been attached in the same way to generate a unique top level name.
+
+<P CLASS=para>
+Now take a look at it using the <i CLASS=command>javap</i> utility:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    # javap 'Animal$Brain'
+    class Animal$Brain extends java.lang.Object 
+    {
+        Animal$Brain(Animal);
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You'll see that the compiler has given our inner class a constructor that
+takes a reference to an <tt CLASS=literal>Animal</tt> as an
+argument.  This is how the real inner 
+class gets the handle on its enclosing instance.  
+
+<P CLASS=para>
+The worst thing about these additional class files is that you need to
+know they are there. Utilities like <i CLASS=command>jar</i> don't automatically
+find them; when you are invoking a utility like <i CLASS=command>jar</i>, you need
+to specify these files explicitly, or use a wild 
+card that finds them. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch05-SECT2-AUTOID.4">Security Implications</A></h3>
+
+<P CLASS=para>
+Given what we just saw above--that the inner class really does exist as an
+automatically generated top level class--how does it get access to 
+private variables?  The answer, unfortunately, is that the compiler is 
+forced to break the encapsulation of your object and insert accessor methods
+so that the inner class can reach them.  The accessor methods will be given
+package level access, so your object is still safe within its package walls,
+but it is conceivable that this difference could be meaningful if people
+were allowed to create new classes within your package.
+
+<P CLASS=para>
+The visibility modifiers on inner classes also have some problems.  Current
+implementations of the virtual machine do not implement the notion of a 
+private or protected class within a package, so giving your inner class
+anything other than public or default visibility is only a compile-time
+guarantee.
+
+<P CLASS=para>
+It is difficult to conceive of how these security issues could be
+abused, but it is interesting to note that Java is straining a bit
+to stay within its original design.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Interfaces</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Object and Class Classes</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

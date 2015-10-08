@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] 11.6 Formatted Messages</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:59:14 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>Internationalization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-11-SECT-6">11.6 Formatted Messages</A></h2>
+
+<P CLASS=para>
+We've seen that in order to internationalize programs, you
+must place all user-visible messages into resource bundles.
+This is straightforward when the text to be localized
+consists of simple labels like those on buttons and menu
+items.  It is trickier, however, with messages that consist
+partially of static text and partially of dynamic values.
+For example, a compiler might have to display a message like
+"Error at line 5 of file 'hello.java'," in which the line
+number and filename are dynamic and locale-independent, while
+the rest of the message is static and needs to be localized.
+
+<P CLASS=para>
+<A NAME="CH11.MESSAGEFORMA1"></A>The <tt CLASS=literal>MessageFormat</tt> class of the <tt CLASS=literal>java.text</tt>
+package helps tremendously with these types of messages.  To
+use it, you store only the static parts of a message in the
+<tt CLASS=literal>ResourceBundle</tt> and include special characters that
+indicate where the dynamic parts of the message are to be
+placed.  For example, one resource bundle might contain the
+message: "Error at line {0} of file {1}."  And another
+resource bundle might contain a "translation" that looks
+like this: "Erreur: {1}: {0}."
+
+<P CLASS=para>
+To use such a localized message, you create a
+<tt CLASS=literal>MessageFormat</tt> object from the static part of the
+message, and then call its <tt CLASS=literal>format()</tt> method, passing
+in an array of the values to be substituted.  In this case,
+the array would contain an <tt CLASS=literal>Integer</tt> object that
+specifies the line number and a <tt CLASS=literal>String</tt> object that
+specifies the filename.  The <tt CLASS=literal>MessageFormat</tt> class
+knows about other <tt CLASS=literal>Format</tt> classes defined in
+<tt CLASS=literal>java.text</tt>.  It creates and uses
+<tt CLASS=literal>NumberFormat</tt> objects to format numbers and
+<tt CLASS=literal>DateFormat</tt> objects to format dates and times.  In
+addition, you can design messages that create
+<tt CLASS=literal>ChoiceFormat</tt> objects to convert from numbers to
+strings--this is useful when working with enumerated types
+such as numbers that correspond to month names, or when you
+need to use the singular or plural form of a word based on
+the value of some number.
+
+<P CLASS=para>
+<A HREF="ch11_06.htm#JNUT2-CH-11-EX-6">Example 11.6</A>
+demonstrates this kind of <tt CLASS=literal>MessageFormat</tt> usage.  It
+is a convenience class with a single static method for the
+localized display of exception and error messages. When
+invoked, the code attempts to load a <tt CLASS=literal>ResourceBundle</tt>
+with the basename "Errors."  If found, it looks up a message resource
+using the class name of the exception object that was
+passed.  If such a resource is found, it is used to display
+the error message.  An array of five values is passed to the
+<tt CLASS=literal>format()</tt> method.  The localized error message can
+include any or all of these arguments.
+
+<P CLASS=para>
+The <tt CLASS=literal>LocalizedError.display()</tt> method defined in this
+example was used in <A HREF="ch11_03.htm#JNUT2-CH-11-EX-1">Example 11.1</A>
+at the beginning of this chapter. <A HREF="ch11_06.htm#JNUT2-CH-11-EX-7">Example 11.7</A>
+shows the default <I CLASS=emphasis>Errors.properties</I> resource bundle used in
+conjunction with that example.  Error message display for
+the program is nicely internationalized.  Porting the
+program's error message to a new locale is simply a matter of
+translating (localizing) the <I CLASS=emphasis>Errors.properties</I> file.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-11-EX-6">Example 11.6: Internationalizing Error Message Display with MessageFormat</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.text.*;
+import java.io.*;
+import java.util.*;
+/**
+ * A convenience class that can display a localized exception message
+ * depending on the class of the exception.  It uses a MessageFormat,
+ * and passes five arguments that the localized message may include:
+ *   {0}: the message included in the exception or error.
+ *   {1}: the full class name of the exception or error.
+ *   {2}: a guess at what file the exception was caused by.
+ *   {3}: a line number in that file.
+ *   {4}: the current date and time.
+ * Messages are looked up in a ResourceBundle with the basename
+ * "Errors," using the full class name of the exception object as
+ * the resource name.  If no resource is found for a given exception
+ * class, the superclasses are checked.
+ */
+public class LocalizedError {
+  public static void display(Throwable error) {
+    ResourceBundle bundle;
+    // Try to get the resource bundle.
+    // If none, print the error in a non-localized way.
+    try { bundle = ResourceBundle.getBundle("Errors"); }
+    catch (MissingResourceException e) {
+      error.printStackTrace(System.err);
+      return;
+    }
+    // Look up a localized message resource in that bundle, using the
+    // classname of the error (or its superclasses) as the resource name.
+    // If no resource was found, display the error without localization.
+    String message = null;
+    Class c = error.getClass();
+    while((message == null) &amp;&amp; (c != Object.class)) {
+      try { message = bundle.getString(c.getName()); }
+      catch (MissingResourceException e) { c = c.getSuperclass(); }
+    }
+    if (message == null) { error.printStackTrace(System.err);  return; }
+    // Try to figure out the filename and line number of the
+    // exception.  Output the error's stack trace into a string, and
+    // use the heuristic that the first line number that appears in
+    // the stack trace is after the first or  second colon.  We assume that
+    // this stack frame is the first one the programmer has any control
+    // over, and so report it as the location of the exception.
+    String filename = "";
+    int linenum = 0;
+    try {
+      StringWriter sw = new StringWriter();    // Output stream into a string.
+      PrintWriter out = new PrintWriter(sw);   // PrintWriter wrapper.
+      error.printStackTrace(out);              // Print stacktrace.
+      String trace = sw.toString();            // Get it as a string.
+      int pos = trace.indexOf(':');            // Look for first colon.
+      if (error.getMessage() != null)          // If the error has a message
+        pos = trace.indexOf(':', pos+1);       // look for second colon.
+      int pos2 = trace.indexOf(')', pos);      // Look for end of line number.
+      linenum = Integer.parseInt(trace.substring(pos+1,pos2));  // Get linenum.
+      pos2 = trace.lastIndexOf('(', pos);      // Back to start of filename.
+      filename = trace.substring(pos2+1, pos); // Get filename.
+    }
+    catch (Exception e) { ; }                  // Ignore exceptions.
+    // Set up an array of arguments to use with the message.
+    String errmsg = error.getMessage();
+    Object[] args = {
+      ((errmsg!= null)?errmsg:""), error.getClass().getName(),
+      filename, new Integer(linenum), new Date()
+    };
+    // Finally, display the localized error message, using
+    // MessageFormat.format() to substitute the arguments into the message.
+    System.out.println(MessageFormat.format(message, args));
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+<A HREF="ch11_06.htm#JNUT2-CH-11-EX-7">Example 11.7</A>
+shows the resource bundle properties file used to localize
+the set of possible error messages that could be thrown by
+the <tt CLASS=literal>ConvertEncoding</tt> class shown at the beginning of
+this chapter.  With a resource bundle like this,
+<tt CLASS=literal>ConvertEncoding</tt> produces error messages like the following:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Error: Specified encoding not supported
+        Error occurred at line 46 of file "ConvertEncoding.java"
+        at 7:55:28 PM on 08-Apr-97
+</PRE>
+</DIV>
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-11-EX-7">Example 11.7: A ResourceBundle Properties File Containing Localized Error Messages</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+#
+# This is the file Errors.properties.
+# One property for each class of exceptions that our program might
+# report.  Note the use of backslashes to continue long lines onto the
+# next.  Also note the use of \n and \t for newlines and tabs.
+#
+java.io.FileNotFoundException: \
+Error: File "{0}" not found\n\t\
+Error occurred at line {3} of file "{2}"\n\tat {4}
+java.io.UnsupportedEncodingException: \
+Error: Specified encoding not supported\n\t\
+Error occurred at line {3} of file "{2}"\n\tat {4,time} on {4,date}
+java.io.CharConversionException:\
+Error: Character conversion failure.  Input data is not in specified format.
+# A generic resource.  Display a message for any error or exception that
+# is not handled by a more specific resource.
+java.lang.Throwable:\
+Error: {1}: {0}\n\t\
+Error occurred at line {3} of file "{2}"\n\t{4,time,long} {4,date,long}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Localizing User-Visible Messages</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Reflection</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

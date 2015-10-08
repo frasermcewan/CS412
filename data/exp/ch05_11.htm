@@ -1,0 +1,613 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.11 Reflection</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:53:10 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="ch05-SECT1-AUTOID.2">5.11 Reflection</A></h2>
+
+<P CLASS=para>
+In this section we'll take a look at the Java reflection API,
+supported by the classes in the
+<tt CLASS=literal>java.lang.reflect</tt> package.  As its 
+name suggests, reflection is the ability for a programming language to
+examine itself.  The Java reflection API lets Java code look at an
+object (more precisely, the class of the object) and determine its
+structure.  Within the limits imposed by the security manager, you can
+find out what constructors, methods, fields a class has, and their
+attributes.  You can even change the value of fields, dynamically
+invoke methods, and construct new objects, much as if Java had
+primitive pointers to variables and methods.
+
+<P CLASS=para>
+We don't have room here to cover the full reflection API.  As you
+might expect, 
+the <tt CLASS=literal>reflect</tt> package is complex and rich in
+details. But reflection has been designed so that you can do a lot
+with relatively little effort; 20% of the effort will give you 80% of
+the fun.
+
+<P CLASS=para>
+The reflection API is used by Java Beans to determine the capabilities
+of objects at runtime.  It's also used at a lower level by object
+serialization (see Chapter 8) to tear apart and build objects for
+transport over streams or into persistent storage.  Obviously, the
+power to pick apart objects and see their internals must be zealously
+watched by the security manager. Your code is not allowed to do
+anything with the reflection API that it couldn't do with static Java
+code. In short, reflection is a powerful tool, but it isn't a
+loophole. An object can't use it to find out about data fields that it
+wouldn't normally be able to access (for example, another object's
+private fields), and you can't use it to modify any data
+inappropriately.
+
+<P CLASS=para>
+The three primary features of a class are its fields (variables), 
+its methods, and its constructors.  For purposes of describing or accessing an 
+object, these three features are represented by the classes in the reflection
+API: the <tt CLASS=literal>java.lang.reflect.Field</tt>,
+<tt CLASS=literal>java.lang.reflect.Method</tt>, and
+<tt CLASS=literal>java.lang.reflect.Constructor</tt> classes
+represent the fields, methods, and constructors of a class.
+To get one of these objects, we use the class's
+<tt CLASS=literal>Class</tt>.
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">Field[] getFields()</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the public variables, including inherited ones.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Field getField(String name)</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the specified public variable, which may be inherited.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Field[] getDeclaredFields()</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get all, public and nonpublic,
+variables declared in this class (not including those inherited from 
+superclasses).</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Field getDeclaredField(String name)</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the specified
+variable, public or nonpublic, declared in this class (inherited 
+variables not considered).</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Method[] getMethods()</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the public methods, including inherited ones.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Method getMethod(String name, Class [] argumentTypes)</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the specified public method, who's arguments match the types listed in
+<I CLASS=emphasis>argumentTypes</I>.  The method may be inherited.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Method[] getDeclaredMethods()</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get all, public and
+nonpublic, methods declared in this class (not including those inherited
+from superclasses).</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Method getDeclaredMethod(String name, Class[] argumentTypes)</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the specified method, public or nonpublic, who's arguments match the 
+types listed in <I CLASS=emphasis>argumentTypes</I>, and which is declared in this class 
+(inherited methods not considered).</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Constructor[] getConstructors() </TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the public constructors of this class.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Constructor getConstructor(Class[] argumentTypes)</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the specified public constructor of this class, who's arguments match the
+types listed in <I CLASS=emphasis>argumentTypes</I>.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Constructor[] getDeclaredConstructors() </TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get all, public and nonpublic, constructors of this class.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Constructor getDeclaredConstructor(Class[] argumentTypes)</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Get the specified constructor, public or nonpublic, who's arguments match
+the types listed in <I CLASS=emphasis>argumentTypes</I>.</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+The table above shows that the <tt CLASS=literal>Class</tt> class provides
+two pairs of methods for getting at each type of feature.  One pair
+allows access to a class's public features (including those inherited
+from its superclases), while the other pair allows access to any
+public or nonpublic item declared within the class (but not features
+that are inherited), subject to security considerations.  For example,
+<tt CLASS=literal>getFields()</tt> returns an array of
+<tt CLASS=literal>Field</tt> objects representing all of a class's public
+variables, including those it
+inherits. <tt CLASS=literal>getDeclaredFields()</tt> returns an array
+representing all the variables declared in the class, regardless of
+their access modifiers (not including variables the security manager
+won't let you see), but not including inherited variables.  (For
+constructors, the distinction between "all constructors" and "declared
+constructors" is meaningful, so <tt CLASS=literal>getConstructors()</tt>
+and <tt CLASS=literal>getDeclaredConstructors()</tt> differ only in that
+the former returns public constructors, while the latter returns
+all the class's constructors.)  Each pair of methods includes a method
+for listing all of the items at once (for example,
+<tt CLASS=literal>getFields()</tt>), and a method for looking up a
+particular item by name and (for methods and constructors) signature
+(for example, <tt CLASS=literal>getField()</tt>, which takes the field
+name as an argument).
+
+<P CLASS=para>
+As a quick example, we'll show how easy it is to list all of the 
+public methods of the <tt CLASS=literal>java.util.Calendar</tt>
+class: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Method [] methods = Calendar.class.getMethods();
+for (int i=0; i &lt; methods.length; i++)
+    System.out.println( methods[i] );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we have used the <tt CLASS=literal>.class</tt> notation to
+get a reference the <tt CLASS=literal>Class</tt> of
+<tt CLASS=literal>Calendar</tt>.  Remember the discussion of the
+<tt CLASS=literal>Class</tt> class--the reflection methods don't
+belong to the <tt CLASS=literal>Calendar</tt> class itself; they
+belong to the <tt CLASS=literal>java.lang.Class</tt> object that
+describes the <tt CLASS=literal>Calendar</tt> class.  If we
+wanted to start from an instance of
+<tt CLASS=literal>Calendar</tt> (or, say, an unknown object) we
+could have used the <tt CLASS=literal>getClass()</tt> method of
+the object instead:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Method [] methods = myUnknownObject.getClass().getMethods();
+</PRE>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch05-SECT2-AUTOID.5">Security</A></h3>
+
+<P CLASS=para>
+Access to the reflection API is governed by a security manager. A
+fully trusted application has access to all of the above
+functionality--it can gain access to members of classes at the level
+of restriction normally granted code within its scope.  There is
+currently no "special" access granted by the reflection API.  It is
+possible that in the future, the full power of the reflection API will
+be available to completely trusted code such as debuggers; right now,
+user code can only see what it could have seen at compile-time.
+Untrusted code (for example, an unsigned applet) has the normal level
+of access to classes loaded from its own origin (classes sharing its
+classloader), but can only rely on the ability to access the public
+members of public classes coming from the rest of the system.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch05-SECT2-AUTOID.6">Accessing Fields</A></h3>
+
+<P CLASS=para>
+The class <tt CLASS=literal>java.lang.reflect.Field</tt> is used
+to represent static variables and instance variables.
+<tt CLASS=literal>Field</tt> has a full set of accessor methods
+for all of the base types (for example,
+<tt CLASS=literal>getInt()</tt> and
+<tt CLASS=literal>setInt()</tt>,
+<tt CLASS=literal>getBoolean()</tt> and
+<tt CLASS=literal>setBoolean()</tt>), and
+<tt CLASS=literal>get()</tt> and
+<tt CLASS=literal>set()</tt> methods for accessing members that
+are object references.
+
+<P CLASS=para>
+For example, given the following class:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class BankAccount {
+    public int balance;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+With the reflection API we can read and modify the value of the public
+integer field <tt CLASS=literal>balance</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+BankAccount myBankAccount = ...;
+...
+try {
+    Field balanceField = BankAccount.class.getField("balance");
+    int balance = balanceField.getInt( myBankAccount );  // read it
+    balanceField.setInt( myBankAccount, 42 );            // change it
+} catch ( NoSuchFieldException e ) { 
+    // There is no "balance" field in this class
+} catch ( IllegalAccessException e2) {
+    // We don't have permission to access the field.
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+ 
+The various methods of <tt CLASS=literal>Field</tt> take a
+reference to the particular object instance that we want to access.
+In the code above, the <tt CLASS=literal>getField()</tt> method returns a
+<tt CLASS=literal>Field</tt> object that represents the
+<tt CLASS=literal>balance</tt> of the <tt CLASS=literal>BankAccount</tt>
+class; this object doesn't refer to any specific
+<tt CLASS=literal>BankAccount</tt>. Therefore, to read or modify any
+specific <tt CLASS=literal>BankAccount</tt>, we call
+<tt CLASS=literal>getInt()</tt> and <tt CLASS=literal>setInt()</tt> with a
+reference to <tt CLASS=literal>myBankAccount</tt>, which is the account we
+want to work with.  As you can see, an exception occurs if we ask for
+access to a field that doesn't exist, or if we don't have the proper
+permission to read or write the field.  If we make
+<tt CLASS=literal>balance</tt> a <tt CLASS=literal>private</tt> field, we can
+still look up the <tt CLASS=literal>Field</tt> object that describes it,
+but we won't be able to read or write its value.
+
+<P CLASS=para>
+Therefore, we aren't doing anything that we couldn't have done with
+static code at compile-time; as long as
+<tt CLASS=literal>balance</tt> is a
+<tt CLASS=literal>public</tt> member of a class that we can
+access, we can write code to read and modify its value. What's
+important is that we're accessing <tt CLASS=literal>balance</tt>
+at run-time, and could use this technique to examine the
+<tt CLASS=literal>balance</tt> field in a class that was
+dynamically loaded.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch05-SECT2-AUTOID.7">Accessing Methods</A></h3>
+
+<P CLASS=para>
+The class <tt CLASS=literal>java.lang.reflect.Method</tt>
+represents a static or instance method.  Subject to the normal
+security rules, a <tt CLASS=literal>Method</tt> object's
+<tt CLASS=literal>invoke()</tt> method can be used to call the
+underlying object's method with specified arguments.  Yes, Java has
+something like a method pointer!
+
+<P CLASS=para>
+As an example, we'll write a Java application called
+<tt CLASS=literal>invoke</tt> that 
+takes as command line arguments the name of a Java class and the name of
+a method to invoke.  For simplicity, we'll assume that the method is
+static and takes no arguments:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.lang.reflect.*;
+class invoke {
+    public static void main( String [] args ) {
+        try {
+            Class c = Class.forName( args[0] );
+            Method m = c.getMethod( args[1], new Class [] { } );
+            Object ret =  m.invoke( null, null );
+            System.out.println( "Invoked static method: " + args[1] + 
+                " of class: " + args[0] + " with no args\nResults: " + ret );
+        } catch ( ClassNotFoundException e ) {
+            // Class.forName() can't find the class
+        } catch ( NoSuchMethodException e2 ) {
+            // that method doesn't exist
+        } catch ( IllegalAccessException e3 ) {
+            // we don't have permission to invoke that method
+        } catch ( InvocationTargetException e4 ) {
+            // an exception ocurred while invoking that method
+            System.out.println("Method threw an: " + e4.getTargetException() );
+        }
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We can run <tt CLASS=literal>invoke</tt> to fetch the value of
+the system clock: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% java invoke java.lang.System currentTimeMillis
+Invoked static method: currentTimeMillis of class: java.lang.System
+with no args 
+Results: 861129235818
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Cool, eh?  Maybe you'll consider this the first step towards writing a
+full blown scripting language for Java, in Java.  If you do, please
+let me know.
+
+<P CLASS=para>
+Turning to the code, our first task is to look up the specified
+<tt CLASS=literal>Class</tt> by name. To do so, we call the
+<tt CLASS=literal>forName()</tt> method with the name of the desired class
+(the first command line argument).  We then ask for the specified
+method by its name. <tt CLASS=literal>getMethod()</tt> has two arguments:
+the first is the method name (the second command line argument) and
+the second is an array of <tt CLASS=literal>Class</tt> objects that
+specifies the method's signature. (Remember that any method may be
+overloaded; you must specify the signature to make it clear which
+version you want.) Since our simple program only calls methods with no
+arguments, we create an anonymous empty array of
+<tt CLASS=literal>Class</tt> objects.  Had we wanted to invoke a method
+that takes arguments, we would have passed an array of the classes of
+their respective types, in the proper order.  (An
+<tt CLASS=literal>IllegalArgumentException</tt> can be thrown at run-time
+if they are wrong).  The classes of primitive types can be found in
+the static <tt CLASS=literal>TYPE</tt> fields of their respective
+wrappers; for example, use <tt CLASS=literal>Integer.TYPE</tt> for the
+class of a primitive integer.
+
+<P CLASS=para>
+Once we have the <tt CLASS=literal>Method</tt> object, we call its
+<tt CLASS=literal>invoke()</tt> method. This calls our target method, and
+returns the result as an <tt CLASS=literal>Object</tt>. (To do anything
+nontrivial with this object, you have to cast it to something more
+specific. Presumably, since you're calling the method, you know what
+kind of object to expect.)  If the returned value is a primitive type
+like <tt CLASS=literal>int</tt> or <tt CLASS=literal>boolean</tt>, it will be
+wrapped in the standard wrapper class for its type. (Wrappers for
+primitive types are discussed in <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A>.) If the method returns
+<tt CLASS=literal>void</tt>, <tt CLASS=literal>invoke()</tt> returns a
+<tt CLASS=literal>Void</tt> object.  (This is why a wrapper class is
+needed for <tt CLASS=literal>void</tt>; we need a class to represent
+<tt CLASS=literal>void</tt> return values.)
+
+<P CLASS=para>
+The first argument to <tt CLASS=literal>invoke()</tt> is the
+object on which we would like to invoke the method. If the method is
+static, there is no object, so we set the first argument to
+<tt CLASS=literal>null</tt>. That's the case in our example.  The
+second argument is an array of objects to be passed as arguments to
+the methods.  The types of these should match the types specified in
+the <tt CLASS=literal>getMethod()</tt> call.  Because we're
+calling a method with no arguments, we can pass
+<tt CLASS=literal>null</tt> for the second argument to
+<tt CLASS=literal>invoke()</tt>. As with the return value, the
+types of primitive arguments are expected to be wrapped in wrapper
+classes.  The reflection API automatically unpacks them for the method
+invocation.
+
+<P CLASS=para>
+The exceptions shown in the code above occur if we cannot find or
+don't have permission to access the method.  Additionally, an
+<tt CLASS=literal>InvocationTargetException</tt> occurs if the
+method being invoked throws some kind of exception itself.  You can
+find out what it threw by calling the
+<tt CLASS=literal>getTargetException()</tt> method of
+<tt CLASS=literal>InvocationTargetException</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch05-SECT2-AUTOID.8">Accessing Constructors</A></h3>
+
+<P CLASS=para>
+ 
+The <tt CLASS=literal>java.lang.reflect.Constructor</tt> class
+represents an object constructor.  Subject to the security manager,
+you can use it to create a new instance of an object, with arguments.
+Although you can load new classes dynamically and create instances of
+them with <tt CLASS=literal>Class.forName()</tt> and
+<tt CLASS=literal>Class.newInstance()</tt>, you cannot specify
+arguments with those methods.
+
+<P CLASS=para>
+Here we'll create an instance of
+<tt CLASS=literal>java.util.Date</tt>, passing a string argument
+to the constructor:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try {
+    Constructor c = Date.class.getConstructor( new Class [] { String.class } );
+    Object o = c.newInstance( new Object [] { "Jan 1, 1997" } );
+    Date d = (Date)o;
+    System.out.println(d);
+} catch ( NoSuchMethodException e ) {
+        // getConstructor() couldn't find the constructor we described
+} catch ( InstantiationException e2 ) {
+    // the class is abstract 
+} catch ( IllegalAccessException e3 ) {
+    // we don't have permission to create an instance
+} catch ( InvocationTargetException e4 ) {
+    // the construct threw an exception
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The story is much the same as with a method invocation; after all, a
+constructor is really no more than a method with some strange
+properties.  We look up the appropriate constructor for our
+<tt CLASS=literal>Date</tt> class--the one that takes a single
+<tt CLASS=literal>String</tt> as its argument--by passing
+<tt CLASS=literal>getConstructor()</tt> an array containing the
+<tt CLASS=literal>String</tt> class as its only element. (If the
+constructor required more arguments, we would put additional objects
+in the array, representing the classes of each argument.)  We can then
+invoke <tt CLASS=literal>newInstance()</tt>, passing it a
+corresponding array of argument objects.  Again, to pass primitive
+types we would wrap them in their wrapper types first.  Finally, we
+cast the resulting object to a <tt CLASS=literal>Date</tt>, and
+print it.
+
+<P CLASS=para>
+The same exceptions seen in the previous example apply here, including
+the possible <tt CLASS=literal>IllegalArgumentException</tt>. In
+addition, <tt CLASS=literal>newInstance()</tt> throws an
+<tt CLASS=literal>InstantiationException</tt> if the class is
+abstract and cannot be instantiated.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch05-SECT3-AUTOID.8">What about arrays?</A></h4>
+
+<P CLASS=para>
+The reflection API allows you to create and inspect array of base
+types using the <tt CLASS=literal>java.lang.reflect.Array</tt>
+class.  The process is much the same as with the other classes.  For
+more information, look in a language reference.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch05-SECT3-AUTOID.9">What is Reflection good for?</A></h4>
+
+<P CLASS=para>
+Well, we've already said that reflection is used by the serialization
+process (<A HREF="ch08_01.htm">Chapter 8, <i>Input/Output Facilities</i></A>), and that it is used by graphical
+development environments, like Borland's JBuilder and Symantec's
+Visual Cafe.  But these are pretty much behind the scenes
+applications. What can reflection do for the average Java programmer?
+
+<P CLASS=para>
+First, it's there when you really need a method pointer. However, in
+most situations where a method pointer is convenient, there are other
+solutions to try; writing an anonymous adapter class is likely to be
+clearer and more efficient.  Reflection would let you write a generic
+adapter class; that is, an adapter that doesn't know in advance what
+method to call.  The adapter's client could pass a method name to the
+adapter as a string; the adapter would then use reflection to find the
+given Method in its client. 
+
+<P CLASS=para>
+Even more generally, you can use reflection in any situation where you
+need to call methods that you don't know about in advance. It's hard
+to think of good examples--but then, that's the beauty of Java: it
+opens possibilities for new kinds of applications. Perhaps you'll need
+to write some kind of self-extending program, that loads new modules
+dynamically and uses reflection to find out how to use them. In short,
+don't relegate reflection to the dusty toolbox of tricks that are only
+useful for experts. With some experimentation, you'll find that
+reflection greatly adds to Java's capabilities. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Object and Class Classes</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Threads</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

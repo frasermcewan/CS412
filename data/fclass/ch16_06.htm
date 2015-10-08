@@ -1,0 +1,927 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] Collator</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:30:08 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>The java.text Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Collator</H1>
+
+<H2>Name</H2>
+
+Collator
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.38">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.Collator</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.text.RuleBasedCollator</tt>
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Cloneable</tt>, 
+<tt CLASS=literal>java.io.Serializable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.39">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>Collator</tt> class compares strings in a manner that is appropriate for a particular locale. 
+Although <tt CLASS=literal>Collator</tt> is an <tt CLASS=literal>abstract</tt> 
+class, the <tt CLASS=literal>getInstance()</tt> factory 
+methods can be used to get a usable instance of a <tt CLASS=literal>Collator</tt> 
+subclass that implements a particular collation strategy. One subclass, 
+<tt CLASS=literal>RuleBasedCollator</tt>, is provided 
+as part of the JDK. 
+
+<P CLASS=para>
+A <tt CLASS=literal>Collator</tt> object has a <I CLASS=emphasis>strength</I> 
+property that controls the level of difference that is considered significant 
+for comparison purposes. The <tt CLASS=literal>Collator</tt> 
+class provides four strength values: <tt CLASS=literal>PRIMARY</tt>, 
+<tt CLASS=literal>SECONDARY</tt>, <tt CLASS=literal>TERTIARY</tt>, 
+and <tt CLASS=literal>IDENTICAL</tt>. Although the 
+interpretation of these strengths is locale-dependent, they generally have 
+the following meanings: 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>PRIMARY</tt><br>
+<DD>
+
+<P CLASS=para>
+The comparison considers letter differences, but ignores case and diacriticals. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SECONDARY</tt><br>
+<DD>
+
+<P CLASS=para>
+The comparison considers letter differences and diacriticals, but ignores case. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>TERTIARY</tt><br>
+<DD>
+
+<P CLASS=para>
+The comparison considers letter differences, case, and diacriticals. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IDENTICAL</tt><br>
+<DD>
+
+<P CLASS=para>
+The comparison considers all differences. </DL>
+<P CLASS=para>
+The default comparison strength is <tt CLASS=literal>TERTIARY</tt>. 
+
+<P CLASS=para>
+If you only need to compare two <tt CLASS=literal>String</tt> 
+objects once, the <tt CLASS=literal>compare()</tt> 
+method of the <tt CLASS=literal>Collator</tt> class 
+provides the best performance. However, if you need to compare the same 
+<tt CLASS=literal>String</tt> objects multiple times, 
+such as when you are sorting, you should use <tt CLASS=literal>CollationKey</tt> 
+objects instead. A <tt CLASS=literal>CollationKey</tt> 
+object contains a <tt CLASS=literal>String</tt> that 
+has been converted into a series of bits that can be compared in a bitwise 
+fashion against other <tt CLASS=literal>CollationKey</tt> 
+objects. You use a <tt CLASS=literal>Collator</tt> 
+object to create a <tt CLASS=literal>CollationKey</tt> 
+for a given <tt CLASS=literal>String</tt>. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.40">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.text.Collator extends java.lang.Object
+                      implements java.io.Serializable, 
+                                 java.lang.Cloneable {
+  // Constants
+  public static final int CANONICAL_DECOMPOSITION;
+  public static final int FULL_DECOMPOSITION;
+  public static final int IDENTICAL;
+  public static final int NO_DECOMPOSITION;
+  public static final int PRIMARY;
+  public static final int SECONDARY;
+  public static final int TERTIARY;
+  // Constructors
+  protected Collator();
+  // Class Methods
+  public static synchronized Locale[] getAvailableLocales();
+  public static synchronized Collator getInstance();
+  public static synchronized Collator getInstance(Locale desiredLocale);
+  // Instance Methods
+  public Object clone();
+  public abstract int compare(String source, String target);
+  public boolean equals(Object that); 
+  public boolean equals(String source, String target);
+  public abstract CollationKey getCollationKey(String source);
+  public synchronized int getDecomposition();
+  public synchronized int getStrength();
+  public abstract synchronized int hashCode();
+  public synchronized void setDecomposition(int decompositionMode);
+  public synchronized void setStrength(int newStrength);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.41">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.52">CANONICAL_DECOMPOSITION</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.61">public final static int CANONICAL_DECOMPOSITION</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A decomposition constant that specifies that Unicode 2.0 characters which 
+are canonical variants are decomposed for collation. This is the default 
+decomposition setting. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.53">FULL_DECOMPOSITION</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.62">public final static int FULL_DECOMPOSITION</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A decomposition constant that specifies that Unicode 2.0 canonical variants 
+and compatibility variants are decomposed for collation. This is the 
+most complete decomposition setting, and thus the slowest setting. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.54">IDENTICAL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.63">public final static int IDENTICAL</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A strength constant that specifies that all differences are considered 
+significant for comparison purposes. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.55">NO_DECOMPOSITION</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.64">public final static int NO_DECOMPOSITION</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A decomposition setting that specifies that no Unicode characters are
+decomposed for collation. This is the least complete decomposition setting, 
+and thus the fastest setting. It only works correctly for languages that 
+do not use diacriticals. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.56">PRIMARY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.65">public final static int PRIMARY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A strength constant that specifies that only primary differences are considered 
+significant for comparison purposes. Primary differences are typically 
+letter differences. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.57">SECONDARY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.66">public final static int SECONDARY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A strength constant that specifies that only secondary differences and 
+above are considered significant for comparison purposes. Secondary differences 
+are typically differences in diacriticals, or accents. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.58">TERTIARY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.67">public final static int TERTIARY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A strength constant that specifies that only tertiary differences and above 
+are considered significant for comparison purposes. Tertiary differences 
+are typically differences in case. This is the default strength setting. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.42">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.59">Collator</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.68">protected Collator()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Collator</tt> 
+with the default strength of <tt CLASS=literal>TERTIARY</tt> 
+and default decomposition mode of <tt CLASS=literal>CANONICAL_DECOMPOSITION</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.43">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.60">getAvailableLocales</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.69">public static synchronized Locale[] getAvailableLocales()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An array of <tt CLASS=literal>Locale</tt> objects. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an array of the <tt CLASS=literal>Locale</tt> 
+objects for which this class can create <tt CLASS=literal>Collator</tt> 
+objects. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.61">getInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.70">public static synchronized Collator getInstance()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Collator</tt> appropriate for 
+the default <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>Collator</tt> 
+that compares strings in the default <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.71"><DIV CLASS=screen> <P> <PRE> public static synchronized Collator getInstance( Locale desiredLocale) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>desiredLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> 
+to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Collator</tt> appropriate for 
+the given <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a <tt CLASS=literal>Collator</tt> 
+that compares strings in the given <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.44">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.62">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.72">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this<tt CLASS=literal> Collator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>Collator</tt> 
+and returns it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.63">compare</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.73">public abstract int compare(String source, String target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>source</tt><br>
+<DD>
+
+<P CLASS=para>
+The source string.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>target</tt><br>
+<DD>
+
+<P CLASS=para>
+The target string. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+
+<tt CLASS=literal>-1</tt> if <tt CLASS=literal>source</tt> is less than
+<tt CLASS=literal>target</tt>, <tt CLASS=literal>0</tt> if the strings are
+equal, or <tt CLASS=literal>1</tt> if <tt CLASS=literal>source</tt> is greater
+than <tt CLASS=literal>target</tt>.
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This method compares the given strings according to the collation
+rules for this <tt CLASS=literal>Collator</tt> and returns a value that
+indicates their relationship. If either of the strings are compared
+more than once, a <tt CLASS=literal>CollationKey</tt> should be used
+instead.
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.64">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.74">public boolean equals(Object that)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>that</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be compared with this object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; 
+<tt CLASS=literal>false</tt> if they are not. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.equals()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>obj</tt> is an instance of <tt CLASS=literal>Collator</tt> 
+and is equivalent to this <tt CLASS=literal>Collator</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.75">public boolean equals(String source, Source target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>source</tt><br>
+<DD>
+
+<P CLASS=para>
+The source string.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>target</tt><br>
+<DD>
+
+<P CLASS=para>
+The target string. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the given strings are 
+equal; <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method compares the given strings for equality using the collation 
+rules for this <tt CLASS=literal>Collator</tt>. Note 
+that this method applies locale-specific rules and is thus not the same 
+as <tt CLASS=literal>String.equals()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.65">getCollationKey</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.76">public abstract CollationKey getCollationKey(String source)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>source</tt><br>
+<DD>
+
+<P CLASS=para>
+The string to use when generating the <tt CLASS=literal>CollationKey</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>CollationKey</tt> for the given 
+string. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method generates a <tt CLASS=literal>CollationKey</tt> 
+for the given string. The returned object can be compared with other <tt CLASS=literal>CollationKey</tt> 
+objects using <tt CLASS=literal>CollationKey.compareTo()</tt>. 
+This comparison is faster than using <tt CLASS=literal>Collator.compare()</tt>, 
+so if the same string is used for many comparisons, you should use 
+<tt CLASS=literal>CollationKey</tt> objects. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.66">getDecomposition</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.77">public synchronized int getDecomposition()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The decomposition mode for this <tt CLASS=literal>Collator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current decomposition mode for this <tt CLASS=literal>Collator</tt>. 
+The decomposition mode specifies how composed Unicode characters are handled 
+during collation. You can adjust the decomposition mode to choose between 
+faster and more complete collation. The returned value is one of the following 
+values: <tt CLASS=literal>NO_DECOMPOSITION</tt>, <tt CLASS=literal>CANONICAL_DECOMPOSITION</tt>, 
+or <tt CLASS=literal>FULL_DECOMPOSITION</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.67">getStrength</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.78">public synchronized int getStrength()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The strength setting for this <tt CLASS=literal>Collator</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current strength setting for this <tt CLASS=literal>Collator</tt>. 
+The strength specifies the minimum level of difference that is considered 
+significant during collation. The returned value is one of the following 
+values: <tt CLASS=literal>PRIMARY</tt>, <tt CLASS=literal>SECONDARY</tt>, 
+<tt CLASS=literal>TERTIARY</tt>, or <tt CLASS=literal>IDENTICAL</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.68">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.79">public abstract synchronized int hashCode()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode for this object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.hashCode()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a hashcode for this <tt CLASS=literal>Collator</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.69">setDecomposition</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.80">public synchronized void setDecomposition(int decompositionMode)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>decompositionMode</tt><br>
+<DD>
+
+<P CLASS=para>
+The decomposition mode:
+<tt CLASS=literal>NO_DECOMPOSITION</tt>, 
+<tt CLASS=literal>CANONICAL_DECOMPOSITION</tt>,
+or <tt CLASS=literal>FULL_DECOMPOSITION</tt>. 
+</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the decomposition mode for this <tt CLASS=literal>Collator</tt>. 
+The decomposition mode specifies how composed Unicode characters are handled 
+during collation. You can adjust the decomposition mode to choose between 
+faster and more complete collation. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch16-REFSECT2-AUTOID.70">setStrength</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch16-REFSECT3-AUTOID.81">public synchronized void setStrength(int newStrength)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newStrength</tt><br>
+<DD>
+
+<P CLASS=para>
+The new strength setting: <tt CLASS=literal>PRIMARY</tt>, <tt CLASS=literal>SECONDARY</tt>, 
+<tt CLASS=literal>TERTIARY</tt>, or <tt CLASS=literal>IDENTICAL</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the strength of this <tt CLASS=literal>Collator</tt>. 
+The strength specifies the minimum level of difference that is considered 
+significant during collation. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.45">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+<TH ALIGN="LEFT">Method</TH>
+<TH ALIGN="LEFT">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch16-REFSECT1-AUTOID.46">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>CollationKey</tt>, 
+<tt CLASS=literal>Locale</tt>, 
+<tt CLASS=literal>RuleBasedCollator</tt>, 
+<tt CLASS=literal>String</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>CollationKey</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>DateFormat</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

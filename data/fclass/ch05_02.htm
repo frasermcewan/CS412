@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.2 Vectors</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:11:54 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Collections</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-5-SECT-2">5.2 Vectors</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.VECT2"></A>The <tt CLASS=literal>Vector</tt> class implements 
+a variable-length array that can hold any kind of object. Like an array, 
+the elements in a <tt CLASS=literal>Vector</tt> are 
+accessed with an integer index. However, unlike an array, the size of a 
+<tt CLASS=literal>Vector</tt> can grow and shrink 
+as needed to accommodate a changing number of objects. <tt CLASS=literal>Vector</tt> 
+provides methods to add and remove elements, as well as ways to search 
+for objects in a <tt CLASS=literal>Vector</tt> and 
+iterate through all of the objects. 
+
+<P CLASS=para>
+You can create a <tt CLASS=literal>Vector</tt> object 
+using the constructor that takes no arguments. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Vector v = new Vector()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>Vector</tt> 
+with an initial capacity of 10. The capacity of a <tt CLASS=literal>Vector</tt> 
+specifies how many objects it can contain before more space must be allocated. 
+You can improve the performance of a <tt CLASS=literal>Vector</tt> 
+by setting its initial capacity to a more appropriate value when you create 
+it. For example, if you know that you are going to be storing close to 
+100 objects in a <tt CLASS=literal>Vector</tt>, you 
+could set the initial capacity as follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Vector v = new Vector(100)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It can be time-consuming for a <tt CLASS=literal>Vector</tt> 
+to increase its capacity, so it is better to set the initial capacity based 
+on a rough estimate of the number of objects a <tt CLASS=literal>Vector</tt> 
+will contain than to simply use the default capacity. 
+
+<P CLASS=para>
+The capacity increment of a <tt CLASS=literal>Vector</tt> 
+specifies how much more space is allocated each time the <tt CLASS=literal>Vector</tt> 
+needs to increase its capacity. If you do not specify a capacity increment 
+when you create a <tt CLASS=literal>Vector</tt>, it 
+uses the default value of 0, which causes the <tt CLASS=literal>Vector</tt> 
+to double in size every time it needs to increase its capacity. Doubling 
+in size is a good way for a <tt CLASS=literal>Vector</tt> 
+to become large enough quickly when you have no idea what size it needs 
+to be. However, if you do have a rough idea of the final size of a <tt CLASS=literal>Vector</tt>, 
+specifying a positive capacity increment is less wasteful of memory. For 
+example, if you know that you will be putting 100 or so objects in a <tt CLASS=literal>Vector</tt>, 
+you could create it as follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Vector v = new Vector(110, 20)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Once you have created an empty <tt CLASS=literal>Vector</tt> 
+object, you can put object references in it using the <tt CLASS=literal>addElement()</tt> 
+and <tt CLASS=literal>insertElementAt()</tt> methods. 
+The <tt CLASS=literal>addElement()</tt> method adds 
+an element to the end of a <tt CLASS=literal>Vector</tt>. 
+The following code fragment shows the use of the <tt CLASS=literal>addElement()</tt> 
+method: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Vector v = new Vector();
+v.addElement("abc");
+v.addElement("jkl");
+v.addElement("xyz");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>insertElementAt()</tt> method 
+inserts a new element into a <tt CLASS=literal>Vector</tt> 
+before a given position, so it can be used to insert an element at any 
+position in a <tt CLASS=literal>Vector</tt> except 
+the last. Like arrays, <tt CLASS=literal>Vector</tt> 
+objects are indexed starting at 0. Here's how to insert an object 
+at the beginning of the <tt CLASS=literal>Vector</tt> 
+object created above: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+v.insertElementAt("123", 0);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>size()</tt> method returns the 
+number of elements in a <tt CLASS=literal>Vector</tt> 
+object. 
+
+<P CLASS=para>
+After you have added some elements to a <tt CLASS=literal>Vector</tt> 
+object, you can retrieve elements with a number of different methods. For 
+example, the <tt CLASS=literal>elementAt()</tt> method 
+fetches the object at the specified position in the <tt CLASS=literal>Vector</tt>, 
+while the <tt CLASS=literal>firstElement()</tt> and 
+<tt CLASS=literal>lastElement()</tt> methods return 
+the first and last objects in the <tt CLASS=literal>Vector</tt>, 
+respectively. Finally, the <tt CLASS=literal>elements()</tt> 
+method returns an <tt CLASS=literal>Enumeration</tt> 
+object that accesses the elements in the <tt CLASS=literal>Vector</tt> 
+object. 
+
+<P CLASS=para>
+The <tt CLASS=literal>setElementAt()</tt> method allows 
+you to change the object stored at a specified position in the <tt CLASS=literal>Vector</tt>, 
+while the <tt CLASS=literal>removeElementAt()</tt> 
+method removes the object at a specified position from the <tt CLASS=literal>Vector</tt>. 
+The <tt CLASS=literal>removeElement()</tt> method 
+takes an object reference as an argument and removes the first element 
+in the <tt CLASS=literal>Vector</tt> that refers to 
+the given object, if there is such an element. You can also remove all 
+of the elements from the <tt CLASS=literal>Vector</tt> 
+using the <tt CLASS=literal>removeAllElements()</tt> 
+method. 
+
+<P CLASS=para>
+The <tt CLASS=literal>Vector</tt> class also provides 
+some methods for searching the contents of a <tt CLASS=literal>Vector</tt> 
+object. For example, the <tt CLASS=literal>contains()</tt> 
+method returns <tt CLASS=literal>true</tt> if a <tt CLASS=literal>Vector</tt> 
+contains a reference to a specified object. The <tt CLASS=literal>indexOf()</tt> 
+and <tt CLASS=literal>lastIndexOf()</tt> methods return the positions of
+the first and last elements, respectively, in a
+<tt CLASS=literal>Vector</tt> that match a specified object.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Enumerations</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Stacks</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

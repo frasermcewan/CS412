@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 28] 28.9 java.net.HttpURLConnection (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:31:03 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch28_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 28<br>The java.net Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch28_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-28-SECT-9">28.9 java.net.HttpURLConnection (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-28-SECT-9.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class is a specialization of <tt CLASS=literal>URLConnection</tt>.  An
+instance of this class is returned when the
+<tt CLASS=literal>openConnection()</tt> method is called for a <tt CLASS=literal>URL</tt>
+object that uses the HTTP protocol.
+
+<P CLASS=para>
+The many constants defined by this class are the status
+codes returned by HTTP servers.  <tt CLASS=literal>setRequestMethod()</tt>
+specifies what kind of HTTP request is made.  The
+contents of this request must be sent through the
+<tt CLASS=literal>OutputStream</tt> returned by the
+<tt CLASS=literal>getOutputStream()</tt> method of the superclass.  Once an
+HTTP request has been sent, <tt CLASS=literal>getResponseCode()</tt>
+returns the HTTP server's response code as an integer, and
+<tt CLASS=literal>getResponseMessage()</tt> returns the server's response
+message.  The <tt CLASS=literal>disconnect()</tt> method closes the
+connection, and the static <tt CLASS=literal>setFollowRedirects()</tt>
+specifies whether URL connections that use the HTTP protocol
+should automatically follow redirect responses sent by HTTP
+servers.
+
+<P CLASS=para>
+In order to successfully use this class, you need to
+understand the details of the HTTP protocol.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class <tt CLASS=literal>HttpURLConnection</tt> extends URLConnection {
+    // <tt CLASS=literal>Protected Constructor</tt>
+            protected <tt CLASS=literal>HttpURLConnection</tt>(URL <tt CLASS=literal>u</tt>);
+    // <tt CLASS=literal>Response Code Constants</tt>
+            public static final int <tt CLASS=literal>HTTP_ACCEPTED</tt>, <tt CLASS=literal>HTTP_BAD_GATEWAY</tt>, <tt CLASS=literal>HTTP_BAD_METHOD</tt>;
+            public static final int <tt CLASS=literal>HTTP_BAD_REQUEST</tt>, <tt CLASS=literal>HTTP_CLIENT_TIMEOUT</tt>, <tt CLASS=literal>HTTP_CONFLICT</tt>;
+            public static final int <tt CLASS=literal>HTTP_CREATED</tt>, <tt CLASS=literal>HTTP_ENTITY_TOO_LARGE</tt>, <tt CLASS=literal>HTTP_FORBIDDEN</tt>;
+            public static final int <tt CLASS=literal>HTTP_GATEWAY_TIMEOUT</tt>, <tt CLASS=literal>HTTP_GONE</tt>, <tt CLASS=literal>HTTP_INTERNAL_ERROR</tt>;
+            public static final int <tt CLASS=literal>HTTP_LENGTH_REQUIRED</tt>, <tt CLASS=literal>HTTP_MOVED_PERM</tt>, <tt CLASS=literal>HTTP_MOVED_TEMP</tt>;
+            public static final int <tt CLASS=literal>HTTP_MULT_CHOICE</tt>, <tt CLASS=literal>HTTP_NOT_ACCEPTABLE</tt>, <tt CLASS=literal>HTTP_NOT_AUTHORITATIVE</tt>;
+            public static final int <tt CLASS=literal>HTTP_NOT_FOUND</tt>, <tt CLASS=literal>HTTP_NOT_MODIFIED</tt>, <tt CLASS=literal>HTTP_NO_CONTENT</tt>;
+            public static final int <tt CLASS=literal>HTTP_OK</tt>, <tt CLASS=literal>HTTP_PARTIAL</tt>, <tt CLASS=literal>HTTP_PAYMENT_REQUIRED</tt>;
+            public static final int <tt CLASS=literal>HTTP_PRECON_FAILED</tt>, <tt CLASS=literal>HTTP_PROXY_AUTH</tt>, <tt CLASS=literal>HTTP_REQ_TOO_LONG</tt>;
+            public static final int <tt CLASS=literal>HTTP_RESET</tt>, <tt CLASS=literal>HTTP_SEE_OTHER</tt>, <tt CLASS=literal>HTTP_SERVER_ERROR</tt>;
+            public static final int <tt CLASS=literal>HTTP_UNAUTHORIZED</tt>, <tt CLASS=literal>HTTP_UNAVAILABLE</tt>, <tt CLASS=literal>HTTP_UNSUPPORTED_TYPE</tt>;
+            public static final int <tt CLASS=literal>HTTP_USE_PROXY</tt>, <tt CLASS=literal>HTTP_VERSION</tt>;
+    // <tt CLASS=literal>Protected Instance Variables</tt>
+            protected String <tt CLASS=literal>method</tt>;
+            protected int <tt CLASS=literal>responseCode</tt>;
+            protected String <tt CLASS=literal>responseMessage</tt>;
+    // <tt CLASS=literal>Class Methods</tt>
+            public static boolean <tt CLASS=literal>getFollowRedirects</tt>();
+            public static void <tt CLASS=literal>setFollowRedirects</tt>(boolean <tt CLASS=literal>set</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public abstract void <tt CLASS=literal>disconnect</tt>();
+            public String <tt CLASS=literal>getRequestMethod</tt>();
+            public int <tt CLASS=literal>getResponseCode</tt>() throws IOException;
+            public String <tt CLASS=literal>getResponseMessage</tt>() throws IOException;
+            public void <tt CLASS=literal>setRequestMethod</tt>(String <tt CLASS=literal>method</tt>) throws ProtocolException;
+            public abstract boolean <tt CLASS=literal>usingProxy</tt>();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-28-SECT-9.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+Object->URLConnection->HttpURLConnection
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch28_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch28_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.net.FileNameMap (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.net.InetAddress (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

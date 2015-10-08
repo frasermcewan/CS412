@@ -1,0 +1,1938 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 19] AWTEventMulticaster </TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:08:56 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 19<br>java.awt Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch19_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>AWTEventMulticaster <img src="gifs/bstar.gif" alt="(New)" border=0></H1>
+
+<H2>Name</H2>
+
+AWTEventMulticaster <img src="gifs/bstar.gif" alt="(New)" border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch19-REFSECT1-AUTOID.3"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/awteve3.gif" alt="[Graphic: Figure from the text]" width=503 height=353 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-1">Description</A></h2>
+
+<P CLASS=para>
+This class multicasts events to event listeners. Each multicaster has two 
+listeners, cunningly named <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. When an event source 
+calls one of the listener methods of the multicaster, the multicaster calls 
+the same listener method on both <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. Multicasters are built 
+into trees using the static <tt CLASS=literal>add()</tt> 
+and <tt CLASS=literal>remove()</tt> methods. In this 
+way a single event can be sent to many listeners. 
+
+<P CLASS=para>
+Static methods make it easy to implement event multicasting in component 
+subclasses. Each time an <tt CLASS=literal>add&lt;type&gt;Listener()</tt> 
+function is called in the component subclass, call the corresponding <tt CLASS=literal>AWTEventMulticaster.add()</tt> 
+method to chain together (or "tree up") listeners. Similarly, 
+when a <tt CLASS=literal>remove&lt;type&gt;Listener()</tt> 
+function is called, <tt CLASS=literal>AWTEventMulticaster.remove()</tt> 
+can be called to remove a chained listener. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-2">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.awt.AWTEventMulticaster
+  extends java.lang.Object
+  implements java.awt.event.ActionListener, java.awt.event.AdjustmentListener,
+             java.awt.event.ComponentListener, java.awt.event.ContainerListener,
+             java.awt.event.FocusListener, java.awt.event.ItemListener,
+             java.awt.event.KeyListener, java.awt.event.MouseListener,
+             java.awt.event.MouseMotionListener, java.awt.event.TextListener,
+             java.awt.event.WindowListener {
+  // Variables
+  protected EventListener a;
+  protected EventListener b;
+  // Constructors
+  protected AWTEventMulticaster(EventListener a, EventListener b);
+  // Class Methods
+  public static ActionListener add(ActionListener a, ActionListener b);
+  public static AdjustmentListener add(AdjustmentListener a, 
+      AdjustmentListener b);
+  public static ComponentListener add(ComponentListener a, 
+      ComponentListener b);
+  public static ContainerListener add(ContainerListener a, 
+      ContainerListener b);
+  public static FocusListener add(FocusListener a, FocusListener b);
+  public static ItemListener add(ItemListener a, ItemListener b);
+  public static KeyListener add(KeyListener a, KeyListener b);
+  public static MouseListener add(MouseListener a, MouseListener b);
+  public static MouseMotionListener add(MouseMotionListener a, 
+      MouseMotionListener b);
+  public static TextListener add(TextListener a, TextListener b);
+  public static WindowListener add(WindowListener a, WindowListener b);
+  protected static EventListener addInternal(EventListener a, EventListener b);
+  public static ActionListener remove(ActionListener l, ActionListener oldl);
+  public static AdjustmentListener remove(AdjustmentListener l, 
+      AdjustmentListener oldl);
+  public static ComponentListener remove(ComponentListener l, 
+      ComponentListener oldl);
+  public static ContainerListener remove(ContainerListener l, 
+      ContainerListener oldl);
+  public static FocusListener remove(FocusListener l, FocusListener oldl);
+  public static ItemListener remove(ItemListener l, ItemListener oldl);
+  public static KeyListener remove(KeyListener l, KeyListener oldl);
+  public static MouseListener remove(MouseListener l, MouseListener oldl);
+  public static MouseMotionListener remove(MouseMotionListener l, 
+      MouseMotionListener oldl);
+  public static TextListener remove(TextListener l, TextListener oldl);
+  public static WindowListener remove(WindowListener l, WindowListener;
+  protected static EventListener removeInternal(EventListener l, 
+      EventListener oldl);
+  // Instance Methods
+  public void actionPerformed(ActionEvent e);
+  public void adjustmentValueChanged(AdjustmentEvent e);
+  public void componentAdded(ContainerEvent e);
+  public void componentHidden(ComponentEvent e);
+  public void componentMoved(ComponentEvent e);
+  public void componentRemoved(ContainerEvent e);
+  public void componentResized(ComponentEvent e);
+  public void componentShown(ComponentEvent e);
+  public void focusGained(FocusEvent e);
+  public void focusLost(FocusEvent e);
+  public void itemStateChanged(ItemEvent e);
+  public void keyPressed(KeyEvent e);
+  public void keyReleased(KeyEvent e);
+  public void keyTyped(KeyEvent e);
+  public void mouseClicked(MouseEvent e);
+  public void mouseDragged(MouseEvent e);
+  public void mouseEntered(MouseEvent e);
+  public void mouseExited(MouseEvent e);
+  public void mouseMoved(MouseEvent e);
+  public void mousePressed(MouseEvent e);
+  public void mouseReleased(MouseEvent e);
+  public void textValueChanged(TextEvent e);
+  public void windowActivated(WindowEvent e);
+  public void windowClosed(WindowEvent e);
+  public void windowClosing(WindowEvent e);
+  public void windowDeactivated(WindowEvent e);
+  public void windowDeiconified(WindowEvent e);
+  public void windowIconified(WindowEvent e);
+  public void windowOpened(WindowEvent e);
+  // Protected Instance Methods
+  protected EventListener remove(EventListener oldl);
+  protected void saveInternal(ObjectOutputStream s, String k) throws IOException;
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-3">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-3.1">a</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-3.1.1">protected EventListener a</A></h4>
+
+<P CLASS=para>
+One of the <tt CLASS=literal>EventListener</tt>s this 
+<tt CLASS=literal>AWTEventMulticaster</tt> sends events to. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-3.2">b</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-3.2.1">protected EventListener b</A></h4>
+
+<P CLASS=para>
+One of the <tt CLASS=literal>EventListener</tt>s this 
+<tt CLASS=literal>AWTEventMulticaster</tt> sends events to. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-4">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-4.1">AWTEventMulticaster</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-4.1.1">protected AWTEventMulticaster (EventListener a, EventListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+A listener that receives events.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+A listener that receives events.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs an <tt CLASS=literal>AWTEventMulticaster</tt> 
+that sends events it receives to the supplied listeners. The constructor 
+is protected because it is only the class methods of <tt CLASS=literal>AWTEventMulticaster</tt> 
+that ever instantiate this class. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1">add</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.1">public static ActionListener add (ActionListener a, ActionListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.2">public static AdjustmentListener add (AdjustmentListener a, AdjustmentListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.3">public static ComponentListener add (ComponentListener a, ComponentListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.4">public static ContainerListener add (ContainerListener a, ContainerListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.5">public static FocusListener add (FocusListener a, FocusListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.6">public static ItemListener add (ItemListener a, ItemListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.7">public static KeyListener add (KeyListener a, KeyListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.8">public static MouseListener add (MouseListener a, MouseListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.9">public static MouseMotionListener add (MouseMotionListener a, MouseMotionListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.10">public static TextListener add (TextListener a, TextListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.1.11">public static WindowListener add (WindowListener a, WindowListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.2">addInternal</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.2.1">public static EventListener addInternal (EventListener a, EventListener b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>a</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that passes events to <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is a helper for the <tt CLASS=literal>add()</tt> methods. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3">remove</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.1">public static ActionListener remove (ActionListener l, ActionListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.2">public static AdjustmentListener remove (AdjustmentListener l, AdjustmentListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.3">public static ComponentListener remove (ComponentListener l, ComponentListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.4">public static ContainerListener remove (ContainerListener l, ContainerListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.5">public static FocusListener remove (FocusListener l, FocusListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.6">public static ItemListener remove (ItemListener l, ItemListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.7">public static KeyListener remove (KeyListener l, KeyListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.8">public static MouseListener remove (MouseListener l, MouseListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.9">public static MouseMotionListener remove (MouseMotionListener l, MouseMotionListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.10">public static TextListener remove (TextListener l, TextListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.11">public static WindowListener remove (WindowListener l, WindowListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.3.12">public static WindowListener remove (WindowListener l, WindowListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.4">removeInternal</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-5.4.1">public static EventListener removeInternal (EventListener l, EventListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+An event listener. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A listener object that multicasts to <tt CLASS=literal>l</tt> 
+but not <tt CLASS=literal>oldl</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is a helper for the <tt CLASS=literal>remove()</tt> 
+methods. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.1">actionPerformed</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.1.1">public void actionPerformed (ActionEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The action event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.2">adjustmentValueChanged</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.2.1">public void adjustmentValueChanged (AdjustmentEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The adjustment event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.3">componentAdded</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.3.1">public void componentAdded (ContainerEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The container event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.4">componentHidden</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.4.1">public void componentHidden (ComponentEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The component event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.5">componentMoved</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.5.1">public void componentMoved (ComponentEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The component event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.6">componentRemoved</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.6.1">public void componentRemoved (ContainerEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The container event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.7">componentResized</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.7.1">public void componentResized (ComponentEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The component event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.8">componentShown</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.8.1">public void componentShown (ComponentEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The component event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.9">focusGained</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.9.1">public void focusGained (FocusEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The focus event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.10">focusLost</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.10.1">public void focusLost (FocusEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The focus event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.11">itemStateChanged</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.11.1">public void itemStateChanged (ItemEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The item event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.12">keyPressed</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.12.1">public void keyPressed (KeyEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The key event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.13">keyReleased</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.13.1">public void keyReleased (KeyEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The key event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.14">keyTyped</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.14.1">public void keyTyped (KeyEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The key event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.15">mouseClicked</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.15.1">public void mouseClicked (MouseEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The mouse event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.16">mouseDragged</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.16.1">public void mouseDragged (MouseEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The mouse event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.17">mouseEntered</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.17.1">public void mouseEntered (MouseEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The mouse event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.18">mouseExited</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.18.1">public void mouseExited (MouseEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The mouse event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.19">mouseMoved</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.19.1">public void mouseMoved (MouseEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The mouse event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.20">mousePressed</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.20.1">public void mousePressed (MouseEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The mouse event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.21">mouseReleased</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.21.1">public void mouseReleased (MouseEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The mouse event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.22">textValueChanged</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.22.1">public void textValueChanged (TextEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The text event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.23">windowActivated</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.23.1">public void windowActivated (WindowEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The window event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.24">windowClosed</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.24.1">public void windowClosed (WindowEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The window event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.25">windowClosing</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.25.1">public void windowClosing (WindowEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The window event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.26">windowDeactivated</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.26.1">public void windowDeactivated (WindowEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The window event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.27">windowDeiconified</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.27.1">public void windowDeiconified (WindowEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The window event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.28">windowIconified</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.28.1">public void windowIconified (WindowEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The window event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.29">windowOpened</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-6.29.1">public void windowOpened (WindowEvent e)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>e</I><br>
+<DD>
+
+<P CLASS=para>
+The window event that occurred. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Handles the event by passing it on to listeners <tt CLASS=literal>a</tt> 
+and <tt CLASS=literal>b</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-7">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-7.1">remove</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-7.1.1">protected EventListener remove(EventListener oldl)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>oldl</I><br>
+<DD>
+
+<P CLASS=para>
+The listener to remove. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The resulting <tt CLASS=literal>EventListener</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method removes <tt CLASS=literal>oldl</tt> from the <tt CLASS=literal>AWTEventMulticaster</tt> 
+and returns the resulting listener. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-AWTEVENTM-SECT-8">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ActionEvent</tt>, <tt CLASS=literal>AdjustmentEvent</tt>, 
+<tt CLASS=literal>ComponentEvent</tt>, <tt CLASS=literal>Event</tt>, 
+<tt CLASS=literal>EventListener</tt>, <tt CLASS=literal>EventObject</tt>, 
+<tt CLASS=literal>FocusEvent</tt>, <tt CLASS=literal>ItemEvent</tt>, 
+<tt CLASS=literal>KeyEvent</tt>, <tt CLASS=literal>MouseEvent</tt>, 
+<tt CLASS=literal>WindowEvent</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch19_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>AWTEvent <img src="gifs/bstar.gif" alt="(New)" border=0></td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>AWTException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

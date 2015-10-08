@@ -1,0 +1,362 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.7 Reference Data Types</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:47:52 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>How Java Differs from C</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-7">2.7 Reference Data Types</A></h2>
+
+<P CLASS=para>
+<A NAME="REFERENCE-DATA-TYPES"></A><A NAME="DATA-TYPES2"></A>The non-primitive data types in Java are objects and arrays.
+These non-primitive types are often called "reference types"
+because they are handled "by reference"--in other words, 
+the address of the object or array is stored in a variable, 
+passed to methods, and so on.  By comparison, primitive types 
+are handled "by value"--the actual primitive values are stored
+in variables and passed to methods.
+
+<P CLASS=para>
+In C, you can manipulate a value by reference by taking its
+address with the <tt CLASS=literal>&amp;</tt> operator, and you can "dereference"
+an address with the <tt CLASS=literal>*</tt> and <tt CLASS=literal>-&gt;</tt> operators.
+These operators do not exist in Java: primitive types are
+always passed by value; arrays and objects are always
+passed by reference.
+
+<P CLASS=para>
+Because objects are passed by reference, two different
+variables may refer to the same object:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Button p, q;
+p = new Button();           // p refers to a Button object.
+q = p;                      // q refers to the same Button.
+p.setLabel("Ok");           // A change to the object through p...
+String s = q.getLabel();    // ...is also visible through q.  
+                            // s now contains "Ok."
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This is not true of primitive types, however:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+int i = 3;                  // i contains the value 3.
+int j = i;                  // j contains a copy of the value in i.
+i = 2;                      // Changing i doesn't change j.
+                            // Now, i == 2 and j == 3.
+</PRE>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-7.1">Terminology: Pass by Reference</A></h3>
+
+<P CLASS=para>
+The statement that Java manipulates objects "by reference"
+causes confusion for some programmers, because there are
+several different meanings of "by reference" in common use.
+Regardless of what we call it, it is important to understand
+what Java does.  Java works with references to objects.  A
+Java variable holds only a reference to an object, not the
+object itself.  When an object is passed to a method,
+only a reference to the object is actually passed, not the
+entire object.  It is in this sense that Java manipulates
+objects "by reference."
+
+<P CLASS=para>
+Some people use the term "pass by reference" to mean that a
+reference to a variable is passed to a method.  Java
+does not do this.  For example, it is <I CLASS=emphasis>not</I> possible to
+write a working <tt CLASS=literal>swap()</tt> function like the following
+in Java:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void swap(Object a, Object b) {
+  Object temp = a;
+  a = b;
+  b = temp;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The method parameters <tt CLASS=literal>a</tt> and <tt CLASS=literal>b</tt> contain
+references to objects, not addresses of variables.  Thus,
+while this <tt CLASS=literal>swap()</tt> function does compile and run, it
+has no effect except on its own local variables and
+arguments.
+
+<P CLASS=para>
+To solve this terminology problem, perhaps we should say
+that Java manipulates objects "by reference," but it passes
+object references to methods "by value."
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-7.2">Copying Objects</A></h3>
+
+<P CLASS=para>
+Because reference types are not passed by value, assigning
+one object to another in Java does not copy the value of the
+object.  It merely assigns a reference to the object.
+Consider the following code:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Button a = new Button("Okay");
+Button b = new Button("Cancel");
+a = b;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+After these lines are executed, the variable <tt CLASS=literal>a</tt>
+contains a reference to the object that <tt CLASS=literal>b</tt> refers
+to.  The object that <tt CLASS=literal>a</tt> used to refer to is lost.
+
+<P CLASS=para>
+To copy the data of one object into another object, use the
+<tt CLASS=literal>clone()</tt> method:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Vector b = new Vector;
+c = b.clone();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+After these lines run, the variable <tt CLASS=literal>c</tt> refers to an
+object that is a duplicate of the object referred to by <tt CLASS=literal>b</tt>.
+Note that not all types support the <tt CLASS=literal>clone()</tt> method.
+Only classes that implement the <tt CLASS=literal>Cloneable</tt> interface
+may be cloned.
+For more information on cloning objects,
+look up <tt CLASS=literal>java.lang.Cloneable</tt> and
+<tt CLASS=literal>java.lang.Object.clone()</tt> in <A HREF="ch25_01.htm">Chapter 25, <i>The java.lang Package</i></A>.
+
+<P CLASS=para>
+Arrays are also reference types, and assigning an array simply
+copies a reference to the array.  To actually copy the
+values stored in an array, you must assign each of the
+values individually or use the <tt CLASS=literal>System.arraycopy()</tt>
+method.  
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-7.3">Checking Objects for Equality</A></h3>
+
+<P CLASS=para>
+Another implication of passing objects by reference is that
+the <tt CLASS=literal>==</tt> operator tests whether two variables refer to
+the same object, not whether two objects contain the same
+values.  To actually test whether two separate objects are
+the same, you must use a specially written method for that
+object type (just as you might use <tt CLASS=literal>strcmp()</tt> to
+compare C strings
+for equality).  In Java, a number of
+classes define an <tt CLASS=literal>equals()</tt> method that you can use
+to perform this test.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-7.4">Java Has No Pointers</A></h3>
+
+<P CLASS=para>
+The referencing and dereferencing of objects is handled
+for you automatically by Java. Java does not allow you to
+manipulate pointers or memory addresses of any kind:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>It does not allow you to cast object or array references
+into integers or vice-versa.
+
+<P>
+<li CLASS=listitem>It does not allow you to do pointer arithmetic.
+
+<P>
+<li CLASS=listitem>It does not allow you to compute the size in bytes of any
+primitive type or object.
+
+<P>
+</UL>
+<P CLASS=para>
+There are two reasons for these restrictions:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Pointers are a notorious source of bugs.  Eliminating them
+simplifies the language and eliminates many potential bugs.
+
+<P>
+<li CLASS=listitem>Pointers and pointer arithmetic could be used to sidestep
+Java's run-time checks and security mechanisms.  Removing
+pointers allows Java to provide the security guarantees that
+it does.
+
+<P>
+</UL>
+<P CLASS=para>
+To a C programmer, the lack of pointers and pointer
+arithmetic may seem an odious restriction in Java.  But once
+you get used to the Java object-oriented programming model,
+it no longer seems like a serious restriction at all.  The
+lack of pointers does mean that you probably can't do things
+like write UNIX device drivers in Java (at least not without
+using native methods written in C).  But big deal--most of
+us never have to do this kind of low-level programming
+anyway.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-7.5">null</A></h3>
+
+<P CLASS=para>
+The default value for variables of all reference types is
+<tt CLASS=literal>null</tt>.  <tt CLASS=literal>null</tt> is a reserved value that
+indicates "an absence of reference"--i.e., that a variable
+does not refer to any object or array.
+
+<P CLASS=para>
+In Java, <tt CLASS=literal>null</tt> is a reserved keyword, unlike
+<tt CLASS=literal>NULL</tt> in C, where it is just a constant defined to be 0.
+<tt CLASS=literal>null</tt> is an exception to the strong typing rules of
+Java--it may be assigned to any variable of reference type
+(i.e., any variable which has a class, interface, or array as
+its type).
+
+<P CLASS=para>
+<tt CLASS=literal>null</tt> can't be cast to any primitive type, including
+integral types and <tt CLASS=literal>boolean</tt>.  It shouldn't be
+considered equal to zero (although it may be
+implemented this way).
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-7.6">Reference Type Summary</A></h3>
+
+<P CLASS=para>
+The distinction between primitive types passed by value, and
+objects and arrays passed by reference is a crucial one in
+Java.  Be sure you understand the following:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>All objects and arrays are handled by reference in Java.
+(Those object references are passed-by-value to methods,
+however.)
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>=</tt> and <tt CLASS=literal>==</tt> operators assign and test
+references to objects.  Use <tt CLASS=literal>clone()</tt> and
+<tt CLASS=literal>equals()</tt> to actually copy or test the objects themselves.
+
+<P>
+<li CLASS=listitem>The necessary referencing and dereferencing of objects and
+arrays is handled automatically by Java.
+
+<P>
+<li CLASS=listitem>A reference type can never be cast to a primitive type.
+
+<P>
+<li CLASS=listitem>A primitive type can never be cast to a reference type.
+
+<P>
+<li CLASS=listitem>There is no pointer arithmetic in Java.
+
+<P>
+<li CLASS=listitem>There is no <tt CLASS=literal>sizeof</tt> operator in Java.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>null</tt> is a special value that means "no object" or
+indicates an absence of reference.
+
+<P>
+</UL>
+<P CLASS=para>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Primitive Data Types</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Objects</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

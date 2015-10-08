@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.11 Boolean Operators</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:10:36 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>Expressions</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_12.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-11">4.11 Boolean Operators</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.BOOL"></A><A NAME="CH04.BOOL2"></A>The Boolean operators
+in Java are used for conditional AND (<tt CLASS=literal>&amp;&amp;</tt>)
+and conditional OR (<tt CLASS=literal>||</tt>) operations. These operators
+have different precedence; the <tt CLASS=literal>&amp;&amp;</tt> operator
+has the higher precedence and <tt CLASS=literal>||</tt> the lower precedence.
+Both of the operators are evaluated from left to right.
+
+<P CLASS=para>
+The unary operator <tt CLASS=literal>!</tt> provides a Boolean negation
+operation.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_04.htm#JLR2-CH-4-SECT-4.3">Boolean Negation Operator !</A>;
+<A HREF="ch04_14.htm#JLR2-CH-4-SECT-14">Order of Operations</A>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-11.1">Boolean AND Operator &amp;&amp;</A></h3>
+
+<P CLASS=para>
+The conditional
+AND operator <tt CLASS=literal>&amp;&amp;</tt> produces a pure <tt CLASS=literal>boolean</tt>
+value that is the conditional AND of its operands. The <tt CLASS=literal>&amp;&amp;</tt>
+operator may appear in a conditional AND expression:
+
+
+<p>
+<img align=middle src="./figs/jlr0423.gif" alt="[Graphic: Figure from the text]" width=424 height=50 border=0>
+
+<P CLASS=para>
+The
+conditional AND operator is evaluated from left to right. The operator
+never throws an exception.
+
+<P CLASS=para>
+Here is a code example that
+shows the use of the conditional AND operator:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final short readShort() throws IOException {
+    int ch1, ch2;
+    if ((ch1 = in.read()) &gt;= 0 &amp;&amp; (ch2 = in.read()) &gt;= 0)
+        return (short)((ch1 &lt;&lt; 8) + ch2);
+    throw new EOFException();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The operands of the conditional AND operator must both be
+of type <tt CLASS=literal>boolean</tt>, or a compile-time error occurs.
+
+<P CLASS=para>
+The operands of the conditional AND operator are evaluated
+in a different way from the operands for most other operators in
+Java. Most other operators evaluate all of their operands before
+performing their operation; the conditional AND operator does not
+necessarily evaluate both of its operands.
+
+<P CLASS=para>
+As with all
+binary operators, the left operand of <tt CLASS=literal>&amp;&amp;</tt>
+is evaluated first. If the left operand evaluates to <tt CLASS=literal>true</tt>,
+the conditional AND operator evaluates its right operand and produces
+a pure value that has the same value as its right operand. However,
+if the left operand evaluates to <tt CLASS=literal>false</tt>, the right
+operand is not evaluated and the operator produces the pure value
+<tt CLASS=literal>false</tt>.
+
+<P CLASS=para>
+In the above example, the
+expression <tt CLASS=literal>(ch2 = in.read())</tt> is evaluated only
+if the expression <tt CLASS=literal>(ch1 = in.read())</tt> produces
+a value that is greater than or equal to zero.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_10.htm#JLR2-CH-4-SECT-10.1">Bitwise/Logical AND Operator &amp;</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.2">Boolean Type</A>;
+<A HREF="ch04_10.htm#JLR2-CH-4-SECT-10.3">Bitwise/Logical Inclusive OR Operator |</A>;
+<A HREF="ch04_14.htm#JLR2-CH-4-SECT-14">Order of Operations</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-11.2">Boolean OR Operator ||</A></h3>
+
+<P CLASS=para>
+The conditional
+OR operator <tt CLASS=literal>||</tt> produces a pure <tt CLASS=literal>boolean</tt>
+value that is the conditional OR of its operands. The <tt CLASS=literal>||</tt>
+operator may appear in a conditional OR expression:
+
+
+<p>
+<img align=middle src="./figs/jlr0424.gif" alt="[Graphic: Figure from the text]" width=425 height=49 border=0>
+
+<P CLASS=para>
+The
+conditional OR operator is evaluated from left to right. The operator
+never throws an exception.
+
+<P CLASS=para>
+Here is a code example that
+shows the use of the conditional OR operator:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final short readShort() throws IOException {
+    int ch1, ch2;
+    if ((ch1 = in.read()) &lt; 0 || (ch2 = in.read()) &lt; 0)
+        throw new EOFException();
+    return (short)((ch1 &lt;&lt; 8) + ch2);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The operands of
+the conditional OR operator must both be of type <tt CLASS=literal>boolean</tt>,
+or a compile-time error occurs.
+
+<P CLASS=para>
+The operands of the
+conditional OR operator are evaluated in a different way from the
+operands for most other operators in Java. Most other operators
+evaluate all of their operands before performing their operation;
+the conditional OR operator does not necessarily evaluate both of
+its operands.
+
+<P CLASS=para>
+As with all binary operators, the left
+operand of <tt CLASS=literal>||</tt> is evaluated first. If the left
+operand evaluates to <tt CLASS=literal>false</tt>, the conditional OR
+operator evaluates its right operand and produces a pure value that
+has the same value as its right operand. However, if the left operand
+evaluates to <tt CLASS=literal>true</tt>, the right operand is not evaluated
+and the operator produces the pure value <tt CLASS=literal>true</tt>.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_10.htm#JLR2-CH-4-SECT-10.3">Bitwise/Logical Inclusive OR Operator |</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.2">Boolean Type</A>;
+<A HREF="ch04_11.htm#JLR2-CH-4-SECT-11.1">Boolean AND Operator &amp;&amp;</A>;
+<A HREF="ch04_14.htm#JLR2-CH-4-SECT-14">Order of Operations</A>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_12.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Bitwise/Logical Operators</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Conditional Operator</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

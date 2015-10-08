@@ -1,0 +1,1733 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] 10.2 Applets</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:00:03 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>Understand the Abstract Windowing Toolkit</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-2">10.2 Applets</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.APP1"></A>If you've been waiting for a more detailed discussion of the applet class, 
+here it is. For examples of writing applets, please see <A HREF="ch02_01.htm">Chapter 2, <i>A First Applet</i></A> (the tutorial) 
+and the examples in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A> and throughout the book.
+
+<P CLASS=para>
+An <tt CLASS=literal>Applet</tt> is something like a 
+<tt CLASS=literal>Panel</tt> with a mission.  
+It is a GUI Container that has some extra structure to allow it to be used
+in an "alien" environment like a Web browser or appletviewer.
+Applets also have a life-cycle that lets them act more like 
+an application than a static component.
+Although applets tend to be relatively simple, there's no inherent
+restriction on their complexity. There's no reason you couldn't write
+an air traffic control system (well, let's be less ambitious: a word
+processor) as an applet.
+<P CLASS=para>
+Structurally, an applet is a sort of wrapper for your Java code.  In
+contrast to a standalone graphical Java application, which starts up
+from a <tt CLASS=literal>main()</tt> method and creates a GUI, an
+applet is itself a Component that expects to be dropped into someone
+else's GUI.  Thus, an applet can't run by itself; it runs in the
+context of a Web browser or an appletviewer.  Instead of having your
+application create a <tt CLASS=literal>Frame</tt> to hold your
+GUI, you stuff your application inside an
+<tt CLASS=literal>Applet</tt> (which is itself a Container) and let someone else
+add the applet to their GUI.
+<P CLASS=para>
+Pragmatically, an applet is an intruder into someone else's
+environment, and therefore has to be treated with suspicion. The Web
+browsers that run applets impose restrictions on what the applet is
+allowed to do. The restrictions are enforced by a security manager,
+which the applet is not allowed to change. The browser also provides
+an "applet context," which is additional support that helps the applet
+live within its restrictions. 
+<P CLASS=para>
+Aside from that top level structure and the security restrictions,
+there is no difference between an applet and an application.  If your
+application can live within the restrictions imposed by a browser's
+security manager, you can easily structure it to function as an applet
+and a standalone application. (We'll show an example of an Applet
+that can also be run as a standalone below.)  Conversely, if you can
+supply all of the things that an applet requires from its environment,
+you can use applets within your stand-alone applications and within
+other applets (though this requires a bit of work).
+<P CLASS=para>
+As we said a moment ago, an <tt CLASS=literal>Applet</tt>
+expects to be embedded in GUI (perhaps a document) and used in a viewing 
+environment that provides it with special resources. 
+In all other respects,
+however, applets are just ordinary <tt CLASS=literal>Panel</tt>
+objects.  (See <A HREF="ch10_02.htm#EXJ-CH-10-FIG-8">Figure 10.8</A>.)  Like a 
+<tt CLASS=literal>Panel</tt>, an <tt CLASS=literal>Applet</tt>
+can contain user-interface components and implement all the basic
+drawing and event-handling capabilities of the
+<tt CLASS=literal>Component</tt> class. We draw on an
+<tt CLASS=literal>Applet</tt> by overriding its <tt CLASS=literal>paint()</tt>
+method; we respond to events in the
+<tt CLASS=literal>Applet</tt>'s display area by providing the
+appropriate event-listeners.  The additional structure
+applets have helps them interact with the viewer environment.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-8">Figure 10.8: The java.applet package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1008.gif" alt="[Graphic: Figure 10-8]" width=503 height=282 border=0>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-2.1">Applet Control</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>Applet</tt> class contains four methods an
+applet can override to guide it through its life cycle. The
+<tt CLASS=literal>init()</tt>, <tt CLASS=literal>start()</tt>,
+<tt CLASS=literal>stop()</tt>, and <tt CLASS=literal>destroy()</tt> methods are
+called by an applet viewer, such as a Web browser, to direct the
+applet's behavior. <tt CLASS=literal>init()</tt> is called once,
+after the applet is created. The <tt CLASS=literal>init()</tt> method
+is where you perform basic setup like parsing parameters, building a
+user interface, and loading resources.  Given what we've said
+about objects,
+you might expect the <tt CLASS=literal>Applet</tt>'s constructor would 
+be the right place
+for such initialization.  However, the constructor is meant to be 
+called by the applet's environment, for simple creation of the applet.
+This might happen before the applet has access to certain resources, 
+like information about its environment. Therefore, an applet doesn't normally
+do any work in its constructor; it relies on the default constructor for the
+<tt CLASS=literal>Applet</tt> class and does its initialization in the
+<tt CLASS=literal>init()</tt> method.
+
+<P CLASS=para>
+The <tt CLASS=literal>start()</tt> method is called whenever the
+applet becomes visible; it shouldn't be a surprise then that the
+<tt CLASS=literal>stop()</tt> method is called whenever the applet becomes
+invisible.  <tt CLASS=literal>init()</tt> is only called once in
+the life of an applet, but <tt CLASS=literal>start()</tt> 
+and <tt CLASS=literal>stop()</tt> can be called any number of times (but always in the logical 
+sequence).
+For example, <tt CLASS=literal>start()</tt> is called when the
+applet is displayed, such as when it 
+scrolls onto the screen; <tt CLASS=literal>stop()</tt> is called if
+the applet scrolls off the screen or the viewer leaves the
+document. <tt CLASS=literal>start()</tt> tells the applet
+it should be active.  The applet may want to create threads, animate, or
+otherwise perform useful (or annoying)
+activity. <tt CLASS=literal>stop()</tt> is called to let the applet know
+it should go dormant. 
+Applets should cease CPU-intensive or
+wasteful activity when they are stopped and resume it when (and if)
+they are restarted. However, there's no requirement that an
+invisible applet stop computing; in some applications, it may be
+useful for the applet to continue running in the background.  Just be
+considerate of your user, who doesn't want an invisible applet
+dragging down system performance.  And for the users: be aware of the tools
+that will develop to let you monitor and squash rogue applets in 
+your web browser.
+
+<P CLASS=para>
+Finally, the <tt CLASS=literal>destroy()</tt> method is called to give the
+applet a last chance to clean up before it's removed--some time
+after the call to <tt CLASS=literal>stop()</tt>. For example, an applet
+might want to close down suspended communications channels or remove
+graphics frames. Exactly when <tt CLASS=literal>destroy()</tt> is called
+depends on the applet viewer; Netscape Navigator calls
+<tt CLASS=literal>destroy()</tt> just prior to deleting the applet from
+its cache. This means that although an applet can cling to life after
+being told to <tt CLASS=literal>stop()</tt>, how long it can go on
+is unpredictable. If you want to maintain your applet as the
+user progresses through other activities, consider putting
+it in an HTML frame (see 
+<A HREF="ch10_02.htm#EXJ-CH-10-SECT-2.2.2">"Driving the Browser"</A> later in this chapter).
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch10-SECT2-AUTOID.2">The Applet security Sandbox</A></h3>
+
+<P CLASS=para>
+Applets are quarantined within the browser by an applet
+<tt CLASS=literal>SecurityManager</tt>.  The
+<tt CLASS=literal>SecurityManager</tt> is part of the application
+that runs the applet, e.g., the web browser or applet viewer.  It is
+installed before the browser loads any applets and implements the
+basic restrictions that let you run untrusted applets safely.
+Remember that, aside from basic language robustness, there are no
+inherent security restrictions on a standalone Java application.  It
+is the browser's responsibility to install a special security
+manager and limit what applets are allowed to do.  
+<P CLASS=para>
+
+Most browsers impose the following restrictions on untrusted applets:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Untrusted Applets cannot read or write files on the local host.
+
+<P>
+<li CLASS=listitem>Untrusted Applets can only open network connections (sockets) to
+the server from which they originated.
+
+<P>
+<li CLASS=listitem>Untrusted Applets cannot start other processes on the local host.
+
+<P>
+<li CLASS=listitem>Untrusted Applets cannot have native methods.
+
+<P>
+</UL>
+<P CLASS=para>
+We discuss these restrictions in more detail in the relevant chapters
+in this book. However, the motivation for these restrictions should be
+fairly obvious: you clearly wouldn't want a program coming from some
+random Internet site to access your files, or run arbitrary
+programs. Although untrusted applets cannot directly read and write
+files on the client side or talk to arbitrary hosts on the network,
+applets can work with servers to store data and communicate.  For
+example, an applet can use Java's RMI (Remote Method Invocation)
+facility to do processing on its server.  An applet can communicate
+with other applets on the Net by proxy through its server.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.14">Trusted Applets</A></h4>
+
+<P CLASS=para>
+The latest version of Java makes it possible to sign archive files
+that contain applets. Because a signature identifies the applet's
+origin unambiguously, we can now distinguish between "trusted" applets
+(i.e., applets that come from a site or person you trust not to do
+anything harmful) and run of the mill "untrusted" applets.  In web
+browsers that support signing, trusted applets can be granted
+permission to "go outside" of the applet security sandbox.  Trusted
+applets can be allowed to do most of the things that standalone Java
+applications can do: read and write files, open network connections to
+arbitrary machines, and interact with the local operating system by
+starting processes.  Trusted applets still can't have native methods,
+but including native methods in an applet would make it unportable,
+and would therefore be a bad idea.
+<P CLASS=para>
+<A HREF="ch03_01.htm">Chapter 3, <i>Tools of the Trade</i></A> discusses how to package your applet's class files
+and resources into a JAR file and sign it with your digital signature.
+Currently, HotJava is the only browser that supports signing, but
+Netscape Navigator, Internet Explorer, and others will probably catch
+up soon.
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-2.2">Getting Applet Resources</A></h3>
+
+<P CLASS=para>
+<A NAME="CH10.APP2"></A><A NAME="CH10.APP3"></A>
+An applet needs to communicate with its applet viewer. For example, it needs
+to get its parameters from the HTML document in which
+it appears.  An applet may also need to load images, audio clips, and other 
+items.  It may also want to ask the viewer about other applets on the same 
+HTML
+page in order to communicate with them. 
+To get resources from the applet viewer environment, applets use the
+<tt CLASS=literal>AppletStub</tt> and <tt CLASS=literal>AppletContext</tt>
+interfaces. Unless you're writing a browser or some other
+application that loads and runs applets, you won't have to implement these 
+interfaces, but you do use them within your applet.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.15">Applet Parameters</A></h4>
+
+<P CLASS=para>
+An applet gets its parameters from the parameter tags
+placed inside the <tt CLASS=literal>&lt;applet&gt;</tt> tag in the
+HTML document.  For example, the code below reads
+the "sheep" parameter from its HTML page:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+String imageName = getParameter( "imageName" ); 
+try  {
+    int numberOfSheep = Integer.parseInt(getParameter( "sheep" )); 
+} catch ( NumberFormatException e ) { // use default } 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A friendly applet will provide information about the parameters it 
+accepts through its <tt CLASS=literal>getParameterInfo()</tt> method.  <tt CLASS=literal>getParameterInfo()</tt> returns
+an array of string arrays, listing and describing the applet's parameters.  
+For each parameter, three strings are provided: the parameter name, its
+possible values or value types, and a verbose description.  For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public String [][] getParameterInfo() {
+    String [][] appletInfo = 
+        {"logo",   "url",  "Main logo image"}
+        {"timer", "int",   "Time to wait before becoming annoying"},
+        {"flashing", "constant | intermittant",  "Flag for how to flash"},
+    return appletInfo;
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.16">Applet Resources</A></h4>
+
+<P CLASS=para>
+An applet can find where it lives by calling the
+<tt CLASS=literal>getDocumentBase()</tt> and
+<tt CLASS=literal>getCodeBase()</tt>
+methods. <tt CLASS=literal>getDocumentBase()</tt> returns the base
+URL of the document in which the applet appears;
+<tt CLASS=literal>getCodeBase()</tt> returns the base
+URL of the <tt CLASS=literal>Applet</tt>'s class
+files. An applet can use these to construct relative
+URLs from which to load other resources like images, 
+sounds, and other data.
+The <tt CLASS=literal>getImage()</tt> method takes a URL and asks for 
+an image from the viewer environment. The image may be pulled from a cache 
+or loaded asynchronously when later used. The
+<tt CLASS=literal>getAudioClip()</tt> method, similarly, retrieves sound
+clips.  
+See <A HREF="ch09_01.htm">Chapter 9, <i>Network Programming</i></A> for a full discussion of how to work with URLs, and
+<A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A> for examples of applets that load images.
+
+<P CLASS=para>
+The following example uses
+<tt CLASS=literal>getCodeBase()</tt> to construct a
+URL and load a properties-configuration file, located
+at the same location as the applet's class file. (See
+<A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A> for a discussion of properties.)
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Properties props = new Properties(); 
+try {
+    URL url = new URL(getCodeBase(), "appletConfig.props");
+    props.load( url.openStream() ); 
+} catch ( IOException e ) { // failed } 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A better way to load resources is by calling the <tt CLASS=literal>getResource()</tt>
+and <tt CLASS=literal>getResourceAsStream()</tt> methods of the <tt CLASS=literal>Class</tt> class, which search 
+the applet's JAR files (if any) as well as its codebase.
+See <A HREF="ch08_01.htm">Chapter 8, <i>Input/Output Facilities</i></A> for a discussion of resource loading.  The following
+code loads
+the properties file appletConfig.props:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Properties props = new Properties(); 
+try {
+    props.load( getClass().getResourceAsStream("appletConfig.props") );
+} catch ( IOException e ) { // failed } 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-2.2.2">Driving the Browser</A></h4>
+
+<P CLASS=para>
+The status line is a blurb of text that usually appears somewhere in the
+viewer's display, indicating a current activity. An applet can
+request that some text be placed in the status line with the
+<tt CLASS=literal>showStatus()</tt> method. (The browser isn't
+required to do anything in response to this call, but most browsers
+will oblige you.)
+<P CLASS=para>
+An applet can also ask the browser to show a new document.
+To do this, the 
+applet makes a call to the showDocument( url ) method of the 
+<tt CLASS=literal>AppletContext</tt>.  
+You can get a reference to the <tt CLASS=literal>AppletContext</tt> with
+the Applet's <tt CLASS=literal>getAppletContext()</tt> method. 
+<tt CLASS=literal>showDocument()</tt> can take an additional
+<tt CLASS=literal>String</tt> argument to tell the browser where to
+display the new URL:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+getAppletContext().showDocument( url, name ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>name</tt> argument can be the name of an
+existing labeled HTML frame; the document referenced by the URL
+will be displayed in that frame. You can use this method to create
+an applet that "drives" the browser to new locations dynamically, but stays
+active on the screen in a separate frame.
+If the named frame doesn't exist, the browser will create
+a new top-level window to hold it.  Alternatively, <tt CLASS=literal>name</tt> can have one 
+of the following special values:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">_self</TD>
+<TD ALIGN="left">Show in the current Frame</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">_parent</TD>
+<TD ALIGN="left">Show in the parent of our Frame</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">_top</TD>
+<TD ALIGN="left">Show in outer-most (top level) frame.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">_blank</TD>
+<TD ALIGN="left">Show in a new top level browser window.</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+Both <tt CLASS=literal>showStatus()</tt> and 
+<tt CLASS=literal>showDocument()</tt>
+requests may be ignored by a cold-hearted viewer or Web browser.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    *** Missing Discussion of getApplet() ***
+    *** Add a blurb about the upcoming InfoBus stuff ***
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.17">Applets vs. Standalone Applications</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    *** Discuss getImage() and image loading from JAR files for applications ***
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The following list summarizes the methods of the applet API:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// from the AppletStub
+boolean isActive();
+URL getDocumentBase();
+URL getCodeBase();
+String getParameter(String name);
+AppletContext getAppletContext();
+void appletResize(int width, int height);
+// from the AppletContext
+AudioClip getAudioClip(URL url);
+Image getImage(URL url);
+Applet getApplet(String name);
+Enumeration getApplets();
+void showDocument(URL url);
+public void showDocument(URL url, String target);
+void showStatus(String status);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+These are the methods that are provided by the applet viewer
+environment.  If your applet doesn't happen to use any of them, or if
+you can provide alternatives to handle special cases (such as loading
+images from JAR files), your applet could be made able to function as
+a standalone application as well as an applet.  For example, our
+<tt CLASS=literal>HelloWeb</tt> applet from <A HREF="ch02_01.htm">Chapter 2, <i>A First Applet</i></A> was very
+simple.  We can easily give it a <tt CLASS=literal>main()</tt>
+method to allow it to be run as a standalone application:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class HelloWeb extends Applet {
+ 
+    public void paint( java.awt.Graphics gc ) {
+        gc.drawString( "Hello Web!", 125, 95 );
+    }
+ 
+    public static void main( String [] args ) {
+        Frame theFrame = new Frame();
+        Applet helloWeb = new HelloWeb();
+        theFrame.add("Center", helloWeb);
+        theFrame.setSize(200,200);
+        helloWeb.init();
+        helloWeb.start();
+        theFrame.show();
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we get to play "appletviewer" for a change. We have created an
+instance of <tt CLASS=literal>HelloWeb</tt> using its constructor
+- something we don't normally do$mdash;and added it to our own
+<tt CLASS=literal>Frame</tt>.  We call its
+<tt CLASS=literal>init()</tt> method to give the applet a chance
+to wake up and then call its <tt CLASS=literal>start()</tt>
+method.  In this example, <tt CLASS=literal>HelloWeb</tt> doesn't
+implement these, <tt CLASS=literal>init()</tt> and
+<tt CLASS=literal>start()</tt>, so we're calling methods
+inherited from the <tt CLASS=literal>Applet</tt> class.  This is
+the procedure that an appletviewer would use to run an applet.  (If we
+wanted to go further, we could implement our own
+<tt CLASS=literal>AppletContext</tt> and
+<tt CLASS=literal>AppletStub</tt>, and set them in the
+<tt CLASS=literal>Applet</tt> before startup).
+<P CLASS=para>
+Trying to make your applets into applications as well often doesn't
+make sense, and is not always trivial.
+We show this only to get you thinking about the real differences 
+between applets and applications.  
+It is probably best to stay within the applet API
+until you have a need to go outside it.  Remember that trusted applets
+can do almost all of the things that applications can.  It is probably
+wiser to make an applet that requires trusted permissions than an 
+application.
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1.2">Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH10.EV1"></A>We've spent a lot of time discussing the different kinds of objects in
+AWT--components, containers, and a few special containers like
+applets. But we've neglected communications between different objects.
+A few times, we've mentioned events, and we have even used them in the
+occasional program (like our applets in <A HREF="ch02_01.htm">Chapter 2, <i>A First Applet</i></A>), but we have
+deferred a discussion of events until later. Now is the time to pay
+that debt.
+
+<P CLASS=para>
+AWT objects communicate by sending events.
+The way we talk about "firing" events and "handling" them makes it sound
+as if they are part of some special Java language feature.  But they aren't.
+An event is simply an ordinary Java object that is delivered to its receiver
+by invoking an ordinary Java method.  Everything else, however interesting,
+is purely convention.  The entire Java event mechanism is really 
+just a set of conventions for the kinds of descriptive objects that should 
+be delivered; these conventions prescribe when, how, and to whom
+events should be delivered. 
+
+<P CLASS=para>
+Events are sent from a single source object to one or more listeners
+(or "targets").
+A listener implements specific event handling methods that enable it
+to receive a
+type of event.  It then registers itself with a source of that kind of event.
+Sometimes there may be an "adapter" object interposed between the event 
+source and the listener, but there is always a connection
+established before any events are delivered. 
+
+<P CLASS=para>
+An event object is a subclass of
+<tt CLASS=literal>java.util.EventObject</tt> that holds 
+information about "something that's happened" to its source.  The
+<tt CLASS=literal>EventObject</tt> class serves mainly to
+identify event objects;
+the only information it contains is a reference to the event source
+(the object that sent the event).
+Components do not normally send or receive
+<tt CLASS=literal>EventObject</tt>s as such; they 
+work with subclasses that provide more specific information.
+<tt CLASS=literal>AWTEvent</tt> is a subclass of
+<tt CLASS=literal>EventObject</tt> that is used within AWT;
+further subclasses of <tt CLASS=literal>AWTEvent</tt> provide
+information about specific event types. 
+
+<P CLASS=para>
+For example, events of type <tt CLASS=literal>ActionEvent</tt>
+are fired by buttons
+when they are pushed.  <tt CLASS=literal>ActionEvent</tt>s are
+also sent when a menu item is selected 
+or when a user presses ENTER in a <tt CLASS=literal>TextField</tt>.
+Similarly, <tt CLASS=literal>MouseEvent</tt>s are generated when
+you operate your mouse within a component's area.
+You can gather the general meaning of these two events from their names;
+they are relatively self-descriptive.
+<tt CLASS=literal>ActionEvent</tt>s correspond to a decisive
+"action" that a user has taken with the component--like pressing a
+button, or pressing ENTER to indicate that he has filled in a text
+field. An <tt CLASS=literal>ActionEvent</tt> thus carries the
+name of an action to be performed (the "action command") by the program. 
+<tt CLASS=literal>MouseEvent</tt>s describe the state of the
+mouse, and therefore carry information like the x and y coordinates
+and the state of your mouse
+buttons at the time it was created.
+You might hear someone say that
+<tt CLASS=literal>ActionEvent</tt> is at a "higher semantic level"
+than <tt CLASS=literal>MouseEvent</tt>. This means that
+<tt CLASS=literal>ActionEvent</tt> is an interpretation of
+something that happened and is, therefore, 
+conceptually more powerful 
+than the <tt CLASS=literal>MouseEvent</tt>, which carries raw
+data.  An <tt CLASS=literal>ActionEvent</tt> lets us know that a component
+has done its job, while a <tt CLASS=literal>MouseEvent</tt>
+simply confers a lot of information about the mouse at a given time.
+You could figure out that somebody clicked on a
+<tt CLASS=literal>Button</tt> by examining mouse events, but it
+is simpler to work with action events.
+The precise meaning of an event, however, can depend on the context in
+which it is received.  (More on that in a moment.)
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.18">Event Receivers and Listener Interfaces</A></h4>
+
+<P CLASS=para>
+An event is delivered by passing it as an argument to an event handler 
+method in the receiving object.
+<tt CLASS=literal>ActionEvent</tt>s, for example,
+are always delivered to a method called
+<tt CLASS=literal>actionPerformed()</tt> in the receiver:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Receiver
+public void actionPerformed( ActionEvent e ) {
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+For each type of event, there is a corresponding 
+listener interface that describes the methods it must provide to receive
+those events.
+In this case, any object that receives
+<tt CLASS=literal>ActionEvent</tt>s 
+must implement the <tt CLASS=literal>ActionListener</tt> interface:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public interface ActionListener extends java.util.EventListener {
+    public void actionPerformed( ActionEvent e );
+}
+// Reciever implements ActionListener
+</PRE>
+</DIV>
+
+<P CLASS=para>
+All listener interfaces are subinterfaces of
+<tt CLASS=literal>java.util.EventListener</tt>, 
+but <tt CLASS=literal>EventListener</tt> is simply an empty
+interface.  It exists only to help the compiler
+identify listener interfaces.
+
+<P CLASS=para>
+Listener interfaces are required for a number of reasons. First, they
+help to identify objects that are capable of receiving a given 
+type of event.  This way we can 
+give the event handler methods friendly, 
+descriptive names and still make it easy for documentation, tools, and
+humans to recognize them in a class.  Next, listener interfaces are
+useful because there can be several methods specified for an event receiver.
+For example, the <tt CLASS=literal>FocusListener</tt> interface
+contains two methods:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+abstract void focusGained( FocusEvent e );
+abstract void focusLost( FocusEvent e );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Athough these methods both take a 
+<tt CLASS=literal>FocusEvent</tt> as an argument, they correspond
+to different meanings for why the
+event was fired; in this case, whether the
+<tt CLASS=literal>FocusEvent</tt> means that focus was 
+received or lost. You could figure out what happened by inspecting the
+event; all <tt CLASS=literal>AWTEvent</tt>s contain a constant
+specifying the event's subtype. By requiring two methods, the
+<tt CLASS=literal>FocusListener</tt> 
+interface saves you the effort: if
+<tt CLASS=literal>focusGained()</tt> is called, you know the
+event type was <tt CLASS=literal>FOCUS_GAINED</tt>. Similarly,
+the <tt CLASS=literal>MouseListener</tt> interface defines five
+methods for receiving mouse events (and
+<tt CLASS=literal>MouseMotionListener</tt> defines two more),
+each of which gives you some additional information about why the
+event occurred. In general, the listener interfaces group sets of
+related event handler methods; the method called in any given
+situation provides a context for the information in the event object.
+
+<P CLASS=para>
+There can be more than one listener interface for dealing with a
+particular kind of event.  For example, the 
+<tt CLASS=literal>MouseListener</tt> interface describes methods
+for receiving <tt CLASS=literal>MouseEvent</tt>s when the mouse 
+enters or exits an area, or a mouse button is 
+pressed or released.
+<tt CLASS=literal>MouseMotionListener</tt> is an entirely separate 
+interface that describes methods to get mouse events when the mouse is
+moved (no buttons pressed) or dragged (buttons pressed). By separating
+mouse events into these two categories, Java lets you 
+be a little more selective about the circumstances under which you want to 
+recieve <tt CLASS=literal>MouseEvent</tt>s. You can register as a
+listener for mouse events without receiving mouse motion events; since
+mouse motion events are extremely common, you don't want to handle
+them if you don't need to. 
+
+<P CLASS=para>
+Finally, we should point out two simple patterns in the 
+naming of AWT event listener interfaces and handler methods:  
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Event handler methods are public methods that return type  
+<tt CLASS=literal>void</tt> and take a single event object (a
+subclass of <tt CLASS=literal>java.util.EventObject</tt> as an argument).[2]
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+This rule is not complete.  The full Java Beans 
+allows event handler methods to take additional arguments when absolutely
+necessary and also to throw checked exceptions.
+</blockquote>
+<P>
+<li CLASS=listitem>Listener interfaces are subclasses of
+<tt CLASS=literal>java.util.EventListener</tt> 
+that are named with the suffix "Listener," e.g., FooListener.
+
+<P>
+</UL>
+<P CLASS=para>
+These may seem pretty obvious, but they are important because
+they are our first hint of a <I CLASS=emphasis>design pattern</I> governing
+how to build components that work with events.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.19">Event Sources</A></h4>
+
+<P CLASS=para>
+The previous section described the machinery that an event receiver uses
+to accept events.  In this section we'll describe how the receiver
+tells an event source to start sending it events as they occur.
+
+<P CLASS=para>
+To receive events, an eligible listener must register itself with an 
+event source.  It does this by 
+calling an "add listener" method in the event source, and passing a
+reference (a callback) to itself.
+For example, the AWT <tt CLASS=literal>Button</tt> class is a
+source of <tt CLASS=literal>ActionEvent</tt>s. In order to
+receive these events, our code 
+might do something like the following:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// source of ActionEvents
+Button theButton = new Button("Belly");
+   
+// receiver of ActionEvents
+class TheReceiver implements ActionListener {
+   setupReceiver() {
+      ...
+      theButton.addActionListener( this );
+   }
+   public void actionPerformed( ActionEvent e ) {
+      // Belly Button pushed...
+   }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The receiver makes a call to
+<tt CLASS=literal>addActionListener()</tt> to complete its 
+setup and become eligible to receive
+<tt CLASS=literal>ActionEvent</tt>s from the button when they
+occur. 
+It passes the reference <tt CLASS=literal>this</tt>, to add
+itself as the <tt CLASS=literal>ActionListener</tt>.
+
+<P CLASS=para>
+To manage its listeners, an <tt CLASS=literal>ActionEvent</tt>
+source (like the <tt CLASS=literal>Button</tt>) always implements  
+two methods:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// ActionEvent source
+public void addActionListener(ActionListener listener) {
+   ...
+}
+public void removeActionListener(ActionListener listener) {
+   ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeActionListener()</tt> method
+complements <tt CLASS=literal>addActionListener()</tt> and 
+does what you'd expect: it removes the listener from the list so that it will
+not receive future events from that source.
+
+<P CLASS=para>
+Now, you may be expecting an
+"event source" interface listing these two methods, but there isn't
+one.  There are no event source
+interfaces in the current conventions.  
+If you are analyzing a class and trying to determine what events it
+generates, you have to look for the add and remove methods.
+For example, the presence of the
+<tt CLASS=literal>addActionListener()</tt> and  
+<tt CLASS=literal>removeActionListener()</tt> methods define the
+object as a source of <tt CLASS=literal>ActionEvent</tt>s.
+If you happen to be a human being, you can simply look at the 
+documentation; but if the documentation isn't available, or if you're
+writing a program that needs to analyze a class (a process called
+"reflection"), you can look for this design pattern:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>A source of events for the FooListener interface must implement 
+a pair of add/remove methods: 
+	
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>	addFooListener(FooListener listener)  (*)
+        
+
+<P>
+<li CLASS=listitem>	removeFooListener(FooListener listener)
+	
+
+<P>
+</UL>
+<P>
+<li CLASS=listitem>If an event source can only support one event listener 
+(unicast delivery), the add listener method can throw the checked exception
+<tt CLASS=literal>java.util.TooManyListenersException</tt>.
+
+<P>
+</UL>
+<P CLASS=para>
+So, what do all the naming patterns up to this point accomplish?  Well, for one
+thing they make it possible for automated tools and integrated development 
+environments to divine what are sources and what are sinks of particular 
+events.  Tools that work with Java Beans will use the Java 
+reflection and introspection APIs to search for these kinds of design patterns
+and identify the events that can be fired and received by a component.  
+
+<P CLASS=para>
+It also means that event hookups are strongly typed, just like the 
+rest of Java.  So, it's not easy to accidentally hook up the wrong kind of
+components; for example, you can't register to receive
+<tt CLASS=literal>ItemEvent</tt>s from a
+<tt CLASS=literal>Button</tt>, because a button doesn't have an
+<tt CLASS=literal>addItemListener()</tt> method.  Java knows at
+compile time what types of events can be delivered to whom.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.20">Event Delivery</A></h4>
+
+<P CLASS=para>
+AWT events are multicast; every event is associated with 
+a single source, but can be delivered to any number of receivers.
+Events are registered and distributed using an observer/observable model.
+When an event listener registers itself with an event source, the event 
+source adds the listener to a list.  When an event is fired, it is delivered 
+individually to each listener on the list.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-9">Figure 10.9: Event delivery</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1009.gif" alt="[Graphic: Figure 10-9]" width=503 height=203 border=0>
+
+</DIV>
+
+<P CLASS=para>
+There are no guarantees about the order in which events will be 
+delivered.  Neither are there any guarantees if you register yourself more 
+than once with an event source; you may get the event more than once,
+or not. Similarly, you should assume that every listener receives the
+same event data. Events are "immutable"; they can't be changed by
+their listeners. There's one important exception to this rule, which
+we'll discuss later.
+
+<P CLASS=para>
+To be complete we could say that event delivery is synchronous with respect
+to the event source, but that follows from the fact 
+that the event 
+delivery is really just the invocation of a normal Java method.  
+The source of the event calls the handler method of each listener.  
+However, listeners shouldn't assume that all of the events will be sent in 
+the same thread.  An event source could decide to sent out 
+events to all of the listeners in parallel.
+
+<P CLASS=para>
+How exactly an event source maintains its set of listeners, constructs,
+and fires the events is up to it.  Often it is sufficient to use a
+<tt CLASS=literal>Vector</tt> 
+to hold the list.  We'll show the code for a component that uses a 
+custom event in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A>.
+For efficiency, AWT components all use the 
+<tt CLASS=literal>java.awt.AWTEventMulticaster</tt> object, which
+maintains a linked tree of the 
+listeners for the component.  You can use that too, if you are firing 
+standard AWT events.  We'll describe the event multicaster in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A>
+as well. 
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.21">AWTEvents</A></h4>
+
+<P CLASS=para>
+All of the events used by AWT GUI components are subclasses of 
+<tt CLASS=literal>java.awt.AWTEvent</tt>.
+<tt CLASS=literal>AWTEvent</tt> holds some 
+common information that is used by AWT 
+to identify and process events.  You can use or subclass any of the
+<tt CLASS=literal>AWTEvent</tt>  
+types for use in your own components.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Use the event hierarchy from Java in a Nutshell or AWT Reference.
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>ComponentEvent</tt> is the base class for
+events that can be fired by any AWT 
+component.  This includes events that provide notification when a component 
+changes its dimensions or visibility, as well as the other event types for
+mouse operation and key presses.
+<tt CLASS=literal>ContainerEvent</tt>s are fired by AWT
+containers when components are added or removed.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.22">java.awt.event.InputEvent</A></h4>
+
+<P CLASS=para>
+<tt CLASS=literal>MouseEvent</tt>s, which track the state of the
+mouse, and <tt CLASS=literal>KeyEvent</tt>s, 
+which are fired when the user uses the keyboard, are types of 
+<tt CLASS=literal>java.awt.event.InputEvent</tt>.  Input events from
+the mouse and keyboard are  
+a little bit special.  They are normally produced by the native Java machinery
+associated with the peers.  When the user touches a key or moves the mouse 
+within a component's area, the events are generated with that component as 
+the source.
+
+<P CLASS=para>
+Input events and some other AWT events are placed on a special event queue that
+is managed by the AWT Toolkit.  This gives the Toolkit control over 
+how the events are delivered.  First, under some circumstances, the Toolkit
+can decide to "compress" a sequence of the same type of event into a
+single event.  This is done to make some event types more
+efficient--in particular, mouse events and some special internal
+events used to control repainting.  Perhaps more important to us,
+input events 
+are delivered with a special arrangement that lets listeners decide
+if the component itself should act on the event.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.23">Consuming events</A></h4>
+
+<P CLASS=para>
+Normally, the native peer of a standard AWT component operates by 
+receiving <tt CLASS=literal>InputEvent</tt>s telling it about the
+mouse and keyboard.  
+When you push a <tt CLASS=literal>Button</tt>, the native
+<tt CLASS=literal>ButtonPeer</tt> object receives a
+<tt CLASS=literal>MouseEvent</tt> 
+and does its job in native land to accomplish the button-depressing behavior.
+But for <tt CLASS=literal>InputEvent</tt>s, the Toolkit first
+delivers the event to any listeners 
+registered with the the component and gives those listeners a chance to
+mark the event as "consumed," effectively telling the peer to ignore it.
+An <tt CLASS=literal>InputEvent</tt> is marked "consumed" by
+calling the <tt CLASS=literal>consume()</tt> method.  (Yes, 
+this is a case where an event is not treated as immutable.)
+
+<P CLASS=para>
+So, we could stop our <tt CLASS=literal>Button</tt> from working
+by registering a listener with it 
+that catches "mouse button depressed" events.  When it got one, we could 
+call its <tt CLASS=literal>consume()</tt> method to tell the
+<tt CLASS=literal>ButtonPeer</tt> to ignore that event. 
+This is particularly useful if you happen to be building a develoment 
+environment in Java and you want to "turn off" components while the user
+arranges them.
+
+<P CLASS=para>
+If you need to, in a trusted application you can get access to the AWT 
+event queue.  The Toolkit uses an instance of
+<tt CLASS=literal>java.awt.EventQueue</tt>. 
+With it you can peek at pending AWT events or even to push in new ones.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.24">Mouse and Key Modifiers on InputEvents</A></h4>
+
+<P CLASS=para>
+<tt CLASS=literal>InputEvent</tt>s come with a set of flags for
+special modifiers.  These let you 
+detect if the SHIFT or ALT key was held down during a mouse
+button or key press, or if the second or third mouse buttons were
+pressed.  The following are the flag values contained in 
+<tt CLASS=literal>java.awt.event.InputEvent</tt>:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>SHIFT_MASK
+
+<P>
+<li CLASS=listitem>CTRL_MASK
+
+<P>
+<li CLASS=listitem>META_MASK
+
+<P>
+<li CLASS=listitem>ALT_MASK
+
+<P>
+<li CLASS=listitem>BUTTON1_MASK
+
+<P>
+<li CLASS=listitem>BUTTON2_MASK
+
+<P>
+<li CLASS=listitem>BUTTON3_MASK
+
+<P>
+</UL>
+<P CLASS=para>
+To check for these masks, you can simply do a boolean AND of the modifiers,
+returned by the <tt CLASS=literal>InputEvent</tt>'s
+<tt CLASS=literal>getModifiers()</tt> method and the flag or
+flags you're interested in:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void mousePressed (MouseEvent e) {
+    int mods = e.getModifiers();
+    if ((mods &amp; InputEvent.SHIFT_MASK) != 0)
+        // Shifted Mouse Button press
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the list you'll notice there are three BUTTON flags.  These can be
+used to detect if a particular mouse button was used in a mouse press on a 
+two or three button mouse.  Be warned, if you use these you run the
+risk that your program won't work on platforms without multibutton
+mice. Currently, BUTTON2_MASK is equivalent to ALT_MASK, and
+BUTTON3_MASK is equivalent to META_MASK. This means that pushing the
+second mouse button is equivalent to pressing the first (or only)
+button with the ALT key depressed, and the third button is equivalent
+to the first with the META key depressed. However, if you really want
+to guarantee portability, you should limit yourself to a single
+button, possibly in combination with keyboard modifiers, rather than
+relying on the button masks.
+
+<P CLASS=para>
+Key events provide one other situation in which events aren't
+immutable. You can change the character that the user typed by calling
+<tt CLASS=literal>setKeyChar()</tt>,
+<tt CLASS=literal>setKeyCode()</tt>, or
+<tt CLASS=literal>setKeyModifiers()</tt>. A user's keystroke
+isn't displayed until the <tt CLASS=literal>KeyEvent</tt> is
+delivered to the peer. Therefore, by changing the character in the
+<tt CLASS=literal>KeyEvent</tt>, you can change the character
+displayed on the screen.  This is a good way to implement a field that
+only displays uppercase characters, regardless of what the user types. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch10-SECT2-AUTOID.3">AWT Event Reference</A></h3>
+
+<P CLASS=para>
+The following tables summarize the AWT Events, which components fire them,
+and the methods of the listener interfaces that receive them:
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.25">AWT Component and Container Events</A></h4>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">Event</TH>
+<TH ALIGN="left">Fired by</TH>
+<TH ALIGN="left">Listener interface(s)</TH>
+<TH ALIGN="left">Handler Method(s)</TH>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=4 ALIGN="left">ComponentEvent</TD>
+<TD ROWSPAN=16 ALIGN="left"><I CLASS=emphasis>All Components (*)</I></TD>
+<TD ROWSPAN=4 ALIGN="left">ComponentListener</TD>
+<TD ALIGN="left">componentResized()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">componentMoved()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">componentShown()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">componentHidden()</TD>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=2 ALIGN="left">FocusEvent</TD>
+<TD ROWSPAN=2 ALIGN="left">FocusListener</TD>
+<TD ALIGN="left">focusGained()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">focusLost()</TD>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=3 ALIGN="left">KeyEvent</TD>
+<TD ROWSPAN=3 ALIGN="left">KeyListener</TD>
+<TD ALIGN="left">keyTyped()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">keyPressed()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">keyReleased()</TD>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=7 ALIGN="left">MouseEvent</TD>
+<TD ROWSPAN=5 ALIGN="left">MouseListener</TD>
+<TD ALIGN="left">mouseClicked()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">mousePressed()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">mouseReleased()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">mouseEntered()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">mouseExited()</TD>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=2 ALIGN="left">MouseMotionListener</TD>
+<TD ALIGN="left">mouseDragged()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">mouseMoved()</TD>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=2 ALIGN="left">ContainerEvent</TD>
+<TD ROWSPAN=2 ALIGN="left"><I CLASS=emphasis>All Containers</I></TD>
+<TD ROWSPAN=2 ALIGN="left">ContainerListener</TD>
+<TD ALIGN="left">componentAdded()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">componentRemoved()</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.26">Component specific AWT Events</A></h4>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">Event</TH>
+<TH ALIGN="left">Fired by</TH>
+<TH ALIGN="left">Listener interface(s)</TH>
+<TH ALIGN="left">Handler Method(s)</TH>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=4 ALIGN="left">ActionEvent</TD>
+<TD ALIGN="left">TextField</TD>
+<TD ROWSPAN=4 ALIGN="left">ActionListener</TD>
+<TD ROWSPAN=4 ALIGN="left">actionPerformed()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">MenuItem</TD>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">List</TD>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Button</TD>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=4 ALIGN="left">ItemEvent</TD>
+<TD ALIGN="left">List</TD>
+<TD ROWSPAN=4 ALIGN="left">ItemListener</TD>
+<TD ROWSPAN=4 ALIGN="left">itemStateChanged()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Checkbox</TD>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Choice</TD>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">CheckboxMenuItem</TD>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=2 ALIGN="left">AdjustmentEvent</TD>
+<TD ALIGN="left">ScrollPane</TD>
+<TD ROWSPAN=2 ALIGN="left">AdjustmentListener</TD>
+<TD ROWSPAN=2 ALIGN="left">adjustmentValueChanged()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Scrollbar</TD>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=2 ALIGN="left">TextEvent</TD>
+<TD ALIGN="left">TextArea</TD>
+<TD ROWSPAN=2 ALIGN="left">TextListener</TD>
+<TD ROWSPAN=2 ALIGN="left">textValueChanged()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">TextField</TD>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=7 ALIGN="left">WindowEvent</TD>
+<TD ROWSPAN=7 ALIGN="left">Frame, Dialog</TD>
+<TD ROWSPAN=7 ALIGN="left">WindowListener</TD>
+<TD ALIGN="left">windowOpened()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">windowClosing()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">windowClosed()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">windowIconified()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">windowDeiconified()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">windowActivated()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">windowDeactivated()</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch10-SECT2-AUTOID.4">Adapter Classes</A></h3>
+
+<P CLASS=para>
+It's not ideal to have your application components implement a
+listener interface and receive events directly.  Sometimes it's not even 
+possible.  Being an event receiver forces you to 
+modify or subclass your objects to implement the appropriate event
+listener interfaces and add the code necessary to handle the events.  A more
+subtle issue is that, since we are talking about AWT events here,
+you are, of necessity, building GUI logic into parts of your application
+that shouldn't have to know anything about the GUI.
+Let's look at an example:
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-10">Figure 10.10: Implementing the ActionListener interface</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1010.gif" alt="[Graphic: Figure 10-10]" width=503 height=132 border=0>
+
+</DIV>
+
+<P CLASS=para>
+In <A HREF="ch10_02.htm#EXJ-CH-10-FIG-10">Figure 10.10</A> we have drawn the plans for our Vegomatic food processor.
+Here we have made our Vegomatic object implement the
+<tt CLASS=literal>ActionListener</tt> interface
+so that it can receive events directly from the three
+<tt CLASS=literal>Button</tt> components:
+"Chop," "Puree," and "Frappe."  The problem is that our Vegomatic object
+now has to know more than how to mangle food.  It also has to be
+aware that it will be driven by three controls, specifically buttons that 
+send action commands, and be aware of which methods in itself it should invoke for those
+commands.  Our boxes labeling the GUI and Application code overlap in an
+unwholesome way.  If the marketing people should later want to add or
+remove buttons, or perhaps just change the names, we have to be
+careful. We may have to modify the logic in our Vegomatic Object.  All
+is not well.
+
+<P CLASS=para>
+An alternative is to place an "adapter" class between our event source and
+receiver.  An adapter is a simple object whose sole purpose is to map an 
+incoming event to an outgoing method.  
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-11">Figure 10.11: A design using adapter classes</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1011.gif" alt="[Graphic: Figure 10-11]" width=503 height=163 border=0>
+
+</DIV>
+
+<P CLASS=para>
+<A HREF="ch10_02.htm#EXJ-CH-10-FIG-11">Figure 10.11</A> shows a better design that uses three adapter classes, one
+for each button.  The implementation of the first adapter might look like:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class VegomaticAdapter1 implements actionListener {
+    Vegotmatic vegomatic;
+    VegomaticAdapter1 ( Vegotmatic vegomatic ) {
+        this.vegomatic = vegomatic;
+    }
+    public void actionPerformed( ActionEvent e ) {
+        vegomatic.chopFood();
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+So somewhere in the code where we build our GUI, we could register our
+listener like so:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// building GUI for our Vegomatic
+Vegomatic theVegomatic = ...;
+Button chopButton = ...;
+// make the hookup 
+chopButton.addActionListener( new VegomaticAdapter1(theVegomatic) );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We have completely separated the messiness of our GUI from the application
+code.  However, we have added three new classes to our application,
+none of which does very much.  Is that good?  That depends on your
+vantage point. 
+
+<P CLASS=para>
+Under different circumstances our buttons may have been able to share
+a common adapter class that was simply instantiated with different
+parameters.  There are various trade-off that can be made between
+size, efficiency, and elegance of code.  Often, adapter classes will
+be generated automatically by development tools.  The way we have
+named our adapter classes "VegomaticAdapter1," "VegomaticAdapter2,"
+and "VegomaticAdapter3" hints at this.  More often, when hand coding,
+you'll use an inner 
+class. At the other extreme, we can forsake Java's strong typing and
+use the reflection API to create a completely dynamic hookup betwen an
+event source and listener.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.27">AWT Dummy Adapters</A></h4>
+
+<P CLASS=para>
+Many listener interfaces contain more than one event handler method.
+Unfortunately, this means that to register yourself as interested in any
+one of those events, you must implement the whole listener interface.  
+And to accomplish this you might find yourself typing in dummy 
+"stubbed out" methods, simply to complete the interface.  There is really 
+nothing wrong with this, but it is a bit tedious.
+To save you some trouble, AWT provides some helper classes that
+implement these dummy methods for you.  
+For each listener interface containing more than one method there is
+an adapter class containing the stubbed methods.  The adapter class
+serves as a base class for your own adapters.
+So, when you need a class to patch together your event source and listener, 
+you can simply subclass the adapter and override only the methods you want.
+
+<P CLASS=para>
+For example, the <tt CLASS=literal>MouseAdapter</tt> class
+implements the <tt CLASS=literal>MouseListener</tt> interface 
+and provides the following implementation:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void mouseClicked(MouseEvent e) {};
+public void mousePressed(MouseEvent e) {};
+public void mouseReleased(MouseEvent e) {};
+public void mouseEntered(MouseEvent e) {};
+public void mouseExited(MouseEvent e) {};
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This may not look like a tremendous time saver, and you're right.  It's
+simply a bit of sugar.  The primary advantage comes into play when we use 
+the <tt CLASS=literal>MouseAdapter</tt> as the base for your own
+adapter in an anonymous inner class. 
+For example, suppose we want to catch a
+<tt CLASS=literal>mousePressed()</tt> event in some component 
+and blow up a building.  We can use the following to make the hookup:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+someComponent.addMouseListener( new MouseAdapter() {
+    public void MousePressed(MouseEvent e) {
+        building.blowUp();
+    }
+} );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We've taken artistic liberties with the formatting, but I think it's very 
+readable, and I like it.
+It's a common enough activity that it's nice to avoid typing those extra
+few lines and perhaps stave off the onset of carpal tunnel syndrome for 
+a few more hours.  Remember that any time you use an inner class, the 
+compiler is generating a class for you, so the messiness you've saved in
+your source still exists in the output classes.
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch10-SECT2-AUTOID.5">Old Style and New Style Event Processing</A></h3>
+
+<P CLASS=para>
+Although Java is still a youngster, it has a bit of a legacy.  Versions of
+Java before 1.1 used a different style of event delivery.  Back in the
+old days (a few months ago) event types were
+limited and events were only delivered to the
+<tt CLASS=literal>Component</tt> that generated it, or
+one of its parent containers.  The old style component event handler
+methods (now deprecated) returned a boolean 
+value declaring whether or not they had "handled" the event. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+boolean handleEvent( Event e ) {
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If the method returns false, the 
+event is automatically redelivered to the component's container to give it a 
+chance.  If the container does not handle it, it is passed on to its parent
+container and so on.  
+In this way, events were propogated up the containment hierarchy 
+until they were either consumed or
+passed over to the component peer, just as current
+<tt CLASS=literal>InputEvent</tt>s are ultimately 
+interpreted used the peer if no registered event listeners have
+consumed them. 
+
+<P CLASS=para>
+Although this style of event delivery was convenient for some simple 
+applications, it is not very flexible.  Events could only be handled by 
+components, which meant that you always had to subclass a
+<tt CLASS=literal>Component</tt> or
+<tt CLASS=literal>Container</tt> type to handle events.  This was
+a degenerate use of inheritance 
+(bad design) that led to the creation of lots of unnecessary classes.
+
+<P CLASS=para>
+We could, alternatively, receive the events for many embedded components 
+in a single parent container, but that would often lead to very convoluted 
+logic in the container's event handling methods.
+It is also very costly to run 
+every single AWT event through a guantlet of (often empty) tests as it 
+traverses its way up the tree of containers.  
+This is why Java now provides the more
+dynamic and general event source/listener model that we have described in
+this chapter.  
+The old style events and event handler methods are, however, still with us.
+
+<P CLASS=para>
+Java is not allowed to simply change and break an established API.  Instead,
+as we described in <A HREF="ch01_01.htm">Chapter 1, <i>Yet Another Language?</i></A>, older ways of doing things are simply 
+"deprecated"
+in favor of the new ones.  This means that code using the old style event
+handler methods will still work; you may see old-style code 
+around for a long time.  The problem with relying on old-style
+event delivery, however, is that the old and new ways of doing
+things cannot be mixed.
+
+<P CLASS=para>
+By default, Java is obligated to perform the old behavior--offering events
+to the component and each of its parent containers.  However, Java turns off
+the old style delivery whenever it thinks that we have elected to use the new 
+style.  
+Java determines whether a <tt CLASS=literal>Component</tt> should
+recieve old style 
+or new style events based on whether any event listeners are registered, or
+whether new style events have been explicitly enabled.
+When an AWT event listener is registered with a
+<tt CLASS=literal>Component</tt>, new style events
+are implicitly turned on (a flag is set).   
+Additionally, a mask is set telling the component the types of AWT events 
+it should process.
+The mask allows components to be more selective about which events
+they process.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.28">processEvent()</A></h4>
+
+<P CLASS=para>
+When new style events are enabled, all events are first routed to the 
+<tt CLASS=literal>dispatchEvent()</tt> method of the
+<tt CLASS=literal>Component</tt> class.  The 
+<tt CLASS=literal>dispatchEvent()</tt> method examines the
+component's event
+mask and decides whether the event 
+should be processed or ignored.  Events that have been "enabled" are 
+sent to the <tt CLASS=literal>processEvent()</tt> method, which
+simply looks at the event's type 
+and delegates it to a "helper" processing method named for its type.  
+The helper processing method finally dispatches the event to the set of 
+registered listeners for its type.
+
+<P CLASS=para>
+ 
+This process closely parallels the way in which old style events are 
+processed, and the way in which events are first directed to a single
+<tt CLASS=literal>handleEvent()</tt> 
+method that dispatches them to more specific handler methods in the
+<tt CLASS=literal>Component</tt> class.  The differences are that
+new style events are not delivered 
+unless someone is listening for them, and the listener registration mechanism
+means that we don't have to subclass the component in order to override its
+event handler methods and insert our own code.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.29">Enabling New Style Events Explicitly</A></h4>
+
+<P CLASS=para>
+Still, if you are subclassing a <tt CLASS=literal>Component</tt>
+type for other reasons, or you 
+really want to process all events in a single method, you should
+be aware that it is possible to emulate the old style event handling
+and override your component's event processing methods.  You simply have to 
+call the <tt CLASS=literal>Component</tt>'s
+<tt CLASS=literal>enableEvents()</tt> method with the appropriate 
+mask value to turn on processing for the given type of event.  You can then
+override the corresponding method and insert your code.
+The mask values are found in the
+<tt CLASS=literal>java.awt.AWTEvent</tt> class:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">java.awt.AWTEvent mask</TH>
+<TH ALIGN="left">method</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">COMPONENT_EVENT_MASK</TD>
+<TD ALIGN="left">processComponentEvent()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">FOCUS_EVENT_MASK</TD>
+<TD ALIGN="left">processFocusEvent()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">KEY_EVENT_MASK</TD>
+<TD ALIGN="left">processKeyEvent()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">MOUSE_EVENT_MASK</TD>
+<TD ALIGN="left">processMouseEvent()</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">MOUSE_MOTION_EVENT_MASK</TD>
+<TD ALIGN="left">processMouseMotionEvent()</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+    public void init() {
+        ...
+        enableEvent( AWTEvent.KEY_EVENT_MASK ):
+    }
+    public void processKeyEvent(KeyEvent e) {
+        if ( e.getID() == KeyEvent.KEY_TYPED )
+            // do work
+        super.processKeyEvent(e);
+    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If you do this it is vital that you remember to make a call to 
+<tt CLASS=literal>super.process...Event()</tt> in order to allow
+normal event delegation to continue. Of course, by emulating old-style
+event handling, we're giving up the virtues of the new style; in
+particular, this code is a lot less flexible than the code we could
+write with the new event model. As we've seen, the user interface is
+hopelessly tangled with the actual work your program does. 
+A compromise solution would be to have your subclass declare that it
+implements the appropriate listener interface and register itself, as we have
+done in the simpler examples in this book:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class MyApplet implements KeyListener ...
+        
+    public void init() {
+        addKeyListener( this ):
+        ...
+    }
+    public void keyTyped(KeyEvent e) {
+        // do work
+    }
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>GUI Concepts in Java</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Using and Creating GUI Components</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

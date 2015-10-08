@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 29] 29.18 java.text.SimpleDateFormat (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:33:21 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch29_17.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 29<br>The java.text Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch29_19.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-18">29.18 java.text.SimpleDateFormat (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-18.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This is the concrete <tt CLASS=literal>Format</tt> subclass used by
+<tt CLASS=literal>DateFormat</tt> to handle formatting and parsing of
+dates.  Most applications should not use this class
+directly--instead, they should obtain a localized
+<tt CLASS=literal>DateFormat</tt> object by calling one of the static
+methods of <tt CLASS=literal>DateFormat</tt>.
+
+<P CLASS=para>
+<tt CLASS=literal>SimpleDateFormat</tt> formats dates and times according to a
+pattern, which specifies the positions of the various fields
+of the date, and a <tt CLASS=literal>DateFormatSymbols</tt> object, which
+specifies important auxiliary data, such as the names of
+months.  Applications that require highly customized date or
+time formatting can create a custom <tt CLASS=literal>SimpleDateFormat</tt>
+object by specifying the desired pattern.  This creates
+a <tt CLASS=literal>SimpleDateFormat</tt> object that uses the
+<tt CLASS=literal>DateFormatSymbols</tt> object for the default locale.
+You may also specify a locale explicitly to use the
+<tt CLASS=literal>DateFormatSymbols</tt> object for that locale.  Or, you
+can even provide an explicit <tt CLASS=literal>DateFormatSymbols</tt>
+object of your own, if you need to format dates and times
+for an unsupported locale.
+
+<P CLASS=para>
+You can use the <tt CLASS=literal>applyPattern()</tt> method of a
+<tt CLASS=literal>SimpleDateFormat</tt> to change the formatting pattern
+used by the object.  The syntax of this pattern is described
+in the following table.  Any characters in the format string
+that do not appear in this table appear literally in the
+formatted date.
+
+<DIV CLASS=informaltable>
+<P>
+<A NAME="JNUT2-CH-29-TAB-2"></A>
+
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">Field</TH>
+<TH ALIGN="left">Full Form</TH>
+<TH ALIGN="left">Short Form</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Year</TD>
+<TD ALIGN="left"><tt CLASS=literal>yyyy</tt> (4 digits)</TD>
+<TD ALIGN="left"><tt CLASS=literal>yy</tt> (2 digits)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Month</TD>
+<TD ALIGN="left"><tt CLASS=literal>MMM</tt> (name)</TD>
+<TD ALIGN="left"><tt CLASS=literal>MM</tt> (2 digits), <tt CLASS=literal>M</tt> (1 or 2 digits)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Day of week</TD>
+<TD ALIGN="left"><tt CLASS=literal>EEEE</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>EE</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Day of month</TD>
+<TD ALIGN="left"><tt CLASS=literal>dd</tt> (2 digits)</TD>
+<TD ALIGN="left"><tt CLASS=literal>d</tt> (1 or 2 digits)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Hour (1-12)</TD>
+<TD ALIGN="left"><tt CLASS=literal>hh</tt> (2 digits)</TD>
+<TD ALIGN="left"><tt CLASS=literal>h</tt> (1 or 2 digits)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Hour (0-23)</TD>
+<TD ALIGN="left"><tt CLASS=literal>HH</tt> (2 digits)</TD>
+<TD ALIGN="left"><tt CLASS=literal>H</tt> (1 or 2 digits)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Hour (0-11)</TD>
+<TD ALIGN="left"><tt CLASS=literal>KK</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>K</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Hour (1-24)</TD>
+<TD ALIGN="left"><tt CLASS=literal>kk</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>k</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Minute</TD>
+<TD ALIGN="left"><tt CLASS=literal>mm</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Second</TD>
+<TD ALIGN="left"><tt CLASS=literal>ss</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Millisecond</TD>
+<TD ALIGN="left"><tt CLASS=literal>SSS</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">AM/PM</TD>
+<TD ALIGN="left"><tt CLASS=literal>a</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Time zone</TD>
+<TD ALIGN="left"><tt CLASS=literal>zzzz</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>zz</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Day of week in month</TD>
+<TD ALIGN="left"><tt CLASS=literal>F</tt> (e.g., 3rd Thursday)</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Day in year</TD>
+<TD ALIGN="left"><tt CLASS=literal>DDD</tt> (3 digits)</TD>
+<TD ALIGN="left"><tt CLASS=literal>D</tt> (1, 2, or 3 digits)</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Week in year</TD>
+<TD ALIGN="left"><tt CLASS=literal>ww</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal></tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Era (e.g., BC/AD)</TD>
+<TD ALIGN="left">G</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>SimpleDateFormat</tt> extends DateFormat {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>SimpleDateFormat</tt>();
+            public <tt CLASS=literal>SimpleDateFormat</tt>(String <tt CLASS=literal>pattern</tt>);
+            public <tt CLASS=literal>SimpleDateFormat</tt>(String <tt CLASS=literal>pattern</tt>, Locale <tt CLASS=literal>loc</tt>);
+            public <tt CLASS=literal>SimpleDateFormat</tt>(String <tt CLASS=literal>pattern</tt>, DateFormatSymbols <tt CLASS=literal>formatData</tt>);
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public void <tt CLASS=literal>applyLocalizedPattern</tt>(String <tt CLASS=literal>pattern</tt>);
+            public void <tt CLASS=literal>applyPattern</tt>(String <tt CLASS=literal>pattern</tt>);
+            public Object <tt CLASS=literal>clone</tt>();  //<tt CLASS=literal> Overrides DateFormat</tt>
+            public boolean <tt CLASS=literal>equals</tt>(Object <tt CLASS=literal>obj</tt>);  //<tt CLASS=literal> Overrides DateFormat</tt>
+            public StringBuffer <tt CLASS=literal>format</tt>(Date <tt CLASS=literal>date</tt>, StringBuffer <tt CLASS=literal>toAppendTo</tt>, FieldPosition <tt CLASS=literal>pos</tt>);  //<tt CLASS=literal> Defines DateFormat</tt>
+            public DateFormatSymbols <tt CLASS=literal>getDateFormatSymbols</tt>();
+            public int <tt CLASS=literal>hashCode</tt>();  //<tt CLASS=literal> Overrides DateFormat</tt>
+            public Date <tt CLASS=literal>parse</tt>(String <tt CLASS=literal>text</tt>, ParsePosition <tt CLASS=literal>pos</tt>);  //<tt CLASS=literal> Defines DateFormat</tt>
+            public void <tt CLASS=literal>setDateFormatSymbols</tt>(DateFormatSymbols <tt CLASS=literal>newFormatSymbols</tt>);
+            public String <tt CLASS=literal>toLocalizedPattern</tt>();
+            public String <tt CLASS=literal>toPattern</tt>();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-29-SECT-18.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+Object->Format(Serializable, Cloneable)->DateFormat(Cloneable)->SimpleDateFormat
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch29_17.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch29_19.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.text.RuleBasedCollator (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.text.StringCharacterIterator (JDK 1.1)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

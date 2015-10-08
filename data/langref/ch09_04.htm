@@ -1,0 +1,580 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.4 The Exception Hierarchy</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:17:39 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Exception Handling</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-4">9.4 The Exception Hierarchy</A></h2>
+
+<P CLASS=para>
+The possible exceptions in a Java program are organized in
+a hierarchy of exception classes. The <tt CLASS=literal>Throwable</tt>
+class, which is an immediate subclass of <tt CLASS=literal>Object</tt>,
+is at the root of the exception hierarchy. <tt CLASS=literal>Throwable</tt> has
+two immediate subclasses: <tt CLASS=literal>Exception</tt>
+and <tt CLASS=literal>Error</tt>.
+<A HREF="ch09_04.htm#JLR2-CH-9-FIG-1">Figure 9.1</A> shows the standard exception
+classes defined in the <tt CLASS=literal>java.lang</tt>
+package, while <A HREF="ch09_04.htm#JLR2-CH-9-FIG-2">Figure 9.2</A>
+shows the standard error classes defined in <tt CLASS=literal>java.lang</tt>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JLR2-CH-9-FIG-1">Figure 9.1: Standard Java exception classes</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jlrf0901.gif" alt="[Graphic: Figure 9-1]" width=502 height=303 border=0>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JLR2-CH-9-FIG-2">Figure 9.2: Standard Java error classes</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jlrf0902.gif" alt="[Graphic: Figure 9-2]" width=502 height=382 border=0>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-4.1">Exceptions</A></h3>
+
+<P CLASS=para>
+All of the subclasses of <tt CLASS=literal>Exception</tt> represent
+exceptional conditions that a normal Java program may want to handle.
+Many of the standard exceptions are also subclasses of
+<tt CLASS=literal>RuntimeException</tt>.
+Runtime exceptions represent runtime conditions that can generally
+occur in any Java method, so a method is not required to declare
+that it throws any of the runtime exceptions. However, if a method
+can throw any of the other standard exceptions, it must declare
+them in its <tt CLASS=literal>throws</tt> clause.
+
+<P CLASS=para>
+A Java program should try to handle all of the standard exception
+classes, since they represent routine abnormal conditions that should
+be anticipated and caught to prevent program termination.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-4.1.1">Runtime exceptions</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.lang</tt> package defines the following
+standard runtime exception classes:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArithmeticException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown to indicate an exceptional
+arithmetic condition, such as integer division by zero.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ArrayIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown when an out-of-range index is detected by an
+array object. An out-of-range index occurs when the index is less
+than zero or greater than or equal to the size of the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ArrayStoreException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception
+is thrown when there is an attempt to store a value in an array
+element that is incompatible with the type of the array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassCastException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown when there is an attempt
+to cast a reference to an object to an inappropriate type.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown to indicate that an illegal
+argument has been passed to a method.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalMonitorStateException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown when an object's <tt CLASS=literal>wait()</tt>,
+<tt CLASS=literal>notify()</tt>, or <tt CLASS=literal>notifyAll()</tt> method
+is called from a thread that does not own the object's monitor.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalStateException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is 
+thrown to indicate that a method has been invoked when the run-time environment is in an inappropriate state for the requested operation. 
+This exception is new in Java 1.1.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalThreadStateException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown to indicate an attempt
+to perform an operation on a thread that is not legal for the thread's
+current state, such as attempting to resume a dead thread.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+The appropriate subclass of this exception (i.e.,
+<tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>
+or <tt CLASS=literal>StringIndexOutOfBoundsException</tt>)
+is thrown when an array or string index is out of bounds.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NegativeArraySizeException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown in response to an attempt
+to create an array with a negative size.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NullPointerException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown when there is an attempt
+to access an object through a <tt CLASS=literal>null</tt> object reference. This
+can occur when there is an attempt to access an instance variable
+or call a method through a <tt CLASS=literal>null</tt> object or when
+there is an attempt to subscript an array with a <tt CLASS=literal>null</tt>
+object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NumberFormatException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown to indicate that an attempt
+to parse numeric information in a string has failed.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>RuntimeException</tt><br>
+<DD>
+
+<P CLASS=para>
+The appropriate subclass of this exception is thrown
+in response to a runtime error detected at the virtual machine level.
+Because these exceptions are so common, methods that can throw objects
+that are instances of <tt CLASS=literal>RuntimeException</tt> or one
+of its subclasses are not required to declare that fact in their
+<tt CLASS=literal>throws</tt> clauses.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown in response to an attempt
+to perform an operation that violates the security policy implemented
+by the installed <tt CLASS=literal>SecurityManager</tt> object.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>StringIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown when a <tt CLASS=literal>String</tt>
+or <tt CLASS=literal>StringBuffer</tt> object detects an out-of-range
+index. An out-of-range index occurs when the index is less than
+zero or greater than or equal to the length of the string.</DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-4.1.2">Other exceptions</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.lang</tt> package defines the following
+standard exception classes that are not runtime exceptions:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassNotFoundException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown to indicate that a class
+that is to be loaded cannot be found.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>CloneNotSupportedException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown when the <tt CLASS=literal>clone()</tt>
+method has been called for an object that does not 
+implement the <tt CLASS=literal>Cloneable</tt> 
+interface and thus cannot be cloned. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>Exception</tt><br>
+<DD>
+
+<P CLASS=para>
+The appropriate subclass of this exception is thrown
+in response to an error detected at the virtual machine level. If
+a program defines its own exception classes, they should be subclasses
+of the <tt CLASS=literal>Exception</tt> class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown when a program tries to
+dynamically load a class (i.e., uses the <tt CLASS=literal>forName()</tt>
+method of the <tt CLASS=literal>Class</tt> class, 
+or the <tt CLASS=literal>findSystemClass()</tt>
+or the <tt CLASS=literal>loadClass()</tt> method of 
+the <tt CLASS=literal>ClassLoader</tt>
+class) and the currently executing method does not have access to
+the specified class because it is in another package and 
+not <tt CLASS=literal>public</tt>.
+This exception is also thrown when a program tries to create an
+instance of a class (i.e., uses the <tt CLASS=literal>newInstance()</tt>
+method of the <tt CLASS=literal>Class</tt> class) that does not have
+a zero-argument constructor accessible to the caller.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InstantiationException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown in response to an attempt
+to instantiate an <tt CLASS=literal>abstract</tt> class or an interface
+using the <tt CLASS=literal>newInstance()</tt> method of the <tt CLASS=literal>Class</tt>
+class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown to signal that a thread
+that is sleeping, waiting, or otherwise paused has been interrupted
+by another thread.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchFieldException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception 
+is thrown when a specified variable cannot be found. 
+This exception is new in Java 1.1.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchMethodException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is thrown when a specified method
+cannot be found.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-9-SECT-4.2">Errors</A></h3>
+
+<P CLASS=para>
+<A NAME="CH09.ERROR"></A><A NAME="CH09.ERROR2"></A>The subclasses of <tt CLASS=literal>Error</tt> represent errors
+that are normally thrown by the class loader, the virtual machine,
+or other support code. Application-specific code should not normally
+throw any of these standard error classes. If a method does throw
+an <tt CLASS=literal>Error</tt> class or any of its subclasses, the
+method is not required to declare that fact in its <tt CLASS=literal>throws</tt>
+clause.
+
+<P CLASS=para>
+A Java program should not try to handle the standard error
+classes. Most of these error classes represent non-recoverable errors
+and as such, they cause the Java runtime system to print an error
+message and terminate program execution.
+
+<P CLASS=para>
+The <tt CLASS=literal>java.lang</tt> package defines the following
+standard error classes:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>AbstractMethodError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown in response to an attempt to
+invoke an <tt CLASS=literal>abstract</tt> method.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassCircularityError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when a circular reference among
+classes is detected during class initialization.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ClassFormatError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when an error is detected in
+the format of a file that contains a class definition.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>Error</tt><br>
+<DD>
+
+<P CLASS=para>
+The appropriate subclass of this error is thrown
+when an unpredictable error, such as running out of memory, occurs.
+Because of the unpredictable nature of these errors, methods that
+can throw objects that are instances of <tt CLASS=literal>Error</tt>
+or one of its subclasses are not required to declare that fact in
+their <tt CLASS=literal>throws</tt> clauses.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ExceptionInInitializerError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is 
+thrown when an unexpected exception is thrown in a static initializer.
+This error is new in Java 1.1.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalAccessError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when a class attempts to access
+a field or call a method it does not have access to. Usually this
+error is caught by the compiler; this error can occur at run-time
+if the definition of a class changes after the class that references
+it was last compiled.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>IncompatibleClassChangeError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error or one of its subclasses is thrown when
+a class refers to another class in an incompatible way. This situation
+occurs when the current definition of the referenced class is incompatible
+with the definition of the class that was found when the referring
+class was compiled. For example, say class <tt CLASS=literal>A</tt>
+refers to a method in class <tt CLASS=literal>B</tt>. Then, after class
+<tt CLASS=literal>A</tt> is compiled, the method is removed from class
+<tt CLASS=literal>B</tt>. When class <tt CLASS=literal>A</tt> is loaded,
+the run-time system discovers that the method in class <tt CLASS=literal>B</tt>
+no longer exists and throws an error.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InstantiationError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown in response to an attempt to
+instantiate an <tt CLASS=literal>abstract</tt> class or an interface.
+Usually this error is caught by the compiler; this error can occur
+at run-time if the definition of a class is changed after the class
+that references it was last compiled.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>InternalError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown to signal an internal error
+within the virtual machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>LinkageError</tt><br>
+<DD>
+
+<P CLASS=para>
+The appropriate subclass of this error is thrown
+when there is a problem resolving a reference to a class. Reasons
+for this may include a difficulty in finding the definition of the
+class or an incompatibility between the current definition and the
+expected definition of the class.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NoClassDefFoundError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when the definition of a class
+cannot be found.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchFieldError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown in response to an attempt to
+reference an instance or class variable that is not defined in the
+current definition of a class. Usually this error is caught by the
+compiler; this error can occur at run-time if the definition of a
+class is changed after the class that references it was last compiled.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchMethodError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown in response to an attempt to
+reference a method that is not defined in the current definition
+of a class. Usually this error is caught by the compiler; this error
+can occur at run-time if the definition of a class is changed after
+the class that references it was last compiled.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>OutOfMemoryError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when an attempt to allocate
+memory fails.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>StackOverflowError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when a stack overflow error
+occurs within the virtual machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ThreadDeath</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown by the <tt CLASS=literal>stop()</tt>
+method of a <tt CLASS=literal>Thread</tt> object to kill the thread.
+Catching <tt CLASS=literal>ThreadDeath</tt> objects is not recommended.
+If it is necessary to catch a <tt CLASS=literal>ThreadDeath</tt> object,
+it is important to re-throw the object so that it is possible to
+cleanly stop the catching thread.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>UnknownError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when an error of unknown origins
+is detected in the run-time system.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>UnsatisfiedLinkError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when the implementation of
+a native method cannot be found.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>VerifyError</tt><br>
+<DD>
+
+<P CLASS=para>
+This error is thrown when the byte-code verifier
+detects that a class file, though well-formed, contains some sort
+of internal inconsistency or security problem.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>VirtualMachineError</tt><br>
+<DD>
+
+<P CLASS=para>
+The appropriate subclass of this error is thrown
+to indicate that the Java virtual machine has encountered an error.</DL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Generating Exceptions</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The java.lang Package</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

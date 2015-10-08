@@ -1,0 +1,544 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 15] URLStreamHandler</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:23:37 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_22.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 15<br>The java.net Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_24.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>URLStreamHandler</H1>
+
+<H2>Name</H2>
+
+URLStreamHandler
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.153">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.net.URLStreamHandler</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.154">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>URLStreamHandler</tt> class 
+is an <tt CLASS=literal>abstract</tt> class that defines 
+methods that encapsulate protocol-specific behavior. A stream handler protocol 
+knows how to establish a connection for a particular protocol and how to 
+parse the protocol-specific portion of a URL. An application does not normally 
+create a <tt CLASS=literal>URLStreamHandler</tt> directly; 
+the appropriate subclass of <tt CLASS=literal>URLStreamHandler</tt> 
+is created by a <tt CLASS=literal>URLStreamHandlerFactory</tt>. 
+
+<P CLASS=para>
+The main purpose of a subclass of <tt CLASS=literal>URLStreamHandler</tt> 
+is to create a <tt CLASS=literal>URLConnection</tt> 
+object for a given <tt CLASS=literal>URL</tt>. The 
+<tt CLASS=literal>URLStreamHandler</tt> object creates 
+an object of the appropriate subclass of <tt CLASS=literal>URLConnection</tt> 
+for the protocol type specified by the URL. In order for a <tt CLASS=literal>URL</tt> 
+object to handle a protocol type such as <tt CLASS=literal>http</tt>, 
+<tt CLASS=literal>ftp</tt>, or <tt CLASS=literal>nntp</tt>, 
+it needs an object of the appropriate subclass of <tt CLASS=literal>URLStreamHandler</tt> 
+to handle the protocol-specific details. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.155">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.net.URLStreamHandler extends java.lang.Object {
+  // Protected Instance Methods
+  protected abstract URLConnection openConnection(URL u) 
+  protected void parseURL(URL u, String spec, int start, int limit);
+  protected void setURL(URL u, String protocol, String host, 
+                        int port, String file, String ref);
+  protected String toExternalForm(URL u);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.156">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.214">openConnection</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.238"><DIV CLASS=screen> <P> <PRE> protected abstract URLConnection openConnection(URL u) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>u</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>URL</tt> 
+being connected to. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>URLConnection</tt> object for 
+the given <tt CLASS=literal>URL</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method handles the protocol-specific details of establishing a connection 
+to a remote resource specified by the <tt CLASS=literal>URL</tt>. 
+The connection should be handled just up to the point where the resource 
+data can be downloaded. A <tt CLASS=literal>ContentHandler</tt> 
+then takes care of downloading the data and creating an appropriate object.
+
+<P CLASS=para>
+A subclass of <tt CLASS=literal>URLStreamHandler</tt> 
+must implement this method. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.215">parseURL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.239">protected void parseURL(URL u, String spec, int start, int limit)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>u</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to a <tt CLASS=literal>URL</tt> 
+object that receives the results of parsing.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>spec</tt><br>
+<DD>
+
+<P CLASS=para>
+The string representation 
+of a URL to be parsed.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>start</tt><br>
+<DD>
+
+<P CLASS=para>
+The offset at which 
+to begin parsing the protocol-specific portion of the URL.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>limit</tt><br>
+<DD>
+
+<P CLASS=para>
+The offset of the 
+last character that is to be parsed. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method parses the string representation of a URL into a <tt CLASS=literal>URL</tt> 
+object.
+
+<P CLASS=para>
+Some parts of the <tt CLASS=literal>URL</tt> object 
+may already be specified if <tt CLASS=literal>spec</tt> 
+specifies a relative URL. However, values for those parts in <tt CLASS=literal>spec</tt> 
+can override the inherited context.
+
+<P CLASS=para>
+The method only parses the protocol-specific portion of the URL. In other 
+words, <tt CLASS=literal>start</tt> should specify 
+the character immediately after the first colon (:), which marks the termination 
+of the protocol type, and <tt CLASS=literal>limit</tt> 
+should either be the last character in the string or the first pound sign 
+(#), which marks the beginning of a protocol-independent anchor. Rather 
+than return a result, the method calls the <tt CLASS=literal>set()</tt> 
+method of the specified <tt CLASS=literal>URL</tt> 
+object to set its fields to the appropriate values.
+
+<P CLASS=para>
+The implementation of the <tt CLASS=literal>parseURL()</tt> 
+method in <tt CLASS=literal>URLStreamHandler</tt> 
+parses the string representation as if it were an <tt CLASS=literal>http</tt> 
+specification. A subclass that implements a protocol stream handler for 
+a different protocol must override this method to properly parse the URL. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.216">setURL</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.240"><DIV CLASS=screen> <P> <PRE> protected void setURL(URL u, String protocol, String host, int port, String file, String ref) </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>u</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to a <tt CLASS=literal>URL</tt> 
+object to be modified.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>protocol</tt><br>
+<DD>
+
+<P CLASS=para>
+A protocol.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>host</tt><br>
+<DD>
+
+<P CLASS=para>
+A hostname.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port number.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>file</tt><br>
+<DD>
+
+<P CLASS=para>
+A filename.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>ref</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the protocol, hostname, port number, filename, and reference 
+of the given <tt CLASS=literal>URL</tt> to the specified 
+values by calling the <tt CLASS=literal>set()</tt> 
+method of the <tt CLASS=literal>URL</tt>. Only subclasses 
+of <tt CLASS=literal>URLStreamHandler</tt> are allowed 
+to call the <tt CLASS=literal>set()</tt> method of 
+a <tt CLASS=literal>URL</tt> object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.217">toExternalForm</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.241">protected String toExternalForm(URL u)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>u</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>URL</tt> 
+object to convert to a string representation. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of the given <tt CLASS=literal>URL</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method unparses a <tt CLASS=literal>URL</tt> 
+object and returns a string representation of the URL.
+
+<P CLASS=para>
+The implementation of the <tt CLASS=literal>toExternalForm()</tt> 
+method in <tt CLASS=literal>URLStreamHandler</tt> 
+returns a string representation that is appropriate for an <tt CLASS=literal>http</tt> 
+specification. A subclass that implements a protocol stream handler for 
+a different protocol must override this method to create a correct string 
+representation. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.157">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.158">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ContentHandler</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>URL</tt>, 
+<tt CLASS=literal>URLConnection</tt>, 
+<tt CLASS=literal>URLStreamHandlerFactory</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_22.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_24.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>URLEncoder</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>URLStreamHandlerFactory</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

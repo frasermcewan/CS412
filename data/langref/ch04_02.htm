@@ -1,0 +1,721 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.2 Allocation Expressions</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:09:55 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>Expressions</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-2">4.2 Allocation Expressions</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.ALLOC1"></A><A NAME="CH04.ALLOC2"></A><A NAME="CH04.ALLOC3"></A><A NAME="CH04.ALLOC4"></A>An <I CLASS=emphasis>allocation expression</I>
+is a primary expression that creates an object or an array. An allocation
+expression also produces a reference to the newly created object
+or array:
+
+
+<p>
+<img align=middle src="./figs/jlr0410.gif" alt="[Graphic: Figure from the text]" width=424 height=48 border=0>
+
+
+<p>
+<img align=middle src="./figs/jlr0411.gif" alt="[Graphic: Figure from the text]" width=424 height=48 border=0>
+
+<P CLASS=para>
+When <I CLASS=emphasis>AllocationExpression</I> contains parentheses, 
+the allocation
+expression creates a non-array object. When 
+<I CLASS=emphasis>AllocationExpression</I>
+contains square brackets, the allocation expression creates
+an array.
+
+<P CLASS=para>
+An object created by an allocation expression
+continues to exist until the program terminates or it is freed by
+the garbage collector
+(see <A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.4">Object Destruction</A>). Consider
+the following code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class X {
+    Double perm;
+    void foo() {
+        Double d = new Double(8.9473);
+        int a[] = new int [2];
+        d = new Double(3.1415926);
+        a[0] = d.intValue();
+        perm = d;
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first line of <tt CLASS=literal>foo()</tt>
+creates a <tt CLASS=literal>Double</tt> object and uses it as the initial
+value of the variable <tt CLASS=literal>d</tt>. The second line creates
+an array of integers and uses it as the initial value of the variable
+<tt CLASS=literal>a</tt>. At this point, neither of the two objects
+that has been created is a candidate for garbage collection because
+there is a variable referencing each of them.
+
+<P CLASS=para>
+The third
+line of <tt CLASS=literal>foo</tt> creates another <tt CLASS=literal>Double</tt>
+object and assigns it to the variable <tt CLASS=literal>d</tt>. Now
+there is nothing that refers to the first <tt CLASS=literal>Double</tt>
+object that we created, so that object can now be garbage collected
+at any time.
+
+<P CLASS=para>
+When the block in this example finishes
+executing, the variables declared inside of the block, <tt CLASS=literal>a</tt>
+and <tt CLASS=literal>d</tt>, pass out of scope. Now there is nothing
+referring to the array object that we created; now that object can
+be garbage-collected at any time. However, because the variable
+<tt CLASS=literal>perm</tt> now refers to the second <tt CLASS=literal>Double</tt>
+object we created, that object is not a candidate for garbage collection.
+
+<P CLASS=para>
+<b>References</b>
+<I CLASS=emphasis>ArgumentList</I> 4.1.8;
+<I CLASS=emphasis>ClassBody</I> 5.4;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>;
+<I CLASS=emphasis>Expression</I> 4;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.3">Object Creation</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.4">Object Destruction</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1">Primary Expressions</A>;
+<I CLASS=emphasis>Type</I> 3
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-2.1">Object Allocation Expressions</A></h3>
+
+<P CLASS=para>
+An allocation expression
+that contains parentheses creates a non-array object;
+that is, an instance of a class. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new Double(93.1872)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <I CLASS=emphasis>Type</I> in an object
+allocation expression must be a class or interface type.
+The argument
+list supplied between the parentheses provides the actual arguments
+to be passed to the object's constructor.
+However, if a <I CLASS=emphasis>ClassBody</I> 
+follows the parentheses, no arguments may appear 
+between the parentheses, and different rules apply. (These rules
+are discussed in <A HREF="ch04_02.htm#JLR2-CH-4-SECT-2.1.1">Allocating instances of anonymous classes</A>.)
+
+<P CLASS=para>
+If <tt CLASS=literal>new</tt> is preceded by a 
+<I CLASS=emphasis>PrimaryExpression</I> and a dot, the
+<I CLASS=emphasis>PrimaryExpression</I> must produce a reference 
+to an object. Furthermore, the object's class must be an inner or 
+nested top-level class that is named by
+the identifier that follows <tt CLASS=literal>new</tt>. 
+If the specified class is a non-<tt CLASS=literal>static</tt> 
+inner class, the object created by the
+allocation expression has the object referenced by the
+<I CLASS=emphasis>PrimaryExpression</I> as its enclosing instance. 
+For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Z {
+    class Y {
+    ...
+    } 
+    public static void main(String[] argv) {
+        Z myZ = new Z();
+        Z.Y myY = myZ.new Y();
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the preceding example, we must supply an explicit enclosing
+instance of <tt CLASS=literal>Z</tt> to create a <tt CLASS=literal>Z.Y</tt> 
+object because <tt CLASS=literal>main()</tt> is a <tt CLASS=literal>static</tt>
+method. A non-<tt CLASS=literal>static</tt> method of <tt CLASS=literal>Z</tt> 
+could create an instance of <tt CLASS=literal>Z.Y</tt>
+without supplying an explicit enclosing instance of <tt CLASS=literal>Z</tt> 
+because the method itself is associated with an instance of 
+<tt CLASS=literal>Z</tt>. However, because a <tt CLASS=literal>static</tt> 
+method is not associated with an instance of its class, it must supply an
+explicit enclosing instance when creating an instance of an inner
+class.
+
+<P CLASS=para>
+The syntax that allows <tt CLASS=literal>new</tt> to be preceded by 
+a <I CLASS=emphasis>PrimaryExpression</I> and a dot is not 
+supported prior to Java 1.1.
+
+<P CLASS=para>
+The remainder of this section applies only to allocation expressions
+that contain parentheses but no <I CLASS=emphasis>ClassBody</I>. 
+Allocation expressions that contain a <I CLASS=emphasis>ClassBody</I> 
+are described in <A HREF="ch04_02.htm#JLR2-CH-4-SECT-2.1.1">Allocating instances of anonymous classes</A>. 
+
+<P CLASS=para>
+An object
+allocation expression performs the following steps:
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>Creates a new object with all of its instance variables set to their
+default values. The default values for these variables are determined
+by their types.
+
+<P>
+<li CLASS=listitem>Calls the constructor that matches the given
+argument list.
+
+<P>
+<li CLASS=listitem>Produces a reference to the initialized object.
+
+<P>
+</OL>
+<P CLASS=para>
+<A NAME="CH04.INVOKE1"></A><A NAME="CH04.INVOKE2"></A>The process of selecting the appropriate constructor to call is similar
+to the process used to select the method invoked by a method call
+expression. The compiler determines which constructors have formal
+parameters compatible with the given arguments. If there is more
+than one suitable constructor, the compiler must select the constructor
+that most closely matches the given arguments. If the compiler cannot
+select one constructor as a better match than the others,
+the constructor selection process fails and an error message is
+issued.
+
+<P CLASS=para>
+Here are the details of the constructor
+selection process:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>Step One</I><br>
+<DD>
+
+<P CLASS=para>
+The constructor definitions are searched for constructors
+that, taken in isolation, could be called by the allocation expression.
+A constructor is a candidate if it meets the following criteria:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The constructor is accessible to the allocation expression, based on
+any access modifiers specified in the constructor's declaration.
+
+<P>
+<li CLASS=listitem>The
+number of formal parameters declared for the constructor is the
+same as the number of actual arguments provided in the allocation
+expression.
+
+<P>
+<li CLASS=listitem>The data type of each actual parameter is
+assignment-compatible with the corresponding formal parameter.
+
+<P>
+</UL>
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Step Two</I><br>
+<DD>
+
+<P CLASS=para>
+If more than one constructor meets the criteria
+in Step One, the Java compiler tries to determine if one constructor
+is a more specific match than the others. If there is no constructor
+that matches more specifically, the constructor selection process
+fails and an error message is issued.
+
+<P CLASS=para>
+Given two constructors that are both candidates
+to be invoked by the same object allocation expression, one constructor
+is more specific than another constructor if each parameter of the
+first constructor is assignment-compatible with the corresponding
+parameter of the second constructor.</DL>
+<P CLASS=para>
+When an object allocation expression is evaluated, the constructor selected
+in Step Two is invoked. This constructor returns a reference to
+the newly created object.
+
+<P CLASS=para>
+Here's an example that shows
+how the constructor selection process works:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Consel {
+    Consel() { }
+    Consel(Object o, double d) {}
+    Consel(String s, int i) {}
+    Consel(int i, int j) {}
+    public void main(String[] argv) {
+        Consel c = new Consel("abc",4);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>main()</tt> method in the <tt CLASS=literal>Consel</tt>
+class creates a new <tt CLASS=literal>Consel</tt> object. The process
+of selecting which constructor to call proceeds as follows:
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>The
+compiler finds all of the constructors that are accessible to the
+<tt CLASS=literal>new</tt> operator. Since all of the constructors are
+accessible, the compiler then narrows its choices to those constructors
+that have the same number of formal parameters as the number of
+actual arguments in the allocation expression. This step eliminates
+the constructor with no formal parameters, so now there are three
+choices. The compiler again narrows its choices to those constructors
+with formal parameters that are assignment-compatible with the actual
+values. Because a <tt CLASS=literal>String</tt> is not assignment-compatible
+with an <tt CLASS=literal>int</tt> variable, the compiler eliminates
+the constructor that takes two <tt CLASS=literal>int</tt> parameters.
+
+<P>
+<li CLASS=listitem>Now the compiler must choose which of the two remaining
+constructors is more specific than the other. Because a <tt CLASS=literal>String</tt>
+object reference can be assigned to an <tt CLASS=literal>Object</tt>
+variable and an <tt CLASS=literal>int</tt> value can be assigned to
+a <tt CLASS=literal>double</tt> variable, the constructor <tt CLASS=literal>Consel(String
+s, int i)</tt> is the more specific of the two. This constructor
+is the one that is invoked to create the <tt CLASS=literal>Consel</tt>
+object.
+
+<P>
+</OL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_02.htm#JLR2-CH-4-SECT-2.1.1">Allocating instances of anonymous classes</A>;
+<A HREF="ch04_13.htm#JLR2-CH-4-SECT-13.1">Assignment Compatibility</A>;
+<I CLASS=emphasis>ClassBody</I> 5.4;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.1">Class Types</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.2">Interface Types</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1">Primary Expressions</A>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-2.1.1">Allocating instances of anonymous classes</A></h4>
+
+<P CLASS=para>
+An allocation expression that contains a <I CLASS=emphasis>ClassBody</I>
+creates an instance of an <I CLASS=emphasis>anonymous class</I>. 
+It is called an anonymous class because it has no name of its own. 
+The variables and methods of an anonymous class are defined in the
+<I CLASS=emphasis>ClassBody</I>. If the type specified after 
+<tt CLASS=literal>new</tt> is a class, the anonymous class
+is a subclass of that class. If the type specified after 
+<tt CLASS=literal>new</tt> is an interface, 
+the anonymous class implements that interface and is a 
+subclass of <tt CLASS=literal>Object</tt>. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class MainFrame extends Frame {
+...
+    public MainFrame(String title) {
+        super(title);
+        WindowAdapter listener;
+        listener = new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                exit();
+            } 
+        };
+        addWindowListener(listener);
+    } 
+...
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The example creates an instance of an anonymous subclass of the
+<tt CLASS=literal>WindowAdapter</tt> class.
+If an allocation expression contains a <I CLASS=emphasis>ClassBody</I>, 
+it cannot contain any arguments between the parentheses because
+an anonymous class cannot declare any constructors. 
+Instead, an anonymous class must use instance initializers to handle 
+any complex initialization.
+
+<P CLASS=para>
+The body of an anonymous class cannot declare any 
+<tt CLASS=literal>static</tt> variables, <tt CLASS=literal>static</tt> methods, 
+<tt CLASS=literal>static</tt> classes, or static initializers.
+Anonymous classes are not supported prior to Java 1.1.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.7.4">Anonymous classes</A>;
+<I CLASS=emphasis>ClassBody</I> 5.4;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6">Nested Top-Level and Member Classes</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.4">Static Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-2.2">Array Allocation Expressions</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.ARRAYALLOC"></A>An allocation expression that contains square brackets creates an array, such as:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new int[10]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+An array allocation
+expression performs the following steps:
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>Allocates storage for the array
+
+<P>
+<li CLASS=listitem>Sets the <tt CLASS=literal>length</tt> variable of
+the array and initializes the array elements to their default values
+
+<P>
+<li CLASS=listitem>Produces a reference to the initialized array
+
+<P>
+</OL>
+<P CLASS=para>
+Although
+Java does not support multi-dimensional arrays, it does support
+arrays of arrays. The most important distinction between a multi-dimensional
+array and an array of arrays is that in an array of arrays, each
+array need not be of the same length. Because arrays of arrays are
+most often used to represent multi-dimensional arrays, this book
+refers to them as multi-dimensional arrays, even though that is
+not precisely correct.
+
+<P CLASS=para>
+The type of the array created
+by an array allocation expression can be expressed by removing both
+the word <tt CLASS=literal>new</tt> and
+the expressions from within the square brackets. For example, here
+is an allocation expression:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new int[3][4][5]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The type of the array produced by that expression is:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int[][][]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This means that the
+number of dimensions in the array produced by an allocation expression
+is the same as the number of pairs of square brackets in the allocation
+expression.
+
+<P CLASS=para>
+The expressions that appear in the square
+brackets must be of type <tt CLASS=literal>int</tt>, <tt CLASS=literal>short</tt>,
+<tt CLASS=literal>char</tt>, or <tt CLASS=literal>byte</tt>. Each of the
+expressions specifies the length of a single dimension of the array
+that is being created. For example, the allocation expression above
+creates an array of 3 arrays of 4 arrays of 5 <tt CLASS=literal>int</tt>
+values. The length supplied for an array must not be negative. At
+runtime, if an expression in square brackets produces a negative
+array length, a <tt CLASS=literal>NegativeArraySizeException</tt> is
+thrown.
+
+<P CLASS=para>
+The syntax of an array allocation expression
+specifies that the first pair of square brackets must contain an
+expression, while the trailing square brackets do not need to. This
+means that an array allocation expression can be written to build
+fewer dimensions of an array than there are dimensions in the array's
+type. For example, consider this allocation expression:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new char [10][]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The array produced by this allocation expression is an array of arrays
+of <tt CLASS=literal>char</tt>. The allocation expression creates a
+single array of 10 elements, where each of those elements is a <tt CLASS=literal>char</tt>
+array of unspecified length.
+
+<P CLASS=para>
+Array allocation expressions
+are often used to initialize array variables. Here are some examples:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int j[] = new int[10];          // array of 10 ints
+ing k[][] = new float[3][4];    // array of 3 arrays
+                                // of 4 floats
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here's an example that builds an array of different length arrays, or in other
+words a non-rectangular array of arrays:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int a[][] = new int [3][];
+a[0] = new int [5];
+a[1] = new int [6];
+a[2] = new int [7];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+None of the array allocation expressions presented so far have used
+array initializers. When an array allocation expression does not
+include an array initializer, the array is created with all of its
+elements set to a default value. The default value
+is based on the type of the array. Table 4-1 shows the default
+values used for the various types in Java.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="ch04-TABLE-AUTOID.1">Table 4.1: Default Values for Array Elements</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Array Type</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Default Value</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>byte</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>char</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>'\u0000'</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>short</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>int</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>long</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0L</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>float</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0.0F</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0.0</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Boolean</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>false</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Object reference</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>null</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+If you want to create an array that contains elements with 
+different initial values, you can include an 
+<I CLASS=emphasis>ArrayInitializer</I> at the end of the allocation
+expression. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new int [] { 4,7,9 }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Notice that there is no expression between the square brackets. If an
+allocation expression contains square brackets and no
+<I CLASS=emphasis>ArrayInitializer</I>, at least the first pair of 
+square brackets must contain an expression. However, if an 
+allocation expression does contain an <I CLASS=emphasis>ArrayInitializer</I>, 
+there cannot be any expressions between any of the square brackets.
+An allocation expression that contains an
+<I CLASS=emphasis>ArrayInitializer</I> can be used to create an
+anonymous array: one that is created and initialized without
+using a variable initializer.
+
+<P CLASS=para>
+The syntax that allows an <I CLASS=emphasis>ArrayInitializer</I> 
+in an allocation expression is not supported prior to Java 1.1.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.7">Index Expressions</A>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Primary Expressions</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Increment/Decrement Operators</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

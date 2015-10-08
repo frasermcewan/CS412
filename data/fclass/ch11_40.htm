@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] ObjectInputValidation</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:39:00 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_39.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_41.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ObjectInputValidation</H1>
+
+<H2>Name</H2>
+
+ObjectInputValidation
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.272">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Interface Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.ObjectInputValidation</tt>
+
+<p>
+<DT CLASS=varlistentry>Super-interface:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Immediate Sub-interfaces:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Implemented By:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.273">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>ObjectInputValidation</tt> interface 
+defines a callback for object validation. A class implements this interface 
+if it needs to validate deserialized objects. A class that needs to perform 
+object validation on deserialized instances should pass a validation object 
+to <tt CLASS=literal>ObjectInputStream.registerValidation()</tt> 
+at the beginning of its <tt CLASS=literal>private</tt> 
+<tt CLASS=literal>readObject()</tt> method. When an 
+object of that class is deserialized, the <tt CLASS=literal>validateObject()</tt> 
+method in the validation object is called. If the method is satisfied with 
+the state of the deserialized object, it returns quietly; otherwise it 
+should throw an <tt CLASS=literal>InvalidObjectException</tt>. 
+
+<P CLASS=para>
+The simplest case is to have a class do its own validation by implementing 
+<tt CLASS=literal>ObjectInputValidation</tt> itself 
+and passing <tt CLASS=literal>this</tt> to the <tt CLASS=literal>registerValidation()</tt> 
+method. For example, the following code fragment shows how to register 
+for validation in <tt CLASS=literal>readObject()</tt>. 
+The <tt CLASS=literal>validateObject()</tt> method 
+always throws an exception: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class ValidateMe
+    implements Serializable, ObjectInputValidation {
+    private void readObject(ObjectInputStream in)
+                 throws IOException, ClassNotFoundException {
+        in.registerValidation(this, 0);
+        in.defaultReadObject();
+    }
+    public void validateObject() throws InvalidObjectException {
+        // if (this object is not valid)
+            throw new InvalidObjectException("Object not valid!");
+    }
+...
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.274">Interface Declaration</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract interface java.io.ObjectInputValidation {
+  // Methods
+  public abstract void validateObject();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.275">Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch11-REFSECT2-AUTOID.277">validateObject</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch11-REFSECT3-AUTOID.346">public void validateObject() throws InvalidObjectException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InvalidObjectException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the method is not satisfied with its state. 
+
+</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method allows an object to check its own 
+validity. An <tt CLASS=literal>InvalidObjectException</tt> 
+should be thrown if anything is invalid. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch11-REFSECT1-AUTOID.276">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ObjectInput</tt>, 
+<tt CLASS=literal>ObjectInputStream</tt>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_39.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_41.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ObjectInputStream</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ObjectOutput</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

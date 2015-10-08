@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] Exception Handling</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:10:28 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-4">4. Exception Handling</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Handling Exceptions<br>
+<A HREF="ch04_02.htm">Declaring Exceptions</A><BR>
+<A HREF="ch04_03.htm">Generating Exceptions</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+Exception handling is a mechanism that allows Java programs to handle
+various exceptional conditions, such as semantic violations of the
+language and program-defined errors, in a robust way. When an
+exceptional condition occurs, an <I CLASS=emphasis>exception</I> is
+thrown. If the Java virtual machine or run-time environment detects a
+semantic violation, the virtual machine or run-time environment
+implicitly throws an exception.  Alternately, a program can throw an
+exception explicitly using the <tt CLASS=literal>throw</tt>
+statement. After an exception is thrown, control is transferred from
+the current point of execution to an appropriate
+<tt CLASS=literal>catch</tt> clause of an enclosing <tt CLASS=literal>try</tt>
+statement. The <tt CLASS=literal>catch</tt> clause is called an exception
+handler because it handles the exception by taking whatever actions
+are necessary to recover from it.
+<A NAME="CH09.EXC"></A>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-4-SECT-1">4.1 Handling Exceptions</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.TRY"></A>The <tt CLASS=literal>try</tt> statement provides Java's exception-handling mechanism.
+A <tt CLASS=literal>try</tt> statement contains a block of code to be
+executed. Putting a block in a <tt CLASS=literal>try</tt> 
+statement indicates that any
+exceptions or other abnormal exits in the block are going to be
+handled appropriately. A <tt CLASS=literal>try</tt> statement can have
+any number of optional <tt CLASS=literal>catch</tt> clauses that act
+as exception handlers for the <tt CLASS=literal>try</tt> block.
+A <tt CLASS=literal>try</tt>
+statement can also have a <tt CLASS=literal>finally</tt> clause.
+The <tt CLASS=literal>finally</tt> block is always executed before control
+leaves the <tt CLASS=literal>try</tt> statement; it cleans
+up after the <tt CLASS=literal>try</tt> block. Note that a <tt CLASS=literal>try</tt>
+statement must have either a <tt CLASS=literal>catch</tt>
+clause or a <tt CLASS=literal>finally</tt> clause.
+
+<P CLASS=para>
+Here is an example of a <tt CLASS=literal>try</tt> statement that
+includes a <tt CLASS=literal>catch</tt> clause and a <tt CLASS=literal>finally</tt>
+clause:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    out.write(b);
+} catch (IOException e) {
+    System.out.println("Output Error");
+} finally {
+    out.close();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If <tt CLASS=literal>out.write()</tt> throws an <tt CLASS=literal>IOException</tt>,
+the exception is caught by the <tt CLASS=literal>catch</tt> clause.
+Regardless of whether <tt CLASS=literal>out.write()</tt> returns normally
+or throws an exception, the <tt CLASS=literal>finally</tt> block is
+executed, which ensures that <tt CLASS=literal>out.close()</tt> is always
+called.
+
+<P CLASS=para>
+A <tt CLASS=literal>try</tt> statement
+executes the block that follows the keyword <tt CLASS=literal>try</tt>.
+If an exception is thrown from within the <tt CLASS=literal>try</tt>
+block and the <tt CLASS=literal>try</tt> statement has any
+<tt CLASS=literal>catch</tt>
+clauses, those clauses are searched, in order, for one that
+can handle the exception. If a <tt CLASS=literal>catch</tt> clause handles
+an exception, that <tt CLASS=literal>catch</tt> block is executed.
+
+<P CLASS=para>
+However, if the <tt CLASS=literal>try</tt> statement does not
+have any <tt CLASS=literal>catch</tt> clauses that can handle the exception
+(or does not have any <tt CLASS=literal>catch</tt> clauses at all),
+the exception propagates up through enclosing statements in the current
+method. If the current method does not contain a <tt CLASS=literal>try</tt>
+statement that can handle the exception, the exception
+propagates up to the invoking method. If this method does not contain
+an appropriate <tt CLASS=literal>try</tt> statement, the exception propagates
+up again, and so on. Finally, if no <tt CLASS=literal>try</tt> statement
+is found to handle the exception, the currently running thread terminates.
+
+<P CLASS=para>
+A <tt CLASS=literal>catch</tt> clause is declared with a parameter
+that specifies the type of exception it can handle. The parameter
+in a <tt CLASS=literal>catch</tt> clause must be of type
+<tt CLASS=literal>Throwable</tt>
+or one of its subclasses. When an exception occurs, the
+<tt CLASS=literal>catch</tt> clauses are searched for the first one with a parameter that matches the type of the exception thrown or is a superclass of the thrown exception. When the
+appropriate <tt CLASS=literal>catch</tt> block is executed, the actual
+exception object is passed as an argument to the <tt CLASS=literal>catch</tt>
+block. The code within a <tt CLASS=literal>catch</tt> block
+should do whatever is necessary to handle the exceptional condition.
+
+<P CLASS=para>
+The <tt CLASS=literal>finally</tt> clause of a <tt CLASS=literal>try</tt> statement
+is always executed, no matter how control leaves the <tt CLASS=literal>try</tt>
+statement. Thus it is a good place to handle clean-up
+operations, such as closing files, freeing resources, and closing
+network connections.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Synchronizing Multiple Threads</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Declaring Exceptions</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

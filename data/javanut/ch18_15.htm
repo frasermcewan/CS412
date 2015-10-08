@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 18] 18.15 java.awt.Component (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:09:38 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_14.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 18<br>The java.awt Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_16.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-15">18.15 java.awt.Component (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-15.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> is the superclass of all GUI components
+(except menu components) in the <tt CLASS=literal>java.awt</tt> package.  You may
+not instantiate a <tt CLASS=literal>Component</tt> directly; you must use
+a subclass.
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> defines many methods.  Some of these are
+intended to be implemented by subclasses.  Some are used
+internally by the AWT.  Some are to be implemented to handle events.
+And many are useful utility methods for working with GUI
+components.  <tt CLASS=literal>getParent()</tt> returns the
+<tt CLASS=literal>Container</tt> that a <tt CLASS=literal>Component</tt> is contained in.
+<tt CLASS=literal>setBackground()</tt>, <tt CLASS=literal>setForeground()</tt>, and
+<tt CLASS=literal>setFont()</tt> set the specified display attributes of a
+component.  <tt CLASS=literal>hide()</tt>, <tt CLASS=literal>show()</tt>,
+<tt CLASS=literal>enable()</tt>, and <tt CLASS=literal>disable()</tt> perform the
+specified actions for a component.  <tt CLASS=literal>createImage()</tt>
+creates an <tt CLASS=literal>Image</tt> object from a specified
+<tt CLASS=literal>ImageProducer</tt>, or creates an offscreen image that
+can be draw into and used for double-buffering during
+animation.  <tt CLASS=literal>Component</tt> also has quite a few deprecated
+methods as a result of the Java 1.1 event model and the
+introduction of the JavaBeans method naming
+conventions. The class defines quite a few methods for
+handling many types of events using the 1.0 model and the
+1.1 model in both its high-level and low-level forms.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class <tt CLASS=literal>Component</tt> extends Object implements ImageObserver, MenuContainer, Serializable {
+    // <tt CLASS=literal>Protected Constructor</tt>
+        <b>1.1</b>  protected <tt CLASS=literal>Component</tt>();
+    // <tt CLASS=literal>Constants</tt>
+        <b>1.1</b>  public static final float <tt CLASS=literal>BOTTOM_ALIGNMENT</tt>;
+        <b>1.1</b>  public static final float <tt CLASS=literal>CENTER_ALIGNMENT</tt>;
+        <b>1.1</b>  public static final float <tt CLASS=literal>LEFT_ALIGNMENT</tt>;
+        <b>1.1</b>  public static final float <tt CLASS=literal>RIGHT_ALIGNMENT</tt>;
+        <b>1.1</b>  public static final float <tt CLASS=literal>TOP_ALIGNMENT</tt>;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+         #  public boolean <tt CLASS=literal>action</tt>(Event <tt CLASS=literal>evt</tt>, Object <tt CLASS=literal>what</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>add</tt>(PopupMenu <tt CLASS=literal>popup</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>addComponentListener</tt>(ComponentListener <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>addFocusListener</tt>(FocusListener <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>addKeyListener</tt>(KeyListener <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>addMouseListener</tt>(MouseListener <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>addMouseMotionListener</tt>(MouseMotionListener <tt CLASS=literal>l</tt>);
+             public void <tt CLASS=literal>addNotify</tt>();
+         #  public Rectangle <tt CLASS=literal>bounds</tt>();
+             public int <tt CLASS=literal>checkImage</tt>(Image <tt CLASS=literal>image</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+             public int <tt CLASS=literal>checkImage</tt>(Image <tt CLASS=literal>image</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+        <b>1.1</b>  public boolean <tt CLASS=literal>contains</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+        <b>1.1</b>  public boolean <tt CLASS=literal>contains</tt>(Point <tt CLASS=literal>p</tt>);
+             public Image <tt CLASS=literal>createImage</tt>(ImageProducer <tt CLASS=literal>producer</tt>);
+             public Image <tt CLASS=literal>createImage</tt>(int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+         #  public void <tt CLASS=literal>deliverEvent</tt>(Event <tt CLASS=literal>e</tt>);
+         #  public void <tt CLASS=literal>disable</tt>();
+        <b>1.1</b>  public final void <tt CLASS=literal>dispatchEvent</tt>(AWTEvent <tt CLASS=literal>e</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>doLayout</tt>();
+         #  public void <tt CLASS=literal>enable</tt>();
+         #  public void <tt CLASS=literal>enable</tt>(boolean <tt CLASS=literal>b</tt>);
+        <b>1.1</b>  public float <tt CLASS=literal>getAlignmentX</tt>();
+        <b>1.1</b>  public float <tt CLASS=literal>getAlignmentY</tt>();
+             public Color <tt CLASS=literal>getBackground</tt>();
+        <b>1.1</b>  public Rectangle <tt CLASS=literal>getBounds</tt>();
+             public ColorModel <tt CLASS=literal>getColorModel</tt>();
+        <b>1.1</b>  public Component <tt CLASS=literal>getComponentAt</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+        <b>1.1</b>  public Component <tt CLASS=literal>getComponentAt</tt>(Point <tt CLASS=literal>p</tt>);
+        <b>1.1</b>  public Cursor <tt CLASS=literal>getCursor</tt>();
+             public Font <tt CLASS=literal>getFont</tt>();  //<tt CLASS=literal> From MenuContainer</tt>
+             public FontMetrics <tt CLASS=literal>getFontMetrics</tt>(Font <tt CLASS=literal>font</tt>);
+             public Color <tt CLASS=literal>getForeground</tt>();
+             public Graphics <tt CLASS=literal>getGraphics</tt>();
+        <b>1.1</b>  public Locale <tt CLASS=literal>getLocale</tt>();
+        <b>1.1</b>  public Point <tt CLASS=literal>getLocation</tt>();
+        <b>1.1</b>  public Point <tt CLASS=literal>getLocationOnScreen</tt>();
+        <b>1.1</b>  public Dimension <tt CLASS=literal>getMaximumSize</tt>();
+        <b>1.1</b>  public Dimension <tt CLASS=literal>getMinimumSize</tt>();
+        <b>1.1</b>  public String <tt CLASS=literal>getName</tt>();
+             public Container <tt CLASS=literal>getParent</tt>();
+         #  public ComponentPeer <tt CLASS=literal>getPeer</tt>();
+        <b>1.1</b>  public Dimension <tt CLASS=literal>getPreferredSize</tt>();
+        <b>1.1</b>  public Dimension <tt CLASS=literal>getSize</tt>();
+             public Toolkit <tt CLASS=literal>getToolkit</tt>();
+        <b>1.1</b>  public final Object <tt CLASS=literal>getTreeLock</tt>();
+         #  public boolean <tt CLASS=literal>gotFocus</tt>(Event <tt CLASS=literal>evt</tt>, Object <tt CLASS=literal>what</tt>);
+         #  public boolean <tt CLASS=literal>handleEvent</tt>(Event <tt CLASS=literal>evt</tt>);
+         #  public void <tt CLASS=literal>hide</tt>();
+            public boolean <tt CLASS=literal>imageUpdate</tt>(Image <tt CLASS=literal>img</tt>, int <tt CLASS=literal>flags</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>w</tt>, int <tt CLASS=literal>h</tt>);  //<tt CLASS=literal> From ImageObserver</tt>
+         #  public boolean <tt CLASS=literal>inside</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+            public void <tt CLASS=literal>invalidate</tt>();
+            public boolean <tt CLASS=literal>isEnabled</tt>();
+        <b>1.1</b>  public boolean <tt CLASS=literal>isFocusTraversable</tt>();
+            public boolean <tt CLASS=literal>isShowing</tt>();
+            public boolean <tt CLASS=literal>isValid</tt>();
+            public boolean <tt CLASS=literal>isVisible</tt>();
+         #  public boolean <tt CLASS=literal>keyDown</tt>(Event <tt CLASS=literal>evt</tt>, int <tt CLASS=literal>key</tt>);
+         #  public boolean <tt CLASS=literal>keyUp</tt>(Event <tt CLASS=literal>evt</tt>, int <tt CLASS=literal>key</tt>);
+         #  public void <tt CLASS=literal>layout</tt>();
+            public void <tt CLASS=literal>list</tt>();
+            public void <tt CLASS=literal>list</tt>(PrintStream <tt CLASS=literal>out</tt>);
+            public void <tt CLASS=literal>list</tt>(PrintStream <tt CLASS=literal>out</tt>, int <tt CLASS=literal>indent</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>list</tt>(PrintWriter <tt CLASS=literal>out</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>list</tt>(PrintWriter <tt CLASS=literal>out</tt>, int <tt CLASS=literal>indent</tt>);
+         #  public Component <tt CLASS=literal>locate</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+         #  public Point <tt CLASS=literal>location</tt>();
+         #  public boolean <tt CLASS=literal>lostFocus</tt>(Event <tt CLASS=literal>evt</tt>, Object <tt CLASS=literal>what</tt>);
+         #  public Dimension <tt CLASS=literal>minimumSize</tt>();
+         #  public boolean <tt CLASS=literal>mouseDown</tt>(Event <tt CLASS=literal>evt</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+         #  public boolean <tt CLASS=literal>mouseDrag</tt>(Event <tt CLASS=literal>evt</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+         #  public boolean <tt CLASS=literal>mouseEnter</tt>(Event <tt CLASS=literal>evt</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+         #  public boolean <tt CLASS=literal>mouseExit</tt>(Event <tt CLASS=literal>evt</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+         #  public boolean <tt CLASS=literal>mouseMove</tt>(Event <tt CLASS=literal>evt</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+         #  public boolean <tt CLASS=literal>mouseUp</tt>(Event <tt CLASS=literal>evt</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+         #  public void <tt CLASS=literal>move</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+         #  public void <tt CLASS=literal>nextFocus</tt>();
+            public void <tt CLASS=literal>paint</tt>(Graphics <tt CLASS=literal>g</tt>);
+            public void <tt CLASS=literal>paintAll</tt>(Graphics <tt CLASS=literal>g</tt>);
+         #  public boolean <tt CLASS=literal>postEvent</tt>(Event <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From MenuContainer</tt>
+         #  public Dimension <tt CLASS=literal>preferredSize</tt>();
+            public boolean <tt CLASS=literal>prepareImage</tt>(Image <tt CLASS=literal>image</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+            public boolean <tt CLASS=literal>prepareImage</tt>(Image <tt CLASS=literal>image</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>, ImageObserver <tt CLASS=literal>observer</tt>);
+            public void <tt CLASS=literal>print</tt>(Graphics <tt CLASS=literal>g</tt>);
+            public void <tt CLASS=literal>printAll</tt>(Graphics <tt CLASS=literal>g</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>remove</tt>(MenuComponent <tt CLASS=literal>popup</tt>);  //<tt CLASS=literal> From MenuContainer</tt>
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>removeComponentListener</tt>(ComponentListener <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>removeFocusListener</tt>(FocusListener <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>removeKeyListener</tt>(KeyListener <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>removeMouseListener</tt>(MouseListener <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>removeMouseMotionListener</tt>(MouseMotionListener <tt CLASS=literal>l</tt>);
+            public void <tt CLASS=literal>removeNotify</tt>();
+            public void <tt CLASS=literal>repaint</tt>();
+            public void <tt CLASS=literal>repaint</tt>(long <tt CLASS=literal>tm</tt>);
+            public void <tt CLASS=literal>repaint</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public void <tt CLASS=literal>repaint</tt>(long <tt CLASS=literal>tm</tt>, int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+            public void <tt CLASS=literal>requestFocus</tt>();
+         #  public void <tt CLASS=literal>reshape</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+         #  public void <tt CLASS=literal>resize</tt>(int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+         #  public void <tt CLASS=literal>resize</tt>(Dimension <tt CLASS=literal>d</tt>);
+            public void <tt CLASS=literal>setBackground</tt>(Color <tt CLASS=literal>c</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setBounds</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>, int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setBounds</tt>(Rectangle <tt CLASS=literal>r</tt>);
+        <b>1.1</b>  public synchronized void <tt CLASS=literal>setCursor</tt>(Cursor <tt CLASS=literal>cursor</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setEnabled</tt>(boolean <tt CLASS=literal>b</tt>);
+            public synchronized void <tt CLASS=literal>setFont</tt>(Font <tt CLASS=literal>f</tt>);
+            public void <tt CLASS=literal>setForeground</tt>(Color <tt CLASS=literal>c</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setLocale</tt>(Locale <tt CLASS=literal>l</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setLocation</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setLocation</tt>(Point <tt CLASS=literal>p</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setName</tt>(String <tt CLASS=literal>name</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setSize</tt>(int <tt CLASS=literal>width</tt>, int <tt CLASS=literal>height</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setSize</tt>(Dimension <tt CLASS=literal>d</tt>);
+        <b>1.1</b>  public void <tt CLASS=literal>setVisible</tt>(boolean <tt CLASS=literal>b</tt>);
+        #   public void <tt CLASS=literal>show</tt>();
+        #   public void <tt CLASS=literal>show</tt>(boolean <tt CLASS=literal>b</tt>);
+        #   public Dimension <tt CLASS=literal>size</tt>();
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+        <b>1.1</b>  public void <tt CLASS=literal>transferFocus</tt>();
+            public void <tt CLASS=literal>update</tt>(Graphics <tt CLASS=literal>g</tt>);
+            public void <tt CLASS=literal>validate</tt>();
+    // <tt CLASS=literal>Protected Instance Methods</tt>
+        <b>1.1</b>  protected final void <tt CLASS=literal>disableEvents</tt>(long <tt CLASS=literal>eventsToDisable</tt>);
+        <b>1.1</b>  protected final void <tt CLASS=literal>enableEvents</tt>(long <tt CLASS=literal>eventsToEnable</tt>);
+            protected String <tt CLASS=literal>paramString</tt>();
+        <b>1.1</b>  protected void <tt CLASS=literal>processComponentEvent</tt>(ComponentEvent <tt CLASS=literal>e</tt>);
+        <b>1.1</b>  protected void <tt CLASS=literal>processEvent</tt>(AWTEvent <tt CLASS=literal>e</tt>);
+        <b>1.1</b>  protected void <tt CLASS=literal>processFocusEvent</tt>(FocusEvent <tt CLASS=literal>e</tt>);
+        <b>1.1</b>  protected void <tt CLASS=literal>processKeyEvent</tt>(KeyEvent <tt CLASS=literal>e</tt>);
+        <b>1.1</b>  protected void <tt CLASS=literal>processMouseEvent</tt>(MouseEvent <tt CLASS=literal>e</tt>);
+        <b>1.1</b>  protected void <tt CLASS=literal>processMouseMotionEvent</tt>(MouseEvent <tt CLASS=literal>e</tt>);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-15.2">Extended By:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Button, 
+Canvas, 
+Checkbox, 
+Choice, 
+Container, 
+Label, 
+List, 
+Scrollbar, 
+TextComponent</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-15.3">Passed To:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>BorderLayout.addLayoutComponent(), 
+BorderLayout.removeLayoutComponent(), 
+CardLayout.addLayoutComponent(), 
+CardLayout.removeLayoutComponent(), 
+ComponentEvent(), 
+Container.add(), 
+Container.addImpl(), 
+Container.isAncestorOf(), 
+Container.remove(), 
+ContainerEvent(), 
+FlowLayout.addLayoutComponent(), 
+FlowLayout.removeLayoutComponent(), 
+FocusEvent(), 
+GridBagLayout.addLayoutComponent(), 
+GridBagLayout.getConstraints(), 
+GridBagLayout.lookupConstraints(), 
+GridBagLayout.removeLayoutComponent(), 
+GridBagLayout.setConstraints(), 
+GridLayout.addLayoutComponent(), 
+GridLayout.removeLayoutComponent(), 
+KeyEvent(), 
+LayoutManager.addLayoutComponent(), 
+LayoutManager.removeLayoutComponent(), 
+LayoutManager2.addLayoutComponent(), 
+MediaTracker(), 
+MouseEvent(), 
+PaintEvent(), 
+PopupMenu.show(), 
+ScrollPane.addImpl(), 
+Toolkit.createComponent(), 
+Toolkit.getNativeContainer()</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-15.4">Returned By:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Component.getComponentAt(), 
+Component.locate(), 
+ComponentEvent.getComponent(), 
+Container.add(), 
+Container.getComponent(), 
+Container.getComponentAt(), 
+Container.getComponents(), 
+Container.locate(), 
+ContainerEvent.getChild(), 
+PropertyEditor.getCustomEditor(), 
+PropertyEditorSupport.getCustomEditor(), 
+Window.getFocusOwner()</tt>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_14.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_16.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.awt.Color (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.awt.Container (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

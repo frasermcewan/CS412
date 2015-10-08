@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.6 The Security Manager</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:55:56 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Basic Utility Classes</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-6">7.6 The Security Manager</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.SEC1"></A> 
+As I described in <A HREF="ch01_01.htm">Chapter 1, <i>Yet Another Language?</i></A>,
+a Java application's access to system resources, such as the
+display, the filesystem, threads, external processes, and the network,
+can be controlled at a single point with a <I CLASS=emphasis>security
+manager</I>. The class that implements this functionality in
+the Java API is the
+<tt CLASS=literal>java.lang.SecurityManager</tt> class.
+
+<P CLASS=para>
+An instance of the <tt CLASS=literal>SecurityManager</tt> class can
+be installed once, and only once, in the life of the Java run-time
+environment. Thereafter, every access to a fundamental system
+resource is filtered through specific methods of the
+<tt CLASS=literal>SecurityManager</tt> object by the core Java
+packages. By installing a specialized
+<tt CLASS=literal>SecurityManager</tt>, we can implement arbitrarily
+complex (or simple) security policies for allowing access to
+individual resources.
+
+<P CLASS=para>
+When the Java run-time system starts executing, it's in a
+wide-open state until a <tt CLASS=literal>SecurityManager</tt> is
+installed. The "null" security manager grants all
+requests, so the Java virtual environment can perform any activity
+with the same level of access as other programs running under the
+user's authority. If the application that is running needs to
+ensure a secure environment, it can install a
+<tt CLASS=literal>SecurityManager</tt> with the
+<tt CLASS=literal>static System.setSecurityManager()</tt>
+method. For example, a Java-enabled Web browser like Netscape
+Navigator installs a <tt CLASS=literal>SecurityManager</tt> before it runs
+any Java applets.
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.SecurityManager</tt> must be subclassed
+to be used. This class does not actually contain any
+<tt CLASS=literal>abstract</tt> methods; it's <tt CLASS=literal>abstract</tt>
+as an indication that its default implementation is not very
+useful. By default, each security method in
+<tt CLASS=literal>SecurityManager</tt> is implemented to provide the
+strictest level of security. In other words, the default
+<tt CLASS=literal>SecurityManager</tt> simply rejects all requests.
+
+<P CLASS=para>
+The following example, <tt CLASS=literal>MyApp</tt>, installs a trivial 
+subclass of <tt CLASS=literal>SecurityManager</tt> as one of its first 
+activities: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class FascistSecurityManager extends SecurityManager { } 
+ 
+public class MyApp { 
+    public static void main( Strings [] args ) { 
+        System.setSecurityManager( new FascistSecurityManager() ); 
+        // No access to files, network, windows, etc. 
+        ... 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above scenario, <tt CLASS=literal>MyApp</tt> does little aside from
+reading from <tt CLASS=literal>System.in</tt> and writing to
+<tt CLASS=literal>System.out</tt>. Any attempts to read or write files,
+access the network, or even open an window, results in a
+<tt CLASS=literal>SecurityException</tt> being thrown.
+
+<P CLASS=para>
+After this draconian <tt CLASS=literal>SecurityManager</tt> is
+installed, it's impossible to change the
+<tt CLASS=literal>SecurityManager</tt> in any way. The security of this
+feature is not dependent on the <tt CLASS=literal>SecurityManager</tt>;
+you can't replace or modify the <tt CLASS=literal>SecurityManager</tt>
+under any circumstances. The upshot of this is that you have to
+install one that handles all your needs up front.
+
+<P CLASS=para>
+To do something more useful, we can override
+the methods that are consulted for access to various kinds of
+resources. <A HREF="ch07_05.htm#EXJ-CH-7-TAB-8">Table 7.7</A> lists some of the more
+important access methods. You should not normally have to call these
+methods yourself, although you could. They are called by the core Java
+classes before granting particular types of access.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-9">Table 7.8: SecurityManager Methods</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Can I...?</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkAccess(Thread g)</tt></TD>
+<TD ALIGN="left">Access this thread?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkExit(int status)</tt></TD>
+<TD ALIGN="left">Execute a <tt CLASS=literal>System.exit()</tt>?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkExec(String cmd)</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>exec()</tt> this process?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkRead(String file)</tt></TD>
+<TD ALIGN="left">Read a file?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkWrite(String file)</tt></TD>
+<TD ALIGN="left">Write a file?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkDelete(String file)</tt></TD>
+<TD ALIGN="left">Delete a file?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkConnect(String host, int port)</tt></TD>
+<TD ALIGN="left">Connect a socket to a host?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkListen(int port)</tt></TD>
+<TD ALIGN="left">Create a server socket?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkAccept(String host, int port)</tt></TD>
+<TD ALIGN="left">Accept this connection?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkPropertyAccess(String key)</tt></TD>
+<TD ALIGN="left">Access this system property?</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>checkTopLevelWindow(Object window)</tt></TD>
+<TD ALIGN="left">Create this new top-level window?</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+All these methods, with the exception of
+<tt CLASS=literal>checkTopLevelWindow()</tt>, simply return to grant
+access. If access is not granted, they throw a
+<tt CLASS=literal>SecurityException</tt>.
+<tt CLASS=literal>checkTopLevelWindow()</tt> returns a
+<tt CLASS=literal>boolean</tt> value. A value of <tt CLASS=literal>true</tt>
+indicates the access is granted; a value of <tt CLASS=literal>false</tt>
+indicates the access is granted with the restriction that the new
+window should provide a warning border that serves to identify it as
+an untrusted window.
+
+<P CLASS=para>
+Let's implement a silly
+<tt CLASS=literal>SecurityManager</tt> that allows only files beginning
+with the name <i CLASS=filename>foo</i> to be read:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class  FooFileSecurityManager extends SecurityManager { 
+ 
+    public void checkRead( String s ) { 
+        if ( !s.startsWith("foo") ) 
+            throw new SecurityException("Access to non-foo file: " + 
+                s + " not allowed." ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Once the <tt CLASS=literal>FooFileSecurityManager</tt> is installed, any
+attempt to read a filename other than <i CLASS=filename>foo*</i> from any
+class will fail and cause a <tt CLASS=literal>SecurityException</tt> to be
+thrown. All other security methods are inherited from
+<tt CLASS=literal>SecurityManager</tt>, so they are left at their default
+restrictiveness.
+
+<P CLASS=para>
+All restrictions placed on applets by an applet-viewer
+application are enforced through a
+<tt CLASS=literal>SecurityManager</tt>, which allows untrusted code loaded from
+over the network to be executed safely. The restrictions placed on
+applets are currently fairly harsh. As time passes and security
+considerations related to applets are better understood and accepted,
+the applet API will hopefully become more powerful
+and allow forms of persistence and access to designated public
+information.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Properties</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Internationalization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

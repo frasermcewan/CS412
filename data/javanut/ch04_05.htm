@@ -1,0 +1,378 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.5 Other AWT Improvements</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:51:07 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>What's New in Java 1.1</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-5">4.5 Other AWT Improvements</A></h2>
+
+<P CLASS=para>
+In addition to the major change in the AWT event model,
+there have been quite a few other improvements to the AWT.
+These improvements are summarized in the sections below.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-5.1">Printing</A></h3>
+
+<P CLASS=para>
+Printing in Java 1.1 is implemented through the new
+<tt CLASS=literal>PrintJob</tt> class and <tt CLASS=literal>PrintGraphics</tt> interface.
+The <tt CLASS=literal>PrintJob</tt> class represents a print request.
+When a <tt CLASS=literal>PrintJob</tt> object is created, the user is
+prompted with a platform-dependent print dialog, which
+allows her to specify options such as which printer to use.
+
+<P CLASS=para>
+The <tt CLASS=literal>getGraphics()</tt> method of a <tt CLASS=literal>PrintJob</tt>
+object returns a <tt CLASS=literal>Graphics</tt> object that can be used for
+printing.  This object is an instance of a subclass of
+<tt CLASS=literal>Graphics</tt> that knows how to print in a
+platform-dependent way.  The object also implements the
+<tt CLASS=literal>PrintGraphics</tt> interface.  To print a component, you
+simply pass this <tt CLASS=literal>Graphics</tt> object to the component's
+<tt CLASS=literal>print()</tt> method.  If the component does not define
+this method, the default implementation simply
+invokes the <tt CLASS=literal>paint()</tt> method, which usually does the
+right thing.  When you want to print a component and all of
+its subcomponents, you can simply pass the <tt CLASS=literal>Graphics</tt> object
+to the <tt CLASS=literal>printAll()</tt> method of the component.
+
+<P CLASS=para>
+Printing multiple pages is more complex, of course.  The
+application is responsible for pagination of the output, and
+in order to draw the output on the page the application may
+also need to query the <tt CLASS=literal>PrintJob</tt> object to determine
+the page size (in pixels) and page resolution (in pixels per
+inch).
+
+<P CLASS=para>
+For security reasons, applets are not allowed to initiate
+print jobs; if they were, you could expect to see applets on
+the Net that automatically printed hardcopy advertisements to
+your printer!  Note, however, that this does not mean that
+applets cannot print
+themselves when the browser or applet viewer initiates the
+print request object and invokes the <tt CLASS=literal>printAll()</tt> method
+of the applet.
+
+<P CLASS=para>
+<A HREF="ch08_01.htm">Chapter 8, <i>New AWT Features</i></A> contains an example that uses
+the printing capabilities of Java 1.1.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-5.2">Cut-and-Paste</A></h3>
+
+<P CLASS=para>
+Data transfer via the cut-and-paste metaphor is supported in
+Java 1.1 by the classes and interfaces in the
+<tt CLASS=literal>java.awt.datatransfer</tt> package.  One half of this
+package provides generic data-transfer functionality, and
+the other half provides the classes and interfaces needed
+for clipboard-based cut-and-paste.  In future versions of
+the JDK, we can expect to see support for the drag-and-drop
+data transfer metaphor added to this package.
+
+<P CLASS=para>
+For the purposes of data transfer, the <tt CLASS=literal>DataFlavor</tt>
+class represents the notion of a data type or data format.
+A <tt CLASS=literal>DataFlavor</tt> consists of a human-readable name for
+the flavor and one of two possible machine-readable format definitions.  The
+first of the machine-readable descriptions is a <tt CLASS=literal>String</tt>
+that specifies a MIME type for the transferred data. The second
+is a <tt CLASS=literal>Class</tt> object that represents a
+Java class.  When a <tt CLASS=literal>DataFlavor</tt> is specified with a
+<tt CLASS=literal>Class</tt> object, it is an instance of this class that
+is passed when data transfer actually occurs.
+
+<P CLASS=para>
+Any value that can be transferred through the Java 1.1 data
+transfer mechanism must be represented by a class that
+implements the <tt CLASS=literal>Transferable</tt> interface.  This
+interface defines methods to query the data flavors that the
+class supports, and it defines a method that the data transfer
+mechanism calls to convert the transferable value into the
+appropriate form for a given <tt CLASS=literal>DataFlavor</tt>.
+
+<P CLASS=para>
+While the <tt CLASS=literal>DataFlavor</tt> class and the
+<tt CLASS=literal>Transferable</tt> interface define the fundamental data
+transfer mechanism, they, by themselves, are not enough to
+initiate or perform data transfer.  For this purpose,
+<tt CLASS=literal>java.awt.datatransfer</tt> also defines the
+<tt CLASS=literal>Clipboard</tt> class and the <tt CLASS=literal>ClipboardOwner</tt>
+interface.  Together, they support a cut-and-paste metaphor
+for data transfer.  Because strings are often transferred
+between applications, <tt CLASS=literal>java.awt.datatransfer</tt> provides
+the <tt CLASS=literal>StringSelection</tt> class.  This class implements
+both the <tt CLASS=literal>Transferable</tt> and the <tt CLASS=literal>ClipboardOwner</tt>
+interfaces and makes it very easy to transfer textual data
+through cut-and-paste.
+
+<P CLASS=para>
+Inter-application data
+transfer is performed through the system clipboard.  It is
+also possible to perform intra-application transfers through
+a private clipboard that an application creates for itself.
+Note that untrusted applets are not allowed to access the
+system clipboard--there could be sensitive information
+contained on it that untrusted code should not have access
+to.  This means that applets cannot participate in
+inter-application cut-and-paste. <A HREF="ch08_01.htm">Chapter 8, <i>New AWT Features</i></A>
+provides an example that demonstrates intra-application
+cut-and-paste data transfer.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-5.3">Popup Menus and Menu Shortcuts</A></h3>
+
+<P CLASS=para>
+Java 1.1 adds support for popup menus to the
+AWT.  The <tt CLASS=literal>PopupMenu</tt> class is a subclass of
+<tt CLASS=literal>Menu</tt>; menu items are added to it just as they
+are added to regular pulldown menus.  A popup menu can be
+attached to an arbitrary AWT component, using the new
+<tt CLASS=literal>add()</tt> method of the <tt CLASS=literal>Component</tt> class.  And,
+finally, a popup menu can be "popped up" by calling its
+<tt CLASS=literal>show()</tt> method. (The menu pops itself down
+automatically.)
+
+<P CLASS=para>
+An application typically displays a popup menu when the
+user clicks a certain mouse button over the component that
+the menu is attached to.  However, different platforms
+traditionally use different mouse buttons to display popup
+menus.  You can use the new <tt CLASS=literal>isPopupTrigger()</tt> method
+of <tt CLASS=literal>MouseEvent</tt> to determine whether a given mouse click has the
+appropriate modifiers set to trigger the popup menu for the
+current platform.
+
+<P CLASS=para>
+Java 1.1 also adds support for menu shortcut keys.  The new
+<tt CLASS=literal>MenuShortcut</tt> class represents a menu shortcut key.
+An instance of this class may optionally be specified
+whenever you create a <tt CLASS=literal>MenuItem</tt> object.  Again, different
+platforms use different modifier keys to invoke menu
+shortcuts, so when you create a <tt CLASS=literal>MenuShortcut</tt> object,
+you specify only the key in question (plus, optionally, the
+<b>Shift</b> key).  The system translates this into a
+platform-dependent shortcut using <b>Ctrl</b>, <b>Alt</b>, or
+some other modifier key.
+
+<P CLASS=para>
+The example in <A HREF="ch08_01.htm">Chapter 8, <i>New AWT Features</i></A> demonstrates both a popup menu and menu shortcuts.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-5.4">Keyboard Focus Traversal</A></h3>
+
+<P CLASS=para>
+The ability to operate a GUI without using the mouse is an
+important feature of any windowing toolkit.  The addition of
+menu shortcuts in Java 1.1 is an important step in this
+direction.  Java 1.1 also adds rudimentary facilities for
+keyboard focus traversal (i.e., moving keyboard focus among
+the individual components in a window) using the <b>Tab</b>
+and <b>Shift-Tab</b> keys.
+
+<P CLASS=para>
+Under the new focus traversal scheme, components within a
+container are traversed in the order in which they were
+added to the container.  (Note, however, that it is possible
+to override this order by specifying an explicit position
+within the container's component list for a new component as
+it is added to the container with the <tt CLASS=literal>add()</tt> method.)
+Beyond adding components to their container in the order
+desired for traversal, nothing else is required of the
+programmer in order to make keyboard focus traversal work.
+
+<P CLASS=para>
+If you are creating a custom component that can accept
+keyboard focus, you should override the
+<tt CLASS=literal>isFocusTraversable()</tt> method to return <tt CLASS=literal>true</tt>.
+The component should call the <tt CLASS=literal>requestFocus()</tt> method
+it inherits from <tt CLASS=literal>Component</tt> when the user clicks on
+it or otherwise activates it.  Finally, when a component
+receives focus, (i.e., when its <tt CLASS=literal>processFocusEvent()</tt>
+method is invoked), it should provide some sort of visual
+indication, such as a highlighted border, that it has the
+focus.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-5.5">Miscellaneous Improvements</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>SystemColor</tt> class
+represents a color used by the desktop system.  On some
+platforms, these colors may be dynamically updated while the
+system is running.  The <tt CLASS=literal>SystemColor</tt> class also
+implements quite a few constants that represent system
+colors for various GUI components.  Thus, if you want your
+GUIs to match the desktop color scheme, you might create
+them using colors such as <tt CLASS=literal>SystemColor.menu</tt> (the
+background color for menus) and <tt CLASS=literal>SystemColor.menuText</tt>
+(foreground color for menus), for example.
+
+<P CLASS=para>
+The treatment of fonts has been changed and improved
+somewhat in Java 1.1.  The use of the font names
+"TimesRoman," "Helvetica," and "Courier" is now discouraged.
+Instead, you should use "serif," "sansserif," and
+"monospaced"--these names convey the essential style of the
+font face, without specifying the exact font to be used.
+The font names "Dialog" and "DialogInput" are still
+supported in Java 1.1.  An important reason for switching to
+generic font names is that Java can now display any Unicode
+character for which there is an appropriate font installed
+on the host system.  The names "serif" and "sansserif" have
+meaning even when applied to non-Latin character sets, such
+as Japanese Kanji characters; the names "timesroman" and
+"helvetica" clearly do not.  Another result of this fuller
+Unicode support is that the use of the "ZapfDingbats" font
+is also discouraged.  Instead, regardless of what font you
+are using, you can simply encode these graphical symbols
+using Unicode characters between <tt CLASS=literal>\u2700</tt> and
+<tt CLASS=literal>\u27ff</tt>.  (See <A HREF="ch11_01.htm">Chapter 11, <i>Internationalization</i></A>
+for an example.) This improved support for Unicode makes it
+much easier to write internationalized programs in Java.
+
+<P CLASS=para>
+In Java 1.0, mouse cursors could only be specified for a
+<tt CLASS=literal>Frame</tt>.  In Java 1.1, every component can have a its
+own cursor, represented by the new <tt CLASS=literal>Cursor</tt> object.
+There are new methods of <tt CLASS=literal>Component</tt> for setting and
+querying the cursor.  This change does not add any new
+predefined cursor images, nor does it add the ability to
+create custom cursors; it merely allows you to specify a
+cursor for any arbitrary component, and to do so in a more
+logical fashion.
+
+<P CLASS=para>
+The <tt CLASS=literal>ScrollPane</tt> class is new in Java 1.1.  It is a
+<tt CLASS=literal>Container</tt> that makes it very easy to scroll a large
+component or GUI within a smaller visible area.  Doing this
+in Java 1.0 required a custom container, and suffered from
+some serious performance problems. <A HREF="ch08_01.htm">Chapter 8, <i>New AWT Features</i></A> shows the use
+of a <tt CLASS=literal>ScrollPane</tt> object.
+
+<P CLASS=para>
+Another new feature is the ability to
+create "lightweight components."  These are components and
+containers that do not have a native window of their own.
+In Java 1.0, custom components and containers had to be
+subclassed from <tt CLASS=literal>Canvas</tt> or <tt CLASS=literal>Panel</tt>.  In Java
+1.1, however, you can subclass <tt CLASS=literal>Component</tt> and
+<tt CLASS=literal>Container</tt> directly.  Doing so creates a simpler component or
+container, without the overhead of a native window.  It also
+allows you to create partially transparent components that
+appear non-rectangular.
+
+<P CLASS=para>
+Java 1.1 also includes several miscellaneous changes to
+clipping and image manipulation:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>Graphics</tt> class defines a method to set an
+arbitrary clipping rectangle, even to one that is larger
+than the current clipping region.  There is also a new
+method to query the current clipping region.
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>Graphics</tt> also defines two new <tt CLASS=literal>drawImage()</tt>
+methods that are more flexible than the existing
+<tt CLASS=literal>drawImage()</tt> methods.  These new methods allow
+arbitrary image cropping, scaling, and flipping.
+
+<P>
+<li CLASS=listitem>There are two new classes, <tt CLASS=literal>ReplicateScaleFilter</tt> and
+<tt CLASS=literal>AreaAveragingScaleFilter</tt>, that can be used to scale
+an image as it is loaded, and a new convenience method, 
+<tt CLASS=literal>Image.getScaledInstance()</tt>, to obtain a new
+<tt CLASS=literal>Image</tt> object that contains a scaled version of some
+other <tt CLASS=literal>Image</tt>.
+
+<P>
+<li CLASS=listitem>New methods have been added to the <tt CLASS=literal>MemoryImageSource</tt>
+class that allow images generated from memory to be
+dynamically and efficiently updated, allowing a kind of
+image animation.
+
+<P>
+<li CLASS=listitem>New methods have been added to the <tt CLASS=literal>PixelGrabber</tt>
+class to make it more efficient and flexible to use.
+
+<P>
+</UL>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Deprecated Features</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Internationalization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

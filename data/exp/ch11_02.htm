@@ -1,0 +1,478 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] 11.2 Text Components</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:01:02 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>Using and Creating GUI Components</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-11-SECT-4">11.2 Text Components</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.TEXT1"></A><A NAME="CH10.TEXT3"></A>
+AWT gives us two basic
+text components: <tt CLASS=literal>TextArea</tt> is a multiline text
+editor with vertical and horizontal
+scrollbars; <tt CLASS=literal>TextField</tt> is a simple, single-line text
+editor. 
+Both <tt CLASS=literal>TextField</tt> and
+<tt CLASS=literal>TextArea</tt> derive from the
+<tt CLASS=literal>TextComponent</tt> 
+class, which provides 
+the functionality they have in common.  This includes methods for 
+setting and retrieving the displayed text, specifying whether the text 
+is "editable" or read-only, manipulating the caret (cursor) position in
+the display, and manipulating the "selection text."
+
+<P CLASS=para>
+Both <tt CLASS=literal>TextArea</tt>s and  
+<tt CLASS=literal>TextField</tt>s send
+<tt CLASS=literal>TextEvent</tt>s to listeners when their text is 
+modified. To receive these events, you must implement the
+<tt CLASS=literal>java.awt.TextListener</tt> interface and
+register by calling the component's
+<tt CLASS=literal>addTextListener()</tt> method. 
+In addition, <tt CLASS=literal>TextField</tt> components generate
+an <tt CLASS=literal>ActionEvent</tt> whenever the user presses
+the RETURN key within the 
+field. To get these events, implement the 
+<tt CLASS=literal>ActionListener</tt> interface and call
+<tt CLASS=literal>addActionListener()</tt> to register.
+
+<P CLASS=para>
+Here are a couple of simple applets that show you how to work with
+text areas and fields. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch11-SECT2-AUTOID.1">A TextEntryBox</A></h3>
+
+<P CLASS=para>
+Our first example, <tt CLASS=literal>TextEntryBox</tt>, creates a
+<tt CLASS=literal>TextArea</tt> and ties it to a
+<tt CLASS=literal>TextField</tt>, as you can see in 
+<A HREF="ch11_02.htm#EXJ-CH-11-FIG-1">Figure 11.1</A>. 
+
+<P CLASS=para>
+When the user hits RETURN in the
+<tt CLASS=literal>TextField</tt>, we receive an
+<tt CLASS=literal>ActionEvent</tt> 
+and add the line to the <tt CLASS=literal>TextArea</tt>'s display. 
+
+<P CLASS=para>
+Try it out. You may have
+to click your mouse in the <tt CLASS=literal>TextField</tt> to give it
+focus before typing in it. If you fill up the display with lines, you
+can test drive the scrollbar.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-11-FIG-1">Figure 11.1: The TextEntryBox applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1101.gif" alt="[Graphic: Figure 11-1]" width=502 height=432 border=0>
+
+</DIV>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class TextEntryBox extends java.applet.Applet 
+implements ActionListener { 
+    TextArea area;
+    TextField field;
+    
+    public void init() {
+        setLayout( new BorderLayout() );
+        add( "Center", area = new TextArea() );
+        area.setFont( new Font("TimesRoman",Font.BOLD,18) );
+        area.setText("Howdy!\n");
+        add( "South", field = new TextField() );
+        field.addActionListener ( this );
+    }
+    public void actionPerformed(ActionEvent e) {
+        area.append( field.getText() + '\n' );
+        field.setText("");
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>TextEntryBox</tt> is exceedingly simple; we've done a
+few things to make it more interesting. First, we set the
+applet's layout manager to <tt CLASS=literal>BorderLayout</tt>. We
+use <tt CLASS=literal>BorderLayout</tt> to position the
+<tt CLASS=literal>TextArea</tt> above the
+<tt CLASS=literal>TextField</tt>; the text area goes in the
+"North" region of the layout, and the text field is in the "South" region. We
+give the text area a bigger font using
+<tt CLASS=literal>Component</tt>'s <tt CLASS=literal>setFont()</tt>
+method; fonts are discussed in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A>. Finally, we want to be
+notified whenever the user types RETURN in the text field, so we
+register our applet (<tt CLASS=literal>this</tt>) as a listener
+for action events by calling
+<tt CLASS=literal>field.addActionListener(this)</tt>. 
+
+<P CLASS=para>
+ Hitting RETURN in the
+<tt CLASS=literal>TextField</tt> generates an action event, and
+that's where the fun begins. We handle the event in the
+<tt CLASS=literal>actionPerformed()</tt> method of our container, the
+<tt CLASS=literal>TextEntryBox</tt> applet. 
+Then we use the <tt CLASS=literal>getText()</tt> and
+<tt CLASS=literal>setText()</tt> methods to manipulate the text the user
+has typed. These methods can be used for both
+<tt CLASS=literal>TextField</tt> and
+<tt CLASS=literal>TextArea</tt>, because 
+these components are derived from the <tt CLASS=literal>TextComponent</tt>
+class, and therefore have some common functionality.
+
+<P CLASS=para>
+
+Our event handler is called
+<tt CLASS=literal>actionPerformed()</tt>, as required by the 
+<tt CLASS=literal>ActionListener</tt> interface. First,
+<tt CLASS=literal>actionPerformed()</tt> calls 
+<tt CLASS=literal>field.getText()</tt> to read the text that the
+user typed into our 
+<tt CLASS=literal>TextField</tt>. It then adds this text to
+the <tt CLASS=literal>TextArea</tt> by calling
+<tt CLASS=literal>area.append()</tt>. Finally, we clear the text
+field by calling <tt CLASS=literal>field.setText("")</tt>,
+preparing it for more input. 
+
+<P CLASS=para>
+By default, <tt CLASS=literal>TextField</tt> and
+<tt CLASS=literal>TextArea</tt> are editable; you can type and edit in
+both text components. They can be changed to output-only areas with
+the <tt CLASS=literal>setEditable()</tt> method. Both text components also
+support <I CLASS=emphasis>selections</I>. A selection is a subset of
+text that is highlighted for copying and pasting in your windowing
+system. You select text by dragging the mouse over it; you can then
+copy and paste it into other text windows. You can get the selected
+text explicitly with <tt CLASS=literal>getSelectedText()</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch11-SECT2-AUTOID.2">TextWatcher Applet</A></h3>
+
+<P CLASS=para>
+Our next example is a <tt CLASS=literal>TextWatcher</tt> that
+consists of two linked text 
+areas. Anything the user types into either area is reflected in both.
+It demonstrates how to handle a <tt CLASS=literal>TextEvent</tt>,
+which is generated whenever 
+the text changes in a <tt CLASS=literal>TextComponent</tt>. It
+also demonstrates how to use 
+an adapter class, which is a more realistic way of setting up event
+listeners. Registering the applet as a listener is okay for simple
+programs, but the technique shown here will serve you better in more
+complex situations. 
+
+<P CLASS=para>
+ 
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-11-FIG-2">Figure 11.2: The TextWatcher applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1102.gif" alt="[Graphic: Figure 11-2]" width=503 height=182 border=0>
+
+</DIV>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class TextWatcher extends java.applet.Applet { 
+    TextArea area1, area2;
+    
+    public void init() {
+        setLayout( new GridLayout(2,1) );
+        add( area1 = new TextArea() );
+        add( area2 = new TextArea() );
+        area1.addTextListener ( new TextSyncAdapter( area2 ));
+        area2.addTextListener ( new TextSyncAdapter( area1 ));
+    }
+    class TextSyncAdapter implements TextListener {
+        TextArea targetArea;
+        TextSyncAdapter( TextArea targetArea ) {
+            this.targetArea = targetArea;
+        }
+        public void textValueChanged(TextEvent e) {
+            TextArea sourceArea = (TextArea)e.getSource();
+            if ( ! targetArea.getText().equals( sourceArea.getText() ) )
+                targetArea.setText( sourceArea.getText() );
+        }
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Setting up the display is simple. We use a
+<tt CLASS=literal>GridLayout</tt> and add two 
+text areas to the layout. Then we add our listeners for text events,
+which are generated whenever the text in a
+<tt CLASS=literal>TextComponent</tt> is changed. 
+There is one listener for each text
+area; both are <tt CLASS=literal>TextSyncAdapter</tt> objects.
+One listens to 
+events from <tt CLASS=literal>area1</tt> and modifies the text in
+<tt CLASS=literal>area2</tt>; the other listens 
+to events from <tt CLASS=literal>area2</tt> and modifies the text
+in <tt CLASS=literal>area1</tt>. 
+
+<P CLASS=para>
+All the real work is done by the
+<tt CLASS=literal>TextSyncAdapter</tt>. This is an inner 
+class; its definition is contained within
+<tt CLASS=literal>TextWatcher</tt> and can't be 
+referenced by classes outside of our
+<tt CLASS=literal>TextWatcher</tt>. The adapter 
+implements the <tt CLASS=literal>TextListener</tt> interface, and
+therefore includes a 
+<tt CLASS=literal>textValueChanged()</tt> method. 
+
+<P CLASS=para>
+<tt CLASS=literal>textValueChanged()</tt> is the heart of the
+listener. First, it extracts 
+the source area from the incoming event; this is the area that
+generated the event. The area whose text the listener is changing (the
+target area) was stored by the constructor. Then it tests whether or
+not the texts in both areas are the same. If they aren't, it calls the
+target area's <tt CLASS=literal>setText()</tt> method to set its
+text equal to the source area's. 
+
+<P CLASS=para>
+The one mysterious feature of this method is the test for equality.
+Why is it necessary? Why can't we just say "the text in one area
+changed, so set the text in the other?" A
+<tt CLASS=literal>TextEvent</tt> is generated 
+whenever a <tt CLASS=literal>TextComponent</tt> is modified for
+any reason; this includes 
+changes caused by software, not just changes that occur when a user
+types. So think about what happens when the user types into
+<tt CLASS=literal>area1</tt>. 
+Typing generates a <tt CLASS=literal>TextEvent</tt>, which causes
+the adapter to change the 
+text in <tt CLASS=literal>area2</tt>. This generates another
+<tt CLASS=literal>TextEvent</tt>, which if we didn't do 
+any testing, would cause us to change area1 again, which would
+generate another <tt CLASS=literal>TextEvent</tt>, ad infinitum.
+By checking whether or not 
+the texts in our two areas are equivalent, we prevent an infinite loop
+in which text events ping-pong back and forth between the two areas. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch11-SECT2-AUTOID.3">Managing Text Yourself</A></h3>
+
+<P CLASS=para>
+Text areas and text fields do the work of handling keystrokes for you,
+but they're certainly not your only options for dealing with keyboard
+input. Any <tt CLASS=literal>Component</tt> can register
+<tt CLASS=literal>KeyListener</tt>s to 
+recieve <tt CLASS=literal>KeyEvent</tt>s that occur when their
+component has focus <A HREF="ch10_01.htm">Chapter 10, <i>Understand the Abstract Windowing Toolkit</i></A>.  We will provide an 
+example here that shows how you might use these to make your own text
+gadgets. 
+
+<P CLASS=para>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-11-FIG-3">Figure 11.3: The KeyWatcher applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1103.gif" alt="[Graphic: Figure 11-3]" width=503 height=253 border=0>
+
+</DIV>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class KeyWatcher extends java.applet.Applet {
+    StringBuffer text = new StringBuffer();
+    public void init () {
+        setFont( new Font("TimesRoman",Font.BOLD,18) );
+        addKeyListener ( new KeyAdapter() {
+            public void keyPressed( KeyEvent e ) {
+                System.out.println(e);
+                type( e.getKeyCode(), e.getKeyChar() );
+            }
+        } );
+        requestFocus();
+    }
+    public void type(int code, char ch ) {
+        switch ( code ) {
+            case ( KeyEvent.VK_BACK_SPACE ): 
+                if (text.length() &gt; 0)
+                    text.setLength( text.length() - 1 );
+                break;
+            case ( KeyEvent.VK_ENTER ): 
+                    System.out.println( text );  // Process line
+                    text.setLength( 0 );
+                break;
+            default:
+                if ( (ch &gt;= ' ') &amp;&amp; (ch &lt;= '~') )
+                    text.append( ch );
+        }
+        repaint();
+    }
+    
+    public void paint(Graphics g) {
+        g.drawString(text.toString() + "_", 20, 20);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Fundamentally, all we are doing is collecting text in a
+<tt CLASS=literal>StringBuffer</tt> 
+and using the <tt CLASS=literal>drawString()</tt> method to
+display it on the screen. As 
+you'd expect, paint() is responsible for managing the display. 
+
+<P CLASS=para>
+In this applet, we're interested in receiving
+<tt CLASS=literal>KeyEvent</tt>s, which occur 
+whenever the user presses any key. To get these events, the applet
+calls its own <tt CLASS=literal>addKeyListener()</tt> method. The
+<tt CLASS=literal>KeyListener</tt> itself is an 
+anonymous class. It doesn't have a name and can't be used anywhere
+else. We create this class by getting a new
+<tt CLASS=literal>KeyAdapter()</tt>, and 
+overriding its <tt CLASS=literal>keyPressed()</tt> method.
+(Remember that <tt CLASS=literal>KeyAdapter</tt> contains 
+do-nothing implementations of the methods in the
+<tt CLASS=literal>KeyListener</tt> 
+interface.) All <tt CLASS=literal>keyPressed()</tt> does is call
+our private method type(), 
+with two arguments: the key code of the key that was pressed, and the
+logical character represented by the keystroke. 
+
+<P CLASS=para>
+<tt CLASS=literal>type()</tt> shows you how to deal with
+keystrokes. Each key event is 
+identified with a code, which identifies the actual key typed, and a
+character, which identifies what the user meant to type. This sounds
+confusing, but it isn't. Basically, there is a constant for each key
+on the keyboard: <tt CLASS=literal>VK_ENTER</tt> for the ENTER
+(return) key, <tt CLASS=literal>VK_A</tt> for the 
+letter A, and so on. However, the physical keystroke isn't usually the
+same as what the user types: the character capital A is made up of two
+keystrokes, while lower case a is made up of one.
+
+<P CLASS=para>
+Therefore, you can expect events for both physical keystrokes and
+typed characters. The <tt CLASS=literal>int</tt> constant
+<tt CLASS=literal>VK_UNDEFINED</tt> is used for the physical key
+code when the event doesn't correspond to a single keystroke. The
+<tt CLASS=literal>char</tt> constant
+<tt CLASS=literal>CHAR_UNDEFINED</tt> indicates that the event
+corresponds to a physical keystroke, but not a typed character. 
+
+<P CLASS=para>
+The <tt CLASS=literal>type()</tt> method is called with both the
+key constant and the 
+character as arguments. The way we use them is relatively simple and
+would need more work for an industrial strength program. Simply, if
+the physical key is <tt CLASS=literal>VK_BACK_SPACE</tt>, we
+delete the last character from 
+the <tt CLASS=literal>StringBuffer</tt> we're building. If it's
+<tt CLASS=literal>VK_ENTER</tt>, we clear the 
+<tt CLASS=literal>StringBuffer</tt>. If the physical key has any
+other value, we look at the 
+character the user typed. If this is a printable character, we add it
+to the <tt CLASS=literal>StringBuffer</tt>. Anything else we
+ignore. Once we've handled the 
+event, we call <tt CLASS=literal>repaint()</tt> to update the
+screen. Using key codes to 
+handle operations like  "Backspace" or "Enter" is easier and less
+bug-prone than working with odd "Control" characters.
+
+<P CLASS=para>
+A final note on our anonymous adapter class: in essence our adapter is
+letting us write a "callback," by calling
+<tt CLASS=literal>type()</tt> whenever
+<tt CLASS=literal>keyPressed()</tt> 
+is called. That's one important use for adapters: to map methods in
+the various listener interfaces into the methods that make sense for
+your class. Unlike C or C++, Java won't let us pass a method pointer
+as an argument, 
+but it will let us create an anonymous class that calls our method
+and passes an instance of that class. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Buttons and Labels</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Lists</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

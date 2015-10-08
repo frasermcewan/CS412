@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.3 The Java Compiler</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:49:32 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Tools of the Trade</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-3-SECT-3">3.3 The Java Compiler</A></h2>
+
+<P CLASS=para>
+<A NAME="CH03.JAVAC"></A>In this section, I'm going to say a few words about
+<i CLASS=command>javac</i>, the Java compiler that is supplied as part
+of Sun's JDK. (If you are happily working in
+another development environment, you may want to skip ahead to the
+next section.) The <i CLASS=command>javac</i> compiler is written
+entirely in Java, so it's available for any platform that supports the
+Java run-time system. The ability to support its own development
+environments is an important stage in a language's development.
+Java makes this bootstrapping automatic by supplying a ready-to-run
+compiler at the same cost as porting the interpreter.
+
+<P CLASS=para>
+<i CLASS=command>javac</i> turns Java source code into a
+compiled class that contains Java virtual machine byte-code. By
+convention, source files are named with a <i CLASS=filename>.java</i>
+extension; the resulting class files have a
+<i CLASS=filename>.class</i> extension. <i CLASS=command>javac</i>
+considers a file to be a single compilation unit. As you'll see
+in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>, classes in a given compilation unit
+share certain features like <tt CLASS=literal>package</tt> and
+<tt CLASS=literal>import</tt> statements.
+
+<P CLASS=para>
+<i CLASS=command>javac</i> allows you one <tt CLASS=literal>public</tt>
+class per file and insists the file have the same name as the
+class. If the filename and class name don't match,
+<i CLASS=command>javac</i> issues a compilation error. A single file
+can contain multiple classes, as long as only one of the classes is
+<tt CLASS=literal>public</tt>. You should avoid packing lots of classes
+into a single file. The compiler lets you include extra
+non-<tt CLASS=literal>public</tt> classes in a <i CLASS=filename>.java</i>
+file, so that you can implement a class that is tightly coupled to
+another class without a lot of hassle. But you should have more than
+one class in a file if the <tt CLASS=literal>public</tt> class in the file
+is the only one that ever uses additional classes.
+
+<P CLASS=para>
+Now for an example. The source code for the following class
+should be placed in a file called <i CLASS=filename>BigBird.java</i>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+package animals.birds 
+ 
+public class BigBird extends Bird { 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We can then compile it with: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% javac BigBird.java 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Unlike the Java interpreter, which takes a class name as its argument,
+<i CLASS=command>javac</i> requires an actual filename to process.
+The above command produces the class file
+<i CLASS=filename>BigBird.class</i> and stores it in the same directory
+as the source file. While it's useful to have the class file in the
+same directory as the source when you are working on a simple example,
+for most real applications you'll need to store the class file
+in an appropriate place in the class path.
+
+<P CLASS=para>
+You can use the <tt CLASS=literal>-d</tt> option to
+<i CLASS=command>javac</i> to specify an alternate directory for
+storing the class files it generates. The specified directory is used
+as the root of the class hierarchy, so <i CLASS=filename>.class</i>
+files are placed in this directory or in a subdirectory below it,
+depending on the package name of the class. For example, we can use
+the following command to put our <i CLASS=filename>BigBird.class</i>
+file in an appropriate location:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% javac -d /home/vicky/Java/classes BigBird.java 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When you use the <tt CLASS=literal>-d</tt> option,
+<i CLASS=command>javac</i> automatically creates any directories
+needed to store the class file in the appropriate place. In the above
+command, the <i CLASS=filename>BigBird.class</i> file is stored in
+<i CLASS=filename>/home/vicky/Java/classes/animals/birds</i>.
+
+<P CLASS=para>
+You can specify multiple <i CLASS=filename>.java</i> files in a
+single <i CLASS=command>javac</i> command; the compiler simply creates
+a class file for each source file. But you don't need to list
+source files for other classes your class references, as long as
+the other classes have already been compiled. During compilation, Java
+resolves other class references using the class path. If our class
+references other classes in <tt CLASS=literal>animals.birds</tt> or other
+packages, the appropriate paths should be listed in the class
+path at compile time, so that <i CLASS=command>javac</i> can find the
+appropriate class files. You either make sure that the
+<tt CLASS=literal>CLASSPATH</tt> environment variable is set or use the
+<tt CLASS=literal>-classpath</tt> option to <i CLASS=command>javac</i>.
+
+<P CLASS=para>
+The Java compiler is more intelligent than your average
+compiler and replaces some of the functionality of a
+<i CLASS=command>make</i> utility. For example,
+<i CLASS=command>javac</i> compares the modification times of the
+source and class files for all referenced classes and recompiles them
+as necessary. A compiled Java class remembers the source file from
+which it was compiled, so as long as the source file is in the same
+directory as the class file, <i CLASS=command>javac</i> can recompile
+the source if necessary. If, in the above example, class
+<tt CLASS=literal>BigBird</tt> references another class,
+<tt CLASS=literal>animals.furry.Grover</tt>, <i CLASS=command>javac</i>
+looks for the source <i CLASS=filename>Grover.java</i> in an
+<tt CLASS=literal>animals.furry</tt> package and recompiles it if
+necessary to bring the <i CLASS=filename>Grover.class</i> class file up
+to date.
+
+<P CLASS=para>
+It's important to note that <i CLASS=command>javac</i> can do
+its job even if only the compiled versions of referenced
+classes are available. Java class files contain all the data type
+and method signature information source files do, so
+compiling against binary class files is as type safe (and exception
+safe) as compiling with Java source code.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Class Path</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Netscape Alternative</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

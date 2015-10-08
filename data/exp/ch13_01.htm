@@ -1,0 +1,445 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 13] Drawing With the AWT</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:02:53 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 13</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch13_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="EXJ-CH-13">13. Drawing With the AWT</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Basic Drawing<br>
+<A HREF="ch13_02.htm">Colors</A><BR>
+<A HREF="ch13_03.htm">Fonts</A><BR>
+<A HREF="ch13_04.htm">Images</A><BR>
+<A HREF="ch13_05.htm">Drawing Techniques</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH11.I1"></A>If you've read the last few chapters and seen the examples in the
+tutorial in <A HREF="ch02_01.htm">Chapter 2, <i>A First Applet</i></A>, then you've probably picked up
+the basics of how graphical operations are performed in Java. Up to
+this point, we have done some simple drawing and even displayed an
+image or two. In this chapter, we will finally give graphics
+programming its due and go into depth about drawing techniques and the
+tools for working with images in Java. In the next chapter, we'll
+explore image processing tools in more detail and we'll look at the
+classes that let you generate images pixel by pixel on the fly.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-13-SECT-1">13.1 Basic Drawing</A></h2>
+
+<P CLASS=para>
+The classes you'll use for drawing come from the
+<tt CLASS=literal>java.awt</tt> package, as shown in
+<A HREF="ch13_01.htm#EXJ-CH-13-FIG-1">Figure 13.1</A>.[1]. 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+The current set of drawing tools has many limitations. In
+the near future, JavaSoft will be releasing packages for advanced 2D
+graphics, which will have much greater capabilities. A 3D package is
+also planned.  See <A HREF="ch01_01.htm">Chapter 1, <i>Yet Another Language?</i></A> 
+for information about likely future Java enhancements.
+</blockquote>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-1">Figure 13.1: Graphics classes of the java.awt package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1301.gif" alt="[Graphic: Figure 13-1]" width=502 height=432 border=0>
+
+</DIV>
+
+<P CLASS=para>
+An instance of the <tt CLASS=literal>java.awt.Graphics</tt> class is
+called a <I CLASS=emphasis>graphics context</I>. It represents a
+drawable surface such as a component's display area or an off-screen
+image buffer. A graphics context provides methods for performing all
+basic drawing operations on its area, including the painting of image
+data. We call the <tt CLASS=literal>Graphics</tt> object a graphics
+context because it also holds contextual information about the drawing
+area. This information includes parameters like the drawing area's
+clipping region, painting color, transfer mode, and text font. If you
+consider the drawing area to be a painter's canvas, you might think of
+a graphics context as an easel that holds a set of tools and marks off
+the work area.
+
+<P CLASS=para>
+There are four ways you normally acquire a 
+<tt CLASS=literal>Graphics</tt> 
+object. Roughly, from most common to least, they are: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>From AWT, as the result of a painting request. In
+this case, AWT acquires a new graphics context for
+the appropriate area and passes it to your component's
+<tt CLASS=literal>paint()</tt> or <tt CLASS=literal>update()</tt> method.
+
+<P>
+<li CLASS=listitem>Directly from an off-screen image buffer. In this case, we ask the
+image buffer for a graphics context directly. We'll use this
+when we discuss techniques like double buffering.
+
+<P>
+<li CLASS=listitem>By copying an existing <tt CLASS=literal>Graphics</tt> object. Duplicating
+a graphics object can be useful for more elaborate drawing operations;
+different copies of a <tt CLASS=literal>Graphics</tt> object draw into the
+same area on the screen, but can have different attributes and
+clipping regions.
+
+<P>
+<li CLASS=listitem>Directly from an on-screen component. It's possible to ask a
+component to give you a <tt CLASS=literal>Graphics</tt> object for its
+display area. However, this is almost always a mistake; if you feel
+tempted to do this, think about why you're trying to circumvent
+the normal <tt CLASS=literal>paint()</tt>/<tt CLASS=literal>repaint()</tt>
+mechanism.
+
+<P>
+</UL>
+<P CLASS=para>
+Each time a component's <tt CLASS=literal>update()</tt> or
+<tt CLASS=literal>paint()</tt> method is called, AWT
+provides the component with a new <tt CLASS=literal>Graphics</tt> object
+for drawing in the display area. This means that attributes we set
+during one painting session, such as drawing color or clipping region,
+are reset the next time <tt CLASS=literal>paint()</tt> or
+<tt CLASS=literal>update()</tt> is called. (Each call to
+<tt CLASS=literal>paint()</tt> starts with a tidy new easel.) For the most
+common attributes, like foreground color, background color, and font,
+we can set defaults in the component itself. Thereafter, the graphics
+contexts for painting in that component come with those properties
+initialized appropriately.
+
+<P CLASS=para>
+If we are working in a component's
+<tt CLASS=literal>update()</tt> method, we can assume our on-screen
+artwork is still intact, and we need only to make whatever changes are
+needed to bring the display up to date. One way to optimize drawing
+operations in this case is by setting a clipping region, as
+we'll see shortly. If our <tt CLASS=literal>paint()</tt> method is
+called, however, we have to assume the worst and redraw the entire
+display.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-13-SECT-1.1">Drawing Methods</A></h3>
+
+<P CLASS=para>
+Methods of the <tt CLASS=literal>Graphics</tt> class operate in a standard
+coordinate system. The origin of a newly created graphics context is
+the top left pixel of the component's drawing area, as shown in 
+<A HREF="ch13_01.htm#EXJ-CH-13-FIG-2">Figure 13.2</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-2">Figure 13.2: Graphics coordinate system</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1302.gif" alt="[Graphic: Figure 13-2]" width=503 height=182 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The diagram above illustrates the default coordinate system. The point
+(0,0) is at the top left corner of the drawing area; the point (width,
+height) is just outside the drawing area at the bottom right corner.
+The point at the bottom right corner within the drawing area has
+coordinates (width-1, height-1). This gives you a drawing area that is
+<tt CLASS=literal>width</tt> pixels wide and
+<tt CLASS=literal>height</tt> pixels high.
+
+<P CLASS=para>
+<P CLASS=para>
+The coordinate system 
+can be translated (shifted) with the <tt CLASS=literal>translate()</tt> 
+method to specify a new point as the origin. 
+The drawable area of the graphics context can be limited to a
+region with the <tt CLASS=literal>setClip()</tt> method. 
+
+<P CLASS=para>
+The basic drawing and painting methods should seem familiar to
+you if you've done any graphics programming. The following
+applet, <tt CLASS=literal>TestPattern</tt>, exercises most of the simple
+shape drawing commands; it's shown in <A HREF="ch13_01.htm#EXJ-CH-13-FIG-3">Figure 13.3</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-13-FIG-3">Figure 13.3: The TestPattern applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1303.gif" alt="[Graphic: Figure 13-3]" width=503 height=253 border=0>
+
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class TestPattern extends java.applet.Applet { 
+    int theta = 45;
+    public void paint( Graphics g ) {
+        int Width = size().width;
+        int Height = size().height;
+        int width = Width/2;
+        int height = Height/2;
+        int x = (Width - width)/2;
+        int y = (Height- height)/2;
+        int [] polyx =  { 0, Width/2, Width, Width/2 };
+        int [] polyy =  { Height/2, 0, Height/2, Height };
+        Polygon poly = new Polygon( polyx, polyy, 4 );
+        
+        g.setColor( Color.black );
+        g.fillRect( 0, 0, size().width, size().height );
+        g.setColor( Color.yellow );
+        g.fillPolygon( poly );
+        g.setColor( Color.red );
+        g.fillRect( x, y, width, height );
+        g.setColor( Color.green );
+        g.fillOval( x, y, width, height );
+        g.setColor( Color.blue );
+        int delta = 90;
+        g.fillArc( x, y, width, height, theta, delta );
+        g.setColor( Color.white );
+        g.drawLine( x, y, x+width, x+height );
+    }
+    public void init() {
+        addMouseListener( new MouseAdapter() {
+            public void mousePressed( MouseEvent e ) {
+                theta = (theta + 10) % 360;
+                repaint();
+            }
+        } );
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>TestPattern</tt> draws a number of simple shapes and
+responds to mouse clicks by rotating the filled arc and
+repainting. Compile it and give it a try. If you click repeatedly on
+the applet, you may notice that everything flashes when it
+repaints. <tt CLASS=literal>TestPattern</tt> is not very intelligent about
+redrawing; we'll examine some better techniques in the upcoming
+section on drawing techniques.
+
+<P CLASS=para>
+With the exception of <tt CLASS=literal>fillArc()</tt> and
+<tt CLASS=literal>fillPolygon()</tt>, each method takes a simple
+<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt> coordinate for the top left
+corner of the shape and a <tt CLASS=literal>width</tt> and
+<tt CLASS=literal>height</tt> for its size. We have picked values that
+draw the shapes centered, at half the width and height of the applet.
+
+<P CLASS=para>
+The most interesting shape we've have drawn is the
+<tt CLASS=literal>Polygon</tt>, a yellow diamond. A
+<tt CLASS=literal>Polygon</tt> object is specified by two arrays that
+contain the <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> coordinates
+of each vertex. In our example, the coordinates of the points in the
+polygon are (<tt CLASS=literal>polyx[0]</tt>,
+<tt CLASS=literal>polyy[0]</tt>), (<tt CLASS=literal>polyx[1]</tt>,
+<tt CLASS=literal>polyy[1]</tt>), and so on. There are simple drawing
+methods in the <tt CLASS=literal>Graphics</tt> class that take two arrays
+and draw or fill the polygon, but we chose to create a
+<tt CLASS=literal>Polygon</tt> object and draw it instead. The reason is
+that the <tt CLASS=literal>Polygon</tt> object has some useful utility
+methods that we might want to use later. A <tt CLASS=literal>Polygon</tt>
+can, for instance, give you its bounding box and tell you if a given
+point lies within its area.
+
+<P CLASS=para>
+AWT also provides a <tt CLASS=literal>Shape</tt> interface, which
+is implemented by different kinds of two dimensional objects.
+Currently, it is only 
+implemented by the <tt CLASS=literal>Rectangle</tt> and
+<tt CLASS=literal>Polygon</tt> classes, but it may be a sign of
+things to come, particularly when JavaSoft releases the extended 2D
+drawing package. The <tt CLASS=literal>setClip()</tt> method of
+the <tt CLASS=literal>Graphics</tt> class takes a
+<tt CLASS=literal>Shape</tt> as an argument, but for the time
+being, it only works if that <tt CLASS=literal>Shape</tt> is a
+<tt CLASS=literal>Rectangle</tt>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>fillArc()</tt> method requires six integer
+arguments. The first four specify the bounding box for an
+oval--just like the <tt CLASS=literal>fillOval()</tt> method. The
+final two arguments specify what portion of the oval we want to draw,
+as a starting angle and an offset. Both the starting angle and the
+offset are specified in degrees. Zero degrees is at three
+o'clock; a positive angle is clockwise. For example, to draw the
+right half of a circle, you might call:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+g.fillArc(0, 0, radius * 2, radius * 2, -90, 180);  
+</PRE>
+</DIV>
+
+<P CLASS=para>
+See the Dial example in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A> (widgets?) for an example of some
+trigonometric gymnastics with arcs().
+
+<P CLASS=para>
+<A HREF="ch13_01.htm#EXJ-CH-13-TAB-1">Table 13.1</A> shows the shape-drawing methods of
+the <tt CLASS=literal>Graphics</tt> class. As you can see, for each of
+the <tt CLASS=literal>fill()</tt> methods in the example,
+there is a corresponding <tt CLASS=literal>draw()</tt> method that renders
+the shape as an unfilled line drawing.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-13-TAB-1">Table 13.1: Shape Drawing Methods in the Graphics Class</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Description</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>draw3DRect()</tt></TD>
+<TD ALIGN="left">Draws a highlighted, 3D rectangle</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>drawArc()</tt></TD>
+<TD ALIGN="left">Draws an arc</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>drawLine()</tt></TD>
+<TD ALIGN="left">Draws a line</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>drawOval()</tt></TD>
+<TD ALIGN="left">Draws an oval</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>drawPolygon()</tt></TD>
+<TD ALIGN="left">Draws a polygon, connecting endpoints</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>drawPolyline()</tt></TD>
+<TD ALIGN="left">Draws a line connecting a polygon's points</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>drawRect()</tt></TD>
+<TD ALIGN="left">Draws a rectangle</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>drawRoundRect()</tt></TD>
+<TD ALIGN="left">Draws a rounded-corner rectangle</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>fill3DRect()</tt></TD>
+<TD ALIGN="left">Draws a filled, highlighted, 3D rectangle</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>fillArc()</tt></TD>
+<TD ALIGN="left">Draws a filled arc</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>fillOval()</tt></TD>
+<TD ALIGN="left">Draws a filled oval</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>fillPolygon()</tt></TD>
+<TD ALIGN="left">Draws a filled polygon</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>fillRect()</tt></TD>
+<TD ALIGN="left">Draws a filled rectangle</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>fillRoundRect()</tt></TD>
+<TD ALIGN="left">Draws a filled, rounded-corner rectangle</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+<tt CLASS=literal>draw3Drect()</tt> automatically chooses colors by
+"darkening" the current color.  So you should set the color to
+something other than black, which is the default (maybe gray or
+white); if you don't, you'll just get black on both sides.  For an
+example, see the <tt CLASS=literal>PictureButton</tt> in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A>.
+
+<P CLASS=para>
+There are a few important drawing methods missing from 
+<A HREF="ch13_01.htm#EXJ-CH-13-TAB-1">Table 13.1</A>. For example, the
+<tt CLASS=literal>drawString()</tt> method, which draws text, and the
+<tt CLASS=literal>drawImage()</tt> method, which draws an image. We'll
+discuss these methods in detail in later sections.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch13_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Absolute Positioning?</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Colors</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

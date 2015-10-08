@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] javadoc</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:04:17 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>JDK Tools</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<A NAME="CH16.JAVADOC-1"></A><A NAME="CH16.APIS.APPLIC1"></A>
+
+<DIV CLASS=refnamediv>
+<H1>javadoc</H1>
+
+<H2>Name</H2>
+
+javadoc---The Java Documentation Generator
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-5.1">Availability</A></h2>
+
+<P CLASS=para>
+JDK 1.0 and later.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-5.2">Synopsis</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+javadoc [ <I CLASS=emphasis>options</I> ] <I CLASS=emphasis>packagename</I>
+javadoc [ <I CLASS=emphasis>options</I> ] <I CLASS=emphasis>filenames</I>
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-5.3">Description</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>javadoc</I> generates API documentation, in HTML format,
+for the specified package, or for the individual Java source
+files specified on the command line.
+
+<P CLASS=para>
+When a package name is specified on the command line,
+<I CLASS=emphasis>javadoc</I> looks for a corresponding package directory
+relative to the class path.  It then parses all of the <I CLASS=emphasis>.java</I>
+source files in that directory and generates an
+HTML documentation file for each class and an HTML index of
+the classes in the package.  By default, the HTML files are
+placed in the current directory.  The <tt CLASS=literal>-d</tt> option
+allows you to override this default.
+
+<P CLASS=para>
+Note that the <tt CLASS=literal>packagename</tt> argument to <I CLASS=emphasis>javadoc</I> is
+the name of the package (components separated by periods)
+and not the name of the package directory.
+You may need to specify the <tt CLASS=literal>-sourcepath</tt> option
+so that <I CLASS=emphasis>javadoc</I> can find
+your package source code correctly, if it is not stored in
+the same location as the package class files.
+
+<P CLASS=para>
+<I CLASS=emphasis>javadoc</I> may also be invoked with any number of Java
+source files specified on the command line.  Note that these
+are filenames, not class names, and are specified with any
+necessary directory components, and with the <I CLASS=emphasis>.java</I>
+extension.  When <I CLASS=emphasis>javadoc</I> is invoked in this
+way, it reads the specified source files and generates HTML
+files (in the current directory, by default) that describe
+each public class defined in the specified source files.
+
+<P CLASS=para>
+The class documentation files that <I CLASS=emphasis>javadoc</I> generates
+describe the class (or interface) and its inheritance
+hierarchy, and index and describe each of the
+<tt CLASS=literal>public</tt> and <tt CLASS=literal>protected</tt> members of the class.
+The generated file
+also contains any "doc comments" that are associated with
+the class and with its methods, constructors, and variables.
+A "doc comment," or documentation comment, is a Java comment
+that begins with <tt CLASS=literal>/**</tt> and ends with <tt CLASS=literal>*/</tt>.  A
+doc comment may include any HTML markup tags (although it
+should not include structuring tags like &lt;H1&gt; or &lt;HR&gt;), and
+may also include tag values that are treated
+specially by <I CLASS=emphasis>javadoc</I>.  These special tags and their
+syntax are documented fully in <A HREF="ch13_01.htm">Chapter 13, <i>Java Syntax</i></A>.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-5.4">Options</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>-author</tt> <I CLASS=emphasis>path</I><br>
+<DD>
+
+<P CLASS=para>
+Specifies that author information specified with the
+<tt CLASS=literal>@author</tt> tag should be output.  This information is
+not output by default.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-classpath</tt> <I CLASS=emphasis>path</I><br>
+<DD>
+
+<P CLASS=para>
+This option specifies a path that <I CLASS=emphasis>javadoc</I> uses to look
+up both class files and source files for the specified
+package.  If you specify this option to tell <I CLASS=emphasis>javadoc</I>
+to look for your source files, you must also be sure to
+include the standard system classpath as well, or
+<I CLASS=emphasis>javadoc</I> will not be able to find the classes it needs.
+This option overrides the default path and any path
+specified by the <tt CLASS=literal>CLASSPATH</tt> environment variable.
+The <tt CLASS=literal>path</tt> specified is an ordered list of directories
+and ZIP files, separated by colons on UNIX systems or
+semicolons on Windows systems.
+To specify additional directories or ZIP files to search
+without overriding the default system class path, use the
+<tt CLASS=literal>CLASSPATH</tt> environment variable.  See the <I CLASS=emphasis>java</I>
+reference page for more information on specifying paths.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-d</tt> <I CLASS=emphasis>directory</I><br>
+<DD>
+
+<P CLASS=para>
+The directory in which <I CLASS=emphasis>javadoc</I> should store the HTML
+files it generates.  The default is the current directory.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-docencoding</tt> <I CLASS=emphasis>encoding-name</I><br>
+<DD>
+
+<P CLASS=para>
+Specifies the character encoding to be used for the output
+documents generated by <I CLASS=emphasis>javadoc</I>.  Available in JDK 1.1
+and later.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-encoding</tt> <I CLASS=emphasis>encoding-name</I><br>
+<DD>
+
+<P CLASS=para>
+Specifies the character encoding to be used to read the
+input source files and the documentation comments they
+contain.  Available in JDK 1.1 and later.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-J</tt><I CLASS=emphasis>javaoption</I><br>
+<DD>
+
+<P CLASS=para>
+Pass the argument <tt CLASS=literal>javaoption</tt> directly through to the
+Java interpreter.  <tt CLASS=literal>javaoption</tt> should not contain
+spaces; if multiple arguments must be passed to the
+interpreter, use multiple <tt CLASS=literal>-J</tt> options.  Available in
+JDK 1.1 and later.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-nodeprecated</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies that <I CLASS=emphasis>javadoc</I> should not include
+<tt CLASS=literal>@deprecated</tt> tags in its output, as it does by
+default.  Available in JDK 1.1 and later.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-noindex</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies that <I CLASS=emphasis>javadoc</I> should not generate the
+<I CLASS=emphasis>AllNames.html</I> index file that it creates by default.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-notree</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies that <tt CLASS=literal>javadoc</tt> should not generate the
+<I CLASS=emphasis>tree.html</I> class hierarchy file that it creates by default.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-sourcepath</tt> <I CLASS=emphasis>path</I><br>
+<DD>
+
+<P CLASS=para>
+A synonym for <tt CLASS=literal>-classpath</tt>.  Note that any specified
+"sourcepath" must include the system classpath.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-verbose</tt><br>
+<DD>
+
+<P CLASS=para>
+Tells <I CLASS=emphasis>javadoc</I> to print additional messages about what it is
+doing.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-version</tt> <I CLASS=emphasis>path</I><br>
+<DD>
+
+<P CLASS=para>
+Specifies that version information specified with the
+<tt CLASS=literal>@version</tt> tag should be output.  This information is
+not output by default.  Note that this option does <I CLASS=emphasis>not</I>
+tell <I CLASS=emphasis>javadoc</I> to print its own version number.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-5.5">Environment</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>CLASSPATH</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies an ordered list (colon-separated
+on UNIX, semicolon-separated on Windows systems) of directories
+and ZIP files in which <I CLASS=emphasis>javadoc</I> should look for class
+definitions.  When a path is specified with this environment
+variable, <I CLASS=emphasis>javadoc</I> always implicitly appends the
+location of the system classes to the end of the path.  If
+this environment variable is not specified, then the default
+path is the current directory and the system classes.  This
+variable is overridden by the <tt CLASS=literal>-classpath</tt> option.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-5.6">Bugs</A></h2>
+
+<P CLASS=para>
+When <I CLASS=emphasis>javadoc</I> cannot find a specified package, it
+produces a stub HTML file and does not warn you that the
+package was not found.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-5.7">See Also</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>java</I>, <I CLASS=emphasis>javac</I>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>javac</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>javah</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

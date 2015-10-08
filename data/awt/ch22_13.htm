@@ -1,0 +1,528 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 22] ReplicateScaleFilter </TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:25:53 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 22<br>java.awt.image Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch22_14.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ReplicateScaleFilter <img src="gifs/bstar.gif" alt="(New)" border=0></H1>
+
+<H2>Name</H2>
+
+ReplicateScaleFilter <img src="gifs/bstar.gif" alt="(New)" border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.75"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/replica.gif" alt="[Graphic: Figure from the text]" width=503 height=93 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.76">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>ReplicateScaleFilter</tt> class 
+uses a simple-minded algorithm to scale an image. If the image is to be 
+reduced, rows and columns of pixels are removed. If the image is to be 
+expanded, rows and columns are duplicated (replicated). 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.77">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class ReplicateScaleFilter
+    extends java.awt.image.ImageFilter {
+  // Variables
+  protected int destHeight;
+  protected int destWidth;
+  protected Object outpixbuf;
+  protected int srcHeight;
+  protected int srcWidth;
+  protected int[] srccols;
+  protected int[] srcrows;
+  // Constructor
+  public ReplicateScaleFilter(int width, int height);
+  // Instance Methods
+  public void setDimensions (int w, int h);
+  public void setPixels(int x, int y, int w, int h, ColorModel model, 
+      byte[] pixels, int off, int scansize);
+  public void setPixels(int x, int y, int w, int h, ColorModel model, 
+      int[] pixels, int off, int scansize);
+  public void setProperties(Hashtable props);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.78">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.111">destHeight</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.133">protected int destHeight</A></h4>
+
+<P CLASS=para>
+Height of the scaled image. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.112">destWidth</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.134">protected int destWidth</A></h4>
+
+<P CLASS=para>
+Width of the scaled image. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.113">outpixbuf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.135">protected Object outpixbuf</A></h4>
+
+<P CLASS=para>
+An internal buffer. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.114">srcHeight</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.136">protected int srcHeight</A></h4>
+
+<P CLASS=para>
+Height of the original image. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.115">srcWidth</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.137">protected int srcWidth</A></h4>
+
+<P CLASS=para>
+Width of the original image. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.116">srccols</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.138">protected int[] srccols</A></h4>
+
+<P CLASS=para>
+Internal array used to map incoming columns to outgoing columns. 
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.117">srcrows</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.139">protected int[] srcrows</A></h4>
+
+<P CLASS=para>
+Internal array used to map incoming rows to outgoing rows. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.79">Constructor</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.118">ReplicateScaleFilter</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.140">public ReplicateScaleFilter (int width, int height)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of scaled image.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of scaled image. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>ReplicateScale</tt><tt CLASS=literal>Filter</tt> 
+that scales the original image to the specified size. If both <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> are -1, the destination 
+image size will be set to the source image size. If either one of the parameters 
+is -1, it will be set to preserve the aspect ratio of the original image. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.80">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.119">setDimensions</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.141">public void setDimensions (int w, int h)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the source image.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the source image. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageFilter.setDimensions(int, int) </tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the size of the source image. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.120">setPixels</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.142">void setPixels (int x, int y, int w, int h, ColorModel model, byte[] pixels, int off, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+Color model of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>off</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of the pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Image</tt><tt CLASS=literal>Filter.setPixels(</tt><tt CLASS=literal>int, 
+int, int, int, ColorModel, byte[], int, int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Receives a rectangle of image data from the <tt CLASS=literal>ImageProducer</tt>; 
+scales these pixels and delivers them to any <tt CLASS=literal>ImageConsumer</tt>s. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.143">void setPixels (int x, int y, int w, int h, ColorModel model, int[] pixels, int off, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>h</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+Color model of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>off</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of the pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Image</tt><tt CLASS=literal>Filter.setPixels(</tt><tt CLASS=literal>int, 
+int, int, int, ColorModel, int[], int, int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Receives a rectangle of image data from the <tt CLASS=literal>ImageProducer</tt>; 
+scales these pixels and delivers them to any <tt CLASS=literal>ImageConsumer</tt>s. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.121">setProperties</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.144">public void setProperties (Hashtable props)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>props</I><br>
+<DD>
+
+<P CLASS=para>
+The properties for the image. </DL>
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageFilter.setProperties(</tt><tt CLASS=literal>Hashtable</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Adds the "rescale" image property to the properties list. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.81">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ColorModel, Hashtable, ImageConsumer, ImageFilter, ImageProducer</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch22_14.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>PixelGrabber</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>RGBImageFilter</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

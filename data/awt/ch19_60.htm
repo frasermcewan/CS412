@@ -1,0 +1,1623 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 19] Toolkit</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:16:48 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_59.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 19<br>java.awt Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch19_61.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Toolkit</H1>
+
+<H2>Name</H2>
+
+Toolkit
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch19-REFSECT1-AUTOID.60"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/toolkit.gif" alt="[Graphic: Figure from the text]" width=502 height=53 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-1">Description</A></h2>
+
+<P CLASS=para>
+The abstract <tt CLASS=literal>Toolkit</tt> class 
+provides access to platform-specific details like window size and available 
+fonts. It also deals with creating all the components' peer objects 
+when you call <tt CLASS=literal>addNotify()</tt>. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-2">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.awt.Toolkit
+    extends java.lang.Object {
+  // Class Methods
+  public static synchronized Toolkit getDefaultToolkit();
+  protected static Container getNativeContainer (Component c); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public static String getProperty (String key, String defaultValue); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  
+  // Instance Methods
+  public abstract void beep(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract int checkImage (Image image, int width, int height, 
+    ImageObserver observer);
+  public abstract Image createImage (ImageProducer producer);
+  public Image createImage (byte[] imagedata); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract Image createImage (byte[ ] imagedata, int imageoffset, 
+    int imagelength); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract ColorModel getColorModel();
+  public abstract String[] getFontList();
+  public abstract FontMetrics getFontMetrics (Font font);
+  public abstract Image getImage (String filename);
+  public abstract Image getImage (URL url);
+  public int getMenuShortcutKeyMask(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract PrintJob getPrintJob (Frame frame, String jobtitle, 
+    Properties props); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract int getScreenResolution();
+  public abstract Dimension getScreenSize();
+  public abstract Clipboard getSystemClipboard(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public final EventQueue getSystemEventQueue(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract boolean prepareImage (Image image, int width, int height, 
+    ImageObserver observer);
+  public abstract void sync();
+  
+  // Protected Instance Methods
+  protected abstract ButtonPeer createButton (Button b);
+  protected abstract CanvasPeer createCanvas (Canvas c);
+  protected abstract CheckboxPeer createCheckbox (Checkbox cb);
+  protected abstract CheckboxMenuItemPeer createCheckboxMenuItem 
+    (CheckboxMenuItem cmi);
+  protected abstract ChoicePeer createChoice (Choice c);
+  protected LightweightPeer createComponent(Component target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  protected abstract DialogPeer createDialog (Dialog d);
+  protected abstract FileDialogPeer createFileDialog (FileDialog fd);
+  protected abstract FramePeer createFrame (Frame f);
+  protected abstract LabelPeer createLabel (Label l);
+  protected abstract ListPeer createList (List l);
+  protected abstract MenuPeer createMenu (Menu m);
+  protected abstract MenuBarPeer createMenuBar (MenuBar mb);
+  protected abstract MenuItemPeer createMenuItem (MenuItem mi);
+  protected abstract PanelPeer createPanel (Panel p);
+  protected abstract PopupMenuPeer createPopupMenu (PopupMenu target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  protected abstract ScrollPanePeer createScrollPane (ScrollPane target);  <img src="gifs/bstar.gif" alt="(New)" border=0>
+  protected abstract ScrollbarPeer createScrollbar (Scrollbar sb);
+  protected abstract TextAreaPeer createTextArea (TextArea ta);
+  protected abstract TextFieldPeer createTextField (TextField tf);
+  protected abstract WindowPeer createWindow (Window w);
+  protected abstract FontPeer getFontPeer (String name, int style); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  protected abstract EventQueue getSystemEventQueueImpl(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  protected void loadSystemColors (int[] systemColors);  <img src="gifs/bstar.gif" alt="(New)" border=0>
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-3">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-3.1">getDefaultToolkit</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-3.1.1">public static synchronized Toolkit getDefaultToolkit()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>AWTError</I><br>
+<DD>
+
+<P CLASS=para>
+If the toolkit for 
+the current platform cannot be found. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The system's default <tt CLASS=literal>Toolkit</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-3.2">getNativeContainer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-3.2.1">protected static Container getNativeContainer (Component c) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The native container for the given component. The component's immediate 
+parent may be a lightweight component. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-3.3">getProperty</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-3.3.1">public static String getProperty (String key, String defaultValue) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>key</I><br>
+<DD>
+
+<P CLASS=para>
+The name of a property. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>defaultValue</I><br>
+<DD>
+
+<P CLASS=para>
+A default value to return if the property is not found. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value of the property described by <tt CLASS=literal>key</tt>, 
+or <tt CLASS=literal>defaultValue</tt> if it is not 
+found. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.1">beep</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.1.1">public abstract void beep() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Produces an audible beep. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.2">checkImage</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.2.1">public abstract int checkImage (Image image, int width, int height, ImageObserver observer)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>image</I><br>
+<DD>
+
+<P CLASS=para>
+Image to check. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the scaled image; -1 if image will be rendered 
+unscaled. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the scaled image; -1 if image will be rendered 
+unscaled. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>observer</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Component</tt> 
+that <tt CLASS=literal>image</tt> will be rendered on. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageObserver</tt> flags ORed 
+together for the data that is now available. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Checks on the status of the construction of a screen representation of 
+<tt CLASS=literal>image</tt> on <tt CLASS=literal>observer</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.3">createImage</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.3.1">public abstract Image createImage (ImageProducer producer)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>producer</I><br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>ImageProducer</tt> 
+that generates data for the desired image. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created <tt CLASS=literal>Image</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>Image</tt> from an 
+<tt CLASS=literal>ImageProducer</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.3.2">public abstract Image createImage (byte[] imagedata) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>imagedata</I><br>
+<DD>
+
+<P CLASS=para>
+Raw data representing an image. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created <tt CLASS=literal>Image</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>Image</tt> from the 
+<tt CLASS=literal>imagedata</tt> provided. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.3.3">public abstract Image createImage (byte[] imagedata, int imageoffset, int imagelength) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>imagedata</I><br>
+<DD>
+
+<P CLASS=para>
+Raw data representing one or more images. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>imageoffset</I><br>
+<DD>
+
+<P CLASS=para>
+An offset into the data given. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>imagelength</I><br>
+<DD>
+
+<P CLASS=para>
+The length of data to use. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created <tt CLASS=literal>Image</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a new <tt CLASS=literal>Image</tt> from the 
+<tt CLASS=literal>imagedata</tt> provided, starting 
+at <tt CLASS=literal>imageoffset</tt> bytes and reading 
+<tt CLASS=literal>imagelength</tt> bytes. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.4">getColorModel</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.4.1">public abstract ColorModel getColorModel()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current <tt CLASS=literal>ColorModel</tt> used 
+by the system. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.5">getFontList</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.5.1">public abstract String[] getFontList()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>String</tt> array of the set of 
+Java fonts available with this <tt CLASS=literal>Toolkit</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.6">getFontMetrics</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.6.1">public abstract FontMetrics getFontMetrics (Font font)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>font</I><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Font</tt> whose 
+metrics are desired </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current <tt CLASS=literal>FontMetrics</tt> for 
+the <tt CLASS=literal>font</tt> on the user's 
+system. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.7">getImage</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.7.1">public abstract Image getImage (String filename)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>filename</I><br>
+<DD>
+
+<P CLASS=para>
+Location of <tt CLASS=literal>Image</tt> 
+on local filesystem </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Image</tt> that needs to be 
+fetched. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Fetches an image from the local file system. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.7.2">public abstract Image getImage (URL url)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>url</I><br>
+<DD>
+
+<P CLASS=para>
+Location of <tt CLASS=literal>Image</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Image</tt> that needs to be 
+fetched. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Fetches an image from a <tt CLASS=literal>URL</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.8">getMenuShortcutKeyMask</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.8.1">public int getMenuShortcutKeyMask() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The modifier key mask used for menu shortcuts. This will be one of the 
+mask constants defined in <tt CLASS=literal>java.awt.Event</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.9">getPrintJob</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.9.1">public abstract PrintJob getPrintJob (Frame frame, String jobtitle, Properties props) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>frame</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>frame</tt> 
+to be used as the parent of a platform-specific printing dialog. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>jobtitle</I><br>
+<DD>
+
+<P CLASS=para>
+The name of the job. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>props</I><br>
+<DD>
+
+<P CLASS=para>
+Properties for this print job. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>PrintJob</tt> object. If the user 
+canceled the printing operation, <tt CLASS=literal>null</tt> 
+is returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.10">getScreenResolution</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.10.1">public abstract int getScreenResolution()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current resolution of the user's screen, in dots-per-inch. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.11">getScreenSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.11.1">public abstract Dimension getScreenSize()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The size of the screen available to the <tt CLASS=literal>Toolkit</tt>, 
+in pixels, as a <tt CLASS=literal>Dimension</tt> object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.12">getSystemClipboard</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.12.1">public abstract Clipboard getSystemClipboard() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Clipboard</tt> object that can 
+be used for cut, copy, and paste operations. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.13">getSystemEventQueue</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.13.1">public final EventQueue getSystemEventQueue() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A reference to the system's event queue, allowing the program to post new events or inspect the queue.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-49.13">prepareImage</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-49.13.1">public abstract boolean prepareImage (Image image, int width, int height, ImageObserver observer)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>image</I><br>
+<DD>
+
+<P CLASS=para>
+Image to check. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the scaled image; -1 if image will be rendered 
+unscaled. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the scaled image; -1 if image will be rendered 
+unscaled. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>observer</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>Component</tt> 
+that <tt CLASS=literal>image</tt> will be rendered on. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if image fully loaded, 
+<tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Forces the system to start loading the <tt CLASS=literal>image</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.14">sync</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-4.14.1">public abstract void sync()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Flushes the display of the underlying graphics context. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5">Protected Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.1">createButton</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.1.1">protected abstract ButtonPeer createButton (Button b)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>b</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Button</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.2">createCanvas</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.2.1">protected abstract CanvasPeer createCanvas (Canvas c)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>c</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Canvas</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.3">createCheckbox</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.3.1">protected abstract CheckboxPeer createCheckbox (Checkbox cb)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>cb</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Checkbox</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.4">createCheckboxMenuItem</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.4.1">protected abstract CheckboxMenuItemPeer createCheckboxMenuItem (CheckboxMenuItem cmi)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>cmi</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>CheckboxMenuItem</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.5">createChoice</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.5.1">protected abstract ChoicePeer createChoice (Choice c)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>c</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Choice</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.6">createComponent</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.6.1">protected LightweightPeer createComponent (Component target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Component</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.7">createDialog</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.7.1">protected abstract DialogPeer createDialog (Dialog d)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>d</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Dialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.8">createFileDialog</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.8.1">protected abstract FileDialogPeer createFileDialog (FileDialog fd)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>fd</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>FileDialog</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.9">createFrame</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.9.1">protected abstract FramePeer createFrame (Frame f)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>f</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Frame</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.10">createLabel</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.10.1">protected abstract LabelPeer createLabel (Label l)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Label</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.11">createList</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.11.1">protected abstract ListPeer createList (List l)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>l</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>List</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.12">createMenu</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.12.1">protected abstract MenuPeer createMenu (Menu m)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>m</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Menu</tt> whose 
+peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the given <tt CLASS=literal>Menu</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.13">createMenuBar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.13.1">protected abstract MenuBarPeer createMenuBar (MenuBar mb)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>mb</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>MenuBar</tt> whose 
+peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>MenuBar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.14">createMenuItem</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.14.1">protected abstract MenuItemPeer createMenuItem (MenuItem mi)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>mi</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>MenuItem</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>MenuItem</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.15">createPanel</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.15.1">protected abstract PanelPeer createPanel (Panel p)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>p</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Panel</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.16">createPopupMenu</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.16.1">protected abstract PopupMenuPeer createPopupMenu (PopupMenu target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>PopupMenu</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.17">createScrollPane</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.17.1">protected abstract ScrollPanePeer createScrollPane (ScrollPane target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>ScrollPane</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.18">createScrollbar</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.18.1">protected abstract ScrollbarPeer createScrollbar (Scrollbar sb)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>sb</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Scrollbar</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.19">createTextArea</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.19.1">protected abstract TextAreaPeer createTextArea (TextArea ta)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ta</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>TextArea</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-59.2">createTextField</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-59.2.1">protected abstract TextFieldPeer createTextField (TextField tf)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>tf</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>TextField</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.21">createWindow</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.21.1">protected abstract WindowPeer createWindow (Window w)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>w</I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt> 
+whose peer needs to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a peer for the <tt CLASS=literal>Window</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.22">getFontPeer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.22.1">protected abstract FontPeer getFontPeer (String name, int style) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters <br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>name</I><br>
+<DD>
+
+<P CLASS=para>
+Name of the font to be created. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>style</I><br>
+<DD>
+
+<P CLASS=para>
+Style of the font to be created. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Newly created peer. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>FontPeer</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-599.2">getSystemEventQueueImpl</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-599.22">protected abstract getSystemEventQueueImpl()<img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A toolkit-specific <tt CLASS=literal>EventQueue</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.23">loadSystemColors</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-5.23.1">protected abstract void loadSystemColors (int[] systemColors) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Fills the given integer array with the current system colors. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-TOOLKIT-SECT-6">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Button</tt>, <tt CLASS=literal>ButtonPeer</tt>, 
+<tt CLASS=literal>Canvas</tt>, <tt CLASS=literal>CanvasPeer</tt>, 
+<tt CLASS=literal>Checkbox</tt>, <tt CLASS=literal>CheckboxMenuItem</tt>, 
+<tt CLASS=literal>CheckboxMenuItemPeer</tt>, <tt CLASS=literal>CheckboxPeer</tt>, 
+<tt CLASS=literal>Choice</tt>, <tt CLASS=literal>ChoicePeer</tt>, 
+<tt CLASS=literal>Clipboard</tt>, <tt CLASS=literal>ColorModel</tt>, 
+<tt CLASS=literal>Component</tt>, <tt CLASS=literal>Container</tt>, 
+<tt CLASS=literal>Dialog</tt>, <tt CLASS=literal>DialogPeer</tt>, 
+<tt CLASS=literal>Dimension</tt>, <tt CLASS=literal>FileDialog</tt>, 
+<tt CLASS=literal>FileDialogPeer</tt>, <tt CLASS=literal>Font</tt>, 
+<tt CLASS=literal>FontMetrics</tt>, <tt CLASS=literal>FontPeer</tt>, 
+<tt CLASS=literal>Frame</tt>, <tt CLASS=literal>FramePeer</tt>, 
+<tt CLASS=literal>Image</tt>, <tt CLASS=literal>ImageObserver</tt>, 
+<tt CLASS=literal>ImageProducer</tt>, <tt CLASS=literal>Label</tt>, 
+<tt CLASS=literal>LabelPeer</tt>, <tt CLASS=literal>LightweightPeer</tt>, 
+<tt CLASS=literal>List</tt>, <tt CLASS=literal>ListPeer</tt>, 
+<tt CLASS=literal>Menu</tt>, <tt CLASS=literal>MenuBar</tt>, 
+<tt CLASS=literal>MenuBarPeer</tt>, <tt CLASS=literal>MenuItem</tt>, 
+<tt CLASS=literal>MenuItemPeer</tt>, <tt CLASS=literal>MenuPeer</tt>, 
+<tt CLASS=literal>Panel</tt>, <tt CLASS=literal>PanelPeer</tt>, 
+<tt CLASS=literal>PrintJob</tt>, <tt CLASS=literal>Scrollbar</tt>, 
+<tt CLASS=literal>ScrollbarPeer</tt>, <tt CLASS=literal>ScrollPane</tt>, 
+<tt CLASS=literal>ScrollPanePeer</tt>, <tt CLASS=literal>String</tt>, 
+<tt CLASS=literal>TextArea</tt>, <tt CLASS=literal>TextAreaPeer</tt>, 
+<tt CLASS=literal>TextField</tt>, <tt CLASS=literal>TextFieldPeer</tt>, 
+<tt CLASS=literal>Window</tt>, <tt CLASS=literal>WindowPeer</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_59.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch19_61.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>TextField</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Window</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

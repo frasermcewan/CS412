@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] Inner Classes and Other New Language Features</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:52:14 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-5">5. Inner Classes and Other New Language Features</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+An Overview of Inner Classes<br>
+<A HREF="ch05_02.htm">Nested Top-Level Classes and Interfaces</A><BR>
+<A HREF="ch05_03.htm">Member Classes</A><BR>
+<A HREF="ch05_04.htm">Local Classes</A><BR>
+<A HREF="ch05_05.htm">Anonymous Classes</A><BR>
+<A HREF="ch05_06.htm">Other New Features of Java 1.1</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+The largest enhancement to the Java language in Java 1.1 is
+something called
+"inner classes."  With this addition to the language,
+classes can be defined as members of other classes, just as
+fields and methods can be defined within classes.
+Classes can also be defined within a block of Java code, just
+as local variables can be defined within a block of code.
+
+<P CLASS=para>
+<A NAME="CH5.INNER.CLASSE1"></A>From one point of view, the addition of inner classes
+regularizes the syntax of Java.  From another point of view,
+though,
+inner classes create quite a few special cases, and a
+confusing array of new rules.  In practice, however, if you
+avoid the obscure and pathological cases, inner classes prove
+to be an elegant and extremely useful addition to the language.
+Their use is particularly common in conjunction with the new
+event model defined by the AWT in Java 1.1.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-1">5.1 An Overview of Inner Classes</A></h2>
+
+<P CLASS=para>
+Java 1.0 allowed classes and interfaces to be defined in
+exactly one context: at the "top level," as members of
+packages.  Java 1.1 adds one new type of top-level classes
+and interfaces, and adds three new types of "inner classes,"
+as outlined below.  Later sections of this chapter describe
+each of these new types of classes and interfaces in more detail and
+present examples of their use.
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>Nested top-level classes and interfaces</I><br>
+<DD>
+
+<P CLASS=para>
+A <I CLASS=emphasis>nested top-level</I> class or interface is defined as a
+static member of an enclosing top-level class or interface.
+The definition of a nested top-level class uses the
+<tt CLASS=literal>static</tt> modifier, just as the definition of a static
+method or static field does.  Nested interfaces are
+implicitly static (though they may be declared
+<tt CLASS=literal>static</tt> to make this explicit) and so are always
+top-level. A nested top-level class or interface behaves
+just like a "normal" class or interface that is a member of
+a package.  The difference is that the name of a nested
+top-level class or interface includes the name of the class
+in which it is defined.  Thus, a <tt CLASS=literal>LinkedList</tt> class
+could define a nested top-level interface <tt CLASS=literal>Linkable</tt>.
+This interface would be referred to as
+<tt CLASS=literal>LinkedList.Linkable</tt>.  Nested top-level classes and
+interfaces are typically used as a convenient way to group
+related classes.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Member classes</I><br>
+<DD>
+
+<P CLASS=para>
+A <I CLASS=emphasis>member class</I> is also defined as a member of an
+enclosing class, but unlike a nested top-level class, it is
+not defined with the <tt CLASS=literal>static</tt> modifier.  This means
+that it is an inner class, rather than a top-level class.
+Nested interfaces are always implicitly <tt CLASS=literal>static</tt>, so
+they are always top-level; there is no such thing as a
+"member interface," or any kind of "inner interface."
+In many ways, a member class is analogous to the other
+members--the instance fields and methods--of a class.
+Member classes are of interest because the code within a
+member class can implicitly refer to any of the fields and
+methods, including <tt CLASS=literal>private</tt> fields and methods, of its
+enclosing class.
+[1]
+Every instance of a member class is associated with an
+enclosing instance of the class that defines it.  Because of
+the requirement for this enclosing instance, several new
+pieces of syntax have been introduced into the Java
+language.
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+Unfortunately, in Java 1.1 and 1.1.1 there are compiler
+bugs that prevent access to the <tt CLASS=literal>private</tt> fields and
+methods of enclosing classes from working correctly.  It is
+not yet clear when these bugs will be fixed.  So while
+access to <tt CLASS=literal>private</tt> members of enclosing classes is
+part of the inner class specification, it is a feature that
+is currently best avoided.  If a field or method must be
+visible to nested classes, you should give it package
+visibility rather than <tt CLASS=literal>private</tt> visibility.
+</blockquote>
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Local classes</I><br>
+<DD>
+
+<P CLASS=para>
+A <I CLASS=emphasis>local class</I> is an inner class defined within a block
+of Java code; it is visible only within that block.
+Interfaces can not be defined locally.  Because a local
+class is defined within a block of code, it is analogous,
+in some ways, to a local variable.  Local classes are not
+member classes, but can still use the fields and methods of
+enclosing classes.  More important, however, the code
+within a local class definition can use any <tt CLASS=literal>final</tt>
+local variables or parameters that are accessible in the
+scope of the block that defines the class.
+Local classes are useful primarily as "adapter
+classes" and are commonly used with the new event-handling
+model required by the Java 1.1 AWT and by JavaBeans.  For
+example, a block of Java 1.1 code that creates a
+<tt CLASS=literal>java.awt.Button</tt> object could use a local class to
+define a simple implementation of the
+<tt CLASS=literal>java.awt.event.ActionListener</tt> interface.  Then it
+could instantiate this simple implementation and pass the
+resulting object to the button's <tt CLASS=literal>addActionListener()</tt>
+method, thereby connecting the button to the "callback" code
+that is executed when the button is pressed.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Anonymous classes</I><br>
+<DD>
+
+<P CLASS=para>
+An <I CLASS=emphasis>anonymous class</I> is an extension to the local class
+concept described above.  Instead of declaring a local class
+with one Java statement, and then instantiating and using it
+in another statement, an anonymous class combines the two
+steps in a single Java expression.  An anonymous class, as
+you might guess, does not have a name.  And because it is
+instantiated in the same expression that defines it, it can
+only be instantiated once.  Except for these differences,
+anonymous classes are quite similar to local classes in
+behavior and use.  Interfaces cannot be defined anonymously,
+of course.  When writing a simple adapter class, the choice
+between a named local class and an unnamed anonymous class
+typically comes down to a matter of style and code clarity,
+rather than any difference in functionality.</DL>
+<P CLASS=para>
+<A HREF="ch05_01.htm#JNUT2-CH-5-TAB-1">Table 5.1</A>
+summarizes the types of classes and interfaces that can be
+defined in Java 1.1; the remaining sections of the chapter
+document each type in more detail.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-5-TAB-1">Table 5.1: Inner Class Summary</A></CAPTION>
+<TR CLASS=row>
+<TH COLSPAN=2 ALIGN="center">Class Type</TH>
+<TH ALIGN="left">Description</TH>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=2 ALIGN="left">
+
+<P CLASS=para>
+Top-level classes and interfaces</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Package member class or interface</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+An ordinary class or interface that is a direct member of a package.
+The basic Java class understood by the VM.  All nested and
+inner classes are converted to this type.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Nested top-level class or interface</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+A conveniently nested top-level class or interface.
+Must be declared <tt CLASS=literal>static</tt> within another top-level
+class or interface.  (Nested interfaces are implicitly
+<tt CLASS=literal>static</tt>.)
+May use the <tt CLASS=literal>static</tt> members of its containing type.</TD>
+</TR>
+<TR CLASS=row>
+<TD ROWSPAN=3 ALIGN="left">
+
+<P CLASS=para>
+Inner classes</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Member class</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+A class defined as a member (non-<tt CLASS=literal>static</tt>) of another.
+Each instance has an enclosing instance, and can use its members.
+New syntax for <tt CLASS=literal>this</tt>, <tt CLASS=literal>new</tt>, and <tt CLASS=literal>super</tt>.
+Cannot have <tt CLASS=literal>static</tt> members.  Cannot have same name
+as a containing class.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Local class</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+A class defined in a block of code.
+Can use members of enclosing classes and <tt CLASS=literal>final</tt>
+local variables and parameters.  New <tt CLASS=literal>this</tt> syntax.
+Same restrictions as member classes.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Anonymous class</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Unnamed class defined within an expression.
+Has features of a local class.  Allows a one-shot class to
+be defined exactly where needed.
+Same restrictions as local class, plus has no name or
+constructor.  Only one instance of the class is created.</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>New JDK Utilities</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Nested Top-Level Classes and Interfaces</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

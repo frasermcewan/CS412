@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 25] 25.8 java.lang.Class (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:26:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 25<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch25_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-8">25.8 java.lang.Class (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-8.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class represents a Java class or interface, or, in Java
+1.1, any Java type.  There is one <tt CLASS=literal>Class</tt> object for
+each class that is loaded into the Java Virtual Machine, and
+in Java 1.1 there are special <tt CLASS=literal>Class</tt> objects that
+represent the Java primitive types.  The <tt CLASS=literal>TYPE</tt>
+constants defined by <tt CLASS=literal>Boolean</tt>, <tt CLASS=literal>Integer</tt>, and
+the other primitive "wrapper classes" hold these special
+<tt CLASS=literal>Class</tt> objects.  Array types are also represented by
+<tt CLASS=literal>Class</tt> objects in Java 1.1.
+
+<P CLASS=para>
+There is no constructor for this class.  You can obtain a
+<tt CLASS=literal>Class</tt> object by calling the <tt CLASS=literal>getClass()</tt>
+method of any instance of the desired class.  In Java 1.1, a
+<tt CLASS=literal>Class</tt> object may also be referred to by
+appending <tt CLASS=literal>.class</tt> to the name of a class.  Finally, and most
+interestingly, a class can be dynamically loaded by passing
+its fully-qualified name (i.e., package name plus class name)
+to the static <tt CLASS=literal>Class.forName()</tt> method.  This method
+loads the named class, if it is not already loaded, into the
+Java interpreter, and returns a <tt CLASS=literal>Class</tt> object for it.
+
+<P CLASS=para>
+The <tt CLASS=literal>newInstance()</tt> method
+creates an instance of a given class--this allows you to
+create instances of dynamically loaded classes for which you
+cannot use the <tt CLASS=literal>new</tt> keyword.  Note that this method
+only works when the target class has a no-argument
+constructor.  See <tt CLASS=literal>newInstance()</tt> in
+<tt CLASS=literal>java.lang.reflect.Constructor</tt> for a more powerful
+way to instantiate dynamically loaded classes.
+
+<P CLASS=para>
+<tt CLASS=literal>getName()</tt> returns the name of the class.
+<tt CLASS=literal>getSuperclass()</tt> returns its superclass.
+<tt CLASS=literal>isInterface()</tt> tests whether the <tt CLASS=literal>Class</tt>
+object represents an interface, and
+<tt CLASS=literal>getInterfaces()</tt> returns an array of the interfaces
+that this class implements.  The various other <tt CLASS=literal>get</tt>
+and <tt CLASS=literal>is</tt> methods return other information about the
+represented class, and form part of the Java Reflection API,
+along with the classes in <tt CLASS=literal>java.lang.reflect</tt>.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public final class <tt CLASS=literal>Class</tt> extends Object implements Serializable {
+    // <tt CLASS=literal>No Constructor</tt>
+    // <tt CLASS=literal>Class Methods</tt>
+            public static native Class <tt CLASS=literal>forName</tt>(String <tt CLASS=literal>className</tt>) throws ClassNotFoundException;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public native ClassLoader <tt CLASS=literal>getClassLoader</tt>();
+        <b>1.1</b>public Class[] <tt CLASS=literal>getClasses</tt>();
+        <b>1.1</b>public native Class <tt CLASS=literal>getComponentType</tt>();
+        <b>1.1</b>public Constructor <tt CLASS=literal>getConstructor</tt>(Class[] <tt CLASS=literal>parameterTypes</tt>) throws NoSuchMethodException, SecurityException;
+        <b>1.1</b>public Constructor[] <tt CLASS=literal>getConstructors</tt>() throws SecurityException;
+        <b>1.1</b>public Class[] <tt CLASS=literal>getDeclaredClasses</tt>() throws SecurityException;
+        <b>1.1</b>public Constructor <tt CLASS=literal>getDeclaredConstructor</tt>(Class[] <tt CLASS=literal>parameterTypes</tt>) throws NoSuchMethodException, SecurityException;
+        <b>1.1</b>public Constructor[] <tt CLASS=literal>getDeclaredConstructors</tt>() throws SecurityException;
+        <b>1.1</b>public Field <tt CLASS=literal>getDeclaredField</tt>(String <tt CLASS=literal>name</tt>) throws NoSuchFieldException, SecurityException;
+        <b>1.1</b>public Field[] <tt CLASS=literal>getDeclaredFields</tt>() throws SecurityException;
+        <b>1.1</b>public Method <tt CLASS=literal>getDeclaredMethod</tt>(String <tt CLASS=literal>name</tt>, Class[] <tt CLASS=literal>parameterTypes</tt>) throws NoSuchMethodException, SecurityException;
+        <b>1.1</b>public Method[] <tt CLASS=literal>getDeclaredMethods</tt>() throws SecurityException;
+        <b>1.1</b>public Class <tt CLASS=literal>getDeclaringClass</tt>();
+        <b>1.1</b>public Field <tt CLASS=literal>getField</tt>(String <tt CLASS=literal>name</tt>) throws NoSuchFieldException, SecurityException;
+        <b>1.1</b>public Field[] <tt CLASS=literal>getFields</tt>() throws SecurityException;
+            public native Class[] <tt CLASS=literal>getInterfaces</tt>();
+        <b>1.1</b>public Method <tt CLASS=literal>getMethod</tt>(String <tt CLASS=literal>name</tt>, Class[] <tt CLASS=literal>parameterTypes</tt>) throws NoSuchMethodException, SecurityException;
+        <b>1.1</b>public Method[] <tt CLASS=literal>getMethods</tt>() throws SecurityException;
+        <b>1.1</b>public native int <tt CLASS=literal>getModifiers</tt>();
+            public native String <tt CLASS=literal>getName</tt>();
+        <b>1.1</b>public URL <tt CLASS=literal>getResource</tt>(String <tt CLASS=literal>name</tt>);
+        <b>1.1</b>public InputStream <tt CLASS=literal>getResourceAsStream</tt>(String <tt CLASS=literal>name</tt>);
+        <b>1.1</b>public native Object[] <tt CLASS=literal>getSigners</tt>();
+            public native Class <tt CLASS=literal>getSuperclass</tt>();
+        <b>1.1</b>public native boolean <tt CLASS=literal>isArray</tt>();
+        <b>1.1</b>public native boolean <tt CLASS=literal>isAssignableFrom</tt>(Class <tt CLASS=literal>cls</tt>);
+        <b>1.1</b>public native boolean <tt CLASS=literal>isInstance</tt>(Object <tt CLASS=literal>obj</tt>);
+            public native boolean <tt CLASS=literal>isInterface</tt>();
+        <b>1.1</b>public native boolean <tt CLASS=literal>isPrimitive</tt>();
+            public native Object <tt CLASS=literal>newInstance</tt>() throws InstantiationException, IllegalAccessException;
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-8.2">Passed To:</A></h3>
+
+<P CLASS=para>
+Array.newInstance(), 
+BeanDescriptor(), 
+Beans.getInstanceOf(), 
+Beans.isInstanceOf(), 
+Class.getConstructor(), 
+Class.getDeclaredConstructor(), 
+Class.getDeclaredMethod(), 
+Class.getMethod(), 
+Class.isAssignableFrom(), 
+ClassLoader.resolveClass(), 
+ClassLoader.setSigners(), 
+Compiler.compileClass(), 
+DataFlavor(), 
+EventSetDescriptor(), 
+IndexedPropertyDescriptor(), 
+Introspector.getBeanInfo(), 
+ObjectOutputStream.annotateClass(), 
+ObjectStreamClass.lookup(), 
+PropertyDescriptor(), 
+PropertyDescriptor.setPropertyEditorClass(), 
+PropertyEditorManager.findEditor(), 
+PropertyEditorManager.registerEditor(), 
+SecurityManager.checkMemberAccess()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-8.3">Returned By:</A></h3>
+
+<P CLASS=para>
+BeanDescriptor.getBeanClass(), 
+BeanDescriptor.getCustomizerClass(), 
+Class.forName(), 
+Class.getClasses(), 
+Class.getComponentType(), 
+Class.getDeclaredClasses(), 
+Class.getDeclaringClass(), 
+Class.getInterfaces(), 
+Class.getSuperclass(), 
+ClassLoader.defineClass(), 
+ClassLoader.findLoadedClass(), 
+ClassLoader.findSystemClass(), 
+ClassLoader.loadClass(), 
+Constructor.getDeclaringClass(), 
+Constructor.getExceptionTypes(), 
+Constructor.getParameterTypes(), 
+DataFlavor.getRepresentationClass(), 
+EventSetDescriptor.getListenerType(), 
+Field.getDeclaringClass(), 
+Field.getType(), 
+IndexedPropertyDescriptor.getIndexedPropertyType(), 
+Member.getDeclaringClass(), 
+Method.getDeclaringClass(), 
+Method.getExceptionTypes(), 
+Method.getParameterTypes(), 
+Method.getReturnType(), 
+Object.getClass(), 
+ObjectInputStream.resolveClass(), 
+ObjectStreamClass.forClass(), 
+PropertyDescriptor.getPropertyEditorClass(), 
+PropertyDescriptor.getPropertyType(), 
+SecurityManager.currentLoadedClass(), 
+SecurityManager.getClassContext()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-8.4">Type Of:</A></h3>
+
+<P CLASS=para>
+Boolean.TYPE, 
+Byte.TYPE, 
+Character.TYPE, 
+Double.TYPE, 
+Float.TYPE, 
+Integer.TYPE, 
+Long.TYPE, 
+Short.TYPE, 
+Void.TYPE
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch25_09.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.lang.Character (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.lang.ClassCastException (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

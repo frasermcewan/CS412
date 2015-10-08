@@ -1,0 +1,371 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.3 Working with URLs</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Thu Jul 24 12:08:39 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Network Programming</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-3">9.3 Working with URLs</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.URL1"></A>A URL points to an
+object on the Internet. It's a collection of information that
+identifies an item, tells you where to find it, and specifies a method
+for communicating with it or retrieving it from its source. A
+URL refers to any kind of information source.
+It might point to static data, such as a file on a local filesystem, a
+Web server, or an FTP archive; or it can point to a
+more dynamic object such as a news article on a news spool or a record
+in a WAIS database. URLs can
+even refer to less tangible resources such as Telnet sessions and
+mailing addresses.
+
+<P CLASS=para>
+A URL is usually presented as a string of
+text, like an address.[3]
+ Since there are many different ways to locate an item on the Net, and
+different mediums and transports require different kinds of
+information, there are different formats for different kinds of
+URLs. The most common form specifies three things:
+a network host or server, the name of the item and its location on
+that host, and a protocol by which the host should communicate:
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+The term URL was coined by the Uniform Resource
+Identifier (URI) working group of the
+IETF to distinguish URLs from
+the more general notion of Uniform Resource Names or
+URNs. URLs are really just
+static addresses, whereas URNs would be more
+persistent and abstract identifiers used to resolve the
+location of an object anywhere on the Net. URLs are
+defined in RFC 1738 and RFC
+1808.
+</blockquote>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+<tt CLASS=replaceable><i>protocol</i></tt>://<tt CLASS=replaceable><i>hostname</i></tt>/<tt CLASS=replaceable><i>location</i></tt>/<tt CLASS=replaceable><i>item</i></tt>
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=replaceable><i>protocol</i></tt> is an identifier such as
+"http," "ftp," or "gopher"; <tt CLASS=replaceable><i>hostname</i></tt>
+is an Internet hostname; and the <tt CLASS=replaceable><i>location</i></tt> and
+<tt CLASS=replaceable><i>item</i></tt> components form a path that identifies the
+object on that host. Variants of this form allow extra information to
+be packed into the URL, specifying things like port
+numbers for the communications protocol and fragment identifiers that
+reference parts inside the object.
+
+<P CLASS=para>
+We sometimes speak of a URL that is relative
+to a base URL. In that case we are using the base
+URL as a starting point and supplying additional
+information. For example, the base URL might point
+to a directory on a Web server; a relative URL
+might name a particular file in that directory.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-3.1">The URL class</A></h3>
+
+<P CLASS=para>
+A URL is represented by an instance of the
+<tt CLASS=literal>java.net.URL</tt> class. A <tt CLASS=literal>URL</tt>
+object manages all information in a URL string
+and provides methods for retrieving the object it identifies. We can
+construct a <tt CLASS=literal>URL</tt> object from a
+URL specification string or from its component
+parts:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    URL aDoc = new URL( "http://foo.bar.com/documents/homepage.html" ); 
+    URL sameDoc = 
+        new URL("http","foo.bar.com","documents/homepage.html"); 
+}  
+catch ( MalformedURLException e ) { } 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The two <tt CLASS=literal>URL</tt> objects above point to the same network
+resource, the <i CLASS=filename>homepage.html</i> document on the
+server foo.bar.com. Whether or not the resource
+actually exists and is available isn't known until we try to
+access it. At this point, the <tt CLASS=literal>URL</tt> object just
+contains data about the object's location and how to access
+it. No connection to the server has been made. We can examine the
+<tt CLASS=literal>URL</tt>'s components with the
+<tt CLASS=literal>getProtocol()</tt>, <tt CLASS=literal>getHost()</tt>, and
+<tt CLASS=literal>getFile()</tt> methods. We can also compare it to
+another <tt CLASS=literal>URL</tt> with the <tt CLASS=literal>sameFile()</tt>
+method. <tt CLASS=literal>sameFile()</tt> determines if two
+URLs point to the same resource. It can be fooled,
+but <tt CLASS=literal>sameFile</tt> does more than compare the
+URLs for equality; it takes into account the
+possibility that one server may have several names, and other factors.
+
+<P CLASS=para>
+When a <tt CLASS=literal>URL</tt> is created, its specification is
+parsed to identify the protocol component. If the protocol
+doesn't make sense, or if Java can't find a protocol
+handler for it, the URL constructor throws a
+<tt CLASS=literal>MalformedURLException</tt>. A protocol handler is a Java
+class that implements the communications protocol for accessing the
+URL resource. For example, given an
+"http" URL, Java prepares to use the
+HTTP protocol handler to retrieve documents from
+the specified server.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-3.2">Stream Data</A></h3>
+
+<P CLASS=para>
+The most general way to get data back from
+<tt CLASS=literal>URL</tt> is to ask for an <tt CLASS=literal>InputStream</tt>
+from the <tt CLASS=literal>URL</tt> by calling
+<tt CLASS=literal>openStream()</tt>. If you're writing an applet
+that will be running under Netscape, this is about your only
+choice. In fact, it's a good choice if you want to receive
+continuous updates from a dynamic information source. The drawback is
+that you have to parse the contents of an object yourself. Not all
+types of URLs support the
+<tt CLASS=literal>openStream()</tt> method; you'll get an
+<tt CLASS=literal>UnknownServiceException</tt> if yours doesn't.
+
+<P CLASS=para>
+The following code reads a single line from an HTML file: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try { 
+    URL url = new URL("http://server/index.html"); 
+    DataInputStream dis = new DataInputStream( url.openStream() ); 
+    String line = dis.readLine(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We ask for an <tt CLASS=literal>InputStream</tt> with
+<tt CLASS=literal>openStream()</tt>, and wrap it in a
+<tt CLASS=literal>DataInputStream</tt> to read a line of text. Here,
+because we are specifying the "http" protocol in the
+URL, we still require the services of an
+HTTP protocol handler. As we'll discuss more in a
+bit, that brings up some questions about what handlers we have
+available to us and where. This example partially works around those
+issues because no content handler is involved; we read the data and
+interpret it as a content handler would. However, there are even more
+limitations on what applets can do right now. For the time being, if
+you construct <tt CLASS=literal>URL</tt>s relative to the applet's
+<tt CLASS=literal>codeBase()</tt>, you should be able to use them in
+applets as in the above example. This should guarantee that the needed
+protocol is available and accessible to the applet. Again, we'll
+discuss the more general issues a bit later.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-9-SECT-3.3">Getting the Content as an Object</A></h3>
+
+<P CLASS=para>
+<A NAME="CH09.GET"></A><tt CLASS=literal>openStream()</tt> operates at a lower level than the
+more general content-handling mechanism implemented by the
+<tt CLASS=literal>URL</tt> class. We showed it first because, until some
+things are settled, you'll be limited as to when you can use
+URLs in their more powerful role. When a proper
+content handler is available to Java (currently, only if you supply
+one with your standalone application), you'll be able to retrieve the
+object the <tt CLASS=literal>URL</tt> addresses as a complete object, by
+calling the <tt CLASS=literal>URL</tt>'s <tt CLASS=literal>getContent()</tt>
+method. 
+<tt CLASS=literal>getContent()</tt> initiates a connection to the
+host, fetches the data for you, determines the data's
+MIME type, and invokes a content handler to turn
+the data into a Java object.
+
+<P CLASS=para>
+For example: given the URL 
+<A HREF="http://foo.bar.com/index.html">http://foo.bar.com/index.html</A>, a call to
+<tt CLASS=literal>getContent()</tt> uses the HTTP
+protocol handler to receive the data and the HTML
+content handler to turn the data into some kind of object. A
+URL that points to a plain-text file would use a
+text-content handler that might return a <tt CLASS=literal>String</tt>
+object. 
+A GIF file might be turned into an
+<tt CLASS=literal>Image</tt> object for display, using a
+GIF content handler. If we accessed the
+GIF file using an "ftp"
+URL, Java would use the same content handler, but
+would use the FTP protocol handler to receive the
+data.
+
+<P CLASS=para>
+<tt CLASS=literal>getContent()</tt> returns the output of the
+content handler. Now we're faced with a problem: exactly what
+did we get?  Since the content handler can return almost anything, the
+return type of <tt CLASS=literal>getContent()</tt> is
+<tt CLASS=literal>Object</tt>. Before doing anything meaningful with this
+<tt CLASS=literal>Object</tt>, we must cast it into some other data type
+that we can work with.
+ For example, if we expect a
+<tt CLASS=literal>String</tt>, we'll cast the result of
+<tt CLASS=literal>getContent()</tt> to a <tt CLASS=literal>String</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String content; 
+ 
+try  
+    content = (String)myURL.getContent(); 
+catch ( Exception e ) { } 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Of course, we are presuming we will in fact get a
+<tt CLASS=literal>String</tt> object back from this
+<tt CLASS=literal>URL</tt>. If we're wrong, we'll get a
+<tt CLASS=literal>ClassCastException</tt>. Since it's common for servers
+to be confused (or even lie) about the MIME types
+of the objects they serve, it's wise to catch that exception (it's a
+subclass of <tt CLASS=literal>RuntimeException</tt>, so catching it is
+optional) or to check the type of the returned object with the
+<tt CLASS=literal>instanceof</tt> operator:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+if ( content instanceof String ) { 
+    String s = (String)content; 
+    ... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Various kinds of errors can occur when trying to retrieve the
+data. For example, <tt CLASS=literal>getContent()</tt> can throw an
+<tt CLASS=literal>IOException</tt> if there is a communications error;
+<tt CLASS=literal>IOException</tt> is not a type of
+<tt CLASS=literal>RuntimeException</tt>, so we must catch it explicitly,
+or declare the method that calls <tt CLASS=literal>getContent()</tt> can
+throw it. Other kinds of errors can happen at the application level:
+some knowledge of how the handlers deal with errors is necessary.
+
+<P CLASS=para>
+For example, consider a <tt CLASS=literal>URL</tt> that refers to a
+nonexistent file on an HTTP server. When
+requested, the server probably returns a valid HTML
+document that consists of the familiar "404 Not Found"
+message. An appropriate HTML content handler is
+invoked to interpret this and return it as it would any other
+HTML object. At this point, there are several
+alternatives, depending entirely on the content handler's
+implementation. It might return a <tt CLASS=literal>String</tt> containing
+the error message; it could also conceivably return some other kind of
+object or throw a specialized subclass of
+<tt CLASS=literal>IOException</tt>. To find out that an error occurred,
+the application may have to look directly at the object returned from
+<tt CLASS=literal>getContent()</tt>. After all, what is an error to the
+application may not be an error as far as the protocol or content
+handlers are concerned. "404 Not Found" isn't an
+error at this level; it's a perfectly valid document.
+
+<P CLASS=para>
+Another type of error occurs if a content handler that
+understands the data's MIME type isn't
+available. In this case, <tt CLASS=literal>getContent()</tt> invokes a
+minimal content handler used for data with an unknown type and
+returns the data as a raw <tt CLASS=literal>InputStream</tt>. A
+sophisticated application might specialize this behavior to try to
+decide what to do with the data on its own.
+
+<P CLASS=para>
+The <tt CLASS=literal>openStream()</tt> and
+<tt CLASS=literal>getContent()</tt> methods both implicitly create a
+connection to the remote <tt CLASS=literal>URL</tt> object. For some
+applications, it may be necessary to use the
+<tt CLASS=literal>openConnection()</tt> method of the
+<tt CLASS=literal>URL</tt> to interact directly with the protocol
+handler. <tt CLASS=literal>openConnection()</tt> returns a
+<tt CLASS=literal>URLConnection</tt> object, which represents a single,
+active connection to the <tt CLASS=literal>URL</tt> resource. We'll
+examine <tt CLASS=literal>URLConnection</tt>s further when we start writing
+protocol handlers.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Datagram Sockets</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Web Browsers and Handlers</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

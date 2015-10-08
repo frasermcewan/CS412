@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.2 Nested Top-Level Classes and Interfaces</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:52:18 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Inner Classes and Other New Language Features</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-2">5.2 Nested Top-Level Classes and Interfaces</A></h2>
+
+<P CLASS=para>
+<A NAME="CH5.INNER.CLASSE2"></A><A NAME="CH5.TOP-LEVEL.CL1"></A><A NAME="CH5.INTERFACES-N1"></A><A NAME="CH5.CLASSES-NEST1"></A>As explained above, a nested top-level class or interface is
+just like a regular package-member class or interface,
+except that, for convenience, it has been nested within
+another class or interface.  Note that nested top-level
+classes and interfaces must be declared <tt CLASS=literal>static</tt>.
+They can only be nested within other top-level classes and
+interfaces (i.e., they cannot be declared within inner
+classes), but they can be nested to any depth.
+
+<P CLASS=para>
+<A HREF="ch05_02.htm#JNUT2-CH-5-EX-1">Example 5.1</A> 
+shows how you might define a nested top-level "helper" interface.
+Note the use of the <tt CLASS=literal>static</tt>
+keyword in the declaration of the interface.  The example
+also shows how this interface is used both within the class
+that contains it and by external classes.  Note the use of
+its hierarchical name in the external class.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-5-EX-1">Example 5.1: Defining and Using a Nested Top-Level Interface</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class LinkedList {
+  // This nested top-level helper interface is defined as a static member.
+  public interface Linkable {
+    public Linkable getNext();
+    public void setNext(Linkable node);
+  }
+  // The head of the list is a Linkable object.
+  Linkable head;  
+  // Method bodies omitted.
+  public void insert(Linkable node) { ... } 
+  public remove(Linkable node) { ... } 
+}
+// This class defines a type of node that we'd like to use in
+// a linked list.  Note the nested interface name in the implements clause.
+class LinkableInteger implements LinkedList.Linkable
+{
+  // Here's the node's data and constructor.
+  int i;
+  public LinkableInteger(int i) { this.i = i; }
+  // Here are the data and methods required to implement the interface.
+  LinkedList.Linkable next;
+  public LinkedList.Linkable getNext() { return next; }
+  public void setNext(LinkedList.Linkable node) { next = node; }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>import</tt> statement can be used to import nested
+top-level classes and interfaces from the class that defines
+them, just as it can be used to import package member
+top-level classes and interfaces from the package that
+defines them.
+<A HREF="ch05_02.htm#JNUT2-CH-5-EX-2">Example 5.2</A>
+shows a new definition of the <tt CLASS=literal>LinkableInteger</tt> class
+from
+<A HREF="ch05_02.htm#JNUT2-CH-5-EX-1">Example 5.1</A>
+that uses an <tt CLASS=literal>import</tt> statement to allow it to refer
+to the <tt CLASS=literal>Linkable</tt> interface by its simple, unqualified
+name (i.e., the name of the enclosing class is no longer needed).
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-5-EX-2">Example 5.2: Importing a Static Member Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import LinkedList.*;     // Or use import LinkedList.Linkable;
+// Since we use an import statement, we can just type
+// "Linkable" instead of "LinkedList.Linkable".
+class LinkableInteger2 implements Linkable
+{
+  int i;
+  public LinkableInteger2(int i) { this.i = i; }
+  Linkable next;
+  public Linkable getNext() { return next; }
+  public void setNext(Linkable node) { next = node; }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-5-SECT-2.1">Nested Top-Level Classes and .class Files</A></h3>
+
+<P CLASS=para>
+When you compile the <I CLASS=emphasis>LinkedList.java</I> file shown in
+<A HREF="ch05_02.htm#JNUT2-CH-5-EX-1">Example 5.1</A>, 
+you'll find that two class files are generated.  The first
+is named <I CLASS=emphasis>LinkedList.class</I>, as expected.  The second,
+however, is named <I CLASS=emphasis>LinkedList$Linkable.class</I>.  The
+<tt CLASS=literal>$</tt> in this name is automatically inserted by the Java
+1.1 compiler.  
+
+<P CLASS=para>
+The Java Virtual Machine knows nothing about
+nested top-level classes and interfaces or the various
+types of inner classes. 
+Therefore, the Java compiler must convert these new types
+into standard, non-nested class files that the Java
+interpreter can understand.  This is done through
+source-code transformations that insert <tt CLASS=literal>$</tt> characters
+into nested class names. These source-code transformations
+may also insert hidden fields,
+methods, and constructor arguments into the affected
+classes.  Unless you are writing a Java 1.1 compiler,
+however, you do not need to know the details 
+of these source-code transformations, and you will typically
+not even notice them, except in the names of class files.
+[2]
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+See the <I CLASS=emphasis>Java Language Specification</I> if you want
+complete details on the source-code transformations
+performed by the Java 1.1 compiler to support inner classes.
+</blockquote>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>An Overview of Inner Classes</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Member Classes</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

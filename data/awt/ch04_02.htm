@@ -1,0 +1,1289 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.2 The Event Class</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:30:30 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>Events</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-2">4.2 The Event Class</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.EVENT2"></A>An instance of the <tt CLASS=literal>Event</tt> class 
+is a platform-independent representation that encapsulates the specifics 
+of an event that happens within the Java 1.0 model. It contains everything 
+you need to know about an event: who, what, when, where, and why the event 
+happened. Note that the <tt CLASS=literal>Event</tt> 
+class is not used in the Java 1.1 event model; instead, Java 1.1 has an 
+<tt CLASS=literal>AWTEvent</tt> class, with subclasses 
+for different event types. 
+
+<P CLASS=para>
+When an event occurs, you decide whether or not to process the event. If 
+you decide against reacting, the event passes through your program quickly 
+without anything happening. If you decide to handle the event, you must 
+deal with it quickly so the system can process the next event. If handling 
+the event requires a lot of work, you should move the event-handling code 
+into its own thread. That way, the system can process the next event while 
+you go off and process the first. If you do not multithread your event 
+processing, the system becomes slow and unresponsive and could lose events. 
+A slow and unresponsive program frustrates users and may convince them 
+to find another solution for their problems. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-2.1">Variables</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Event</tt> contains ten instance 
+variables that offer all the specific information for a particular event. Instance variables
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Object arg </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>arg</tt> field contains some 
+data regarding the event, to be interpreted by the recipient. For example, 
+if the user presses Return 
+within a <tt CLASS=literal>TextField</tt>, an <tt CLASS=literal>Event</tt> 
+with an <tt CLASS=literal>id</tt> of <tt CLASS=literal>ACTION_EVENT</tt> 
+is generated with the <tt CLASS=literal>TextField</tt> 
+as the <tt CLASS=literal>target</tt> and the string 
+within it as the <tt CLASS=literal>arg</tt>. See a 
+description of each specific event to find out what its <tt CLASS=literal>arg</tt> 
+means. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int clickCount </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>clickCount</tt> field allows 
+you to check for double clicking of the mouse. This field is relevant only 
+for <tt CLASS=literal>MOUSE_DOWN</tt> events. There 
+is no way to specify the time delta used to determine how quick a double-click 
+needs to be, nor is there a maximum value for <tt CLASS=literal>clickCount</tt>. 
+If a user quickly clicks the mouse four times, <tt CLASS=literal>clickCount</tt> 
+is four. Only the passage of a system-specific time delta will reset the 
+value so that the next <tt CLASS=literal>MOUSE_DOWN</tt> 
+is the first click. The incrementing of <tt CLASS=literal>clickCount</tt> 
+does not care which mouse button is pressed. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Event evt </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>evt</tt> field does not appear 
+to be used anywhere but is available if you wish to pass around a linked 
+list of events. Then your program can handle this event and tell the system 
+to deal with the next one (as demonstrated in the following code), or you can 
+process the entire chain yourself. </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean mouseDown (Event e, int x, int y) {
+    System.out.println ("Coordinates: " + x + "-" + y);
+    if (e.evt != null)
+        postEvent (e.evt);
+    return true;
+}
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int id </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>id</tt> field of <tt CLASS=literal>Event</tt> 
+contains the identifier of the event. The system-generated events are the 
+following <tt CLASS=literal>Event</tt> constants:
+
+<DIV CLASS=simplelist>
+
+<P>
+<TABLE BORDER=0>
+<TR>
+<TD><tt CLASS=literal>WINDOW_DESTROY</tt></TD>
+<TD><tt CLASS=literal>MOUSE_ENTER</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>WINDOW_EXPOSE</tt></TD>
+<TD><tt CLASS=literal>MOUSE_EXIT</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>WINDOW_ICONIFY</tt></TD>
+<TD><tt CLASS=literal>MOUSE_DRAG</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>WINDOW_DEICONIFY</tt></TD>
+<TD><tt CLASS=literal>SCROLL_LINE_UP</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>KEY_PRESS</tt></TD>
+<TD><tt CLASS=literal>SCROLL_LINE_DOWN</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>KEY_RELEASE</tt></TD>
+<TD><tt CLASS=literal>SCROLL_PAGE_UP</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD><tt CLASS=literal>SCROLL_PAGE_DOWN</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>KEY_ACTION_RELEASE</tt></TD>
+<TD><tt CLASS=literal>SCROLL_ABSOLUTE</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>MOUSE_DOWN</tt></TD>
+<TD><tt CLASS=literal>LIST_SELECT</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>MOUSE_UP</tt></TD>
+<TD><tt CLASS=literal>LIST_DESELECT</tt></TD>
+</TR>
+<TR>
+<TD><tt CLASS=literal>MOUSE_MOVE</tt></TD>
+<TD><tt CLASS=literal>ACTION_EVENT</tt></TD>
+</TR>
+</TABLE>
+
+</DIV>
+
+<P CLASS=para>
+As a user, 
+you can create your own event types and store your own unique event ID 
+here. In Java 1.0, there is no formal way to prevent conflicts between your events and system events, but using a negative IO is a good ad-hoc method. It is up to you to check all the user events generated 
+in your program in order to avoid conflicts among user events. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int key </I><br>
+<DD>
+
+<P CLASS=para>
+For keyboard-related events, the <tt CLASS=literal>key</tt> 
+field contains the integer representation of the keyboard element that 
+caused the event. Constants are available for the keypad keys. To 
+examine <tt CLASS=literal>key</tt> as a character, 
+just cast it to a <tt CLASS=literal>char</tt>. For 
+nonkeyboard-related events, the value is zero. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pubic int modifiers </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>modifiers</tt> field shows the 
+state of the modifier keys when the event happened. A flag is set for each 
+modifier key pressed by the user when the event happened. Modifier keys 
+are Shift, Control, Alt, and Meta. Since the middle and right mouse key 
+are indicated in a Java event by a modifier key, one reason to use the 
+<tt CLASS=literal>modifiers</tt> field is to determine 
+which mouse button triggered an event. See <A HREF="ch04_02.htm#JAWT-CH-4-SECT-2.4">Working With Mouse Buttons in Java 1.0</A> 
+for an example. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Object target </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>target</tt> field contains a 
+reference to the object that is the cause of the event. For example, if 
+the user selects a button, the button is the target of the event. If the 
+user moves the mouse into a <tt CLASS=literal>Frame</tt>, 
+the <tt CLASS=literal>Frame</tt> is the target. The 
+<tt CLASS=literal>target</tt> indicates where the 
+event happened, not the component that is dealing with it. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public long when </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>when</tt> field contains the 
+time of the event in milliseconds. The following code converts this
+<tt CLASS=literal>long</tt> value to a <tt CLASS=literal>Date</tt> 
+to examine its contents: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+Date d = new Date (e.when);
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int x </I><br><I CLASS=emphasis>public int y </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> 
+fields show the coordinates where the event happened. The coordinates are 
+always relative to the top left corner of the target of the event and get 
+translated based on the top left corner of the container as the event gets 
+passed through the containing components. (See the previous <A HREF="ch04_01.htm#JAWT-CH-4-SECT-1.1">Identifying the Target</A> for an example 
+of this translation.) It is possible for either or both of these to be 
+outside the coordinate space of the applet (e.g., if user quickly moves 
+the mouse outside the applet). </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-2.2">Constants</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.CONST"></A>Numerous constants are provided with the <tt CLASS=literal>Event</tt> 
+class. Several designate which event happened (the why). Others are available 
+to help in determining the function key a user pressed (the what). And 
+yet more are available to make your life easier. 
+
+<P CLASS=para>
+When the system generates an event, it calls a handler method for it. To 
+deal with the event, you have to override the appropriate method. The different 
+event type sections describe which methods you override. Key constants
+
+<P CLASS=para>
+These constants are set when a user presses a key. Most of them correspond 
+to function and keypad keys; since such keys are generally used to invoke 
+an action from the program or the system, Java calls them <I CLASS=emphasis>action 
+keys</I> and causes them to generate a 
+different <tt CLASS=literal>Event</tt> type (<tt CLASS=literal>KEY_ACTION</tt>) 
+from regular alphanumeric keys (<tt CLASS=literal>KEY_PRESS</tt>). 
+
+<P CLASS=para>
+<A HREF="ch04_02.htm#JAWT-CH-4-TAB-2">Table 4.2</A> shows the constants used to represent 
+keys and the event type that uses each constant. The values, which are 
+all declared <tt CLASS=literal>public static final int</tt>, 
+appear in the <tt CLASS=literal>key </tt>variable 
+of the event instance. A few keys represent ASCII characters that have 
+string equivalents such as <tt CLASS=literal>\n</tt>. 
+Black stars (<img src="gifs/bstar.gif" alt="(New)" border=0>) mark the constants that are new in Java 1.1; they can be used 
+with the 1.0 event model, provided that you are running Java 1.1. Java 
+1.1 events use a different set of key constants defined in the <tt CLASS=literal>KeyEvent</tt> 
+class. 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-4-TAB-2">Table 4.2: Constants for Keys in Java 1.0</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Constant</TH>
+<TH ALIGN="LEFT">Event Type</TH>
+<TH ALIGN="LEFT">&nbsp;</TH>
+<TH ALIGN="left">Constant</TH>
+<TH ALIGN="left">Event Type</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>HOME</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>F9</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>END</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>F10</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>PGUP</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>F11</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>PGDN</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>F12</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>UP</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>PRINT_SCREEN<img src="gifs/bstar.gif" alt="(New)" border=0></tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>DOWN</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>SCROLL_LOCK<img src="gifs/bstar.gif" alt="(New)" border=0></tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>LEFT</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>CAPS_LOCK<img src="gifs/bstar.gif" alt="(New)" border=0></tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>RIGHT</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>NUM_LOCK<img src="gifs/bstar.gif" alt="(New)" border=0></tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>F1</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>PAUSE<img src="gifs/bstar.gif" alt="(New)" border=0></tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>F2</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>INSERT<img src="gifs/bstar.gif" alt="(New)" border=0></tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_ACTION</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>F3</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>ENTER</tt> (<tt CLASS=literal>\n</tt>)<img src="gifs/bstar.gif" alt="(New)" border=0></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_PRESS</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>F4</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>BACK_SPACE</tt> (<tt CLASS=literal>\b</tt>)<img src="gifs/bstar.gif" alt="(New)" border=0></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_PRESS</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>F5</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>TAB</tt> (<tt CLASS=literal>\t</tt>)<img src="gifs/bstar.gif" alt="(New)" border=0></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_PRESS</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>F6</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>ESCAPE<img src="gifs/bstar.gif" alt="(New)" border=0></tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_PRESS</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>F7</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left"><tt CLASS=literal>DELETE<img src="gifs/bstar.gif" alt="(New)" border=0></tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>KEY_PRESS</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>F8</tt></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>KEY_ACTION</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+Modifiers
+
+<P CLASS=para>
+Modifiers are keys like Shift, Control, Alt, or Meta. When a user presses 
+any key or mouse button that generates an <tt CLASS=literal>Event</tt>, 
+the <tt CLASS=literal>modifiers</tt> field of the 
+<tt CLASS=literal>Event</tt> instance is set. You 
+can check whether any modifier key was pressed by ANDing its constant with 
+the <tt CLASS=literal>modifiers</tt> field. If multiple 
+modifier keys were down at the time the event occurred, the constants for 
+the different modifiers are ORed together in the field. 
+
+<DIV CLASS=simplelist>
+
+<P>
+<tt CLASS=literal>public static final int ALT_MASK</tt><br>
+<tt CLASS=literal>public static final int CTRL_MASK</tt><br>
+<tt CLASS=literal>public static final int META_MASK</tt><br>
+<tt CLASS=literal>public static final int SHIFT_MASK</tt><br>
+</DIV>
+
+<P CLASS=para>
+When reporting a mouse event, the system automatically sets the <tt CLASS=literal>modifiers</tt> 
+field. Since Java is advertised as supporting the single-button mouse model, 
+all buttons generate the same mouse events, and the system uses the <tt CLASS=literal>modifiers</tt> 
+field to differentiate between mouse buttons. That way, a user with a one- 
+or two-button mouse can simulate a three-button mouse by clicking on his 
+mouse while holding down a modifier key. <A HREF="ch04_02.htm#JAWT-CH-4-TAB-3">Table 4.3</A> 
+lists the mouse modifier keys; an applet in <A HREF="ch04_02.htm#JAWT-CH-4-SECT-2.4">Working With Mouse Buttons in Java 1.0</A>
+demonstrates how to differentiate between mouse buttons. 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-4-TAB-3">Table 4.3: Mouse Button Modifier Keys</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Mouse Button</TH>
+<TH ALIGN="left">Modifier Key</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Left mouse button</TD>
+<TD ALIGN="left">None</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Middle mouse button</TD>
+<TD ALIGN="left"><tt CLASS=literal>ALT_MASK</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">Right mouse button</TD>
+<TD ALIGN="left"><tt CLASS=literal>META_MASK</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+For example, if you have a three-button mouse, and click the right button, 
+Java generates some kind of mouse event with the <tt CLASS=literal>META_MASK</tt> 
+set in the <tt CLASS=literal>modifiers</tt> 
+field. If you have a one-button mouse, you can generate the same event 
+by clicking the mouse while depressing the Meta key. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+If you have a multibutton mouse and do an Alt+right 
+mouse or Meta+left mouse, the results are platform specific. You should get a mouse event with two masks set.
+</blockquote><P>
+</DIV>
+
+Key events
+
+<P CLASS=para>
+The component peers deliver separate key events when a user presses and 
+releases nearly any key. <tt CLASS=literal>KEY_ACTION</tt> 
+and <tt CLASS=literal>KEY_ACTION_RELEASE</tt> are 
+for the function and arrow keys, while <tt CLASS=literal>KEY_PRESS</tt> 
+and <tt CLASS=literal>KEY_RELEASE</tt> are for the 
+remaining control and alphanumeric keys. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int KEY_ACTION </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>KEY_ACTION</tt> 
+event when the user presses a function or keypad key. The default <tt CLASS=literal>Component.handleEvent()</tt> 
+method calls the <tt CLASS=literal>keyDown()</tt> 
+method for this event. If the user holds down the key, this event is generated 
+multiple times. If you are using the 1.1 event model, the interface method <tt CLASS=literal>KeyListener.keyPressed()</tt> 
+handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int KEY_ACTION_RELEASE </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>KEY_ACTION_RELEASE</tt> 
+event when the user releases a function or keypad key. The default <tt CLASS=literal>handleEvent()</tt> 
+method for <tt CLASS=literal>Component</tt> calls 
+the <tt CLASS=literal>keyUp()</tt> method for this 
+event. If you are using the 1.1 event model, the <tt CLASS=literal>KeyListener.keyReleased()</tt> 
+interface method handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int KEY_PRESS </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>KEY_PRESS</tt> 
+event when the user presses an ordinary key. The default <tt CLASS=literal>Component.handleEvent()</tt> 
+method calls the <tt CLASS=literal>keyDown()</tt> 
+method for this event. Holding down the key causes multiple <tt CLASS=literal>KEY_PRESS</tt> 
+events to be generated. If you are using the 1.1 event model, the interface method <tt CLASS=literal>KeyListener.keyPressed()</tt> 
+handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int KEY_RELEASE </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver <tt CLASS=literal>KEY_RELEASE</tt> 
+events when the user releases an ordinary key. The default <tt CLASS=literal>handleEvent()</tt> 
+method for <tt CLASS=literal>Component</tt> calls 
+the <tt CLASS=literal>keyUp()</tt> method for this 
+event. If you are using the 1.1 event model, the interface method <tt CLASS=literal>KeyListener.keyReleased()</tt> 
+ handles this event. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+If you want to capture arrow and keypad keys under the X Window System, 
+make sure the key codes are set up properly, using the <I CLASS=emphasis>xmodmap</I> 
+command. 
+</blockquote><P>
+</DIV>
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Some platforms generate events for the modifier keys by themselves, 
+whereas other platforms require modifier keys to be pressed with another 
+key. For example, on a Windows 95 platform, if Ctrl+A is pressed, 
+you would expect one <tt CLASS=literal>KEY_PRESS</tt> 
+and one <tt CLASS=literal>KEY_RELEASE</tt>. However, 
+there is a second <tt CLASS=literal>KEY_RELEASE</tt> 
+for the Control key. Under Motif, you get only a single <tt CLASS=literal>KEY_RELEASE</tt>. 
+</blockquote><P>
+</DIV>
+
+Window events
+
+<P CLASS=para>
+Window events happen only for components that are children of <tt CLASS=literal>Window</tt>. 
+Several of these events are available only on certain platforms. Like other 
+event types, the <tt CLASS=literal>id</tt> variable 
+holds the value of the specific event instance. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int WINDOW_DESTROY </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>WINDOW_DESTROY</tt> 
+event whenever the system tells a window to destroy itself. This is usually 
+done when the user selects the window manager's Close or Quit window 
+menu option. By default, <tt CLASS=literal>Frame </tt>instances 
+do not deal with this event, and you must remember to catch it yourself. 
+If you are using the 1.1 event model, the <tt CLASS=literal>WindowListener.windowClosing()</tt> 
+interface method handles this event.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int WINDOW_EXPOSE </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>WINDOW_EXPOSE</tt> 
+event whenever all or part of a window becomes visible. To find out what 
+part of the window has become uncovered, use the <tt CLASS=literal>getClipRect()</tt> method 
+(or <tt CLASS=literal>getClipBounds()</tt> in Java version 
+1.1) of the <tt CLASS=literal>Graphics</tt> parameter 
+to the <tt CLASS=literal>paint()</tt> method. If you 
+are using the 1.1 event model, the <tt CLASS=literal>WindowListener.windowOpening()</tt> 
+interface method most closely corresponds to the handling of this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int WINDOW_ICONIFY </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>WINDOW_ICONIFY</tt> 
+event when the user iconifies the window. If you are using the 1.1 event 
+model, the interface method <tt CLASS=literal>WindowListener.windowIconified()</tt> 
+ handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int WINDOW_DEICONIFY </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>WINDOW_DEICONIFY</tt> 
+event when the user de-iconifies the window. If you are using the 1.1 event 
+model, the interface method <tt CLASS=literal>WindowListener.windowDeiconified()</tt> 
+handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int WINDOW_MOVED </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>WINDOW_MOVED</tt> event signifies 
+that the user has moved the window. If you are using the 1.1 event model, 
+the <tt CLASS=literal>ComponentListener.componentMoved()</tt> 
+interface method handles this event. </DL>
+Mouse events
+
+<P CLASS=para>
+The component peers deliver mouse events when a user presses or releases 
+a mouse button. Events are also delivered whenever the mouse moves. In 
+order to be platform independent, Java pretends that all mice have a single 
+button. If you press the second or third button, Java generates a regular 
+mouse event but sets the event's <tt CLASS=literal>modifers</tt> 
+field with a flag that indicates which button was pressed. If you press 
+the left button, no <tt CLASS=literal>modifiers</tt> 
+flags are set. Pressing the center button sets the <tt CLASS=literal>ALT_MASK</tt> 
+flag; pressing the right button sets the <tt CLASS=literal>META_MASK</tt> 
+flag. Therefore, you can determine which mouse button was pressed by looking 
+at the <tt CLASS=literal>Event.modifiers</tt> attribute. 
+Furthermore, users with a one-button or two-button mouse can generate the 
+same events by pressing a mouse button while holding down the Alt or Meta 
+keys. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Early releases of Java (1.0.2 and earlier) only propagated mouse events 
+from <tt CLASS=literal>Canvas</tt> and <tt CLASS=literal>Container</tt> 
+objects. With the 1.1 event model, the events that different components 
+process are better defined. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int MOUSE_DOWN </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>MOUSE_DOWN</tt> 
+event when the user presses any mouse button. This action must occur over 
+a component that passes along the <tt CLASS=literal>MOUSE_DOWN</tt> 
+event. The default <tt CLASS=literal>Component.handleEvent()</tt> 
+method calls the <tt CLASS=literal>mouseDown()</tt> 
+method for this event. If you are using the 1.1 event model, the <tt CLASS=literal>MouseListener.mousePressed()</tt> 
+interface method handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int MOUSE_UP </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>MOUSE_UP</tt> 
+event when the user releases the mouse button. This action must occur over 
+a component that passes along the <tt CLASS=literal>MOUSE_UP</tt> 
+event. The default <tt CLASS=literal>handleEvent()</tt> 
+method for <tt CLASS=literal>Component</tt> calls 
+the <tt CLASS=literal>mouseUp()</tt> method for this 
+event. If you are using the 1.1 event model, the interface method <tt CLASS=literal>MouseListener.mouseReleased()</tt> 
+ handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int MOUSE_MOVE </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>MOUSE_MOVE</tt> 
+event whenever the user moves the mouse over any part of the applet. This 
+can happen many, many times more than you want to track, so make sure you 
+really want to do something with this event before trying to capture it. 
+(You can also capture <tt CLASS=literal>MOUSE_MOVE</tt> 
+events and without losing much, choose to deal with only every third or fourth movement.) The default <tt CLASS=literal>handleEvent()</tt> 
+method calls the <tt CLASS=literal>mouseMove()</tt> 
+method for the event. If you are using the 1.1 event model, the interface method <tt CLASS=literal>MouseMotionListener.mouseMoved()</tt> 
+handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int MOUSE_DRAG </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>MOUSE_DRAG</tt> 
+event whenever the user moves the mouse over any part of the applet with 
+a mouse button depressed. The default method <tt CLASS=literal>handleEvent()</tt> 
+ calls the <tt CLASS=literal>mouseDrag()</tt> 
+method for the event. If you are using the 1.1 event model, the interface method <tt CLASS=literal>MouseMotionListener.mouseDragged()</tt> 
+ handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int MOUSE_ENTER </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>MOUSE_ENTER</tt> 
+event whenever the cursor enters a component. The default <tt CLASS=literal>handleEvent()</tt> 
+method calls the <tt CLASS=literal>mouseEnter()</tt> 
+method for the event. If you are using the 1.1 event model, the interface method <tt CLASS=literal>MouseListener.mouseEntered()</tt> 
+ handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int MOUSE_EXIT </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>MOUSE_EXIT</tt> 
+event whenever the cursor leaves a component. The default <tt CLASS=literal>handleEvent()</tt> 
+method calls the <tt CLASS=literal>mouseExit()</tt> 
+method for the event. If you are using the 1.1 event model, the interface method <tt CLASS=literal>MouseListener.mouseExited()</tt> 
+ handles this event. </DL>
+Scrolling events
+
+<P CLASS=para>
+The peers deliver scrolling events for the <tt CLASS=literal>Scrollbar</tt> 
+component. The objects that have a built-in scrollbar (like <tt CLASS=literal>List</tt>, 
+<tt CLASS=literal>ScrollPane</tt>, and <tt CLASS=literal>TextArea</tt>) 
+do not generate these events. No default methods are called for any of 
+the scrolling events. They must be dealt with in the <tt CLASS=literal>handleEvent()</tt> 
+method of the <tt CLASS=literal>Container</tt> or a subclass of the <tt CLASS=literal>Scrollbar</tt>. You can determine 
+which particular event occurred by checking the <tt CLASS=literal>id</tt> 
+variable of the event, and find out the new position of the thumb by looking 
+at the <tt CLASS=literal>arg</tt> variable or calling 
+<tt CLASS=literal>getValue()</tt> on the scrollbar. 
+See also the description of the <tt CLASS=literal>AdjustmentListener</tt> 
+interface later in this chapter. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLL_LINE_UP </I><br>
+<DD>
+
+<P CLASS=para>
+The scrollbar peers deliver the <tt CLASS=literal>SCROLL_LINE_UP</tt> 
+event when the user presses the arrow pointing up for the vertical scrollbar 
+or the arrow pointing left for the horizontal scrollbar. This decreases 
+the scrollbar setting by one back toward the minimum value. If you are 
+using the 1.1 event model, the interface method <tt CLASS=literal>AdjustmentListener.adjustmentValueChanged()</tt>
+ handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLL_LINE_DOWN </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>SCROLL_LINE_DOWN</tt> 
+event when the user presses the arrow pointing down for the vertical scrollbar 
+or the arrow pointing right for the horizontal scrollbar. This increases 
+the scrollbar setting by one toward the maximum value. If you are using 
+the 1.1 event model, the interface method <tt CLASS=literal>AdjustmentListener.adjustmentValueChanged()</tt> 
+ handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLL_PAGE_UP </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>SCROLL_PAGE_UP</tt> 
+event when the user presses the mouse with the cursor in the area between the slider and 
+the decrease arrow. This decreases the scrollbar setting by the paging 
+increment, which defaults to 10, back toward the minimum value. If you 
+are using the 1.1 event model, the interface method <tt CLASS=literal>AdjustmentListener.adjustmentValueChanged()</tt> 
+handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLL_PAGE_DOWN </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>SCROLL_PAGE_DOWN</tt> 
+event when the user presses the mouse with the cursor in the area between the slider and 
+the increase arrow. This increases the scrollbar setting by the paging 
+increment, which defaults to 10, toward the maximum value. If you are 
+using the 1.1 event model, the interface method <tt CLASS=literal>AdjustmentListener.adjustmentValueChanged()</tt> 
+ handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLL_ABSOLUTE </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>SCROLL_ABSOLUTE</tt> 
+event when the user drags the slider part of the scrollbar. 
+There is no set time period or distance between multiple <tt CLASS=literal>SCROLL_ABSOLUTE</tt> 
+events. If you are using the Java version 1.1 event model, the <tt CLASS=literal>AdjustmentListener.adjustmentValueChanged()</tt> 
+interface method handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLL_BEGIN <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCROLL_BEGIN</tt> event is not 
+delivered by peers, but you may wish to use it to signify when a user drags 
+the slider at the beginning of a series of <tt CLASS=literal>SCROLL_ABSOLUTE</tt> 
+events. <tt CLASS=literal>SCROLL_END</tt>, described next, would 
+then be used to signify the end of the series. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int SCROLL_END <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>SCROLL_END</tt> event is not 
+delivered by peers, but you may wish to use it to signify when a user drags 
+the slider at the end of a series of <tt CLASS=literal>SCROLL_ABSOLUTE</tt> 
+events. <tt CLASS=literal>SCROLL_BEGIN</tt>, described previously,
+would have been used to signify the beginning of the series. </DL>
+List events
+
+<P CLASS=para>
+Two events specific to the <tt CLASS=literal>List</tt> 
+class are passed along by the peers. They signify when the user has selected 
+or deselected a specific choice in the <tt CLASS=literal>List</tt>. 
+It is not ordinarily necessary to capture these events, because the peers 
+deliver the <tt CLASS=literal>ACTION_EVENT</tt> when 
+the user double-clicks on a specific item in the <tt CLASS=literal>List</tt> 
+and it is this <tt CLASS=literal>ACTION_EVENT</tt> 
+that triggers something to happen. However, if there is reason to do something 
+when the user has just single-clicked on a choice, these events may be 
+useful. An example of how they would prove useful is if you are displaying 
+a list of filenames with the ability to preview files before loading. Single 
+selection would preview, double-click would load, and deselect would stop 
+previewing. 
+
+<P CLASS=para>
+No default methods are called for any of the list events. They must be 
+dealt with in the <tt CLASS=literal>handleEvent()</tt> 
+method of the <tt CLASS=literal>Container</tt> of 
+the <tt CLASS=literal>List</tt> or a subclass of the 
+<tt CLASS=literal>List</tt>. You can determine which 
+particular event occurred by checking the <tt CLASS=literal>id</tt> 
+variable of the event. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int LIST_SELECT </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>LIST_SELECT</tt> 
+event when the user selects an item in a <tt CLASS=literal>List</tt>. 
+If you are using the 1.1 event model, the interface method <tt CLASS=literal>ItemListener.itemStateChanged()</tt> 
+handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int LIST_DESELECT </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>LIST_DESELECT</tt> 
+event when an item in a <tt CLASS=literal>List</tt> 
+has been deselected. This is generated only if the <tt CLASS=literal>List</tt> 
+permits multiple selections. If you are using the 1.1 event model, the 
+<tt CLASS=literal>ItemListener.itemStateChanged()</tt> 
+interface method handles this event. </DL>
+Focus events
+
+<P CLASS=para>
+The peers deliver focus events when a component gains (<tt CLASS=literal>GOT_FOCUS</tt>) 
+or loses (<tt CLASS=literal>LOST_FOCUS</tt>) the input 
+focus. No default methods are called for the focus events. They must be 
+dealt with in the <tt CLASS=literal>handleEvent()</tt> 
+method of the <tt CLASS=literal>Container</tt> of 
+the component or a subclass of the component. You can determine which particular 
+event occurred by checking the <tt CLASS=literal>id</tt> 
+variable of the event. 
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Early releases of Java (1.0.2 and before) did not propagate focus 
+events on all platforms. This is fixed in release 1.1 of Java. Still, 
+you should avoid capturing focus events if you want to write portable 1.0 
+code. 
+</blockquote><P>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int GOT_FOCUS </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>GOT_FOCUS</tt> 
+event when a component gets the input focus. If you are using the 1.1 event 
+model, the <tt CLASS=literal>FocusListener.focusGained()</tt> 
+interface method handles this event. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int LOST_FOCUS </I><br>
+<DD>
+
+<P CLASS=para>
+The peers deliver the <tt CLASS=literal>LOST_FOCUS</tt> 
+event when a component loses the input focus. If you are using the 1.1 
+event model, the <tt CLASS=literal>FocusListener.focusLost()</tt> 
+interface method handles this event. </DL>
+FileDialog events
+
+<P CLASS=para>
+The <tt CLASS=literal>FileDialog</tt> events are another 
+set of nonportable events. Ordinarily, the <tt CLASS=literal>FileDialog</tt> 
+events are completely dealt with by the system, and you never see them. 
+Refer to <A HREF="ch06_01.htm">Chapter 6, <i>Containers</i></A> for exactly how to work with the <tt CLASS=literal>FileDialog</tt> 
+object. If you decide to create a generic <tt CLASS=literal>FileDialog</tt> 
+object, you can use these events to indicate file loading and saving. These 
+constants would be used in the <tt CLASS=literal>id</tt> 
+variable of the specific event instance: 
+
+<DIV CLASS=simplelist>
+
+<P>
+<I CLASS=emphasis>public static final int LOAD_FILE</I><br>
+<I CLASS=emphasis>public static final int SAVE_FILE</I><br>
+</DIV>
+
+Miscellaneous events
+
+<P CLASS=para>
+<tt CLASS=literal>ACTION_EVENT</tt> is probably the 
+event you deal with most frequently. It is generated when the user performs 
+the desired action for a specific component type (e.g., when a user selects 
+a button or toggles a checkbox). This constant would be found in the <tt CLASS=literal>id</tt> 
+variable of the specific event instance.
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int ACTION_EVENT </I><br>
+<DD>
+
+<P CLASS=para>
+The circumstances that lead to the peers delivering the <tt CLASS=literal>ACTION_EVENT</tt> 
+event depend upon the component that is the target of the event and the 
+user's platform. Although the event can be passed along differently 
+on different platforms, users will be accustomed to how the peers work 
+on their specific platforms and will not care that it is different on the 
+other platforms. For example, a Java 1.0 <tt CLASS=literal>List</tt> 
+component on a Microsoft Windows platform allows the user to select an 
+item by pressing the first letter of the choice, whereupon the <tt CLASS=literal>List</tt> 
+tries to find an item that starts with the letter. The X Window System 
+<tt CLASS=literal>List</tt> component does not provide 
+this capability. It works like a normal X <tt CLASS=literal>List</tt>, 
+where the user must scroll to locate the item and then select it. 
+
+<P CLASS=para>
+When the <tt CLASS=literal>ACTION_EVENT</tt> is generated, 
+the <tt CLASS=literal>arg</tt> variable of the specific 
+<tt CLASS=literal>Event</tt> instance is set based 
+upon the component type. In Chapters 5-11, which describe Java's GUI components, the description of each component contains an "Events" subsection that describes the value of the event's <tt CLASS=literal>arg</tt> field. If you are using the 
+1.1 event model, the <tt CLASS=literal>ActionListener.actionPerformed()</tt> 
+and <tt CLASS=literal>ItemListener.itemStateChanged()</tt> 
+interface methods handle this event, depending upon the component type. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-2.3">Event Methods</A></h3><A NAME="CH04.METH"></A>Constructors
+
+<P CLASS=para>
+Ordinarily, the peers deliver all your events for you. However, if you are 
+creating your own components or want to communicate across threads, it 
+may be necessary to create your own events. You can also create your own 
+events to notify your component's container of application-specific occurrences. 
+For example, if you were implementing your own tab sequencing for text 
+fields, you could create a "next text field" event to tell your container 
+to move to the next text field. Once you create the event, you send it 
+through the system using the <tt CLASS=literal>Component.postEvent()</tt> 
+method. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Event (Object target, long when, int id, int x, int y, int key, 
+int modifiers, Object arg) </I><br>
+<DD>
+
+<P CLASS=para>
+The first version of the constructor is the most complete and is what the 
+other two call. It initializes all the fields of the <tt CLASS=literal>Event</tt> 
+to the parameters passed and sets <tt CLASS=literal>clickCount</tt> 
+to 0. See the descriptions of the instance variables <A HREF="ch04_02.htm#JAWT-CH-4-SECT-2.1">Variables</A> 
+for the meanings of the arguments. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Event (Object target, long when, int id, int x, int y, int key, 
+int modifiers) </I><br>
+<DD>
+
+<P CLASS=para>
+The second constructor version calls the first with <tt CLASS=literal>arg</tt> 
+set to null. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Event (Object target, int id, Object arg) </I><br>
+<DD>
+
+<P CLASS=para>
+The final version calls the first constructor with the <tt CLASS=literal>when</tt>, 
+<tt CLASS=literal>x</tt>, <tt CLASS=literal>y</tt>, 
+<tt CLASS=literal>key</tt>, and <tt CLASS=literal>modifiers</tt> 
+parameters set to 0. </DL>
+Modifier methods
+
+<P CLASS=para>
+The modifier methods check to see if the different modifier mask values 
+are set. They report the state of each modifier key at the moment an event 
+occurred. It is possible for multiple masks to be set if multiple modifiers 
+are pressed when the event occurs. 
+
+<P CLASS=para>
+There is no <tt CLASS=literal>altDown()</tt> method; 
+to check whether the Alt key is pressed you must directly compare the event's 
+<tt CLASS=literal>modifiers</tt> against the <tt CLASS=literal>Event.ALT_MASK</tt> 
+constant. The <tt CLASS=literal>metaDown()</tt> method 
+is helpful when dealing with mouse events to see if the user pressed the 
+right mouse button. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean shiftDown () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>shiftDown()</tt> method returns 
+<tt CLASS=literal>true</tt> if the Shift key was pressed and <tt CLASS=literal>false</tt> otherwise. There is no way 
+to differentiate left and right shift keys. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean controlDown () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>controlDown()</tt> method returns 
+<tt CLASS=literal>true</tt> if the Control key was pressed and <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean metaDown () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>metaDown()</tt> method returns 
+<tt CLASS=literal>true</tt> if the Meta key was pressed and <tt CLASS=literal>false</tt> otherwise. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void translate (int x, int y)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>translate()</tt> method translates 
+the x and y coordinates of the <tt CLASS=literal>Event</tt> 
+instance by <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt>. 
+The system does this so that the coordinates of the event are relative 
+to the component receiving the event, rather than the container of the 
+component. The system takes care of all this for you when passing the event 
+through the containment hierarchy (not the object hierarchy), so you do 
+not have to bother with translating them yourself. <A HREF="ch04_02.htm#JAWT-CH-4-FIG-3">Figure 4.3</A> 
+shows how this method would change the location of an event from a container 
+down to an internal component. </DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-4-FIG-3">Figure 4.3: Translating an event's location relative to a component</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0404.gif" alt="[Graphic: Figure 4-3]" width=450 height=278 border=0>
+
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString () </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>Event</tt>, the <tt CLASS=literal>paramString()</tt> 
+method is called in turn to build the string to display. In the event you 
+subclass <tt CLASS=literal>Event</tt> to add additional 
+information, instead of having to provide a whole new <tt CLASS=literal>toString()</tt> 
+method, you need only add the new information to the string already generated 
+by <tt CLASS=literal>paramString()</tt>. Assuming 
+the new information is <tt CLASS=literal>foo</tt>, this would result in the following 
+method declaration: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+protected String paramString() {
+    return super.paramString() + ",foo=" + foo;
+}
+</PRE>
+</DIV>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Event</tt> 
+returns a string with numerous components. The only variables that will 
+always be in the output will be the event ID and the x and y coordinates. 
+The others will be present if necessary (i.e., non-null): key (as the integer 
+corresponding to a keyboard event), shift when <tt CLASS=literal>shiftDown()</tt> 
+is true; control, when <tt CLASS=literal>controlDown()</tt> 
+is true; meta, when <tt CLASS=literal>metaDown()</tt> 
+is true; target (if it was a <tt CLASS=literal>Component</tt>); 
+and arg (the value depends on the target and ID). <tt CLASS=literal>toString()</tt> 
+does not display all pieces of the <tt CLASS=literal>Event</tt> 
+information. An event when moving a <tt CLASS=literal>Scrollbar</tt> 
+might result in the following: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Event[id=602,x=374,y=110,target=java.awt.Scrollbar[374,
+110,15x50,val=1,vis=true,min=0,max=255,vert],arg=1]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-2.4">Working With Mouse Buttons in Java 1.0</A></h3>
+
+<P CLASS=para>
+As stated earlier, the <tt CLASS=literal>modifiers</tt> 
+component of <tt CLASS=literal>Event</tt> can be used 
+to differentiate the different mouse buttons. If the user has a multibutton 
+mouse, the <tt CLASS=literal>modifiers</tt> field 
+is set automatically to indicate which button was pressed. If the user 
+does not own a multibutton mouse, he or she can press the mouse button 
+in combination with the Alt or Meta keys to simulate a three-button mouse. 
+<A HREF="ch04_02.htm#JAWT-CH-4-EX-2">Example 4.2</A> is a sample program called <tt CLASS=literal>mouseEvent</tt> 
+that displays the mouse button selected. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-4-EX-2">Example 4.2: Differentiating Mouse Buttons in Java 1.0</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+public class mouseEvent extends Applet {
+    String theString = "Press a Mouse Key";
+    public synchronized void setString (String s) {
+        theString = s;
+    }
+    public synchronized String getString () {
+        return theString;
+    }
+    public synchronized void paint (Graphics g) {
+        g.drawString (theString, 20, 20);
+    }
+    public boolean mouseDown (Event e, int x, int y) {
+        if (e.modifiers == Event.META_MASK) {
+            setString ("Right Button Pressed");
+        } else if (e.modifiers == Event.ALT_MASK) {
+            setString ("Middle Button Pressed");
+        } else {
+            setString ("Left Button Pressed");
+        }
+        repaint ();
+        return true;
+    }
+    public boolean mouseUp (Event e, int x, int y) {
+        setString ("Press a Mouse Key");
+        repaint ();
+        return true;
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Unfortunately, this technique does not always work. With certain components 
+on some platforms, the peer captures the mouse event and does not pass 
+it along; for example, on Windows, the display-edit menu of a <tt CLASS=literal>TextField </tt>appears when you select the right mouse button. 
+Be cautious about relying on multiple mouse buttons; better yet, if you 
+want to ensure absolute portability, stick to a single button. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-4-SECT-2.5">Comprehensive Event List</A></h3>
+
+<P CLASS=para>
+Unfortunately, there are many platform-specific differences in the way 
+event handling works. It's not clear whether these differences are 
+bugs or whether vendors think they are somehow improving their product by introducing 
+portability problems. We hope that as Java matures, different platforms 
+will gradually come into synch. Until that happens, you might want your 
+programs to assume the lowest common denominator. If you are willing to 
+take the risk, you can program for a specific browser or platform, but 
+should be aware of the possibility of changes. 
+
+<P CLASS=para>
+<A HREF="appc_01.htm">Appendix C, <i>Platform-Specific Event Handling</i></A>, includes a table that shows which components pass along which 
+events by default in the most popular environments. This table was developed 
+using an interactive program called <tt CLASS=literal>compList</tt>, 
+which generates a list of supported events for each component. You can 
+find <tt CLASS=literal>compList</tt> on this book's 
+Web site, <A HREF="http://www.ora.com/catalog/javawt">http://www.ora.com/catalog/javawt</A>. 
+If you want to check the behavior of some new platform, or a newer version 
+of one of the platforms in <A HREF="appc_01.htm">Appendix C, <i>Platform-Specific Event Handling</i></A>, feel free to use <tt CLASS=literal>compList</tt>. 
+It does require a little bit of work on your part. You have to click, toggle, 
+type, and mouse over every object. Hopefully, as Java matures, this program 
+will become unnecessary. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Java 1.0 Event Model</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Java 1.1 Event Model</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

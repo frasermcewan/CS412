@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] 8.3 Printing</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:56:00 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8<br>New AWT Features</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-8-SECT-3">8.3 Printing</A></h2>
+
+<P CLASS=para>
+<A NAME="CH8.PRINTING-1"></A>The popup menu visible in <A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A> 
+shows that that example application supports a <b>Print</b>
+command.  One of the most exciting new features of Java 1.1
+is the ability of programs to generate hardcopy.  You draw
+on a page in Java just as you draw on the screen: by
+invoking methods of a <tt CLASS=literal>Graphics</tt> object.  The
+difference, of course, is in the <tt CLASS=literal>Graphics</tt> object.
+When drawing to the screen, you are given an instance of one
+subclass of <tt CLASS=literal>Graphics</tt>, and when printing, you are
+given an instance of some other subclass.  The two
+subclasses implement the necessary functionality for
+on-screen drawing and printing, respectively.
+
+<P CLASS=para>
+To print in Java 1.1, follow these steps:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>First, you must begin the "print job."  You do this by
+calling the <tt CLASS=literal>getPrintJob()</tt> method of the
+<tt CLASS=literal>Toolkit</tt> object.  This method displays a dialog box
+to the user to request information about the print job, such
+as the name of the printer it should be sent to.
+<tt CLASS=literal>getPrintJob()</tt> returns a <tt CLASS=literal>PrintJob</tt> object.
+You can pass a <tt CLASS=literal>Properties</tt> object to
+<tt CLASS=literal>getPrintJob()</tt> and the user's printing preferences
+are stored in it.  If the <tt CLASS=literal>Properties</tt> object is
+used in a subsequent call to <tt CLASS=literal>getPrintJob()</tt>, those
+preferences are reused in the dialog box.
+
+<P>
+<li CLASS=listitem>To begin printing a page, you call the <tt CLASS=literal>getGraphics()</tt>
+method of the <tt CLASS=literal>PrintJob</tt> object.  This returns a
+<tt CLASS=literal>Graphics</tt> object that implements the
+<tt CLASS=literal>PrintGraphics</tt> interface to distinguish it from an
+on-screen <tt CLASS=literal>Graphics</tt> object.
+
+<P>
+<li CLASS=listitem>Now you can use the various methods of the <tt CLASS=literal>Graphics</tt>
+object to draw your desired output on the page.
+
+<P>
+<li CLASS=listitem>When you are done drawing the page, you call the
+<tt CLASS=literal>dispose()</tt> method of the <tt CLASS=literal>Graphics</tt> object to
+send that page description to the printer.  If you need to
+print another page, you can call the <tt CLASS=literal>getGraphics()</tt>
+method of the <tt CLASS=literal>PrintJob</tt> again to obtain a new
+<tt CLASS=literal>Graphics</tt> object for the next page, and repeat the
+process of drawing and calling <tt CLASS=literal>dispose()</tt>.
+
+<P>
+<li CLASS=listitem>When you have printed all of your pages, you end the print job
+itself by calling the <tt CLASS=literal>end()</tt> method of the
+<tt CLASS=literal>PrintJob</tt> object.
+
+<P>
+</UL>
+<P CLASS=para>
+Printing AWT components and hierarchies of components is
+particularly easy.  You simply pass a print <tt CLASS=literal>Graphics</tt>
+object to the <tt CLASS=literal>print()</tt> method of the component you
+want to print.  By default, <tt CLASS=literal>print()</tt> simply passes
+this <tt CLASS=literal>Graphics</tt> object to the <tt CLASS=literal>paint()</tt> method.  If a
+component wants to display itself differently on paper than
+it does on screen, however, it might implement a custom
+<tt CLASS=literal>print()</tt> method.  To print a complete hierarchy of
+components, you simply call the <tt CLASS=literal>printAll()</tt> method of
+the root component of the hierarchy.
+
+<P CLASS=para>
+An important restriction on printing is that applets cannot
+initiate print jobs.  This does not mean that they cannot
+define custom <tt CLASS=literal>print()</tt> methods to allow themselves to
+be printed; merely that the Web browser or applet viewer
+must initiate the print job, and invoke the
+<tt CLASS=literal>printAll()</tt> method of the applet.
+
+<P CLASS=para>
+The <tt CLASS=literal>print()</tt> method of
+<A HREF="ch08_05.htm#JNUT2-CH-8-EX-1">Example 8.1</A> shows how to generate hardcopy.  Note that this
+<tt CLASS=literal>Scribble.print()</tt> method happens to have the same
+name as the <tt CLASS=literal>Component.print()</tt> method discussed
+above.  The two methods have different arguments, however,
+so <tt CLASS=literal>Scribble.print()</tt> does not override
+<tt CLASS=literal>Component.print()</tt>.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Popup Menus and Menu Shortcuts</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Data Transfer with Cut-and-Paste</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,543 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.4 Vectors and Hashtables</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:55:46 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Basic Utility Classes</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-4">7.4 Vectors and Hashtables</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.VECTORS1"></A><A NAME="CH07.VECTORS2"></A><A NAME="CH07.VECTORS3"></A><A NAME="CH07.VECTORS4"></A>Vectors and hashtables are <I CLASS=emphasis>collection classes</I>.
+Each stores a group of objects according to a particular retrieval
+scheme. Aside from that, they are not particularly closely related
+things. A <I CLASS=emphasis>hashtable</I> is a dictionary; it stores
+and retrieves objects by a key value. A <I CLASS=emphasis>vector</I>,
+on the other hand, holds an ordered collection of elements. It's
+essentially a dynamic array. Both of these, however, have more
+subtle characteristics in common. First, they are two of the most
+useful aspects of the core Java distribution. Second,
+they both take full advantage of Java's dynamic nature at the
+expense of some of its more static type safety.
+
+<P CLASS=para>
+If you work with dictionaries or associative
+arrays in other languages, you should understand how useful
+these classes are. If you are someone who has worked in C or another
+static language, you should find collections to be
+truly magical. They are part of what makes Java
+powerful and dynamic. Being able to work with lists of objects and
+make associations between them is an abstraction from the details of
+the types. It lets you think about the problems at a higher level and
+saves you from having to reproduce common structures every time you
+need them.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-4.1">java.util.Vector</A></h3>
+
+<P CLASS=para>
+A <tt CLASS=literal>Vector</tt> is a dynamic array; it can grow to
+accommodate new items. You can also insert and remove elements at
+arbitrary positions within it. As with other mutable objects in Java,
+<tt CLASS=literal>Vector</tt> is thread-safe. The <tt CLASS=literal>Vector</tt>
+class works directly with the type <tt CLASS=literal>Object</tt>, so we
+can use them with instances of any kind of class.[3]
+ We can even put different kinds of <tt CLASS=literal>Object</tt>s in a
+<tt CLASS=literal>Vector</tt> together; the <tt CLASS=literal>Vector</tt>
+doesn't know the difference.
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+In C++, where classes don't derive from a single
+<tt CLASS=literal>Object</tt> class that supplies a base type and common
+methods, the elements of a collection would usually be derived from
+some common collectable class. This forces the use of multiple
+inheritance and brings its associated problems.
+</blockquote>
+<P CLASS=para>
+As you might guess, this is where things get tricky. To do
+anything useful with an <tt CLASS=literal>Object</tt> after we take it
+back out of a <tt CLASS=literal>Vector</tt>, we have to cast it back
+(narrow) it to its original type. This can be done with safety in Java
+because the cast is checked at run-time. Java throws a
+<tt CLASS=literal>ClassCastException</tt> if we try to cast an object to
+the wrong type. However, this need for casting means that your code
+must remember types or methodically test them with
+<tt CLASS=literal>instanceof</tt>. That is the price we pay for having a
+completely dynamic collection class that operates on all
+types.
+
+<P CLASS=para>
+You might wonder if you can subclass <tt CLASS=literal>Vector</tt> to
+produce a class that looks like a <tt CLASS=literal>Vector</tt>, but that
+works on just one type of element in a type-safe way. Unfortunately,
+the answer is no. We could override <tt CLASS=literal>Vector</tt>'s
+methods to make a <tt CLASS=literal>Vector</tt> that rejects the wrong
+type of element at run-time, but this does not provide any new
+compile-time, static type safety. In C++, templates provide a safe
+mechanism for parameterizing types by restricting the types of objects
+used at compile-time. The keyword <tt CLASS=literal>generic</tt> is a
+reserved word in Java. This means that it's possible that future
+versions might support C++-style templates, using
+<tt CLASS=literal>generic</tt> to allow statically checked parameterized
+types.
+
+<P CLASS=para>
+We can construct a <tt CLASS=literal>Vector</tt> with default characteristics 
+and add elements to it using <tt CLASS=literal>addElement()</tt> and 
+<tt CLASS=literal>insertElement()</tt>: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Vector things = new Vector(); 
+ 
+String one = "one"; 
+String two = "two"; 
+String three = "three"; 
+ 
+things.addElement( one ); 
+things.addElement( three ); 
+things.insertElementAt( two, 1 ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>things</tt> now contains three <tt CLASS=literal>String</tt>
+objects in the order "one," "two," and "three." We can
+retrieve objects by their position with
+<tt CLASS=literal>elementAt()</tt>, <tt CLASS=literal>firstElement()</tt>, and
+<tt CLASS=literal>lastElement()</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String s1 = (String)things.firstElement();       // "one" 
+String s3 = (String)things.lastElement();        // "three" 
+String s2 = (String)things.elementAt(1);         // "two" 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We have to cast each <tt CLASS=literal>Object</tt> back to a
+<tt CLASS=literal>String</tt> in order to assign it a
+<tt CLASS=literal>String</tt> reference.
+<tt CLASS=literal>ClassCastException</tt> is a type of
+<tt CLASS=literal>RuntimeException</tt>, so we can neglect to guard for
+the exception if we are feeling confident about the type we are
+retrieving. Often, as in this example, you'll just have one type
+of object in the <tt CLASS=literal>Vector</tt>. If we were unsure about
+the types of objects we were retrieving, we would want to be prepared
+to catch the <tt CLASS=literal>ClassCastException</tt> or test the type
+explicitly with the <tt CLASS=literal>instanceof</tt> operator.
+
+<P CLASS=para>
+We can search for an item in a <tt CLASS=literal>Vector</tt> with the 
+<tt CLASS=literal>indexOf()</tt> method: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i = things.indexOf( three );                 // i = 2 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>indexOf()</tt> returns a value of <tt CLASS=literal>-1</tt>
+if the object is not found. As a convenience, we can also use
+<tt CLASS=literal>contains()</tt> simply to test for the presence of the
+object.
+
+<P CLASS=para>
+Finally, <tt CLASS=literal>removeElement()</tt> removes a specified 
+<tt CLASS=literal>Object</tt> from the <tt CLASS=literal>Vector</tt>: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+things.removeElement( two ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The element formerly at position three now becomes the second element. 
+
+<P CLASS=para>
+The <tt CLASS=literal>size()</tt> method reports the number of objects 
+currently in the <tt CLASS=literal>Vector</tt>. You might think of using 
+this to loop through all elements of a <tt CLASS=literal>Vector</tt>, 
+using <tt CLASS=literal>elementAt()</tt> to get at each element. This 
+works just fine, but there is a more general way to operate on a complete 
+set of elements like those in a <tt CLASS=literal>Vector</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-4.2">java.util.Enumeration</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.ENUM"></A>The <tt CLASS=literal>java.util.Enumeration</tt> interface can be used 
+by any sort of set to provide serial access to its elements. An object 
+that implements the <tt CLASS=literal>Enumeration</tt> interface presents 
+two methods: <tt CLASS=literal>nextElement()</tt> and <tt CLASS=literal>hasMoreElements()</tt>. 
+<tt CLASS=literal>nextElement()</tt> returns an <tt CLASS=literal>Object</tt> 
+type, so it can be used with any kind of collection. As with taking objects 
+from a <tt CLASS=literal>Vector</tt>, you need to know or determine 
+what the objects are and cast them to the appropriate types before using 
+them. 
+
+<P CLASS=para>
+<tt CLASS=literal>Enumeration</tt> is useful because any type of
+object can implement the interface and then use it to provide access
+to its elements. If you have an object that handles a set of values,
+you should think about implementing the <tt CLASS=literal>Enumeration</tt>
+interface. Simply provide a <tt CLASS=literal>hasMoreElements()</tt> test
+and a <tt CLASS=literal>nextElement()</tt> iterator and declare that your
+class implements <tt CLASS=literal>java.util.Enumeration</tt>. One
+advantage of an <tt CLASS=literal>Enumeration</tt> is that you don't
+have to provide all values up front; you can provide each value
+as it's requested with <tt CLASS=literal>nextElement()</tt>. And since
+<tt CLASS=literal>Enumeration</tt> is an interface, you can write general
+routines that operate on all of the elements <tt CLASS=literal>Enumeration</tt>.
+
+<P CLASS=para>
+An <tt CLASS=literal>Enumeration</tt> does not guarantee the order
+in which elements are returned, however, so if order is important you don't want to use an
+<tt CLASS=literal>Enumeration</tt>. You can iterate through the
+elements in an <tt CLASS=literal>Enumeration</tt> only once; there is no
+way to reset it to the beginning or move backwards through the
+elements.
+
+<P CLASS=para>
+A <tt CLASS=literal>Vector</tt> returns an
+<tt CLASS=literal>Enumeration</tt> of its contents when we call the
+<tt CLASS=literal>elements()</tt> method:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Enumeration e = things.elements(); 
+ 
+while ( e.hasMoreElements() ) { 
+    String s = (String)e.nextElement(); 
+    System.out.println( s ): 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The above code loops three times, as call
+<tt CLASS=literal>nextElement()</tt>, to fetch our strings. The actual type
+of object returned by <tt CLASS=literal>elements()</tt> is a
+<tt CLASS=literal>VectorEnumeration</tt>, but we don't have to worry
+about that. We can always refer to an <tt CLASS=literal>Enumeration</tt>
+simply by its interface.
+
+<P CLASS=para>
+Note that <tt CLASS=literal>Vector</tt> does not implement the
+<tt CLASS=literal>Enumeration</tt> interface. If it did, that would put a
+serious limitation on <tt CLASS=literal>Vector</tt> because we could
+cycle through the elements in it only once. That's clearly not the
+purpose of a <tt CLASS=literal>Vector</tt>, which is why
+<tt CLASS=literal>Vector</tt> instead provides a method that returns an
+<tt CLASS=literal>Enumeration</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-4.3">java.util.Hashtable</A></h3>
+
+<P CLASS=para>
+As I said earlier, a hashtable is a dictionary, similar to an
+associative array. A hashtable stores and retrieves elements with key
+values; they are very useful for things like caches and minimalist
+databases. When you store a value in a hashtable, you associate a key
+with that value. When you need to look up the value, the hashtable
+retrieves it efficiently using the key. The name hashtable itself
+refers to how the indexing and storage of elements is performed, as
+we'll discuss shortly. First I want to talk about how to use a
+hashtable.
+
+<P CLASS=para>
+The <tt CLASS=literal>java.util.Hashtable</tt> class implements a
+hashtable that, like <tt CLASS=literal>Vector</tt>, operates on the type
+<tt CLASS=literal>Object</tt>. A <tt CLASS=literal>Hashtable</tt> stores an
+element of type <tt CLASS=literal>Object</tt> and associates it with a
+key, also of type <tt CLASS=literal>Object</tt>. In this way, we can
+index arbitrary types of elements using arbitrary types as keys. As
+with <tt CLASS=literal>Vector</tt>, casting is generally required to
+narrow objects back to their original type after pulling them out of a
+hashtable.
+
+<P CLASS=para>
+A <tt CLASS=literal>Hashtable</tt> is quite easy to use. We can use 
+the <tt CLASS=literal>put()</tt> method to store items: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Hashtable dates = new Hashtable(); 
+ 
+dates.put( "christmas", 
+    new GregorianCalendar( 1997, Calendar.DECEMBER, 25 ) ); 
+dates.put( "independence", 
+    new GregorianCalendar( 1997, Calendar.JULY, 4 ) ); 
+dates.put( "groundhog", 
+    new GregorianCalendar( 1997, Calendar.FEBRUARY, 2 ) ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+First we create a new <tt CLASS=literal>Hashtable</tt>. Then we add three
+<tt CLASS=literal>GregorianCalendar</tt> objects to the
+hashtable, using <tt CLASS=literal>String</tt>
+objects as keys. The key is the first argument to
+<tt CLASS=literal>put()</tt>; the value is the second. Only one value can
+be stored per key. If we try to store a second object under a key that
+already exists in the <tt CLASS=literal>Hashtable</tt>, the old element is
+booted out and replaced by the new one. The return value of the
+<tt CLASS=literal>put()</tt> method is normally <tt CLASS=literal>null</tt>,
+but if the call to <tt CLASS=literal>put()</tt> results in replacing an
+element, the method instead returns the old stored
+<tt CLASS=literal>Object</tt>.
+
+<P CLASS=para>
+We can now use the <tt CLASS=literal>get()</tt> method to retrieve each 
+of the above dates by name, using the <tt CLASS=literal>String</tt> 
+key by which it was indexed: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+GregorianCalendar g = (GregorianCalendar)dates.get( "christmas" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>get()</tt> method returns a <tt CLASS=literal>null</tt>
+value if no element exists for the given key. The cast is required to
+narrow the returned object back to type <tt CLASS=literal>GregorianCalendar</tt>. I
+hope you can see the advantage of using a <tt CLASS=literal>Hashtable</tt>
+over a regular array. Each value is indexed by a key instead of a
+simple number, so unlike a simple array, we don't have to
+remember where each <tt CLASS=literal>GregorianCalendar</tt> is stored.
+
+<P CLASS=para>
+Once we've put a value in a <tt CLASS=literal>Hashtable</tt>, 
+we can take it back out with the <tt CLASS=literal>remove()</tt> method, 
+again using the key to access the value: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+dates.remove("christmas"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We can test for the existence of a key with <tt CLASS=literal>containsKey()</tt>: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+if ( dates.containsKey( "groundhog" ) ) {    // yes 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Just like with a <tt CLASS=literal>Vector</tt>, we're dealing 
+with a set of items. Actually, we're dealing with two sets: keys 
+and values. The <tt CLASS=literal>Hashtable</tt> class has two methods, 
+<tt CLASS=literal>keys()</tt> and <tt CLASS=literal>elements()</tt>, 
+for getting at these sets. The <tt CLASS=literal>keys()</tt> method 
+returns an <tt CLASS=literal>Enumeration</tt> of the keys for all of 
+the elements in the <tt CLASS=literal>Hashtable</tt>. We can use this 
+<tt CLASS=literal>Enumeration</tt> to loop through all of the keys: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+for (Enumeration e = dates.keys(); e.hasMoreElements(); ) { 
+    String key = (String)e.nextElement(); 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Similarly, <tt CLASS=literal>elements()</tt> provides an
+<tt CLASS=literal>Enumeration</tt> of the elements themselves.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-4.3.1">Hashcodes and key values</A></h4>
+
+<P CLASS=para>
+<A NAME="CH07.HASH"></A>If you've used a hashtable before, you've probably guessed
+that there's more going on behind the scenes than I've let
+on so far. An element in a hashtable is not associated with its key by
+identity, but by something called a <I CLASS=emphasis>hashcode</I>.
+Every object in Java has an identifying hashcode value determined by
+its <tt CLASS=literal>hashCode()</tt> method, which is inherited from the
+<tt CLASS=literal>Object</tt> class. When you store an element in a
+hashtable, the hashcode of the key object registers the element
+internally. Later, when you retrieve the item, that same hashcode
+looks it up efficiently.
+
+<P CLASS=para>
+A hashcode is usually a random-looking integer value based on 
+the contents of an object, so it's different for different instances of 
+a class. Two objects that have different hashcodes serve as unique 
+keys in a hashtable; each object can reference a different stored object. 
+Two objects that have the same hashcode value, on the other hand, appear 
+to a hashtable as the same key. They can't coexist as keys to different 
+objects in the hashtable. 
+
+<P CLASS=para>
+Generally, we want our object instances to have unique hash
+codes, so we can put arbitrary items in a hashtable and index
+them with arbitrary keys. The default <tt CLASS=literal>hashCode()</tt>
+method in the <tt CLASS=literal>Object</tt> class simply assigns each
+object instance a unique number to be used as a hashcode. If a class
+does not override this method, each instance of the class will have a
+unique hashcode. This is sufficient for most objects.
+
+<P CLASS=para>
+However, it's also useful to allow equivalent objects to serve as equivalent 
+keys. <tt CLASS=literal>String</tt> objects provide a good example of 
+this case. Although Java does its best to consolidate them, a literal string 
+that appears multiple times in Java source code is often represented by 
+different <tt CLASS=literal>String</tt> objects at run-time. If each 
+of these <tt CLASS=literal>String</tt> objects has a different hash 
+code, even though the literal value is the same, we could not use strings 
+as keys in a hashtable, like we did the in above examples. 
+
+<P CLASS=para>
+The solution is to ensure that equivalent
+<tt CLASS=literal>String</tt> objects return the same hashcode value so
+that they can act as equivalent keys. The <tt CLASS=literal>String</tt>
+class overrides the default <tt CLASS=literal>hashCode()</tt> method so
+that equivalent <tt CLASS=literal>String</tt> objects return the same hash
+code, while different <tt CLASS=literal>String</tt> objects have unique
+hashcodes. This is possible because <tt CLASS=literal>String</tt> objects
+are immutable; the contents can't change, so neither can the hashcode.
+
+<P CLASS=para>
+A few other classes in the Java API also
+override the default <tt CLASS=literal>hashCode()</tt> method in order to
+provide equivalent hashcodes for equivalent objects. For example,
+each of the primitive wrapper classes provides a
+<tt CLASS=literal>hashCode()</tt> method for this purpose. Other objects
+likely to be used as hashtable keys, such as <tt CLASS=literal>Color</tt>,
+<tt CLASS=literal>Date</tt>, <tt CLASS=literal>File</tt>, and
+<tt CLASS=literal>URL</tt>, also implement their own
+<tt CLASS=literal>hashCode()</tt>methods.
+
+<P CLASS=para>
+So now maybe you're wondering when you need to override
+the default <tt CLASS=literal>hashCode()</tt> method in your objects. If
+you're creating a class to use for keys in a hashtable, think
+about whether the class supports the idea of "equivalent
+objects."  If so, you should implement a
+<tt CLASS=literal>hashCode()</tt> method that returns the same hashcode
+value for equivalent objects.
+
+<P CLASS=para>
+To accomplish this, you need to define the hashcode of an
+object to be some suitably complex and arbitrary function of the
+contents of that object. The only criterion for the function is that
+it should be almost certain to provide different values for different
+contents of the object. Because the capacity of an integer is limited,
+hashcode values are not guaranteed to be unique. This limitation is
+not normally a problem though, as there are
+2^32 possible hashcodes to choose from. The
+more sensitive the hashcode function is to small differences in the
+contents the better. A hashtable works most efficiently when the
+hashcode values are as randomly and evenly distributed as possible. As
+an example, you could produce a hashcode for a
+<tt CLASS=literal>String</tt> object by adding the character values at
+each position in the string and multiplying the result by some number,
+producing a large random-looking integer.
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-4.4">java.util.Dictionary</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.Dictionary</tt> is the
+<tt CLASS=literal>abstract</tt> superclass of
+<tt CLASS=literal>Hashtable</tt>. It lays out the basic
+<tt CLASS=literal>get()</tt>, <tt CLASS=literal>put()</tt>, and
+<tt CLASS=literal>remove()</tt> functionality for dictionary-style
+collections. You could derive other types of dictionaries from this
+class. For example, you could implement a dictionary with a different
+storage format, such as a binary tree.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Dates</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Properties</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

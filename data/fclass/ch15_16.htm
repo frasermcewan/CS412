@@ -1,0 +1,1429 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 15] Socket</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:22:40 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_15.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 15<br>The java.net Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch15_17.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Socket</H1>
+
+<H2>Name</H2>
+
+Socket
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.102">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.net.Socket</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.103">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>Socket</tt> class implements 
+stream-based, connection-oriented, reliable data communication. Although
+<tt CLASS=literal>Socket</tt> objects are often used with the
+Transmission Control Protocol, commonly known as 
+TCP, they are independent of the actual protocol being used.
+The <tt CLASS=literal>Socket</tt> class encapsulates client
+logic that is common to connection-oriented protocols. Sockets
+are two-way data pipes that are connected on either end to an address and 
+port number. As of JDK 1.1, new constructors allow you to specify the local 
+address and port as well as the remote address and port. 
+
+<P CLASS=para>
+A <tt CLASS=literal>Socket</tt> object uses an object that belongs
+to a subclass of the <tt CLASS=literal>abstract</tt> 
+class <tt CLASS=literal>SocketImpl</tt> to access protocol-specific logic.
+A program can specify the subclass of <tt CLASS=literal>SocketImpl</tt>
+that is used by passing an appropriate <tt CLASS=literal>SocketImplFactory</tt> 
+object to the <tt CLASS=literal>setSocketImplFactory()</tt> 
+method before any <tt CLASS=literal>Socket</tt> objects are created.
+This feature allows a program to create sockets that are
+able to accommodate such things as firewalls or even work with
+different protocols.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.104">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.net.Socket extends java.lang.Object {
+  // Constructors
+  public Socket(String host, int port);
+  public Socket(InetAddress address, int port);
+  public Socket(String host, int port, 
+                InetAddress localAddr, int localPort);     // New in 1.1
+  public Socket(InetAddress address, int port, 
+                InetAddress localAddr, int localPort);     // New in 1.1
+  public Socket(String host, int port, 
+                boolean stream);                     // Deprecated in 1.1
+  public Socket(InetAddress host, int port, 
+                boolean stream);                     // Deprecated in 1.1
+  protected Socket();                                      // New in 1.1
+  protected Socket(SocketImpl impl);                       // New in 1.1
+  // Class Methods
+  public static synchronized void setSocketImplFactory(
+                                  SocketImplFactory fac); 
+  // Instance Methods
+  public synchronized void close();
+  public InetAddress getInetAddress();
+  public InputStream getInputStream();
+  public InetAddress getLocalAddress();                    // New in 1.1
+  public int getLocalPort();
+  public OutputStream getOutputStream();
+  public int getPort();
+  public int getSoLinger();                                // New in 1.1
+  public synchronized int getSoTimeout();                  // New in 1.1
+  public boolean getTcpNoDelay();                          // New in 1.1
+  public void setSoLinger(boolean on, int val);            // New in 1.1
+  public synchronized void setSoTimeout(int timeout);      // New in 1.1
+  public void setTcpNoDelay(boolean on);                   // New in 1.1
+  public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.105">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.115">Socket</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.126"><DIV CLASS=screen> <P> <PRE> public Socket(String host, int port) throws IOException, UnknownHostException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>host</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a remote machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port on a remote 
+machine. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to connect to the given host and port.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>UnknownHostException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the IP address of the given hostname cannot be determined. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Socket</tt> 
+and connects it to the specified port on the given host.
+
+<P CLASS=para>
+If a program has specified a socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.127">public Socket(InetAddress address, int port) throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>address</tt><br>
+<DD>
+
+<P CLASS=para>
+The IP address 
+of a remote machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port on a remote 
+machine. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to connect to the given address and port. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Socket</tt> 
+and connects it to the specified port on the host at the given address.
+
+<P CLASS=para>
+If a program has specified a socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.128"><DIV CLASS=screen> <P> <PRE> public Socket(String host, int port, InetAddress localAddr, int localPort) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>host</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a remote machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port on a remote 
+machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>localAddr</tt><br>
+<DD>
+
+<P CLASS=para>
+An IP address 
+on the local host.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>localPort</tt><br>
+<DD>
+
+<P CLASS=para>
+A port on the 
+local host. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to connect to the given host and port. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Socket</tt> 
+and connects it to the specified port on the given host. The constructor 
+also binds the <tt CLASS=literal>Socket</tt> to the 
+specified local address and port.
+
+<P CLASS=para>
+If a program has specified a socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.129"><DIV CLASS=screen> <P> <PRE> public Socket(InetAddress address, int port, InetAddress localAddr, int localPort) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>address</tt><br>
+<DD>
+
+<P CLASS=para>
+The IP address 
+of a remote machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port on a remote 
+machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>localAddr</tt><br>
+<DD>
+
+<P CLASS=para>
+An IP address 
+on the local host.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>localPort</tt><br>
+<DD>
+
+<P CLASS=para>
+A port on the 
+local host. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to connect to the given address and port. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Socket</tt> 
+and connects it to the specified port on the host at the given address. 
+The constructor also binds the <tt CLASS=literal>Socket</tt> 
+to the specified local address and port.
+
+<P CLASS=para>
+If a program has specified a socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.130"><DIV CLASS=screen> <P> <PRE> public Socket(String host, int port, boolean stream) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>host</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of a remote 
+machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port on a remote 
+machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>stream</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that indicates if this socket is a stream socket. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to connect to the given host and port. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Socket</tt> 
+and connects it to the specified port on the given host.
+
+<P CLASS=para>
+If the <tt CLASS=literal>stream</tt> argument is <tt CLASS=literal>true</tt>, 
+a stream socket is created. Otherwise, a datagram socket is created. This 
+constructor is deprecated as of JDK 1.1; use <tt CLASS=literal>DatagramSocket</tt> 
+for datagrams.
+
+<P CLASS=para>
+If a program has specified a socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.131"><DIV CLASS=screen> <P> <PRE> public Socket(InetAddress address, int port, boolean stream) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+Deprecated as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>address</tt><br>
+<DD>
+
+<P CLASS=para>
+The IP address 
+of a remote machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>port</tt><br>
+<DD>
+
+<P CLASS=para>
+A port on a remote 
+machine.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>stream</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that indicates if this socket is a stream socket. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application is not allowed to connect to the given host and port. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Socket</tt> 
+and connects it to the specified port on the host at the given address.
+
+<P CLASS=para>
+If the <tt CLASS=literal>stream</tt> argument is <tt CLASS=literal>true</tt>, 
+a stream socket is created. Otherwise, a datagram socket is created. This 
+constructor is deprecated as of JDK 1.1; use <tt CLASS=literal>DatagramSocket</tt> 
+for datagrams.
+
+<P CLASS=para>
+If a program has specified a socket factory, the <tt CLASS=literal>createSocketImpl()</tt> 
+method of that factory is called to create the actual socket implementation. 
+Otherwise, the constructor creates a plain socket. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.132">protectedSocket()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Socket</tt> 
+that uses an instance of the system default <tt CLASS=literal>SocketImpl</tt> 
+subclass for its low-level network access. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.133">protectedSocket(SocketImpl impl) throws SocketException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>impl</tt><br>
+<DD>
+
+<P CLASS=para>
+The socket implementation 
+to use. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+This exception is never thrown by this constructor. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Socket</tt> 
+that uses the given object for its low-level network access. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.106">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.116">setSocketImplFactory</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.134"><DIV CLASS=screen> <P> <PRE> public static synchronized void setSocketImplFactory( SocketImplFactory fac) throws IOException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>fac</tt><br>
+<DD>
+
+<P CLASS=para>
+An object that implements 
+<tt CLASS=literal>SocketImplFactory</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the factory 
+has already been defined.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the application does not have permission to set the factory. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the <tt CLASS=literal>SocketImplFactory</tt>. 
+This factory produces instances of subclasses of <tt CLASS=literal>SocketImpl</tt> 
+that do the low-level work of sockets. When a <tt CLASS=literal>Socket</tt> 
+constructor is called, the <tt CLASS=literal>createSocketImpl()</tt> 
+method 
+
+of the factory is called to create the socket implementation. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.107">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.117">close</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.135">public synchronized void close() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method closes this socket, releasing any system resources it holds. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.118">getInetAddress</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.136">public InetAddress getInetAddress()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The remote IP address to which this <tt CLASS=literal>Socket</tt> 
+is connected. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the IP address of the remote host to which this socket 
+is connected. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.119">getInputStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.137">public InputStream getInputStream() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>InputStream</tt> that wraps this socket. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an <tt CLASS=literal>InputStream</tt> 
+that reads data from the socket. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.120">getLocalAddress</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.138">public InetAddress getLocalAddress()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The local IP address from which this <tt CLASS=literal>Socket</tt> 
+originates. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the local address that is the origin of the socket. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.121">getLocalPort</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.139">public int getLocalPort()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The local port number from which this <tt CLASS=literal>Socket</tt> 
+originates. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the local port number that is the origin of the socket. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.122">getOutputStream</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.140">public OutputStream getOutputStream() throws IOException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+An <tt CLASS=literal>OutputStream</tt> that wraps this socket. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IOException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind 
+of I/O error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an <tt CLASS=literal>OutputStream</tt> 
+that sends data through the socket. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.123">getPort</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.141">public int getPort()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The remote port number to which this <tt CLASS=literal>Socket</tt> 
+is connected. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the port number of the remote host to which this socket 
+is connected. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.124">getSoLinger</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.142">public int getSoLinger() throws SocketException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The close time-out value for the socket. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+
+This method returns the close time-out value for this socket. A value
+of <tt CLASS=literal>-1</tt> or <tt CLASS=literal>0</tt> indicates that
+<tt CLASS=literal>close()</tt>closes the socket immediately. A value
+greater than <tt CLASS=literal>0</tt> indicates the amount of time, in
+seconds, that <tt CLASS=literal>close()</tt> blocks, waiting for unsent
+data to be sent.
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.125">getSoTimeout</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.143">public synchronized int getSoTimeout() throws SocketException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The read time-out value for the socket. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the read time-out value for this socket. A value of 
+zero indicates that the <tt CLASS=literal>read()</tt> 
+method of the associated <tt CLASS=literal>InputStream</tt> 
+waits indefinitely for an incoming packet, while a non-zero value indicates 
+the number of milliseconds it waits before throwing an
+<tt CLASS=literal>InterruptedIOException</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.126">getTcpNoDelay</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.144">public boolean getTcpNoDelay() throws SocketException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if Nagle's algorithm 
+is disabled for this connection; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method indicates whether Nagle's algorithm is disabled for this 
+socket or not. Said another way, it indicates whether the <tt CLASS=literal>TCPNODELAY</tt> 
+option is enabled or not.
+
+<P CLASS=para>
+In essence, Nagle's algorithm takes small outgoing packets that are 
+closely spaced in time and combines them into larger packets. This improves 
+overall efficiency, since each packet has a certain amount of overhead; 
+however, it does so at the expense of immediacy. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.127">setSoLinger</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.145"><DIV CLASS=screen> <P> <PRE> public void setSoLinger(boolean on, int val) throws SocketException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>on</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies whether or not <tt CLASS=literal>close()</tt> 
+blocks
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>val</tt><br>
+<DD>
+
+<P CLASS=para>
+The new close time-out 
+value, in seconds, for this socket. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the close timeout value for this socket. If <tt CLASS=literal>val</tt> 
+is <tt CLASS=literal>-1</tt> or <tt CLASS=literal>0</tt>, or if <tt CLASS=literal>on</tt> is <tt CLASS=literal>false</tt>, 
+<tt CLASS=literal>close()</tt> closes 
+the socket immediately. If <tt CLASS=literal>on</tt> 
+is <tt CLASS=literal>true</tt> and <tt CLASS=literal>val</tt> 
+is greater than 0, <tt CLASS=literal>val</tt> indicates 
+the amount of time, in seconds, that <tt CLASS=literal>close()</tt> blocks, waiting for unsent data to be sent. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.128">setSoTimeout</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.146"><DIV CLASS=screen> <P> <PRE> public synchronized void setSoTimeout(int timeout) throws SocketException </PRE> </DIV></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>timeout</tt><br>
+<DD>
+
+<P CLASS=para>
+The new read time-out 
+value, in milliseconds, for the socket. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is used to set the time-out value that is used for the <tt CLASS=literal>read()</tt> 
+method of the corresponding <tt CLASS=literal>InputStream</tt>. 
+A non-zero value is the length of time, in milliseconds, that the <tt CLASS=literal>Socket</tt> 
+should wait for data before throwing an
+<tt CLASS=literal>InterruptedIOException</tt>. 
+A value of zero indicates that the <tt CLASS=literal>Socket</tt> 
+should wait indefinitely. If a timeout value is needed, this method must 
+be called before <tt CLASS=literal>read()</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.129">setTcpNoDelay</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.147">public void setTcpNoDelay(boolean on) throws SocketException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Availability<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 
+
+<p>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>on</tt><br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>boolean</tt> 
+value that specifies whether or not to disable Nagle's algorithm. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SocketException</tt><br>
+<DD>
+
+<P CLASS=para>
+If any kind of socket error occurs. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method specifies whether Nagle's algorithm is disabled for this 
+socket or not. Said another way, it determines whether the <tt CLASS=literal>TCPNODELAY</tt> 
+option is enabled or not.
+
+<P CLASS=para>
+In essence, Nagle's algorithm takes small outgoing packets that are 
+closely spaced in time and combines them into larger packets. This improves 
+overall efficiency, since each packet has a certain amount of overhead; 
+however, it does so at the expense of immediacy. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch15-REFSECT2-AUTOID.130">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch15-REFSECT3-AUTOID.148">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The string representation of this <tt CLASS=literal>Socket</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>String</tt> 
+that contains the address and port of this <tt CLASS=literal>Socket</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.108">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch15-REFSECT1-AUTOID.109">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>DatagramSocket</tt>, 
+<tt CLASS=literal>InetAddress</tt>, 
+<tt CLASS=literal>InputStream</tt>, 
+<tt CLASS=literal>IOException</tt>, 
+<tt CLASS=literal>OutputStream</tt>, 
+<tt CLASS=literal>SecurityException</tt>, 
+<tt CLASS=literal>SocketException</tt>, 
+<tt CLASS=literal>SocketImpl</tt>, 
+<tt CLASS=literal>SocketImplFactory</tt>, 
+<tt CLASS=literal>UnknownHostException</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch15_15.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch15_17.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ServerSocket</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>SocketException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

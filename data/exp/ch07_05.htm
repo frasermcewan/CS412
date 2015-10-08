@@ -1,0 +1,329 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.5 Properties</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:55:52 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Basic Utility Classes</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-5">7.5 Properties</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.PROPS1"></A><A NAME="CH07.PROPS2"></A><A NAME="CH07.PROPS3"></A>The <tt CLASS=literal>java.util.Properties</tt> class is a specialized
+hashtable for strings. Java uses the <tt CLASS=literal>Properties</tt>
+object to replace the environment variables used in
+other programming environments. You can use a
+<tt CLASS=literal>Properties</tt> table to hold arbitrary configuration
+information for an application in an easily accessible format. The
+<tt CLASS=literal>Properties</tt> object can also load and store
+information using streams (see <A HREF="ch08_01.htm">Chapter 8, <i>Input/Output Facilities</i></A> for
+information on streams).
+
+<P CLASS=para>
+Any string values can be stored as key/value pairs in a
+<tt CLASS=literal>Properties</tt> table. However, the convention is to use
+a dot-separated naming hierarchy to group property names into logical
+structures, as is done with X resources on UNIX
+systems.[4]
+ The <tt CLASS=literal>java.lang.System</tt> 
+class provides system-environment information in this way, through a system 
+<tt CLASS=literal>Properties</tt> table I'll describe shortly. 
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+Unfortunately, this is just a naming convention right now, so you
+can't access logical groups of properties as you can with X
+resources.
+</blockquote>
+<P CLASS=para>
+Create an empty <tt CLASS=literal>Properties</tt> table and 
+add <tt CLASS=literal>String</tt> key/value pairs just as with 
+any <tt CLASS=literal>Hashtable</tt>: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Properties props = new Properties(); 
+props.put("myApp.xsize", "52"); 
+props.put("myApp.ysize", "79"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Thereafter, you can retrieve values with the
+<tt CLASS=literal>getProperty()</tt>method:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String xsize = props.getProperty( "myApp.xsize" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If the named property doesn't exist,
+<tt CLASS=literal>getProperty()</tt> returns <tt CLASS=literal>null</tt>. You
+can get an <tt CLASS=literal>Enumeration</tt> of the property names with
+the <tt CLASS=literal>propertyNames()</tt> method:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+for ( Enumeration e = props.propertyNames(); e.hasMoreElements; ) { 
+    String name = e.nextElement(); 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-5.1">Default Values</A></h3>
+
+<P CLASS=para>
+When you create a <tt CLASS=literal>Properties</tt> table, you can specify
+a second table for default property values:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+Properties defaults; 
+... 
+Properties props = new Properties( defaults ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now when you call <tt CLASS=literal>getProperty()</tt>, the method
+searches the default table if it doesn't find the named property
+in the current table. An alternative version of
+<tt CLASS=literal>getProperty()</tt> also accepts a default value; this
+value is returned if the property is not found in the current list or
+in the default list:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String xsize = props.getProperty( "myApp.xsize", "50" ); 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-5.2">Loading and Storing</A></h3>
+
+<P CLASS=para>
+You can save a <tt CLASS=literal>Properties</tt> table to an
+<tt CLASS=literal>OutputStream</tt> using the <tt CLASS=literal>save()</tt>
+method. The property information is output in flat ASCII
+format. Continuing with the above example, output the property
+information to <tt CLASS=literal>System.out</tt> as follows:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+props.save( System.out, "Application Parameters" ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As we'll discuss in <A HREF="ch08_01.htm">Chapter 8, <i>Input/Output Facilities</i></A>,
+<tt CLASS=literal>System.out</tt> is a standard output stream similar to
+C's <tt CLASS=literal>stdout</tt>. We could also save the
+information to a file by using a <tt CLASS=literal>FileOutputStream</tt> as
+the first argument to <tt CLASS=literal>save()</tt>. The second argument
+to <tt CLASS=literal>save()</tt> is a <tt CLASS=literal>String</tt> that is
+used as a header for the data. The above code outputs something like
+the following to <tt CLASS=literal>System.out</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+#Application Parameters 
+#Mon Feb 12 09:24:23 CST 1997 
+myApp.ysize=79 
+myApp.xsize=52 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>load()</tt> method reads the previously saved
+contents of a <tt CLASS=literal>Properties</tt> object from an
+<tt CLASS=literal>InputStream</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+FileInputStream fin; 
+... 
+Properties props = new Properties() 
+props.load( fin ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>list()</tt> method is useful for debugging. It 
+prints the contents to an <tt CLASS=literal>OutputStream</tt> in a format 
+that is more human-readable but not retrievable by <tt CLASS=literal>load()</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-5.3">System Properties</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.lang.System</tt> class provides access to basic
+system environment information through the
+<tt CLASS=literal>static System.getProperty()</tt>
+method. This method returns a <tt CLASS=literal>Properties</tt> table that
+contains system properties. System properties take the place of
+environment variables in other programming environments.
+
+<P CLASS=para>
+<A HREF="ch07_05.htm#EXJ-CH-7-TAB-8">Table 7.7</A> summarizes system
+properties that are guaranteed to be defined in any Java environment.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-8">Table 7.7: System Properties</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">System Property</TH>
+<TH ALIGN="left">Meaning</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.vendor</tt></TD>
+<TD ALIGN="left">Vendor-specific string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.vendor.url</tt></TD>
+<TD ALIGN="left">URL of vendor</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.version</tt></TD>
+<TD ALIGN="left">Java version</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.home</tt></TD>
+<TD ALIGN="left">Java installation directory</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.class.version</tt></TD>
+<TD ALIGN="left">Java class version</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.class.path</tt></TD>
+<TD ALIGN="left">The class path</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>os.name</tt></TD>
+<TD ALIGN="left">Operating-system name</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>os.arch</tt></TD>
+<TD ALIGN="left">Operating-system architecture</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>os.version</tt></TD>
+<TD ALIGN="left">Operating-system version</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>file.separator</tt></TD>
+<TD ALIGN="left">File separator (such as "/" or "&nbsp;\")</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>path.separator</tt></TD>
+<TD ALIGN="left">Path separator (such as ":" or ";")</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>line.separator</tt></TD>
+<TD ALIGN="left">Line separator (such as "\n" or "\r\n")</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>user.name</tt></TD>
+<TD ALIGN="left">User account name</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>user.home</tt></TD>
+<TD ALIGN="left">User's home directory</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>user.dir</tt></TD>
+<TD ALIGN="left">Current working directory</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Applets are, by current Web browser conventions, prevented from
+reading the following properties: <tt CLASS=literal>java.home</tt>,
+<tt CLASS=literal>java.class.path</tt>, <tt CLASS=literal>user.name</tt>,
+<tt CLASS=literal>user.home</tt>, and <tt CLASS=literal>user.dir</tt>. As
+you'll see in the next section, these restrictions are
+implemented by a <tt CLASS=literal>SecurityManager</tt> object.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Vectors and Hashtables</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Security Manager</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

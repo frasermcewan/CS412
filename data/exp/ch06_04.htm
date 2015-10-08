@@ -1,0 +1,320 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.4 Scheduling and Priority</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:54:04 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Threads</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-6-SECT-4">6.4 Scheduling and Priority</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.PRIOR1"></A><A NAME="CH06.PRIOR2"></A><A NAME="CH06.PRIOR3"></A>Java makes certain guarantees as to how its threads are
+scheduled. Every thread has a priority value. If, at any time, a
+thread of a higher priority than the current thread becomes runnable,
+it preempts the lower priority thread and begins executing. By
+default, threads at the same priority are scheduled round robin, which
+means once a thread starts to run, it continues until it
+does one of the following:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>Sleeps</I><br>
+<DD>
+
+<P CLASS=para>
+Calls <tt CLASS=literal> Thread.sleep() </tt> or <tt CLASS=literal> wait()</tt>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Waits for lock</I><br>
+<DD>
+
+<P CLASS=para>
+Waits for a lock in order to run a synchronized method
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Blocks on I/O</I><br>
+<DD>
+
+<P CLASS=para>
+Blocks, for example, in a <tt CLASS=literal>xread()</tt> or an
+<tt CLASS=literal>accept()</tt> call
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Explicitly yields control</I><br>
+<DD>
+
+<P CLASS=para>
+Calls <tt CLASS=literal>yield()</tt>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>Terminates</I><br>
+<DD>
+
+<P CLASS=para>
+Completes its target method or is terminated by a
+<tt CLASS=literal>stop()</tt> call</DL>
+<P CLASS=para>
+This situation looks something like what's shown in <A HREF="ch06_04.htm#EXJ-CH-6-FIG-4">Figure 6.4</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-6-FIG-4">Figure 6.4: Priority preemptive, round robin scheduling</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0604.gif" alt="[Graphic: Figure 6-4]" width=503 height=193 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Java leaves certain aspects of scheduling up to the
+implementation.[2]
+The main point here is that some, but not all, implementations 
+of Java use time slicing on threads of the same priority.[3]
+ In a time-sliced system, thread processing is chopped up, so that each 
+thread runs for a short period of time before the context is switched to 
+the next thread, as shown in <A HREF="ch06_04.htm#EXJ-CH-6-FIG-5">Figure 6.5</A>.
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+This implementation-dependent aspect of Java isn't a big deal,
+since it doesn't hurt for an implementation to add time slicing
+on top of the default round-robin scheduling. It's actually not
+hard to create a time-slicing effect by simply having a high-priority
+thread sleeping for a specified time interval. Every time it wakes up,
+it interrupts a lower-priority thread and causes processing to shift
+round robin to the next thread.
+
+<P CLASS=para>[3] 
+As of Java Release 1.0, Sun's Java Interpreter for the Windows 95 and
+Windows NT platforms uses time slicing, as does the Netscape Navigator
+Java environment. Sun's Java 1.0 for the Solaris
+UNIX platforms doesn't.
+</blockquote>
+<P CLASS=para>
+Higher priority threads still preempt lower priority threads 
+in this scheme. The addition of time slicing mixes up the processing 
+among threads of the same priority; on a multiprocessor machine, threads 
+may even be run simultaneously. Unfortunately, this feature can lead to
+differences in your application's behavior.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-6-FIG-5">Figure 6.5: Priority preemptive, time-sliced scheduling</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0605.gif" alt="[Graphic: Figure 6-5]" width=503 height=193 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Since Java doesn't guarantee time slicing, you shouldn't write code
+that relies on this type of scheduling; any software you write needs
+to function under the default round-robin scheduling. But if
+you're wondering what your particular flavor of Java does, try
+the following experiment:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Thready { 
+    public static void main( String args [] ) { 
+        new MyThread("Foo").start(); 
+        new MyThread("Bar").start(); 
+    } 
+} 
+ 
+class MyThread extends Thread { 
+    String message; 
+ 
+    MyThread ( String message ) { 
+        this.message = message; 
+    } 
+ 
+    public void run() { 
+        while ( true )  
+            System.out.println( message ); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>Thready</tt> class starts up two
+<tt CLASS=literal>MyThread</tt> objects. <tt CLASS=literal>Thready</tt> is a
+thread that goes into a hard loop (very bad form) and prints its
+message. Since we don't specify a priority for either thread,
+they both inherit the priority of their creator, so they have the same
+priority.  When you run this example, you will see how your Java
+implementation does it scheduling. Under a round-robin scheme, only
+"Foo" should be printed; "Bar" never
+appears. In a time-slicing implementation, you should occasionally see the
+"Foo" and "Bar" messages alternate.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-6-SECT-4.1">Priorities</A></h3>
+
+<P CLASS=para>
+Now let's change the priority of the second thread:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Thready { 
+    public static void main( String args [] ) { 
+        new MyThread("Foo").start(); 
+        Thread bar = new MyThread("Bar"); 
+        bar.setPriority( Thread.NORM_PRIORITY + 1 ); 
+        bar.start(); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As you might expect, this changes how our example behaves. Now you may
+see a few "Foo" messages, but "Bar" should
+quickly take over and not relinquish control, regardless of the
+scheduling policy.
+
+<P CLASS=para>
+Here we have used the <tt CLASS=literal>setPriority()</tt> method of the
+<tt CLASS=literal>Thread</tt> class to adjust our thread's
+priority. The <tt CLASS=literal>Thread</tt> class defines three standard
+priority values, as shown in <A HREF="ch06_04.htm#EXJ-CH-6-TAB-1">Table 6.1</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-6-TAB-1">Table 6.1: Thread Priority Values</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Value</TH>
+<TH ALIGN="left">Definition</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MIN_PRIORITY</tt></TD>
+<TD ALIGN="left">Minimum priority</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>NORM_PRIORITY</tt></TD>
+<TD ALIGN="left">Normal priority</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>MAX_PRIORITY</tt></TD>
+<TD ALIGN="left">Maximum priority</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+If you need to change the priority of a thread, you should use one of
+these values or a close relative value. But let me warn you against
+using <tt CLASS=literal>MAX_PRIORITY</tt> or a close relative value; if
+you elevate many threads to this priority level, priority will quickly
+become meaningless. A slight increase in priority should be enough for
+most needs. For example, specifying <tt CLASS=literal>NORM_PRIORITY + 1</tt> in
+our example is enough to beat out our other thread.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-6-SECT-4.2">Yielding</A></h3>
+
+<P CLASS=para>
+As I said earlier, whenever a thread sleeps, waits, or blocks on I/O,
+it gives up its time slot, and another thread is scheduled.  So as
+long as you don't write methods that use hard loops, all threads
+should get their due. However, a <tt CLASS=literal>Thread</tt> can also
+give up its time voluntarily with the <tt CLASS=literal>yield()</tt>
+call. We can change our previous example to include a
+<tt CLASS=literal>yield()</tt> on each iteration:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class MyThread extends Thread { 
+    ... 
+ 
+    public void run() { 
+        while ( true ) { 
+            System.out.println( message ); 
+            yield(); 
+        } 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now you should see "Foo" and "Bar" 
+messages alternating one for one. If you have threads that perform very intensive calculations, or
+otherwise eat a lot of CPU time, you might want to
+find an appropriate place for them to yield control occasionally.
+Alternatively, you might want to drop the priority of your intensive
+thread, so that more important processing can proceed around it.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Synchronization</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Basic Utility Classes</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,2574 @@
+<HTML>
+<HEAD>
+<TITLE>[Appendix C] Platform-Specific Event Handling</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:17:05 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="appb_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Appendix C</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="appc_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=appendix><A CLASS="TITLE" NAME="JAWT-APP-C">C. Platform-Specific Event Handling</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+The Results<br>
+<A HREF="appc_02.htm">Test Program</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+My life with Java began in September of 1995. I started on a Sun Sparc20 
+and have since used Java on Windows 95, Windows NT (3.51/4.0), 
+a PowerMac, and an early version of a Java terminal. At the time I started using Java, 
+it was in its alpha 3 release. Even before the beta release, the Internet 
+crowd was hailing Java as the programming language for the next millennium, 
+and people were lining up to take Sun's Java training classes. <A NAME="C.EVENT1"></A><A NAME="C.EVENT2"></A>
+
+<P CLASS=para>
+Although Java has many important features, probably the most important 
+is platform independence: you can compile a program once and run it anywhere. 
+At least, that was the goal; and Java came impressively close to meeting 
+that goal. However, there are some problems, particularly in the area of 
+event handling. Java programs just do not act the same, from platform to 
+platform, environment to environment. Even if you stay within Sun's 
+Java Developer's Kit, you cannot take a program created on one platform, 
+move it to another, and be guaranteed that it will react the same way to 
+the user's interactions. To make matters worse, Netscape, the makers of the 
+first run-time environment for beta API applets, Netscape, decided to take 
+matters into its own hands with Navigator version 3.0; its version 
+of AWT behaves slightly differently than the JDK's. On top of that, Navigator 
+itself differs from platform to platform. Version 1.1 of the JDK introduces 
+more idiosyncrasies, even as it resolves some others. 
+
+<P CLASS=para>
+With more Java environments available, HotJava, Internet Explorer, and 
+Java terminals to name a few, and new official extensions to AWT coming 
+out, the differences are expanding, instead of contracting. Hopefully, 
+there will be a day when this appendix can go away, completely. Until that 
+time, I've tried to document the behavior of different run-time systems, 
+on different platforms. If the platform is not included in this appendix, 
+the source for a test program is. If you run the program on your platform 
+and send the results to me at <I class=emphasis>jaz@ora.com</I>, 
+they will be included in a future printing or provided online. The test 
+program requires user-interaction, so please follow directions carefully. 
+Between printings, the book's Web site will maintain the latest information 
+at <A HREF="http://www.ora.com/catalog/javawt/">http://www.ora.com/catalog/javawt/</A>. 
+Only the results from using the latest releases of each platform are included 
+in <A HREF="appc_01.htm#JAWT-APP-C-TAB-1">Table C.1</A>. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-APP-C-SECT-1">C.1 The Results</A></h2>
+
+<P CLASS=para>
+<A HREF="appc_01.htm#JAWT-APP-C-TAB-1">Table C.1</A> shows the events delivered to
+each component on the major platforms in Java 1.0. An OK in a
+particular entry means that the event is passed to Java from the
+component's peer; a dash means it is not.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-APP-C-TAB-1">Table C.1: Component Events in Java 1.0</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Run-time</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+NN3.0</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+NN3.0</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+NN3.0</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+SDK</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+JDK / Win95 / NT</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+JDK / Mac</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+JDK / Sun</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+IE3.0 / Win95 / NT</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+HJ / Win95 / NT</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+HJ / Sun</TH>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">Button</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">x</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">Canvas</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">x</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">Checkbox</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">x</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">Choice</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">x</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">Label</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">List</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">x</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LIST_SELECT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LIST_DESELECT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">Scrollbar</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">-/X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">-/X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_LINE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_LINE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_PAGE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_PAGE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_ABSOLUTE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">TextArea</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=11 ALIGN="center">TextField</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">X</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT">X</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Key: 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>IE<br>
+<DD>
+
+<P CLASS=para>
+Microsoft's Internet Explorer
+
+<p>
+<DT CLASS=varlistentry>HJ<br>
+<DD>
+
+<P CLASS=para>
+Sun's Hot Java Prebeta 1
+
+<p>
+<DT CLASS=varlistentry>JDK<br>
+<DD>
+
+<P CLASS=para>
+Java Developer's Kit 1.0.2 (<I CLASS=emphasis>appletviewer</I>/Java)
+
+<p>
+<DT CLASS=varlistentry>NN<br>
+<DD>
+
+<P CLASS=para>
+Netscape Navigator
+
+<p>
+<DT CLASS=varlistentry>SDK<br>
+<DD>
+
+<P CLASS=para>
+Microsoft SDK
+
+<p>
+<DT CLASS=varlistentry>Sun<br>
+<DD>
+
+<P CLASS=para>
+Solaris 2.x (UNIX/Motif)</DL>
+<P CLASS=para>
+Yes, things changed again with the 1.1 release. 
+<A HREF="appc_01.htm#JAWT-APP-C-TAB-2">Table C.2</A> shows which Java 
+1.0 events are generated for each component in Java 1.1. Fortunately, 
+there is one clear improvement: the Java 1.1 event model promises much 
+more uniform event processing, since it's largely under your control. 
+For example, you can attach a <tt CLASS=literal>MouseListener</tt> 
+to a <tt CLASS=literal>Label</tt> and receive mouse 
+events that would not be generated with the 1.0 event model. 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-APP-C-TAB-2">Table C.2: Java 1.0 Component Events in Java 1.1</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Component/Events vs.</TH>
+<TH ALIGN="CENTER">
+
+<P CLASS=para>
+HJ/JDK</TH>
+<TH ALIGN="CENTER">
+
+<P CLASS=para>
+HJ/JDK</TH>
+</TR>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Run-time/Platform</TH>
+<TH ALIGN="CENTER">WinNT/95</TH>
+<TH ALIGN="CENTER">Sun</TH>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">Button</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">Canvas</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">Checkbox</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">Choice</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">Label</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">List</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LIST_SELECT</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LIST_DESELECT</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">ScrollBar</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_LINE_UP</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_LINE_DOWN</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_PAGE_UP</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_PAGE_DOWN</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">SCROLL_ABSOLUTE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">TextArea</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD COLSPAN=3 ALIGN="center">TextField</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_PRESS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">KEY_ACTION_RELEASE</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DOWN</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_UP</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_MOVE</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_ENTER</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_EXIT</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">MOUSE_DRAG</TD>
+<TD ALIGN="CENTER">--</TD>
+<TD ALIGN="CENTER">--</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">ACTION_EVENT</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">GOT_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">LOST_FOCUS</TD>
+<TD ALIGN="CENTER">OK</TD>
+<TD ALIGN="CENTER">OK</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Key: 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>HJ<br>
+<DD>
+
+<P CLASS=para>
+Sun's Hot Java Prebeta 2
+
+<p>
+<DT CLASS=varlistentry>JDK<br>
+<DD>
+
+<P CLASS=para>
+Java Developer's Kit 1.1 (<I CLASS=emphasis>appletviewer</I>/Java)
+
+<p>
+<DT CLASS=varlistentry>Sun<br>
+<DD>
+
+<P CLASS=para>
+Solaris 2.x (UNIX/Motif)</DL>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="appb_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="appc_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Applet Tag</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Test Program</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] Internationalization</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:58:54 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-11">11. Internationalization</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+A Word About Locales<br>
+<A HREF="ch11_02.htm">Unicode</A><BR>
+<A HREF="ch11_03.htm">Character Encodings</A><BR>
+<A HREF="ch11_04.htm">Handling Local Customs</A><BR>
+<A HREF="ch11_05.htm">Localizing User-Visible Messages</A><BR>
+<A HREF="ch11_06.htm">Formatted Messages</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+Internationalization is the process of making a program
+flexible enough to run correctly in any locale,
+as discussed in <A HREF="ch04_01.htm">Chapter 4, <i>What's New in Java 1.1</i></A>.
+The required corollary to internationalization is
+localization--the process of arranging for a program to run in
+a specific locale.<A NAME="CH11.INTERNATIONA1"></A>
+
+<P CLASS=para>
+There are several distinct steps to the task of
+internationalization.  Java 1.1 addresses these steps
+with several different mechanisms:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>A program must be able to read, write, and manipulate
+localized text.  Java uses the Unicode character encoding,
+which by itself is a huge step towards internationalization.  In
+addition, in Java 1.1 the <tt CLASS=literal>InputStreamReader</tt> and
+<tt CLASS=literal>OutputStreamWriter</tt> classes convert text from a
+locale-specific encoding to Unicode and from Unicode to a
+locale-specific encoding, respectively.
+
+<P>
+<li CLASS=listitem>A program must conform to local customs when
+displaying dates and times, formatting numbers, and sorting
+strings.  Java addresses these issues with the classes in the
+new <tt CLASS=literal>java.text</tt> package.
+
+<P>
+<li CLASS=listitem>A program must display all user-visible text in the local
+language.  Translating the messages a program displays is
+always one of the main tasks in localizing a program.  A
+more important task is writing the program so that all
+user-visible text is fetched at runtime, rather than
+hard-coded directly into the program.  Java 1.1 facilitates
+this process with the <tt CLASS=literal>ResourceBundle</tt> class and its
+subclasses in the <tt CLASS=literal>java.util</tt> package.
+
+<P>
+</UL>
+<P CLASS=para>
+This chapter discusses all three of these aspects of
+internationalization.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-11-SECT-1">11.1 A Word About Locales</A></h2>
+
+<P CLASS=para>
+A locale represents a geographic, political, or cultural
+region.  In Java 1.1, locales are represented by the
+<tt CLASS=literal>java.util.Locale</tt> class.  A locale is frequently defined
+by a language, which is represented by its standard
+lowercase two-letter code, such as en (English) or fr (French).  
+Sometimes, however, language alone is not sufficient
+to uniquely specify a locale, and a country is added to the
+specification.  A country is represented by
+an uppercase two-letter code.
+For example, the United States English locale (en_US) is
+distinct from the British English locale (en_GB), and the
+French spoken in Canada (fr_CA) is different from the French
+spoken in France (fr_FR).  Occasionally, the scope of a
+locale is further narrowed with the addition of a
+system-dependent "variant" string.
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> class maintains a static default locale,
+which can be set and queried with
+<tt CLASS=literal>Locale.setDefault()</tt> and <tt CLASS=literal>Locale.getDefault()</tt>.
+Locale-sensitive methods in Java 1.1 typically come in two
+forms.  One uses the default locale and the other uses
+a <tt CLASS=literal>Locale</tt> object that is explicitly specified
+as an argument.  A program can create and use any number of
+non-default <tt CLASS=literal>Locale</tt> objects, although it is more
+common simply to rely on the default locale, which is
+inherited from the underlying default locale on the native
+platform.  Locale-sensitive classes in Java often
+provide a method to query the list of locales that they
+support.
+
+<P CLASS=para>
+Finally, note that AWT components in Java 1.1 have a locale
+property, so it is possible for different components to use
+different locales.  (Most components, however, are not
+locale-sensitive; they behave the same in any locale.)
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_09.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Naming Patterns and Conventions</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Unicode</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

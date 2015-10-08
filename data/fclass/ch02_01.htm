@@ -1,0 +1,272 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] Strings and Related Classes</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:07:50 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-2">2. Strings and Related Classes</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+String<br>
+<A HREF="ch02_02.htm">StringBuffer</A><BR>
+<A HREF="ch02_03.htm">String Concatenation</A><BR>
+<A HREF="ch02_04.htm">StringTokenizer</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+As with most programming languages, strings are used extensively throughout 
+Java, so the Java API has quite a bit of functionality to help you manipulate 
+strings. This chapter describes the following classes: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>java.lang.String</tt> class represents all textual strings in Java. A <tt CLASS=literal>String</tt> 
+object is immutable; once you create a <tt CLASS=literal>String</tt> 
+object, there is no way to change the sequence of characters it represents 
+or the length of the string. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>java.lang.StringBuffer</tt> 
+class represents a variable-length, mutable sequence of characters. 
+With a <tt CLASS=literal>StringBuffer</tt> object, 
+you can insert characters anywhere in the sequence and add characters to 
+the end of the sequence. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>java.util.StringTokenizer</tt> 
+class provides support for parsing a string into a sequence of words, 
+or tokens. 
+
+<P>
+</UL>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-2-SECT-1">2.1 String</A></h2>
+
+<P CLASS=para>
+<A NAME="CH02.STRING2"></A>You can create a <tt CLASS=literal>String</tt> object 
+in Java simply by assigning a string literal to a <tt CLASS=literal>String</tt> 
+variable: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+String quote = "To be or not to be";
+</PRE>
+</DIV>
+
+<P CLASS=para>
+All string literals are compiled into <tt CLASS=literal>String</tt>
+objects. Although the Java compiler does not generally treat
+expressions involving object references as compile-time constants,
+references to <tt CLASS=literal>String</tt> objects created from string
+literals are treated as compile-time constants.
+
+<P CLASS=para>
+Of course, there are many other ways to create a <tt CLASS=literal>String</tt> 
+object. The <tt CLASS=literal>String</tt> class has 
+a number of constructors that let you create a <tt CLASS=literal>String</tt> 
+from an array of bytes, an array of characters, another <tt CLASS=literal>String</tt> 
+object, or a <tt CLASS=literal>StringBuffer</tt> object. 
+
+<P CLASS=para>
+If you are a C or C++ programmer, you may be wondering if <tt CLASS=literal>String</tt> 
+objects are null-terminated. The answer is no, and, in fact, the question 
+is irrelevant. The <tt CLASS=literal>String</tt> class 
+actually uses a character array internally. Since arrays in Java are actual 
+objects that know their own length, a <tt CLASS=literal>String</tt> 
+object also knows its length and does not require a special terminator. 
+Use the <tt CLASS=literal>length()</tt> method to 
+get the length of a <tt CLASS=literal>String</tt> 
+object. 
+
+<P CLASS=para>
+Although <tt CLASS=literal>String</tt> objects are 
+immutable, the <tt CLASS=literal>String</tt> class 
+does provide a number of useful methods for working with strings. Any operation 
+that would otherwise change the characters or the length of the string 
+returns a new <tt CLASS=literal>String</tt> object 
+that copies the necessary portions of the original <tt CLASS=literal>String</tt>. 
+
+<P CLASS=para>
+The following methods access the contents of a <tt CLASS=literal>String</tt> 
+object: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>substring()</tt> creates 
+a new <tt CLASS=literal>String</tt> object that contains 
+a sub-sequence of the sequence of characters represented by a <tt CLASS=literal>String</tt> 
+object. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>charAt()</tt> returns 
+the character at a given position in a <tt CLASS=literal>String</tt> 
+object. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>getChars()</tt> and <tt CLASS=literal>getBytes()</tt> 
+return a range of characters in a <tt CLASS=literal>char</tt> 
+array or a <tt CLASS=literal>byte</tt> array. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>toCharArray()</tt> returns 
+the entire contents of a <tt CLASS=literal>String</tt> 
+object as a <tt CLASS=literal>char</tt> array. 
+
+<P>
+</UL>
+<P CLASS=para>
+You can compare the contents of <tt CLASS=literal>String</tt> 
+objects with the following methods: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>equals()</tt> returns 
+<tt CLASS=literal>true</tt> if two <tt CLASS=literal>String</tt> 
+objects have the exact same contents, while <tt CLASS=literal>equalsIgnoreCase()</tt> 
+returns <tt CLASS=literal>true</tt> if two objects 
+have the same contents ignoring differences between upper- and lowercase 
+versions of the same character. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>regionMatches()</tt> 
+determines if two sub-strings contain the same sequence of characters. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>startsWith()</tt> and 
+<tt CLASS=literal>endsWith()</tt> determine if a <tt CLASS=literal>String</tt> 
+object begins or ends with a particular sequence of characters. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>compareTo()</tt> determines 
+if the contents of one <tt CLASS=literal>String</tt> 
+object are less than, equal to, or greater than the contents of another 
+<tt CLASS=literal>String</tt> object. 
+
+<P>
+</UL>
+<P CLASS=para>
+Use the following methods to search for characters in a string: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>indexOf()</tt> searches 
+forward through a string for a given character or string. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>lastIndexOf()</tt> 
+searches backwards through a string for a given character or string. 
+
+<P>
+</UL>
+<P CLASS=para>
+The following methods manipulate the contents of a string and return a 
+new, related string: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal>concat()</tt> returns 
+a new <tt CLASS=literal>String</tt> object that is 
+the concatenation of two <tt CLASS=literal>String</tt> 
+objects. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>replace()</tt> returns 
+a new <tt CLASS=literal>String</tt> object that contains 
+the same sequence of characters as the original string, but with a given 
+character replaced by another given character. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>toLowerCase()</tt> and <tt CLASS=literal>toUpperCase()</tt> 
+return new <tt CLASS=literal>String</tt> objects that 
+contain the same sequence of characters as the original string, but converted 
+to lower- or uppercase. 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>trim()</tt> returns a new <tt CLASS=literal>String</tt> 
+object that contains the same character sequence as the original string, 
+but with leading and trailing white space and control characters removed. 
+
+<P>
+</UL>
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> class also defines 
+a number of <tt CLASS=literal>static</tt> methods 
+named <tt CLASS=literal>valueOf()</tt> that return 
+string representations of primitive Java data types and objects. The <tt CLASS=literal>Object</tt> 
+class defines a <tt CLASS=literal>toString()</tt> 
+method, and, since <tt CLASS=literal>Object</tt> is 
+the ultimate superclass of every other class, every class inherits a basic 
+<tt CLASS=literal>toString()</tt> method. Any class 
+that has a string representation should override the <tt CLASS=literal>toString()</tt> 
+method to produce the appropriate string. 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The java.util.zip Package</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>StringBuffer</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

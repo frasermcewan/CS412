@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] 11.5 PopupMenus</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:01:11 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>Using and Creating GUI Components</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="ch11-SECT1-AUTOID.3">11.5 PopupMenus</A></h2>
+
+<P CLASS=para>
+One of the new components in Java 1.1 is the
+<tt CLASS=literal>PopupMenu</tt>: a menu that automatically
+appears when you press the appropriate mouse button inside of a
+component. Which button you press depends on the platform you're
+using; fortunately you don't have to care.
+
+<P CLASS=para>
+The care and feeding of a <tt CLASS=literal>PopupMenu</tt> is
+basically the same as any other menu. You use a different constructor
+(<tt CLASS=literal>PopupMenu()</tt>) to create it, but otherwise,
+you build a menu and add elements to it the same way. The big
+difference is that you don't need to attach it to a
+<tt CLASS=literal>MenuBar</tt>, and consequently don't need to
+worry about putting the <tt CLASS=literal>MenuBar</tt> in a
+<tt CLASS=literal>Frame</tt>. Instead, you call
+<tt CLASS=literal>add()</tt> to add the
+<tt CLASS=literal>PopupMenu</tt> to any component. 
+
+<P CLASS=para>
+The <tt CLASS=literal>PopupColorMenu</tt> applet contains three
+buttons. You can use a <tt CLASS=literal>PopupMenu</tt> to set the color
+of each button or the applet itself, depending on where you press the
+mouse. (Setting the color of the applet also sets the buttons'
+colors). <A HREF="ch11_02.htm#EXJ-CH-11-FIG-3">Figure 11.3</A> shows the applet in action;
+the user is preparing to change the color of the right-most button.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-11-FIG-6">Figure 11.6: The PopupColorMenu Applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1106.gif" alt="[Graphic: Figure 11-6]" width=503 height=223 border=0>
+
+</DIV>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class PopUpColorMenu extends java.applet.Applet 
+implements ActionListener {
+    PopupMenu colorMenu;
+    Component selectedComponent;
+    public void init() {        
+        add( new Button("One") );
+        add( new Button("Two") );
+        add( new Button("Three") );
+        
+        colorMenu = new PopupMenu("Color");
+        colorMenu.add( makeMenuItem("Red") );
+        colorMenu.add( makeMenuItem("Green") );
+        colorMenu.add( makeMenuItem("Blue") );
+        addMouseListener( new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if ( e.isPopupTrigger() ) {
+                    selectedComponent = getComponentAt( e.getX(), e.getY() );
+                    colorMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        } );
+        add(colorMenu);
+    }
+    public void actionPerformed(ActionEvent e) {
+        String color = e.getActionCommand();
+        if ( color.equals("Red") )
+            selectedComponent.setBackground( Color.red );
+        else if ( color.equals("Green") )
+            selectedComponent.setBackground( Color.green );
+        else if ( color.equals("Blue") )
+            selectedComponent.setBackground( Color.blue );
+    }
+    private MenuItem makeMenuItem(String label) {
+        MenuItem item = new MenuItem(label);
+        item.addActionListener( this );
+        return item;
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Because the popup menu is triggered by mouse events, we need to
+register a <tt CLASS=literal>MouseListener</tt>. In our call to
+<tt CLASS=literal>addMouseListener()</tt>, we create an 
+anonymous inner class based on the
+<tt CLASS=literal>MouseAdapter</tt>. In this class, we override
+the <tt CLASS=literal>mousePressed()</tt> method to display the
+popup menu when we get an appropriate event. How do we know what an
+"appropriate event" is? Fortunately, we don't need to worry about the
+specifics of our user's platform; we just need to call the event's
+<tt CLASS=literal>isPopupTrigger()</tt> method. If this method
+returns <tt CLASS=literal>true</tt>, we know the user has done
+whatever normally displays a popup menu on his system.
+<P CLASS=para>
+Once we know that the user wants to raise a popup menu, we figure out
+which component the mouse is over by calling
+<tt CLASS=literal>getComponentAt()</tt>, with the coordinates of
+the mouse click (given by <tt CLASS=literal>e.getX()</tt> and
+<tt CLASS=literal>e.getY()</tt>). Then we display the popup menu
+by calling its <tt CLASS=literal>show()</tt> method, again with
+the mouse coordinates as arguments.
+
+<P CLASS=para>
+If we wanted to provide different menus for
+different types of components or the background, we could
+add a test within the check for the popup trigger:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+if ( e.isPopupTrigger() ) {
+    selectedComponent = getComponentAt( e.getX(), e.getY() );
+          
+    if ( selectedComponent instanceof Button )
+         colorMenu.show(e.getComponent(), 
+                        e.getX(), e.getY());
+    else if ( selectedComponent instanceof Applet )
+            // show a menu for the background
+    else if ( selectedComponent instanceof someOtherComponent )
+            // show another menu
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The only thing left is to handle the action events from the popup menu
+items. As in our earlier example, we use a helper method called
+<tt CLASS=literal>makeMenuItem()</tt> to register the applet as
+an action listener for every item we add. The applet implements
+<tt CLASS=literal>ActionListener</tt> and has the required
+<tt CLASS=literal>actionPerformed()</tt> method. This method
+reads the action command from the event, which is equal to the
+selected menu item's label by default. It then sets the background
+color of the selected component appropriately. 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Menus and Choices</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Checkboxes and CheckboxGroups</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.5 Reading Applet Parameters</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:53:26 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Applets</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-6-SECT-5">6.5 Reading Applet Parameters</A></h2>
+
+<P CLASS=para>
+<A NAME="CH6.APPLETS-PARA1"></A><A HREF="ch06_05.htm#JNUT2-CH-6-EX-4">Example 6.4</A>
+shows an extension to our <tt CLASS=literal>Scribble</tt> applet. The
+<tt CLASS=literal>ColorScribble</tt> class is a subclass of
+<tt CLASS=literal>Scribble</tt> that adds the ability to scribble in a
+configurable foreground color over a configurable background
+color. (The <tt CLASS=literal>ColorScribble</tt> applet looks a lot like
+the <tt CLASS=literal>Scribble</tt> applet of
+<A HREF="ch06_04.htm#JNUT2-CH-6-FIG-3">Figure 6.3</A>
+and is not pictured here.)
+
+<P CLASS=para>
+<A NAME="CH6.COLORS-IN.IM1"></A><tt CLASS=literal>ColorScribble</tt> has an <tt CLASS=literal>init()</tt> method that
+reads the value of two "applet parameters" that can be
+optionally specified with the <tt CLASS=literal>&lt;PARAM&gt;</tt> tag in the
+applet's HTML file. The returned string values are
+converted to colors and specified as the default foreground
+and background colors for the applet. Note that the
+<tt CLASS=literal>init()</tt> method invokes its superclass's
+<tt CLASS=literal>init()</tt> method, just in case a future version of
+<tt CLASS=literal>Scribble</tt> defines that method to perform
+initialization.
+
+<P CLASS=para>
+This example also introduces the <tt CLASS=literal>getAppletInfo()</tt> and
+<tt CLASS=literal>getParameterInfo()</tt> methods. These methods provide
+textual information about the applet (its author, its
+version, its copyright, etc.) and the parameters that it can
+accept (the parameter names, their types, and their
+meanings). An applet should generally define these methods,
+although the current generation of Web browsers do not
+actually ever make use of them.  (The <tt CLASS=literal>appletviewer</tt>
+application in the JDK does call these methods, however.)
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-6-EX-4">Example 6.4: Reading Applet Parameters</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+public class ColorScribble extends Scribble {
+  // Read in two color parameters and set the colors.
+  public void init() {
+    super.init();
+    Color foreground = getColorParameter("foreground");
+    Color background = getColorParameter("background");
+    if (foreground != null) this.setForeground(foreground);
+    if (background != null) this.setBackground(background);
+  }
+  // Read the specified parameter.  Interpret it as a hexadecimal
+  // number of the form RRGGBB and convert it to a color.
+  protected Color getColorParameter(String name) {
+    String value = this.getParameter(name);
+    try { return new Color(Integer.parseInt(value, 16)); }
+    catch (Exception e) { return null; }
+  }
+  // Return information suitable for display in an About dialog box.
+  public String getAppletInfo() {
+    return "ColorScribble v. 0.02.  Written by David Flanagan.";
+  }
+  // Return info about the supported parameters.  Web browsers and applet
+  // viewers should display this information, and may also allow users to
+  // set the parameter values.
+  public String[][] getParameterInfo() { return info; }
+  // Here's the information that getParameterInfo() returns.
+  // It is an array of arrays of strings describing each parameter.
+  // Format: parameter name, parameter type, parameter description
+  private String[][] info = {
+    {"foreground", "hexadecimal color value", "foreground color"},
+    {"background", "hexadecimal color value", "background color"}
+  };
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+The following HTML fragment references the applet, and
+demonstrates how parameter values can be set with the
+<tt CLASS=literal>&lt;PARAM&gt;</tt> tag:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;APPLET code="ColorScribble.class" width=300 height=300&gt;
+&lt;PARAM name="foreground" value="0000FF"&gt;
+&lt;PARAM name="background" value="FFCCCC"&gt;
+&lt;/APPLET&gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Handling Events</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Images and Sounds</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

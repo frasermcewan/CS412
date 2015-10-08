@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 16] javac</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:04:13 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 16<br>JDK Tools</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch16_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<A NAME="CH16.JAVAC.COMPIL1"></A><A NAME="CH16.PROGRAMMING.3"></A>
+
+<DIV CLASS=refnamediv>
+<H1>javac</H1>
+
+<H2>Name</H2>
+
+javac---The Java Compiler
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-4.1">Availability</A></h2>
+
+<P CLASS=para>
+JDK 1.0 and later.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-4.2">Synopsis</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+javac [ <I CLASS=emphasis>options</I> ] <I CLASS=emphasis>files</I>
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-4.3">Description</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>javac</I> is the Java compiler--it compiles Java source
+code (in <I CLASS=emphasis>.java</I> files) into Java byte-codes
+(in <I CLASS=emphasis>.class</I> files). The Java compiler is itself written
+in Java.
+
+<P CLASS=para>
+<I CLASS=emphasis>javac</I> may be passed any number of Java source files,
+whose names must all end with the <I CLASS=emphasis>.java</I> extension.
+<I CLASS=emphasis>javac</I> produces a separate <I CLASS=emphasis>.class</I> class file for
+each class defined in the source files, regardless of how
+many source files there are. In other words, there need not be a
+one-to-one mapping between Java source files and Java class
+files.  Note also that the compiler requires that there be
+only a single public class defined in any one source file,
+and that the name of the file (minus the <I CLASS=emphasis>.java</I>
+extension) be the same as the name of the class (minus its
+package name, of course).
+
+<P CLASS=para>
+By default, <I CLASS=emphasis>javac</I> places the class files it generates
+in the same directory as the corresponding source file.  You
+can override this behavior with the <tt CLASS=literal>-d</tt> option.
+
+<P CLASS=para>
+When a source file references a class that is not defined in
+another source file on the command line, <I CLASS=emphasis>javac</I>
+searches for the definition of that class using the class
+path.  The default class path contains only the current
+directory and the system
+classes.  You may specify additional classes and packages to
+be searched with the <tt CLASS=literal>-classpath</tt> option or the
+<tt CLASS=literal>CLASSPATH</tt> environment variable.
+
+<P CLASS=para>
+If <I CLASS=emphasis>javac</I> compiles a source file that relies on a class
+that is out of date (i.e., if the source file for that class
+is newer than the class file), it automatically
+recompiles that file.
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-4.4">Options</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>-classpath</tt> <I CLASS=emphasis>path</I><br>
+<DD>
+
+<P CLASS=para>
+The path that <I CLASS=emphasis>javac</I> uses to look up classes referenced
+in the specified source code.  This option overrides the
+default path and any path specified by the
+<tt CLASS=literal>CLASSPATH</tt> environment variable.  The <tt CLASS=literal>path</tt>
+specified is an ordered list of directories and ZIP files,
+separated by colons on UNIX systems or semicolons on Windows
+systems.
+
+<P CLASS=para>
+To specify additional directories or ZIP files to be searched,
+without overriding the default system class path, use the
+<tt CLASS=literal>CLASSPATH</tt> environment variable.  See the <I CLASS=emphasis>java</I>
+reference page for more information on specifying paths.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-d</tt> <I CLASS=emphasis>directory</I><br>
+<DD>
+
+<P CLASS=para>
+The directory in which (or beneath which) class files should
+be stored.  By default, <I CLASS=emphasis>javac</I> stores
+the <I CLASS=emphasis>.class</I> files it generates in the same directory
+as the <I CLASS=emphasis>.java</I> file that those classes were defined in.
+If the <tt CLASS=literal>-d</tt> flag is specified, however, the
+specified <tt CLASS=literal>directory</tt> is treated as the root of the class
+hierarchy and <I CLASS=emphasis>.class</I> files are placed in this
+directory, or in the appropriate subdirectory below it,
+depending on the package name of the class.  Thus, the
+following command:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+% javac -d java/classes java/src/Checkers.java
+</PRE>
+</DIV>
+
+<P CLASS=para>
+places the file <I CLASS=emphasis>Checkers.class</I> in the directory
+<I CLASS=emphasis>java/classes</I> if the <I CLASS=emphasis>Checkers.java</I> file has no
+<tt CLASS=literal>package</tt> statement.  On the other hand, if the
+source file specifies that it is in a package:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package david.games;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+then the <I CLASS=emphasis>.class</I> file is stored in
+<I CLASS=emphasis>java/classes/david/games</I>.
+When the <tt CLASS=literal>-d</tt> option is specified, <I CLASS=emphasis>javac</I>
+automatically creates any directories it needs to store
+its class files in the appropriate place.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-depend</tt><br>
+<DD>
+
+<P CLASS=para>
+Tells <I CLASS=emphasis>javac</I> to recompile any
+out-of-date class files it encounters, not just those that
+are referenced from one of the specified source files.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-deprecation</tt><br>
+<DD>
+
+<P CLASS=para>
+Tells <I CLASS=emphasis>javac</I> to issue a
+warning for every use of a deprecated API.  By default,
+<I CLASS=emphasis>javac</I> issues only a single warning if a program uses
+deprecated APIs.  Available in JDK 1.1 and later.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-g</tt><br>
+<DD>
+
+<P CLASS=para>
+This option tells <I CLASS=emphasis>javac</I> to add line numbers and local
+variable information to the output class files, for use by
+debuggers.  By default, <I CLASS=emphasis>javac</I> only generates the line
+numbers.  With the <tt CLASS=literal>-O</tt> option, <I CLASS=emphasis>javac</I>
+does not generate even that information.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-J</tt><I CLASS=emphasis>javaoption</I><br>
+<DD>
+
+<P CLASS=para>
+Pass the argument <tt CLASS=literal>javaoption</tt> directly through to the
+Java interpreter.  <tt CLASS=literal>javaoption</tt> should not contain
+spaces; if multiple arguments must be passed to the
+interpreter, use multiple <tt CLASS=literal>-J</tt> options.  Available in
+JDK 1.1 and later.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-nowarn</tt><br>
+<DD>
+
+<P CLASS=para>
+Tells <I CLASS=emphasis>javac</I> not to print warning messages.  Errors are
+still reported as usual.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-nowrite</tt><br>
+<DD>
+
+<P CLASS=para>
+Tells <I CLASS=emphasis>javac</I> not to create any class files.  Source
+files are parsed as usual, but no output is written.  This
+option is useful when you want to check that a file will
+compile without actually compiling it.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-O</tt><br>
+<DD>
+
+<P CLASS=para>
+Enable optimization of class files.  This option may cause
+<I CLASS=emphasis>javac</I> to compile <tt CLASS=literal>static</tt>, <tt CLASS=literal>final</tt>, and
+<tt CLASS=literal>private</tt> methods inline, so that they execute faster.
+The trade-off is that the class files will be larger.  This
+option also prevents <I CLASS=emphasis>javac</I> from adding line number
+debugging information to the class files.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>-verbose</tt><br>
+<DD>
+
+<P CLASS=para>
+Tells the compiler to display messages about what it is doing.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-4.5">Environment</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>CLASSPATH</tt><br>
+<DD>
+
+<P CLASS=para>
+Specifies an ordered list (colon-separated on UNIX,
+semicolon-separated on Windows systems) of directories and
+ZIP files in which <I CLASS=emphasis>javac</I> should look for class
+definitions.  When a path is specified with this environment
+variable, <I CLASS=emphasis>javac</I> always implicitly appends the location
+of the system classes to the end of the path.  If this
+environment variable is not specified, the default path
+is the current directory and the system classes.  This
+variable is overridden by the <tt CLASS=literal>-classpath</tt> option.</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JNUT2-CH-16-SECT-4.6">See Also</A></h2>
+
+<P CLASS=para>
+<I CLASS=emphasis>java</I>, <I CLASS=emphasis>jdb</I>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch16_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>javadoc</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

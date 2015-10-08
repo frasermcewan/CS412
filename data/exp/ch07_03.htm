@@ -1,0 +1,307 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.3 Dates</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:55:43 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Basic Utility Classes</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-3">7.3 Dates</A></h2>
+
+<P CLASS=para>
+Working with dates and times without the proper tools can be a
+chore.[2]
+Java 1.1 gives you three classes that do all the hard work for you.
+The <tt CLASS=literal>java.util.Date</tt> encapsulates a point
+in time.  The <tt CLASS=literal>java.util.GregorianCalendar</tt> class,
+which descends from the abstract <tt CLASS=literal>java.util.Calendar</tt>,
+translates
+between a point in time and calendar fields like month, day, and
+year.  Finally, the <tt CLASS=literal>java.text.DateFormat</tt> class
+knows how to generate and parse string representations of dates
+and times.  In Java 1.0.2,
+the <tt CLASS=literal>Date</tt> class performed all three functions.  In
+Java 1.1, most of its methods have been deprecated, so that its only purpose
+in life is to represent a point in time.
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+For a wealth of information about time and world time keeping
+conventions, see <A HREF="http://tycho.usno.navy.mil/">http://tycho.usno.navy.mil/</A>, the
+U.S. Navy Directorate of Time.  For a fascinating history of the Gregorian and
+Julian calendars, try
+<A HREF="http://barroom.visionsystems.com/serendipity/date/jul_greg.html">http://barroom.visionsystems.com/serendipity/date/jul_greg.html</A>.
+</blockquote>
+<P CLASS=para>
+The separation of the
+<tt CLASS=literal>Date</tt> class and the
+<tt CLASS=literal>GregorianCalendar</tt> class is analagous to having
+a class representing temperature and a class that translates that temperature
+to Celsius units.  Conceivably, we could define other subclasses of
+<tt CLASS=literal>Calendar</tt>, say
+<tt CLASS=literal>JulianCalendar</tt> or
+<tt CLASS=literal>LunarCalendar</tt>.
+
+<P CLASS=para>
+The default <tt CLASS=literal>GregorianCalendar</tt> constructor creates an
+object that represents the current time, as determined by the system
+clock:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+GregorianCalendar now = new GregorianCalendar();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Other constructors accept values to initialize the calendar. In the
+first statement below, we construct an object representing August 9,
+1996; the second statement specifies both a date and a time, yielding
+an object that represents 9:01 AM, April 8, 1997. 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+GregorianCalendar daphne = 
+    new GregorianCalendar(1996, Calendar.AUGUST, 9);
+GregorianCalendar sometime = 
+    new GregorianCalendar(1997, Calendar.APRIL, 8, 9, 1); // 9:01 AM
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We can also create a <tt CLASS=literal>GregorianCalendar</tt>
+by setting specific
+fields using the
+<tt CLASS=literal>set()</tt> method.  The
+<tt CLASS=literal>Calendar</tt> class contains a torrent
+of constants representing both calendar fields and field values.  The
+first argument to the <tt CLASS=literal>set()</tt> method
+is a field constant; the second argument is the new value for the field.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+GregorianCalendar kristen = new GregorianCalendar();
+kristen.set(Calendar.YEAR, 1972);
+kristen.set(Calendar.MONTH, Calendar.MAY);
+kristen.set(Calendar.DATE, 20);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>GregorianCalendar</tt> is created
+in the default time zone.  Setting the time zone of the calendar is as
+easy as obtaining the desired <tt CLASS=literal>TimeZone</tt> and
+giving it to the <tt CLASS=literal>GregorianCalendar</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+GregorianCalendar smokey = new GregorianCalendar();
+smokey.setTimeZone(TimeZone.getTimeZone("MST"));
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To create a string representing a point in time, use the
+<tt CLASS=literal>DateFormat</tt> class.  Although
+<tt CLASS=literal>DateFormat</tt> itself is abstract,
+it has several factory methods that return useful
+<tt CLASS=literal>DateFormat</tt> subclass instances.
+To get a default <tt CLASS=literal>DateFormat</tt>, simply
+call <tt CLASS=literal>getInstance()</tt>.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+DateFormat plain = DateFormat.getInstance();
+String now = plain.format(new Date());  // 4/9/97 6:06 AM
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Those of you who don't live on the West coast will notice that
+the example above produces a result that is not quite right.
+<tt CLASS=literal>DateFormat</tt> instances stubbornly
+insist on using Pacific Standard Time, so you have to tell them
+what time zone you're in:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+DateFormat plain = DateFormat.getInstance();
+plain.setTimeZone(TimeZone.getDefault());
+String now = plain.format(new Date());  // 4/9/97 9:06 AM
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can generate a date string or a time string, or both,
+ using the
+<tt CLASS=literal>getDateInstance()</tt>,
+<tt CLASS=literal>getTimeInstance()</tt>, and
+<tt CLASS=literal>getDateTimeInstance()</tt>
+factory
+methods.  The argument to these methods describes
+what level of detail you'd like to see.
+<tt CLASS=literal>DateFormat</tt>
+defines four constants representing detail levels: they are
+<tt CLASS=literal>SHORT</tt>,
+<tt CLASS=literal>MEDIUM</tt>,
+<tt CLASS=literal>LONG</tt>, and
+<tt CLASS=literal>FULL</tt>.  There is also
+a <tt CLASS=literal>DEFAULT</tt>, which is
+the same as <tt CLASS=literal>MEDIUM</tt>. The code below creates
+three <tt CLASS=literal>DateFormat</tt> instances: one to format
+a date, one to format a time, and one to format a date and time
+together. Note that <tt CLASS=literal>getDateTimeInstance()</tt>
+requires two arguments: the first specifies how to format the date,
+the second says how to format the time. 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT); // 09-Apr-97
+DateFormat tf = DateFormat.getTimeInstance(DateFormat.DEFAULT); // 9:18:27 AM
+DateFormat dtf = 
+    DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
+    // Wednesday, April 09, 1997 9:18:27 o'clock AM EDT
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Formatting dates and times for other countries is just as easy.  There
+are overloaded factory methods that accept a
+<tt CLASS=literal>Locale</tt> argument:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+DateFormat df = 
+    DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.FRANCE);
+    // 9 avr. 97 
+DateFormat tf = 
+    DateFormat.getTimeInstance(DateFormat.DEFAULT, Locale.GERMANY);
+    // 9:27:49 
+DateFormat dtf = 
+    DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL,
+                                   Locale.ITALY); 
+    // mercoledi 9 aprile 1997 9.27.49 GMT-04:00
+</PRE>
+</DIV>
+
+<P CLASS=para>
+To parse a string representing a date, we use the
+<tt CLASS=literal>parse()</tt> method of the
+<tt CLASS=literal>DateFormat</tt> class. The result is a
+<tt CLASS=literal>Date</tt> object.  The parsing
+algorithms are finicky, so it's
+safest to parse dates and times that are in the same format that
+is produced by the <tt CLASS=literal>DateFormat</tt>.  The
+<tt CLASS=literal>parse()</tt> method throws
+a <tt CLASS=literal>ParseException</tt> if it doesn't understand
+the string you give it.  Occasionally other exceptions are thrown
+from the <tt CLASS=literal>parse()</tt> method.  To cover
+all the bases, catch <tt CLASS=literal>NullPointerException</tt>s
+and <tt CLASS=literal>StringIndexOutOfBoundsException</tt>s also.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+try {
+  Date d;
+  DateFormat df;
+  
+  df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
+  d = df.parse("Wednesday, April 09, 1997 2:22:22 o'clock PM EST"); // ok
+  
+  df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+  d = df.parse("09-Apr-97 2:22:22 PM"); //ok
+  
+  df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
+  d = df.parse("April 09, 1997 2:22:22 PM EST");    // ok
+  d = df.parse("09-Apr-97 2:22:22 PM"); // ParseException - detail level mismatch
+}
+catch (Exception e) {}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+There's been a lot of talk about the "millenium bug" lately.  This refers
+to the expected failure of software in the year 2000, when programs
+that use two digits to represent years interpret "00" as 1900 instead
+of 2000.  Java is mostly safe from this error.  The
+<tt CLASS=literal>Date</tt> class has no specific
+field for year and is thus immune to this problem.
+The only time you'll run into this error in Java
+is when you
+use a <tt CLASS=literal>DateFormat</tt> to parse a date string
+with a two-digit year.  Two-digit years are automatically prefixed
+with 19.  My advice is to always use a four-digit year when you
+expect to parse a date string.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Math Utilities</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Vectors and Hashtables</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

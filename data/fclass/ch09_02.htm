@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.2 ClassLoader</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:18:13 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Security</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-9-SECT-2">9.2 ClassLoader</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.LOAD1"></A><A NAME="CH09.LOAD2"></A><A NAME="CH09.LOAD3"></A><A NAME="CH09.LOAD4"></A>Java supports dynamically loaded classes, so the class loading
+mechanism plays an important role in the Java security model. The
+default class loading mechanism in Java loads classes from local files
+found relative to directories specified by the
+<tt CLASS=literal>CLASSPATH</tt> environment variable. The
+<tt CLASS=literal>CLASSPATH</tt> environment variable should have a value
+made up of one or more directory paths separated by a colon. The path
+implied by the package of a class is relative to the directories
+specified in the <tt CLASS=literal>CLASSPATH</tt> environment variable.
+
+<P CLASS=para>
+In contrast, an instance of the
+<tt CLASS=literal>java.lang.ClassLoader</tt> class defines how classes are
+loaded over the network. You can specify a security policy for loading
+classes by defining a subclass of <tt CLASS=literal>ClassLoader</tt> that
+implements the
+policy. The <tt CLASS=literal>loadClass()</tt> method of a
+<tt CLASS=literal>ClassLoader</tt> loads a top-level class, such as a
+subclass of <tt CLASS=literal>Applet</tt>. That
+<tt CLASS=literal>ClassLoader</tt> object then becomes associated with the
+loaded class. You can retrieve the <tt CLASS=literal>ClassLoader</tt>
+object that loads the class by calling the
+<tt CLASS=literal>getClassLoader()</tt> of an instance of the loaded
+class; every class in Java inherits this method from the
+<tt CLASS=literal>Object</tt> class.
+
+<P CLASS=para>
+An object of a class loaded using a <tt CLASS=literal>ClassLoader</tt> can
+attempt to load additional classes without explicitly using a
+<tt CLASS=literal>ClassLoader</tt> object. The object does this by calling
+the <tt CLASS=literal>forName()</tt> method of the
+<tt CLASS=literal>Class</tt> class.  However, if a
+<tt CLASS=literal>ClassLoader</tt> object is associated with any pending
+method invocation in the current thread, the
+<tt CLASS=literal>forName()</tt> method uses that
+<tt CLASS=literal>ClassLoader</tt> to load the additional classes. In
+essence, this means that the object can only load classes through its
+associated <tt CLASS=literal>ClassLoader</tt>.
+
+<P CLASS=para>
+If Java security is implemented correctly, an untrusted applet cannot
+escape the security policy implemented by the
+<tt CLASS=literal>ClassLoader</tt> object used to load it because it
+cannot access any other <tt CLASS=literal>ClassLoader</tt> objects. An
+applet should not be able to create its own
+<tt CLASS=literal>ClassLoader</tt> objects. It is the responsibility of
+the <tt CLASS=literal>checkCreateClassLoader()</tt> method of
+<tt CLASS=literal>SecurityManager</tt> to enforce this restriction.
+
+<P CLASS=para>
+Because a <tt CLASS=literal>SecurityManager</tt> can determine the
+<tt CLASS=literal>ClassLoader</tt>, if any, used to load a class, it can
+use the <tt CLASS=literal>ClassLoader</tt> to help determine the
+trustworthiness ofthe class. Classes loaded by different
+<tt CLASS=literal>ClassLoader</tt> objects cannot accidentally be mixed up
+because a class is identified by the combination of its fully
+qualified name and its <tt CLASS=literal>ClassLoader</tt>.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>SecurityManager</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Accessing the Environment</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

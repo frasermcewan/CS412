@@ -56,7 +56,7 @@ public class IndexFiles {
                  + "This indexes the documents in DOCS_PATH, creating a Lucene index"
                  + "in INDEX_PATH that can be searched with SearchFiles";
     String indexPath = "index";
-    String docsPath = "C:/Users/Fraser/workspace/Year 4 Strathclyde/CS412/indexing/index";
+    String docsPath = "data/";
     boolean create = true;
     for(int i=0;i<args.length;i++) {
       if ("-index".equals(args[i])) {

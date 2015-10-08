@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] 11.3 Character Encodings</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:59:06 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>Internationalization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-11-SECT-3">11.3 Character Encodings</A></h2>
+
+<P CLASS=para>
+<A NAME="CH11.CHARACTER.EN3"></A>Text representation has traditionally been one of the
+most difficult problems of internationalization.  Java
+1.1, however, solves this problem quite elegantly and hides
+the difficult issues.  Java uses Unicode internally, so
+it can represent essentially any character in any commonly
+used written language.  As noted above, the remaining task
+is to convert Unicode to and from locale-specific encodings.
+Java 1.1 includes quite a few internal "byte-to-char"
+converters and "char-to-byte" converters that handle
+converting locale-specific character encodings to
+Unicode and vice versa.  While the converters themselves are
+not public, they are accessed through the
+<tt CLASS=literal>InputStreamReader</tt> and <tt CLASS=literal>OutputStreamWriter</tt>
+classes, which are two of the new character streams included
+in the <tt CLASS=literal>java.io</tt> package.
+
+<P CLASS=para>
+Any program can automatically handle locale-specific
+encodings simply by using these new character stream classes
+to do their textual input and output.  (And in addition to
+automatic encoding conversion, the program also benefits
+from the greatly improved efficiency of these new classes
+over the byte streams of Java 1.0.)
+
+<P CLASS=para>
+<A HREF="ch11_03.htm#JNUT2-CH-11-EX-1">Example 11.1</A>
+shows a simple program that works with character encodings.
+It converts a file from one specified encoding to another by
+converting from the first encoding to Unicode and then from
+Unicode to the second encoding.  Note that most of the
+program is taken up with the mechanics of parsing argument
+lists, handling exceptions, and so on.  Only a few lines are
+required to create the <tt CLASS=literal>InputStreamReader</tt> and
+<tt CLASS=literal>OutputStreamWriter</tt> classes that perform the two
+halves of the conversion.  Also note that exceptions are
+handled by calling <tt CLASS=literal>LocalizedError.display()</tt>.  This
+method is not part of the Java 1.1 API; it is a custom
+method shown in <A HREF="ch11_06.htm#JNUT2-CH-11-EX-6">Example 11.6</A>
+at the end of this chapter.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-11-EX-1">Example 11.1: Working with Character Encodings</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.io.*;
+/** A program to convert from one character encoding to another. */
+public class ConvertEncoding {
+  public static void main(String[] args) {
+    String from = null, to = null;
+    String infile = null, outfile = null;
+    for(int i = 0; i &lt; args.length; i++) {  // Parse command-line arguments.
+      if (i == args.length-1) usage();      // All legal args require another.
+      if (args[i].equals("-from")) from = args[++i];
+      else if (args[i].equals("-to")) to = args[++i];
+      else if (args[i].equals("-in")) infile = args[++i];
+      else if (args[i].equals("-out")) outfile = args[++i];
+      else usage();
+    }
+    try { convert(infile, outfile, from, to); }  // Attempt conversion.
+    catch (Exception e) {                        // Handle possible exceptions.
+      LocalizedError.display(e);  // Defined at the end of this chapter.
+      System.exit(1);
+    }
+  }
+  public static void usage() {
+    System.err.println("Usage: java ConvertEncoding &lt;options&gt;\n" +
+                       "Options:\n\t-from &lt;encoding&gt;\n\t-to &lt;encoding&gt;\n\t" +
+                       "-in &lt;file&gt;\n\t-out &lt;file&gt;");
+    System.exit(1);
+  }
+  public static void convert(String infile, String outfile,
+                             String from, String to)
+       throws IOException, UnsupportedEncodingException
+  {
+    // Set up byte streams.
+    InputStream in;
+    if (infile != null) in = new FileInputStream(infile);
+    else in = System.in;
+    OutputStream out;
+    if (outfile != null) out = new FileOutputStream(outfile);
+    else out = System.out;
+    // Use default encoding if no encoding is specified.
+    if (from == null) from = System.getProperty("file.encoding");
+    if (to == null) to = System.getProperty("file.encoding");
+    // Set up character streams.
+    Reader r = new BufferedReader(new InputStreamReader(in, from));
+    Writer w = new BufferedWriter(new OutputStreamWriter(out, to));
+    // Copy characters from input to output.  The InputStreamReader converts
+    // from the input encoding to Unicode, and the OutputStreamWriter converts
+    // from Unicode to the output encoding.  Characters that cannot be
+    // represented in the output encoding are output as '?'
+    char[] buffer = new char[4096];
+    int len;
+    while((len = r.read(buffer)) != -1)  // Read a block of input.
+      w.write(buffer, 0, len);           // And write it out.
+    r.close();                           // Close the input.
+    w.flush();                           // Flush and close output.
+    w.close();
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Unicode</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Handling Local Customs</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

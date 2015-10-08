@@ -1,0 +1,1826 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 12] Thread</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:06:39 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_60.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 12<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch12_62.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Thread</H1>
+
+<H2>Name</H2>
+
+Thread
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.398">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Thread</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Runnable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later</DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.399">Description</A></h2>
+
+<P CLASS=para>
+<A NAME="MAN.THREAD.1"></A>The <tt CLASS=literal>Thread</tt> class encapsulates all of the
+information about a single thread of control running in a Java environment.
+<tt CLASS=literal>Thread</tt> objects are used to control threads in
+a multithreaded program.
+
+<P CLASS=para>
+The execution of Java code is always under the control of
+a <tt CLASS=literal>Thread</tt> object. The <tt CLASS=literal>Thread</tt>
+class provides a <tt CLASS=literal>static</tt> method called <tt CLASS=literal>currentThread()</tt>
+that can be used to get a reference to the <tt CLASS=literal>Thread</tt>
+object that controls the current thread of execution.
+
+<P CLASS=para>
+In order for a <tt CLASS=literal>Thread</tt> object to be useful,
+it must be associated with a method that it is supposed to run.
+Java provides two ways of associating a <tt CLASS=literal>Thread</tt>
+object with a method:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Declare a subclass of <tt CLASS=literal>Thread</tt>
+that defines a <tt CLASS=literal>run()</tt> method. When such a class
+is instantiated and the object's <tt CLASS=literal>start()</tt> method
+is called, the thread invokes this <tt CLASS=literal>run()</tt> method.
+
+<P>
+<li CLASS=listitem>Pass a reference to an object that implements the
+<tt CLASS=literal>Runnable</tt> interface to a <tt CLASS=literal>Thread </tt>constructor.
+When the <tt CLASS=literal>start()</tt> method of such a
+<tt CLASS=literal>Thread</tt> object is called, the thread
+invokes the <tt CLASS=literal>run()</tt>
+method of the <tt CLASS=literal>Runnable </tt>object.
+
+<P>
+</UL>
+<P CLASS=para>
+After a thread is started, it dies when one of the following
+things happens:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>run()</tt>
+method called by the <tt CLASS=literal>Thread</tt> returns.
+
+<P>
+<li CLASS=listitem>An exception is thrown that causes the <tt CLASS=literal>run()</tt>
+method to be exited.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>stop()</tt> method of the
+<tt CLASS=literal>Thread</tt> is called.
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.400">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.lang.Thread extends java.lang.Object
+                              implements java.lang.Runnable {
+    // Constants
+    public final static int MAX_PRIORITY;
+    public final static int MIN_PRIORITY;
+    public final static int NORM_PRIORITY;
+    // Constructors
+    public Thread();
+    public Thread(Runnable target);
+    public Thread(Runnable target, String name);
+    public Thread(String name);
+    public Thread(ThreadGroup group, Runnable target);
+    public Thread(ThreadGroup group, Runnable target, String name);
+    public Thread(ThreadGroup group, String name);
+    // Class Methods
+    public static int activeCount();
+    public static native Thread currentThread();
+    public static void dumpStack();
+    public static int enumerate(Thread tarray[]);
+    public static boolean interrupted();
+    public static native void sleep(long millis);
+    public static void sleep(long millis, int nanos);
+    public static native void yield();
+    // Instance Methods
+    public void checkAccess();
+    public native int countStackFrames();
+    public void destroy();
+    public final String getName();
+    public final int getPriority();
+    public final ThreadGroup getThreadGroup();
+    public void interrupt();
+    public final native boolean isAlive();
+    public final boolean isDaemon();
+    public boolean isInterrupted();
+    public final void join();
+    public final synchronized void join(long millis);
+    public final synchronized void join(long millis, int nanos);
+    public final void resume();
+    public void run();
+    public final void setDaemon(boolean on);
+    public final void setName(String name);
+    public final void setPriority(int newPriority);
+    public synchronized native void start();
+    public final void stop();
+    public final synchronized void stop(Throwable o);
+    public final void suspend();
+    public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.401">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.438">MAX_PRIORITY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.575"><tt CLASS=literal>public final static int MAX_PRIORITY = 10</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The highest priority a thread can have.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.439">MIN_PRIORITY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.576"><tt CLASS=literal>public final static int MIN_PRIORITY = 1</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The lowest priority a thread can have.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.440">NORM_PRIORITY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.577"><tt CLASS=literal>public final static int NORM_PRIORITY = 5</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The default priority assigned to a thread.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.402">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.441">Thread</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.578"><tt CLASS=literal>public Thread()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>Thread </tt>object that belongs to
+the same <tt CLASS=literal>ThreadGroup </tt>object as the current thread,
+has the same daemon attribute as the current thread, has the same
+priority as the current thread, and has a default name.
+
+<P CLASS=para>
+A <tt CLASS=literal>Thread</tt> object created with this constructor
+invokes its own <tt CLASS=literal>run()</tt> method when the <tt CLASS=literal>Thread</tt>
+object's <tt CLASS=literal>start()</tt> method is called. This is not
+useful unless the object belongs to a subclass of the <tt CLASS=literal>Thread</tt>
+class that overrides the <tt CLASS=literal>run()</tt> method.
+
+<P CLASS=para>
+Calling this constructor is equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Thread(null, null, genName)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>genName </tt>is an automatically generated name
+of the form <tt CLASS=literal>"Thread-"+n</tt>, where <tt CLASS=literal>n</tt>
+is an integer incremented each time a <tt CLASS=literal>Thread</tt>
+object is created.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.579"><tt CLASS=literal>public Thread(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of this <tt CLASS=literal>Thread</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>Thread </tt>object that belongs to
+the same <tt CLASS=literal>ThreadGroup </tt>object as the current thread,
+has the same daemon attribute as the current thread, has the same
+priority as the current thread, and has the specified name.
+
+<P CLASS=para>
+A <tt CLASS=literal>Thread</tt> object created with this constructor
+invokes its own <tt CLASS=literal>run()</tt> method when the <tt CLASS=literal>Thread</tt>
+object's <tt CLASS=literal>start()</tt> method is called. This is not
+useful unless the object belongs to a subclass of the <tt CLASS=literal>Thread</tt>
+class that overrides the <tt CLASS=literal>run()</tt> method.
+
+<P CLASS=para>
+Calling this constructor is equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Thread(null, null, name)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The uniqueness of the specified <tt CLASS=literal>Thread</tt>
+object's name is not checked, which may be a problem for programs
+that attempt to identify <tt CLASS=literal>Thread</tt> objects by their
+name.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.580"><tt CLASS=literal>public Thread(ThreadGroup group, Runnable target)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>group</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ThreadGroup</tt> object that this
+<tt CLASS=literal>Thread</tt> object is to be added to.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>target</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an object that implements the <tt CLASS=literal>Runnable</tt>
+interface.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>SecurityException<br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>Thread </tt>object that belongs to
+the specified <tt CLASS=literal>ThreadGroup</tt> object, has the same
+daemon attribute as the current thread, has the same priority as
+the current thread, and has a default name.
+
+<P CLASS=para>
+A <tt CLASS=literal>Thread</tt> object created with this constructor
+invokes the <tt CLASS=literal>run()</tt> method of the specified <tt CLASS=literal>Runnable</tt>
+object when the <tt CLASS=literal>Thread</tt> object's <tt CLASS=literal>start()</tt>
+method is called.
+
+<P CLASS=para>
+Calling this constructor is equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Thread(group, target, genName)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>genName </tt>is an automatically generated name
+of the form <tt CLASS=literal>"Thread-"+n</tt>, where <tt CLASS=literal>n</tt>
+is an integer that is incremented each time a <tt CLASS=literal>Thread</tt>
+object is created.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.581"><tt CLASS=literal>public Thread(ThreadGroup group, Runnable target, String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>group</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ThreadGroup</tt> object that this
+<tt CLASS=literal>Thread</tt> object is to be added to.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>target</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an object that implements the <tt CLASS=literal>Runnable</tt>
+interface.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of this <tt CLASS=literal>Thread</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>Thread</tt> object that belongs to
+the specified <tt CLASS=literal>ThreadGroup</tt> object, has the same
+daemon attribute as the current thread, has the same priority as
+the current thread, and has the specified name.
+
+<P CLASS=para>
+A <tt CLASS=literal>Thread</tt> object created with this constructor
+invokes the <tt CLASS=literal>run()</tt> method of the specified <tt CLASS=literal>Runnable</tt>
+object when the <tt CLASS=literal>Thread</tt> object's <tt CLASS=literal>start()</tt>
+method is called.
+
+<P CLASS=para>
+The uniqueness of the specified <tt CLASS=literal>Thread</tt>
+object's name is not checked, which may be a problem for programs
+that attempt to identify <tt CLASS=literal>Thread</tt> objects by their
+names.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.582"><tt CLASS=literal>public Thread(ThreadGroup group, String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>group</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ThreadGroup</tt> object that this
+<tt CLASS=literal>Thread</tt> object is to be added to.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The name of this <tt CLASS=literal>Thread</tt> object.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Creates a <tt CLASS=literal>Thread </tt>object that belongs to
+the specified <tt CLASS=literal>ThreadGroup </tt>object, has the same
+daemon attribute as the current thread, has the same priority as
+the current thread, and has the specified name.
+
+<P CLASS=para>
+A <tt CLASS=literal>Thread</tt> object created with this constructor
+invokes its own <tt CLASS=literal>run()</tt> method when the <tt CLASS=literal>Thread</tt>
+object's <tt CLASS=literal>start() </tt>method is called. This is not
+useful unless the object belongs to a subclass of the <tt CLASS=literal>Thread</tt>
+class that overrides the <tt CLASS=literal>run()</tt> method.
+Calling this constructor is equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Thread(group, null, name)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The uniqueness of the specified <tt CLASS=literal>Thread</tt>
+object's name is not checked, which may be a problem for programs
+that attempt to identify <tt CLASS=literal>Thread</tt> objects by their
+name.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.403">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.442">activeCount</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.583"><tt CLASS=literal>public static int activeCount()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The current number of threads in the <tt CLASS=literal>ThreadGroup</tt>
+of the currently running thread.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of threads in the <tt CLASS=literal>ThreadGroup</tt>
+of the currently running thread for which the <tt CLASS=literal>isAlive()</tt>
+method returns <tt CLASS=literal>true</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.443">currentThread</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.584"><tt CLASS=literal>public static native Thread currentThread()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A reference to the <tt CLASS=literal>Thread </tt>object that controls
+the currently executing thread.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a reference to the <tt CLASS=literal>Thread</tt>
+object that controls the currently executing thread.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.444">dumpStack</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.585"><tt CLASS=literal>public static void dumpStack()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method outputs a stack trace of the currently running
+thread.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.445">enumerate</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.586"><tt CLASS=literal>public static int enumerate(Thread tarray[])</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>tarray</tt><br>
+<DD>
+
+<P CLASS=para>
+A reference to an array of <tt CLASS=literal>Thread</tt>
+objects.</DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of <tt CLASS=literal>Thread</tt> objects stored in
+the array.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method stores a reference in the array for each of the
+<tt CLASS=literal>Thread</tt> objects in the <tt CLASS=literal>ThreadGroup</tt>
+of the currently running thread for which the <tt CLASS=literal>isAlive()</tt>
+method returns <tt CLASS=literal>true</tt>.
+
+<P CLASS=para>
+Calling this method is equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+currentThread().getThreadGroup().enumerate(tarray)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If the array is not big enough to contain references to all
+the <tt CLASS=literal>Thread</tt> objects, only as many references as
+will fit are put into the array. No indication is given that some
+<tt CLASS=literal>Thread</tt> objects were left out, so it is a good
+idea to call <tt CLASS=literal>activeCount()</tt> before calling this
+method, to get an idea of how large to make the array.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.446">interrupted</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.587"><tt CLASS=literal>public static boolean interrupted()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true </tt>if the currently running thread has
+been interrupted; otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the currently running
+thread has been interrupted.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.447">sleep</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.588"><tt CLASS=literal>public static native void sleep(long millis)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>millis</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of milliseconds that the currently running
+thread should sleep.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If another thread interrupts the currently running
+thread.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes the currently running thread to sleep.
+The method does not return until at least the specified number of
+milliseconds have elapsed.
+
+<P CLASS=para>
+While a thread is sleeping, it retains ownership of all locks.
+The <tt CLASS=literal>Object</tt> class defines a method called <tt CLASS=literal>wait()</tt>
+that is similar to <tt CLASS=literal>sleep()</tt> but causes the currently
+running thread to temporarily relinquish its locks.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.589"><tt CLASS=literal>public static void sleep(long millis, int nanos)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>millis</tt><br>
+<DD>
+
+<P CLASS=para>
+The number of milliseconds that the currently running
+thread should sleep.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>nanos</tt><br>
+<DD>
+
+<P CLASS=para>
+An additional number of nanoseconds to sleep.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If another thread interrupts the currently running
+thread.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes the currently running thread to sleep.
+The method does not return until at least the specified number of
+milliseconds have elapsed.
+
+<P CLASS=para>
+While a thread is sleeping, it retains ownership of all locks.
+The <tt CLASS=literal>Object</tt> class defines a method called <tt CLASS=literal>wait()</tt>
+that is similar to <tt CLASS=literal>sleep()</tt> but causes the currently
+running thread to temporarily relinquish its locks.
+
+<P CLASS=para>
+Note that Sun's reference implementation
+of Java does not attempt to implement the precision implied by this
+method. Instead, it rounds to the nearest millisecond (unless <tt CLASS=literal>millis</tt>
+is <tt CLASS=literal>0</tt>, in 
+
+which case it rounds up to 1 millisecond)
+and calls <tt CLASS=literal>sleep(long)</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.448">yield</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.590"><tt CLASS=literal>public static native void yield()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes the currently running thread to yield control
+of the processor so that another thread can be scheduled.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.404">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.449">checkAccess</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.591"><tt CLASS=literal>public void checkAccess()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines if the currently running thread has
+permission to modify this <tt CLASS=literal>Thread</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.450">countStackFrames</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.592"><tt CLASS=literal>public native int countStackFrames()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The number of pending method invocations on this thread's
+stack.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of pending method invocations
+on this thread's stack.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.451">destroy</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.593"><tt CLASS=literal>public void destroy()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method is meant to terminate this thread without any
+of the usual cleanup (i.e., any locks held by the thread are not
+released). This method provides a last-resort way to terminate
+a thread. While a thread can defeat its <tt CLASS=literal>stop()</tt>
+method by catching objects thrown from it, there is nothing that
+a thread can do to stop itself from being destroyed.
+
+<P CLASS=para>
+Note that Sun's reference implementation
+of Java does not implement the documented functionality of this
+method. Instead, the implementation of this method just throws a
+<tt CLASS=literal>NoSuchMethodError</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.452">getName</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.594"><tt CLASS=literal>public final String getName()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The name of this thread.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the name of this <tt CLASS=literal>Thread</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.453">getPriority</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.595"><tt CLASS=literal>public final int getPriority()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The priority of this thread.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the priority of this <tt CLASS=literal>Thread</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.454">getThreadGroup</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.596"><tt CLASS=literal>public final ThreadGroup getThreadGroup()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ThreadGroup</tt> of this thread.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a reference to the <tt CLASS=literal>ThreadGroup</tt>
+that this <tt CLASS=literal>Thread</tt> object belongs to.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.455">interrupt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.597"><tt CLASS=literal>public void interrupt()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method interrupts this <tt CLASS=literal>Thread</tt> object.
+
+<P CLASS=para>
+Note that prior to version 1.1, Sun's reference implementation
+of Java does not implement the documented functionality of this method.
+Instead, the method just sets a <tt CLASS=literal>private</tt> flag
+that indicates that an interrupt has been requested. None of the
+methods that should throw an <tt CLASS=literal>InterruptedException</tt>
+currently do. However, the <tt CLASS=literal>interrupted()</tt> and
+<tt CLASS=literal>isInterrupted()</tt> methods do return <tt CLASS=literal>true</tt>
+after this method has been called.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.456">isAlive</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.598"><tt CLASS=literal>public final native boolean isAlive()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true </tt>if this thread is alive; otherwise
+<tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this <tt CLASS=literal>Thread</tt>
+object is alive. A <tt CLASS=literal>Thread</tt> object is alive if
+it has been started and has not yet died. In other words, it has
+been scheduled to run before and can still be scheduled to run again.
+A thread is generally alive after its <tt CLASS=literal>start()</tt> method
+is called and until its <tt CLASS=literal>stop()</tt> method is called.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.457">isDaemon</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.599"><tt CLASS=literal>public final boolean isDaemon()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the thread is a daemon thread;
+otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this thread is a daemon
+thread, based on the value of the daemon
+attribute of this <tt CLASS=literal>Thread</tt> object.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.458">isInterrupted</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.600"><tt CLASS=literal>public boolean isInterrupted()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true </tt>if this thread has been interrupted;
+otherwise <tt CLASS=literal>false</tt>.
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not this <tt CLASS=literal>Thread</tt>
+object has been interrupted.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.459">join</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.601"><tt CLASS=literal>public final void join()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If another thread interrupts this thread.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method allows the thread that calls it to wait for the
+<tt CLASS=literal>Thread</tt> associated with this method to die. The
+method returns when the <tt CLASS=literal>Thread</tt> dies. If this thread
+is already dead, then this method returns immediately.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.602"><tt CLASS=literal>public final synchronized void join(long millis)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>millis</tt><br>
+<DD>
+
+<P CLASS=para>
+The maximum number of milliseconds to wait for this
+thread to die.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If another thread interrupts this thread.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes a thread to wait to die. The method returns
+when this <tt CLASS=literal>Thread</tt> object dies or after the specified
+number of milliseconds has elapsed, whichever comes first. However,
+if the specified number of milliseconds is zero, the method will
+wait forever for this thread to die. If this thread is already dead,
+the method returns immediately.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.603"><tt CLASS=literal>public final synchronized void join(long millis, int nanos)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>millis</tt><br>
+<DD>
+
+<P CLASS=para>
+The maximum number of milliseconds to wait for this
+thread to die.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>nanos</tt><br>
+<DD>
+
+<P CLASS=para>
+An additional number of nanoseconds to wait.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>InterruptedException</tt><br>
+<DD>
+
+<P CLASS=para>
+If another thread interrupts this thread.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes a thread to wait to die. The method returns
+when this <tt CLASS=literal>Thread</tt> object dies or after the specified
+amount of time has elapsed, whichever comes first. However, if <tt CLASS=literal>millis</tt>
+and <tt CLASS=literal>nanos</tt> are zero, the method will wait forever
+for this thread to die. If this thread is already dead, the method
+returns immediately.
+
+<P CLASS=para>
+Note that Sun's reference implementation
+of Java does not attempt to implement the precision implied by this
+method. Instead, it rounds to the nearest millisecond (unless <tt CLASS=literal>millis</tt>
+is <tt CLASS=literal>0</tt>, in which case it rounds up to 1 millisecond)
+and calls <tt CLASS=literal>join(long)</tt>.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.460">resume</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.604"><tt CLASS=literal>public final void resume()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method resumes a suspended thread. The method causes
+this <tt CLASS=literal>Thread</tt> object to once again be eligible
+to be run. Calling this method for a thread that is not suspended
+has no effect.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.461">run</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.605"><tt CLASS=literal>public void run()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Runnable.run()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Thread</tt> object's <tt CLASS=literal>start()</tt>
+method causes the thread to invoke a <tt CLASS=literal>run()</tt> method.
+If this <tt CLASS=literal>Thread</tt> object was created without a specified
+<tt CLASS=literal>Runnable</tt> object, the <tt CLASS=literal>Thread </tt>object's
+own <tt CLASS=literal>run()</tt> method is executed. This behavior is
+only useful in a subclass of <tt CLASS=literal>Thread</tt> that overrides
+this <tt CLASS=literal>run()</tt> method, since the <tt CLASS=literal>run()</tt>
+method of the <tt CLASS=literal>Thread</tt> class does not do anything.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.462">setDaemon</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.606"><tt CLASS=literal>public final void setDaemon(boolean on)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>on</tt><br>
+<DD>
+
+<P CLASS=para>
+The new value for this thread's daemon attribute.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalThreadStateException</tt><br>
+<DD>
+
+<P CLASS=para>
+If this method is called after this thread has been
+started and while it is still alive.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the daemon attribute
+of this <tt CLASS=literal>Thread</tt> object to the given value. This
+method must be called before the thread is started. If a thread
+dies and there are no other threads except daemon threads alive,
+the Java virtual machine stops.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.463">setName</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.607"><tt CLASS=literal>public final void setName(String name)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The new name for this thread.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the name of this <tt CLASS=literal>Thread</tt>
+object to the given value. The uniqueness of the specified <tt CLASS=literal>Thread</tt>
+object's name is not checked, which may be a problem for programs
+that attempt to identify <tt CLASS=literal>Thread</tt> objects by their
+name.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.464">setPriority</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.608"><tt CLASS=literal>public final void setPriority(int newPriority)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newPriority</tt><br>
+<DD>
+
+<P CLASS=para>
+The new priority for this thread.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the given priority is less than <tt CLASS=literal>MIN_PRIORITY</tt>
+or greater than <tt CLASS=literal>MAX_PRIORITY</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the priority
+of this <tt CLASS=literal>Thread </tt>to the given value.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.465">start</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.609"><tt CLASS=literal>public synchronized native void start()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalThreadStateException</tt><br>
+<DD>
+
+<P CLASS=para>
+If this <tt CLASS=literal>Thread</tt> object's <tt CLASS=literal>start()</tt>
+method has been called before.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method starts this <tt CLASS=literal>Thread</tt> object,
+allowing it to be scheduled for execution. The top-level code that
+is executed by the thread is the <tt CLASS=literal>run()</tt> method
+of the <tt CLASS=literal>Runnable</tt> object specified in the constructor
+that was used to create this object. If no such object was specified,
+the top-level code executed by the thread is this object's <tt CLASS=literal>run()</tt>
+method.
+
+<P CLASS=para>
+It is not permitted to start a thread more than once.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.466">stop</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.610"><tt CLASS=literal>public final void stop()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes this <tt CLASS=literal>Thread</tt> object to
+stop executing by throwing a <tt CLASS=literal>ThreadDeath</tt> object.
+The object is thrown in this thread, even if the method is called
+from a different thread. This thread is forced to stop whatever
+it is doing and throw a newly created <tt CLASS=literal>ThreadDeath</tt>
+object. If this thread was suspended, it is resumed; if it was sleeping,
+it is awakened.
+Normally, you should not catch <tt CLASS=literal>ThreadDeath</tt>
+objects in a <tt CLASS=literal>try</tt> statement. If you need to catch
+<tt CLASS=literal>ThreadDeath</tt> objects to detect a <tt CLASS=literal>Thread</tt>
+is about to die, the <tt CLASS=literal>try </tt>statement that
+catches <tt CLASS=literal>ThreadDeath</tt> objects should rethrow them.
+
+<P CLASS=para>
+When an object is thrown out of the <tt CLASS=literal>run()</tt>
+method associated with a <tt CLASS=literal>Thread</tt>, the <tt CLASS=literal>uncaughtException()</tt>
+method of the <tt CLASS=literal>ThreadGroup </tt>for that <tt CLASS=literal>Thread</tt>
+is called.
+The <tt CLASS=literal>uncaughtException()</tt> method normally outputs a
+stack trace. However, <tt CLASS=literal>uncaughtException()</tt> treats a
+<tt CLASS=literal>ThreadDeath</tt> object as a special case by not
+outputting a stack trace. When the
+<tt CLASS=literal>uncaughtException()</tt> method returns, the thread is dead.
+The thread is never scheduled to run again.
+
+<P CLASS=para>
+If this <tt CLASS=literal>Thread</tt> object's <tt CLASS=literal>stop()</tt>
+method is called before this thread is started, the <tt CLASS=literal>ThreadDeath</tt>
+object is thrown as soon as the thread is started.</DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.611"><tt CLASS=literal>public final synchronized void stop(Throwable o)</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>o</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be thrown.</DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method causes this <tt CLASS=literal>Thread</tt> object to
+stop executing by throwing the given object.
+Normally, the <tt CLASS=literal>stop()</tt>
+method that takes no arguments and throws a
+<tt CLASS=literal>ThreadDeath</tt>
+object should be called instead of this method. However, if it is
+necessary to stop a thread by throwing some other type of object,
+this method can be used.
+
+<P CLASS=para>
+The object is thrown in this thread, even if the method is
+called from a different thread. This thread is forced to stop whatever
+it is doing and throw the <tt CLASS=literal>Throwable</tt> object <tt CLASS=literal>o</tt>.
+If this thread was suspended, it is resumed; if it was sleeping,
+it is awakened.
+
+<P CLASS=para>
+When an object is thrown out of the <tt CLASS=literal>run()</tt>
+method associated with a <tt CLASS=literal>Thread</tt>, the <tt CLASS=literal>uncaughtException()</tt>
+method of the <tt CLASS=literal>ThreadGroup </tt>for that <tt CLASS=literal>Thread</tt>
+is called. If the thrown object is not an instance of
+the <tt CLASS=literal>ThreadDeath</tt> class, <tt CLASS=literal>uncaughtException()</tt>
+calls the thrown object's <tt CLASS=literal>printStackTrace()</tt> method
+and then the thread dies. The thread
+is never scheduled to run again.
+
+<P CLASS=para>
+If this <tt CLASS=literal>Thread</tt> object's <tt CLASS=literal>stop()</tt>
+method is called before this thread is started, the <tt CLASS=literal>ThreadDeath</tt>
+object is thrown as soon as the thread is started.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.467">suspend</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.612"><tt CLASS=literal>public final void suspend()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SecurityException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>checkAccess()</tt> method of
+the <tt CLASS=literal>SecurityManager</tt> throws a <tt CLASS=literal>SecurityException</tt>.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method suspends a thread. The method causes this <tt CLASS=literal>Thread</tt>
+object to temporarily be ineligible to be run. The thread becomes
+eligible to be run again after its <tt CLASS=literal>resume() </tt>method
+is called. Calling this method for a thread that is already suspended
+has no effect.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch12-REFSECT2-AUTOID.468">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch12-REFSECT3-AUTOID.613"><tt CLASS=literal>public String toString()</tt></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of this <tt CLASS=literal>Thread</tt> object.
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt>
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of this <tt CLASS=literal>Thread</tt>
+object.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.405">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>clone()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch12-REFSECT1-AUTOID.406">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>IllegalThreadStateException</tt>, 
+<tt CLASS=literal>InterruptedException</tt>, 
+<tt CLASS=literal>Object</tt>,
+<tt CLASS=literal>Runnable</tt>, 
+<tt CLASS=literal>SecurityException</tt>, 
+<tt CLASS=literal>SecurityManager</tt>, 
+<tt CLASS=literal>ThreadGroup</tt>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch12_60.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch12_62.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>System</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ThreadDeath</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

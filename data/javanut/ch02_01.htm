@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] How Java Differs from C</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:47:33 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch02_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-2">2. How Java Differs from C</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch02_02.htm'>The Name Space: Packages, Classes, and Members</a><br>
+<a href='ch02_03.htm'>Comments</a><br>
+<a href='ch02_04.htm'>No Preprocessor</a><br>
+<a href='ch02_05.htm'>Unicode and Character Escapes</a><br>
+<a href='ch02_06.htm'>Primitive Data Types</a><br>
+<a href='ch02_07.htm'>Reference Data Types</a><br>
+<a href='ch02_08.htm'>Objects</a><br>
+<a href='ch02_09.htm'>Arrays</a><br>
+<a href='ch02_10.htm'>Strings</a><br>
+<a href='ch02_11.htm'>Operators</a><br>
+<a href='ch02_12.htm'>Statements</a><br>
+<a href='ch02_13.htm'>Exceptions and Exception Handling</a><br>
+<a href='ch02_14.htm'>Miscellaneous Differences</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+Java is a lot like C, which makes it relatively easy for C
+programmers to learn. But there are a number of important
+differences between C and Java, such as the lack of a
+preprocessor, the use of 16-bit Unicode characters, and
+the exception handling mechanism. This chapter explains those
+differences, so that programmers who already know C can
+start programming in Java right away!<A NAME="C-PROGRAMMING-LANGUAGE"></A><A NAME="JAVA"></A>
+
+<P CLASS=para>
+This chapter also points out similarities and differences
+between Java and C++. C++ programmers should beware,
+though: While Java borrows a lot of terminology and even
+syntax from C++, the analogies between Java and C++ are not
+nearly as strong as those between Java and C. C++
+programmers should be careful not to be lulled into a
+false sense of familiarity with Java just because the
+languages share a number of keywords.
+
+<P CLASS=para>
+One of the main areas in which Java differs from C, of course,
+is that Java is an object-oriented language and has
+mechanisms to define classes and create objects that are
+instances of those classes.  Java's object-oriented features
+are a topic for a chapter of their own, and they'll be
+explained in detail in <A HREF="ch03_01.htm">Chapter 3, <i>Classes and Objects in Java</i></A>.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-1">2.1 Program Structure and Environment</A></h2>
+
+<P CLASS=para>
+<A NAME="PROGRAMMING-IN-JAVA"></A>A program in Java consists of one or more class definitions,
+each of which has been compiled into its own <I CLASS=emphasis>.class</I>
+file of Java Virtual Machine object code.  One of these
+classes must define a method <tt CLASS=literal>main()</tt>, which is where the 
+program starts running.
+[1]<A NAME="MAIN-MAIN"></A>
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+<I CLASS=emphasis>Method</I> is an object-oriented term for a procedure or
+function.  You'll see it used throughout this book.
+</blockquote>
+<P CLASS=para>
+To invoke a Java program, you run the Java interpreter,
+<I CLASS=emphasis>java</I>, and specify the name of the class that contains
+the <tt CLASS=literal>main()</tt> method.  You should omit the <I CLASS=emphasis>.class</I> 
+extension when doing this.  
+Note that a Java
+applet is not an application--it is a Java class that is
+loaded and run by an already running Java application such as
+a Web browser or applet viewer.
+
+<P CLASS=para>
+The <tt CLASS=literal>main()</tt> method that the Java interpreter invokes
+to start a Java program must have the following prototype:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public static void main(String args[])
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The Java interpreter runs until the <tt CLASS=literal>main()</tt> method
+returns, or until the interpreter reaches the end of <tt CLASS=literal>main()</tt>.  If
+no threads have been created by the program, the
+interpreter exits.  Otherwise, the interpreter continues
+running until the last thread terminates.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-1.1">Command-Line Arguments</A></h3>
+
+<P CLASS=para>
+The single argument to <tt CLASS=literal>main()</tt> is an array of
+strings, conventionally named <tt CLASS=literal>args</tt> or <tt CLASS=literal>argv</tt>.  The length of
+this array (which would be passed as the <tt CLASS=literal>argc</tt>
+argument in C) is available as <tt CLASS=literal>argv.length</tt>, as is
+the case with any Java array.  The elements of the array are
+the arguments, if any, that appeared on the interpreter
+command line after the class name.  Note that the first
+element of the array is <I CLASS=emphasis>not</I> the name of the class, as
+a C programmer might expect it to be.
+<A HREF="ch02_01.htm#JNUT2-CH-2-EX-1">Example 2.1</A>
+shows how you could write a UNIX-style <I CLASS=emphasis>echo</I> command (a
+program that simply prints out its arguments) in Java.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-2-EX-1">Example 2.1: An Echo Program in Java</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class echo {
+    public static void main(String argv[]) {
+        for(int i=0; i &lt; argv.length; i++) 
+            System.out.print(argv[i] + " ");
+        System.out.print("\n");
+        System.exit(0);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-1.2">Program Exit Value</A></h3>
+
+<P CLASS=para>
+Note that <tt CLASS=literal>main()</tt> must be declared to return
+<tt CLASS=literal>void</tt>.  Thus you cannot return a value from your Java
+program with a <tt CLASS=literal>return</tt> statement in <tt CLASS=literal>main()</tt>.
+If you need to return a value, call <tt CLASS=literal>System.exit()</tt>
+with the desired integer value, as we've done in
+<A HREF="ch02_01.htm#JNUT2-CH-2-EX-1">Example 2.1</A>.
+Note that the handling and interpretation of this exit value
+are, of course, operating-system dependent.
+<tt CLASS=literal>System.exit()</tt> causes the Java interpreter to exit
+immediately, whether or not other threads are running.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-1.3">Environment</A></h3>
+
+<P CLASS=para>
+The Java API does not allow a Java program to read operating
+system environment variables because they are platform-dependent.
+However, Java defines a similar, platform-independent mechanism, 
+known as the system properties list, for
+associating textual values with names.
+
+<P CLASS=para>
+A Java program can look up the
+value of a named property with the <tt CLASS=literal>System.getProperty()</tt> method:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+String homedir = System.getProperty("user.home");
+String debug = System.getProperty("myapp.debug");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The Java interpreter automatically defines a number of
+standard system properties when it starts up.  You can
+insert additional property definitions into the list by
+specifying the <tt CLASS=literal>-D</tt> option to the interpreter:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+% java -Dmyapp.debug=true myapp
+</PRE>
+</DIV>
+
+<P CLASS=para>
+See <A HREF="ch14_01.htm">Chapter 14, <i>System Properties</i></A> for more information on system
+properties. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>A Simple Example</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>The Name Space: Packages, Classes, and Members</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

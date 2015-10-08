@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 1] 1.6 Application and User Level Security</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:47:23 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 1<br>Yet Another Language?</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch01_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-6">1.6 Application and User Level Security</A></h2>
+
+<P CLASS=para>
+<A NAME="CH01.SEC3"></A><A NAME="CH01.SEC4"></A><A NAME="CH01.SEC6"></A>There's a fine line between having enough power to do something
+useful and having all the power to do anything you want. Java provides
+the foundation for a secure environment in which untrusted code can be
+quarantined, managed, and safely executed. However, unless you are
+content with keeping that code in a little black box and running it
+just for its own benefit, you will have to grant it access to at least
+some system resources so that it can be useful. Every kind of
+access carries with it certain risks and benefits. The advantages of
+granting an untrusted applet access to your windowing system, for
+example, are that it can display information and let you interact in a
+useful way. The associated risks are that the applet may instead
+display something worthless, annoying, or offensive.  Since most people can
+accept that level of risk, graphical applets and the World Wide
+Web in general are possible.
+
+<P CLASS=para>
+At one extreme, the simple act of running an application gives
+it a resource, computation time, that it may put to good use or burn
+frivolously. It's difficult to prevent an untrusted application
+from wasting your time, or even attempting a "denial of
+service" attack.  At the other extreme, a powerful, trusted
+application may justifiably deserve access to all sorts of system
+resources (e.g., the filesystem, process creation, network
+interfaces); a malicious application could wreak havoc with these
+resources. The message here is that important and sometimes complex
+security issues have to be addressed.
+
+<P CLASS=para>
+In some situations, it may be acceptable to simply ask the user
+to "OK" requests. Sun's HotJava Web browser can pop
+up a dialog box and ask the user's permission for an applet to
+access an otherwise restricted file. However, we can put only so much
+burden on our users. An experienced person will quickly grow tired of
+answering questions; an inexperienced user may not even be able to
+answer the questions. Is it okay for me to grant an applet access to
+something if I don't understand what that is?
+
+<P CLASS=para>
+Making decisions about what is dangerous and what is not can be
+difficult.  Even ostensibly harmless access, like displaying a window
+can become a threat when paired with the ability for an untrusted
+application to communicate off of your host. The Java
+<tt CLASS=literal>SecurityManager</tt> provides an option to flag windows
+created by an untrusted application with a special, recognizable
+border to prevent it from impersonating another application and
+perhaps tricking you into revealing your password or your secret
+recipe collection. There is also a grey area, in which an application
+can do devious things that aren't quite destructive. An applet
+that can mail a bug report can also mail-bomb your boss. The Java
+language provides the tools to implement whatever security policies
+you want. However, what these policies will be ultimately depends on
+who you are, what you are doing, and where you are doing it.
+
+<P CLASS=para>
+To fully exploit the power of Java, we need to have some basis
+on which to make reasonable decisions about the level of trust an
+application should have. Web browsers such as HotJava start by
+defining a few rules and some coarse levels of security that restrict
+where applets may come from and what system resources they may
+access. These rules are sufficient to keep the waving Duke applet from
+clutching your password file, but they aren't sufficient for
+applications you'd like to trust with sensitive
+information. What if you want to implement a secure applet to carry a
+credit card number to the mall, or more likely the credit-card
+company? How are people to trust that the applet they are using is
+really secure? If it's named the "Bank of Boofa" applet,
+how do they know it's legit?
+
+<P CLASS=para>
+You might think of trusting only certain hosts for these kinds
+of applications.  However, as Java class files begin to fill the Net,
+the situation will become more complicated. Hosts can be
+impersonated. If your communications pass through an untrusted
+network, you can't be sure you're talking to the intended
+entity. Furthermore, class files may need to be cached or retrieved
+through complicated distribution mechanisms.  For these kinds of
+applications, what we really need is a mechanism for verifying the
+authorship and authenticity of an item and making sure that it has not
+been tampered with by the time that you received it. Fortunately, this
+is a problem solved a while ago by your friendly neighborhood
+cryptographers.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-6.1">Signing Classes</A></h3>
+
+<P CLASS=para>
+Digital signatures provide a means of authenticating documents. Like
+their inky analogs, they associate a name with an item in a way that
+is supposed to be difficult to forge. Unlike pen on paper, though,
+electronic digital signatures are actually difficult to forge when
+used properly. By their nature, digital signatures also provide the
+benefit that, if authenticated, a document is known not to have been
+altered in transit. In other words, you can't clip out a digital
+signature and attach it to a new document.
+
+<P CLASS=para>
+The details of cryptography are a bit beyond the scope of this book but 
+the basics are important and interesting.[6]
+ Digital signatures are one side of the coin of public-key
+cryptography. Public-key algorithms rely on the fundamental
+mathematical difficulty of factoring arbitrarily large numbers. In a
+public-key system, there are two pieces of information: a public key
+(as you might have guessed) and a private one. These keys have a
+special asymmetric relationship such that a message encrypted with one
+key can be decrypted only by knowing the other. This means that by
+giving you my public key, you can send me messages that only I can
+read.  No one else, including you, has enough information to decrypt
+the encoded message, so it's safe to send it over untrusted
+networks. Now, by reversing this process, I can encrypt something with
+my private key so that anyone can use my public key to read the
+message. The important thing in this case is that the task of creating
+such a message without the private key is just as difficult as
+decoding the message in the first scenario. Since no one else knows my
+private key, only the real me could have sent the message. This is the
+basis for digital signatures. For Java, this means that we can tell a
+browser "I trust applets signed by John Doe"; if the browser succeeds
+in decoding an applet using John Doe's public key, it knows that the
+applet really came from John Doe, and therefore can be allowed greater
+privileges. 
+
+<blockquote class=footnote>
+<P CLASS=para>[6] 
+See Bruce Schneier's encyclopedic <I CLASS=emphasis>Applied
+Cryptography</I> (John Wiley &amp; Sons).
+</blockquote>
+<P CLASS=para>
+This process can be used to authenticate Java
+class files and other types of objects sent over the network. The
+author of a class signs the code with a digital signature, and we
+authenticate it when we retrieve it. Now we know that we have the
+authentic class, or do we? There is one problem that a digital
+signature alone doesn't solve: at some point we still have to
+assume we have the author's authentic public key. This is
+where a key-certification agency comes into play.
+
+<P CLASS=para>
+A key-certification agency validates a key by issuing a
+certificate that lists a name and an official public key. The
+certificate is signed with the agency's own digital
+signature. The agency presumably has a well-known public key to verify
+the certificate. Of course, this doesn't solve the problem
+entirely, but it reduces the number of people you have to trust and
+the amount of information you have to transport reliably. Presumably
+the agency is a reputable organization, its private keys are well
+guarded, and it certifies keys only after some kind of real-world
+validation such as person-to-person contact.
+
+<P CLASS=para>
+
+The most recent Java release (1.1) contains the tools you need to work with
+signed classes. You can sign Java classes; you
+can tell the HotJava browser whose classes you trust (and how much you
+trust them). Other browsers,
+like Netscape Navigator, should support signed classes in the future.
+You can also use the security API in your own Java programs to handle
+sensitive data safely. The important thing
+is, as always, to know who you are dealing with and what kind of
+software and security you have in place before sending any kind of
+confidential information over the Net. Don't become paranoid,
+just keep yourself informed so that you can weigh the risks and the
+benefits.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch01_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Safety of Implementation</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Java and the World Wide Web</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

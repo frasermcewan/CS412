@@ -1,0 +1,766 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.2 Output Streams and Writers</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:13:50 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>I/O</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2">6.2 Output Streams and Writers</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.OS1"></A>The <tt CLASS=literal>OutputStream</tt> class is an 
+<tt CLASS=literal>abstract</tt> class that defines 
+methods to write a stream of bytes sequentially. Java provides subclasses 
+of the <tt CLASS=literal>OutputStream</tt> class for 
+writing to files and byte arrays, among other things. Other subclasses 
+of <tt CLASS=literal>OutputStream</tt> can be chained 
+together to provide additional logic, such as writing multibyte data types 
+or converting data to a string representation. It is also easy to define 
+a subclass of <tt CLASS=literal>OutputStream</tt> 
+that writes to another kind of destination. 
+
+<P CLASS=para>
+
+In Java 1.1, the <tt CLASS=literal>Writer</tt> class is an
+<tt CLASS=literal>abstract</tt> class that defines methods to write to a
+stream of characters sequentially. Many of the byte-oriented
+subclasses of <tt CLASS=literal>OutputStream</tt> have counterparts in the
+character-oriented world of <tt CLASS=literal>Writer</tt> objects. Thus,
+there are subclasses of <tt CLASS=literal>Writer</tt> for writing to files
+and character arrays.
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.1">OutputStream</A></h3>
+
+<P CLASS=para>
+
+The <tt CLASS=literal>OutputStream</tt> class is the
+<tt CLASS=literal>abstract</tt> superclass of all other byte output stream
+classes. It defines three <tt CLASS=literal>write()</tt> methods for
+writing to a raw stream of bytes:
+<DIV CLASS=screen>
+<P>
+<PRE>
+write(int b)
+write(byte[] b)
+write(byte[] b, int off, int len)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Some <tt CLASS=literal>OutputStream</tt> subclasses 
+may implement buffering to increase efficiency. <tt CLASS=literal>OutputStream</tt> 
+provides a method, <tt CLASS=literal>flush()</tt>, 
+that tells the <tt CLASS=literal>OutputStream</tt> 
+to write any buffered output to the underlying device, which may be a disk 
+drive or a network. 
+
+<P CLASS=para>
+Because the <tt CLASS=literal>OutputStream</tt> class 
+is <tt CLASS=literal>abstract</tt>, you cannot create 
+a "pure" <tt CLASS=literal>OutputStream</tt>. 
+However, the various subclasses of <tt CLASS=literal>OutputStream</tt> 
+can be used interchangeably. For example, methods often take <tt CLASS=literal>OutputStream</tt> 
+parameters. This means that such a method accepts any subclass of <tt CLASS=literal>OutputStream</tt> 
+as an argument. 
+
+<P CLASS=para>
+<tt CLASS=literal>OutputStream</tt> is designed so that
+<tt CLASS=literal>write(byte[])</tt> and <tt CLASS=literal>write(byte[],</tt>
+<tt CLASS=literal>int,</tt> <tt CLASS=literal>int)</tt> call
+<tt CLASS=literal>write(int)</tt>. Thus, when you subclass
+<tt CLASS=literal>OutputStream</tt>, you only need to define the
+<tt CLASS=literal>write()</tt> method. However, for efficiency's sake, you
+should also override <tt CLASS=literal>write(byte[],</tt>
+<tt CLASS=literal>int,</tt> <tt CLASS=literal>int)</tt> with a method that can
+write a block of data more efficiently than writing each byte
+separately.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.2">Writer</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>Writer</tt> class is the <tt CLASS=literal>abstract</tt> 
+parent class of all other character output stream classes. It defines nearly 
+the same methods as <tt CLASS=literal>OutputStream</tt>, 
+except that the <tt CLASS=literal>write()</tt> methods 
+deal with characters instead of bytes: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+write(int c)
+write(char[] cbuf)
+write(char[] cbuf, int off, int len)
+write(String str)
+write(String str, int off, int len)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>Writer</tt> also includes a <tt CLASS=literal>flush()</tt> 
+method that forces any buffered data to be written to the stream. 
+
+<P CLASS=para>
+<tt CLASS=literal>Writer</tt> is designed so that
+<tt CLASS=literal>write(int)</tt> and <tt CLASS=literal>write(char[])</tt>
+both call <tt CLASS=literal>write(char[],</tt> <tt CLASS=literal>int,</tt>
+<tt CLASS=literal>int)</tt>.  Thus, when you subclass
+<tt CLASS=literal>Writer</tt>, you only need to define the
+<tt CLASS=literal>write(char[],</tt> <tt CLASS=literal>int,</tt>
+<tt CLASS=literal>int)</tt> method. Note that this design is different
+from, and more efficient than, that of
+<tt CLASS=literal>OutputStream</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.3">OutputStreamWriter</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>OutputStreamWriter</tt> class 
+serves as a bridge between <tt CLASS=literal>Writer</tt> 
+objects and <tt CLASS=literal>OutputStream</tt> objects. 
+Although an <tt CLASS=literal>OutputStreamWriter</tt> 
+acts like a character stream, it converts its characters to bytes using 
+a character encoding scheme and writes them to an underlying <tt CLASS=literal>OutputStream</tt>. 
+This class is the output counterpart of <tt CLASS=literal>InputStreamReader</tt>. 
+When you create an <tt CLASS=literal>OutputStreamWriter</tt>, specify the underlying <tt CLASS=literal>OutputStream</tt> 
+and, optionally, the name of an encoding scheme. The following example 
+shows how to construct an <tt CLASS=literal>OutputStreamWriter</tt> 
+that writes characters to a file, encoded using the ISO 8859-5 encoding: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+String fileName = "encodedfile.txt";
+String encodingName = "8859_5";
+OutputStreamWriter out;
+try {
+    FileOutputStream fileOut = new FileOutputStream (fileName);
+    out = new OutputStreamWriter (fileOut, encodingName);
+} catch (UnsupportedEncodingException e1) {
+    System.out.println(encodingName + " is not a supported encoding scheme.");
+} catch (IOException e2) {
+    System.out.println("The file " + fileName + " could not be opened.");
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.4">FileWriter and FileOutputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>FileOutputStream</tt> class 
+is a subclass of <tt CLASS=literal>OutputStream</tt> 
+that writes a stream of bytes to a file. The <tt CLASS=literal>FileOutputStream</tt> 
+class has no explicit open method. Instead, the file is implicitly opened, 
+if appropriate, when you create the <tt CLASS=literal>FileOutputStream</tt> 
+object. There are several ways to create a <tt CLASS=literal>FileOutputStream</tt>: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>You can create a <tt CLASS=literal>FileOutputStream</tt> 
+by passing the name of a file to be written: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileOutputStream f1 = new FileOutputStream("foo.txt");
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>Another constructor is available in Java 1.1 that allows you to specify 
+whether you want to append to the file or overwrite it. The following example 
+constructs a <tt CLASS=literal>FileOutputStream</tt> 
+that appends the given file: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileOutputStream f1 = new FileOutputStream("foo.txt", true);
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>You can create a <tt CLASS=literal>FileOutputStream</tt> 
+with a <tt CLASS=literal>File</tt> object: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+File f = new File("foo.txt");
+FileOutputStream f2 = new FileOutputStream(f);
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>You can create a <tt CLASS=literal>FileOutputStream</tt> 
+with a <tt CLASS=literal>FileDescriptor</tt> object. 
+A <tt CLASS=literal>FileDescriptor</tt> encapsulates 
+the native operating system's representation of an open file. You 
+can get a <tt CLASS=literal>FileDescriptor</tt> from 
+a <tt CLASS=literal>RandomAccessFile</tt> by calling 
+its <tt CLASS=literal>getFD()</tt> 
+method. You create a <tt CLASS=literal>FileOutputStream</tt> 
+that writes to the open file associated with a <tt CLASS=literal>RandomAccessFile</tt> 
+as follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+RandomAccessFile raf;
+raf = new RandomAccessFile("z.txt","rw");
+FileInputStream f3 = new FileOutputStream(raf.getFD());
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>FileWriter</tt> class is a subclass 
+of <tt CLASS=literal>Writer</tt> that writes a stream of characters to a file. The characters to be written 
+are converted to bytes using the default character encoding scheme. If 
+you do not want to use the default encoding scheme, you need to wrap an 
+<tt CLASS=literal>OutputStreamWriter</tt> around a 
+<tt CLASS=literal>FileOutputStream</tt> as shown above. 
+You can create a <tt CLASS=literal>FileWriter</tt> 
+from a filename, a <tt CLASS=literal>File</tt> object, 
+or a <tt CLASS=literal>FileDescriptor</tt> object, 
+as described above for <tt CLASS=literal>FileOutputStream</tt>. 
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.5">StringWriter</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>StringWriter</tt> class is a 
+subclass of <tt CLASS=literal>Writer</tt> that stores 
+its data in a <tt CLASS=literal>String</tt> object. 
+Internally, it uses a <tt CLASS=literal>StringBuffer</tt>, 
+which can be examined using <tt CLASS=literal>getBuffer()</tt>. 
+A <tt CLASS=literal>String</tt> containing the data 
+that has been written can be obtained with <tt CLASS=literal>toString()</tt>. 
+The following example creates a <tt CLASS=literal>StringWriter</tt> 
+and writes data into it: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+StringWriter out = new StringWriter();
+char[] buffer = {'b', 'o', 'o', '!', 'h', 'a'};
+out.write('B');
+out.write("uga");
+out.write(buffer, 0, 4);
+System.out.println(out.toString());
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This example produces the following output: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Bugaboo!
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.6">CharArrayWriter and ByteArrayOutputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>CharArrayWriter</tt> class is 
+a subclass of <tt CLASS=literal>Writer</tt> that writes 
+characters to an internal array. There are three ways to retrieve the data 
+that has been written to the <tt CLASS=literal>CharArrayWriter</tt>: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>toCharArray()</tt> 
+method returns a reference to a copy of the internal array. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>toString()</tt> method 
+returns a <tt CLASS=literal>String</tt> constructed 
+from the internal array. 
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>writeTo()</tt> method writes 
+the internal array to another <tt CLASS=literal>Writer</tt>. 
+
+<P>
+</UL>
+<P CLASS=para>
+This example demonstrates how to create a <tt CLASS=literal>CharArrayWriter</tt>, 
+write data into it, and retrieve the data: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+CharArrayWriter out = new CharArrayWriter();
+try {
+    out.write("Daphne"); 
+}catch (IOException e) {}
+char[] buffer = out.toCharArray();
+System.out.println(buffer);
+String result = out.toString();
+System.out.println(result);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This example produces the following output: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Daphne
+Daphne
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The internal buffer of the <tt CLASS=literal>CharArrayWriter</tt> 
+is expanded as needed when data is written. If you know how many characters 
+you will be writing, you can make your <tt CLASS=literal>CharArrayWriter</tt> 
+a little more efficient by passing an initial size to its constructor. 
+
+<P CLASS=para>
+<tt CLASS=literal>ByteArrayOutputStream</tt> is the 
+byte-oriented equivalent of <tt CLASS=literal>CharArrayWriter</tt>. 
+It works in much the same way, with the following exceptions: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The <tt CLASS=literal>write()</tt> methods 
+deal with bytes, not characters. Additionally, <tt CLASS=literal>ByteArrayOutputStream</tt> 
+does not have the <tt CLASS=literal>write(String)</tt> 
+methods that <tt CLASS=literal>CharArrayWriter</tt> 
+defines. 
+
+<P>
+<li CLASS=listitem>Instead of <tt CLASS=literal>toCharArray()</tt>, 
+<tt CLASS=literal>ByteArrayOutputStream</tt> has a 
+<tt CLASS=literal>toByteArray()</tt> method. 
+
+<P>
+<li CLASS=listitem>
+Three <tt CLASS=literal>toString()</tt> methods are provided. The one with
+no arguments converts the bytes in the internal array to characters
+using the default encoding scheme.[1]
+In Java 1.1, the <tt CLASS=literal>toString(int)</tt> method is
+deprecated, since it does not convert bytes to characters
+appropriately.  Instead, pass an encoding name to
+<tt CLASS=literal>toString(String)</tt>; this method correctly converts
+the internal byte array to a character string.
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+In Java 1.1, the default encoding scheme is used for the
+conversion. In earlier versions, characters are simply created using
+the eight bits of each byte as the low eight bits of the character.
+</blockquote>
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.7">PipedOutputStream and PipedWriter</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>PipedOuputStream</tt> class 
+is a subclass of <tt CLASS=literal>OutputStream</tt> 
+that facilitates communication between threads. A <tt CLASS=literal>PipedOutputStream</tt> 
+must be connected to a <tt CLASS=literal>PipedInputStream</tt> 
+to be useful, as it writes bytes that can be read by a connected <tt CLASS=literal>PipedInputStream</tt>. 
+There are a few ways to connect a <tt CLASS=literal>PipedOutputStream</tt> 
+to a <tt CLASS=literal>PipedInputStream</tt>. You 
+can first create the <tt CLASS=literal>PipedInputStream</tt> 
+and pass it to the <tt CLASS=literal>PipedOutputStream</tt> 
+constructor like this: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PipedInputStream pi = new PipedInputStream();
+PipedOutputStream po = new PipedOutputStream(pi);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can also create the <tt CLASS=literal>PipedOutputStream</tt> 
+first and pass it to the <tt CLASS=literal>PipedInputStream</tt> 
+constructor like this: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PipedOutputStream po = new PipedOutputStream();
+PipedInputStream pi = new PipedInputStream(po);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>PipedOutputStream</tt> and
+  <tt CLASS=literal>PipedInputStream</tt> classes each have a
+  <tt CLASS=literal>connect()</tt> method you can use to explicitly
+  connect a <tt CLASS=literal>PipedOutputStream</tt> and a
+  <tt CLASS=literal>PipedInputStream</tt> as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PipedOutputStream po = new PipedOutputStream();
+PipedInputStream pi = new PipedInputStream();
+po.connect(pi);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Or you can use <tt CLASS=literal>connect()</tt> as 
+follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PipedOutputStream po = new PipedOutputStream();
+PipedInputStream pi = new PipedInputStream();
+pi.connect(po);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Only one <tt CLASS=literal>PipedInputStream</tt> can 
+be connected to a <tt CLASS=literal>PipedOutputStream</tt> 
+at a time. If you use a <tt CLASS=literal>connect()</tt> 
+method to connect a <tt CLASS=literal>PipedOutputStream</tt> 
+to an already connected <tt CLASS=literal>PipedInputStream</tt>, 
+any unread bytes from the previously connected <tt CLASS=literal>PipedOutputStream</tt> 
+are lost. 
+
+<P CLASS=para>
+<tt CLASS=literal>PipedWriter</tt> is the character-based 
+equivalent of <tt CLASS=literal>PipedOutputStream</tt>. 
+It works in the same way, except that a <tt CLASS=literal>PipedWriter</tt> 
+is connected to a <tt CLASS=literal>PipedReader</tt> 
+to complete the pipe, using either the appropriate constructor or the <tt CLASS=literal>connect()</tt> 
+method. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.8">FilterOutputStream and FilterWriter</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>FilterOutputStream</tt> class 
+is a wrapper class for <tt CLASS=literal>OutputStream</tt> 
+objects. Conceptually, objects that belong to a subclass of <tt CLASS=literal>FilterOutputStream</tt> 
+are wrapped around another <tt CLASS=literal>OutputStream</tt> 
+object. The constructor for this class requires an <tt CLASS=literal>OutputStream</tt>. 
+The constructor sets the object's <tt CLASS=literal>out</tt> 
+instance variable to reference the specified <tt CLASS=literal>OutputStream</tt>, 
+so from that point on, the <tt CLASS=literal>FilterOutputStream</tt> 
+is associated with the given <tt CLASS=literal>OutputStream</tt>. 
+All of the methods of <tt CLASS=literal>FilterOutputStream</tt> 
+work by calling the corresponding methods in the underlying <tt CLASS=literal>OutputStream</tt>. 
+Because the <tt CLASS=literal>close()</tt> 
+method of a <tt CLASS=literal>FilterOutputStream</tt> 
+calls the <tt CLASS=literal>close()</tt> 
+method of the <tt CLASS=literal>OutputStream</tt> 
+that it wraps, you do not need to explicitly close the underlying <tt CLASS=literal>OutputStream</tt>. 
+
+<P CLASS=para>
+A <tt CLASS=literal>FilterOutputStream</tt> does not 
+add any functionality to the object that it wraps, so by itself it is not 
+very useful. However, subclasses of the <tt CLASS=literal>FilterOutputStream</tt> 
+class do add functionality to the objects that they wrap in two ways: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Some subclasses add logic to the methods of <tt CLASS=literal>OutputStream</tt>. 
+For example, the <tt CLASS=literal>BufferedOutputStream</tt> 
+class adds logic that buffers write operations. 
+
+<P>
+<li CLASS=listitem>Other subclasses add new methods. An example of this is <tt CLASS=literal>DataOutputStream</tt>, 
+which provides methods for writing primitive Java data types to the stream. 
+
+<P>
+</UL>
+<P CLASS=para>
+The <tt CLASS=literal>FilterWriter</tt> class is the 
+character-based equivalent of <tt CLASS=literal>FilterOutputStream</tt>. 
+A <tt CLASS=literal>FilterWriter</tt> is wrapped around 
+an underlying <tt CLASS=literal>Writer</tt> object; 
+the methods of <tt CLASS=literal>FilterWriter</tt> 
+call the corresponding methods of the underlying <tt CLASS=literal>Writer</tt>. 
+However, unlike <tt CLASS=literal>FilterOutputStream</tt>, 
+<tt CLASS=literal>FilterWriter</tt> is an <tt CLASS=literal>abstract</tt> 
+class, so you cannot instantiate it directly. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.9">DataOutputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>DataOutputStream</tt> class 
+is a subclass of the <tt CLASS=literal>FilterOutputStream</tt> 
+class that provides methods for writing a variety of data types to an <tt CLASS=literal>OutputStream</tt>. 
+The <tt CLASS=literal>DataOutputStream</tt> class 
+implements the <tt CLASS=literal>DataOutput</tt> interface, 
+so it defines methods for writing all of the primitive Java data types. 
+
+<P CLASS=para>
+You create a <tt CLASS=literal>DataOutputStream</tt> 
+by passing a reference to an underlying <tt CLASS=literal>OutputStream</tt> 
+to the constructor. Here is an example that creates a <tt CLASS=literal>DataOutputStream</tt> 
+and uses it to write the length of an array as an <tt CLASS=literal>int</tt> 
+and then to write the values in array as <tt CLASS=literal>long</tt> 
+values: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+void writeLongArray(OutputStream out, long[] a) throws IOException {
+    DataOutputStream dout = new DataOutputStream(out);
+    dout.writeInt(a.length);
+    for (int i = 0; i &lt; a.length; i++) {
+        dout.writeLong(a[i]);
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.10">BufferedWriter and BufferedOutputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>BufferedWriter</tt> class is 
+a subclass of <tt CLASS=literal>Writer</tt> that stores 
+output destined for an underlying <tt CLASS=literal>Writer</tt> 
+in an internal buffer. When the buffer fills up, the entire buffer is written, 
+or flushed, to the underlying <tt CLASS=literal>Writer</tt>. 
+Using a <tt CLASS=literal>BufferedWriter</tt> is usually 
+faster than using a regular <tt CLASS=literal>Writer</tt> 
+because it reduces the number of calls that must be made to the underlying 
+device, be it a disk or a network. You can use the <tt CLASS=literal>flush()</tt> 
+method to force a <tt CLASS=literal>BufferedWriter</tt> 
+to write the contents of the buffer to the underlying <tt CLASS=literal>Writer</tt>. 
+
+<P CLASS=para>
+The following example shows how to create a <tt CLASS=literal>BufferedWriter</tt> 
+around a network socket's output stream: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public Writer getBufferedWriter(Socket s) throws IOException {
+    OutputStreamWriter converter = new OutputStreamWriter(s.getOutputStream());
+    return new BufferedWriter(converter);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+First, create an <tt CLASS=literal>OutputStreamWriter</tt> 
+that converts characters to bytes using the default encoding scheme. After 
+they are converted, the bytes are written to the socket. Then simply 
+wrap a <tt CLASS=literal>BufferedWriter</tt> around 
+the <tt CLASS=literal>OutputStreamWriter</tt> to buffer 
+the output. 
+
+<P CLASS=para>
+The <tt CLASS=literal>BufferedOutputStream</tt> class 
+is the byte-based equivalent of <tt CLASS=literal>BufferedWriter</tt>. 
+It works in the same way as <tt CLASS=literal>BufferedWriter</tt>, 
+except that it buffers output for an underlying <tt CLASS=literal>OutputStream</tt>. 
+Here's how you would rewrite the previous example to create a <tt CLASS=literal>BufferedOutputStream</tt> 
+around a socket: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public OutputStream getBufferedOutputStream(Socket s) throws IOException {
+    return new BufferedOutputStream(s.getOutputStream());
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-2.11">PrintWriter and PrintStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>PrintWriter</tt> class is a 
+subclass of <tt CLASS=literal>Writer</tt> that provides a set of methods for printing string representations 
+of every Java data type. A <tt CLASS=literal>PrintWriter</tt> 
+can be wrapped around an underlying <tt CLASS=literal>Writer</tt> 
+object or an underlying <tt CLASS=literal>OutputStream</tt> 
+object. In the case of wrapping an <tt CLASS=literal>OutputStream</tt>, any characters written 
+to the <tt CLASS=literal>PrintWriter</tt> are converted 
+to bytes using the default encoding scheme.[2]
+Additional constructors allow you to specify if the underlying stream should 
+be flushed after every line-separator character is written. 
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+You can achieve the same effect using an
+<tt CLASS=literal>OutputStreamWriter</tt>, but it is easier to use the
+<tt CLASS=literal>PrintWriter(OutputStream)</tt> constructor. However, if
+you want to use an encoding scheme other than the default one, you
+need to create your own <tt CLASS=literal>OutputStreamWriter</tt>.
+</blockquote>
+<P CLASS=para>
+The <tt CLASS=literal>PrintWriter</tt> class provides a
+<tt CLASS=literal>print()</tt> and a <tt CLASS=literal>println()</tt> method
+for every primitive Java data type. As their names imply, the
+<tt CLASS=literal>println()</tt> methods do the same thing as their
+<tt CLASS=literal>print()</tt> counterparts, but also append a line
+separator character.
+
+<P CLASS=para>
+The following example demonstrates how to wrap a
+<tt CLASS=literal>PrintWriter</tt> around an
+<tt CLASS=literal>OutputStream</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+boolean b = true;
+char c = '%'
+double d = 8.31451
+int i = 42;
+String s = "R = ";
+PrintWriter out = new PrintWriter(System.out, true);
+out.print(s);
+out.print(d);
+out.println();
+out.println(b);
+out.println(c);
+out.println(i);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This example produces the following output: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+R = 8.31451
+true
+%
+42
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>PrintWriter</tt> objects are often 
+used to report errors. For this reason, the methods of this class do not 
+throw exceptions. Instead, the methods catch any exceptions thrown by any 
+downstream <tt CLASS=literal>OutputStream</tt> or 
+<tt CLASS=literal>Writer</tt> objects and set an internal 
+flag, so that the object can remember that a problem occurred. You can 
+query the internal flag by calling the <tt CLASS=literal>checkError()</tt> 
+method. 
+
+<P CLASS=para>
+Although you can create a <tt CLASS=literal>PrintWriter</tt> 
+that flushes the underlying stream every time a line-separator character 
+is written, this may not always be exactly what you want. Suppose that 
+you are writing a program that has a character-based user interface, and 
+that you want the program to output a prompt and then allow the user to 
+input a response on the same line. In order to make this work with a <tt CLASS=literal>PrintWriter</tt>, 
+you need to get the <tt CLASS=literal>PrintWriter</tt> 
+to write the characters in its buffer without writing a line separator. 
+You can do this by calling the <tt CLASS=literal>flush()</tt> method. 
+
+<P CLASS=para>
+<tt CLASS=literal>PrintWriter</tt> is new as of Java 
+1.1; it is more capable than the <tt CLASS=literal>PrintStream</tt> 
+class. You should use <tt CLASS=literal>PrintWriter</tt> instead of <tt CLASS=literal>PrintStream</tt> 
+because it uses the default encoding scheme to convert characters to bytes 
+for an underlying <tt CLASS=literal>OutputStream</tt>. 
+The constructors for <tt CLASS=literal>PrintStream</tt> 
+are deprecated in Java 1.1. In fact, the whole class probably would have 
+been deprecated, except that it would have generated a lot of compilation 
+warnings for code that uses <tt CLASS=literal>System.out</tt> 
+and <tt CLASS=literal>System.err</tt>. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Input Streams and Readers</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>File Manipulation</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

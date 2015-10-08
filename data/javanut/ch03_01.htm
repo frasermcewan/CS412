@@ -1,0 +1,392 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] Classes and Objects in Java</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:49:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_14.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-3">3. Classes and Objects in Java</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Introduction to Classes and Objects<br>
+<A HREF="ch03_02.htm">Object Creation</A><BR>
+<A HREF="ch03_03.htm">Class Variables</A><BR>
+<A HREF="ch03_04.htm">Class Methods</A><BR>
+<A HREF="ch03_05.htm">Object Destruction</A><BR>
+<A HREF="ch03_06.htm">Subclasses and Inheritance</A><BR>
+<A HREF="ch03_07.htm">Overriding Methods</A><BR>
+<A HREF="ch03_08.htm">Data Hiding and Encapsulation</A><BR>
+<A HREF="ch03_09.htm">Abstract Classes and Interfaces</A><BR>
+<A HREF="ch03_10.htm">C++ Features Not Found in Java</A><BR>
+<A HREF="ch03_11.htm">Summary</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+Java is an <I CLASS=emphasis>object-oriented</I> language.  "Object-oriented" is a
+term that has become so commonly used as to have practically
+no concrete meaning.  This chapter explains just what "object-oriented"
+means for Java.  It covers:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Classes and objects in Java
+
+<P>
+<li CLASS=listitem>Creating objects
+
+<P>
+<li CLASS=listitem>Garbage collection to free up unused objects
+
+<P>
+<li CLASS=listitem>The difference between class (or static) variables and
+instance variables, and the difference between class (or
+static) methods and instance methods
+
+<P>
+<li CLASS=listitem>Extending a class to create a subclass
+
+<P>
+<li CLASS=listitem>Overriding class methods and dynamic method lookup
+
+<P>
+<li CLASS=listitem>Abstract classes
+
+<P>
+<li CLASS=listitem>Interface types and their implementation by classes
+
+<P>
+</UL>
+<P CLASS=para>
+If you are a C++ programmer, or have other object-oriented
+programming experience, many of the concepts in this
+list should be familiar to you.  If you do not have
+object-oriented experience, don't fear: This chapter assumes
+no knowledge of object-oriented concepts.
+
+<P CLASS=para>
+We saw in the last chapter that close
+analogies can be drawn between Java and C.  Unfortunately for C++
+programmers, the same is not true for Java and C++.  Java
+uses object-oriented programming concepts that are familiar
+to C++ programmers, and it even borrows from C++ syntax in a
+number of places, but the analogies between Java and C++ are
+not nearly as strong as those between Java and C.
+[1]
+C++ programmers may have an easier time with this chapter
+than C programmers will, but they should still read it
+carefully and try not to form preconceptions about Java
+based on their knowledge of C++.
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+As we'll see, Java supports garbage collection and dynamic
+method lookup. This actually makes it a closer relative,
+beneath its layer of C-like syntax, to languages like
+Smalltalk than to C++.
+</blockquote>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-1">3.1 Introduction to Classes and Objects</A></h2>
+
+<P CLASS=para>
+<A NAME="CH3.CLASSES1"></A><A NAME="CH3.OBJECTS1"></A>A <I CLASS=emphasis>class</I> is a collection of data and methods that operate 
+on that data.
+[2]
+The data and methods, taken
+together, usually serve to define the contents and
+capabilities of some kind of <I CLASS=emphasis>object</I>.
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+A <I CLASS=emphasis>method</I> is the object-oriented term for a procedure
+or a function.  You'll see it used a lot in this book.
+Treat it as a synonym for "procedure."
+</blockquote>
+<P CLASS=para>
+For example, a circle can be described by the x, y
+position of its center and by its radius.  There are a
+number of things we can do with circles: compute their
+circumference, compute their area, check whether points are
+inside them, and so on.  Each circle is different (i.e., has
+a different center or radius), but as a <I CLASS=emphasis>class</I>, circles
+have certain intrinsic properties that we can capture in a
+definition.
+<A HREF="ch03_01.htm#JNUT2-CH-3-EX-1">Example 3.1</A>
+shows how we could partially define the class of circles
+in Java.  Notice that the class definition contains
+data and methods (procedures) within the same pair of
+curly brackets.
+[3]
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+C++ programmers should note that methods go inside the class
+definition in Java, not outside with the <tt CLASS=literal>::</tt>
+operator as they usually do in C++.
+</blockquote>
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-1">Example 3.1: The Class of Circles, Partially Captured in Java Code</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Circle {
+    public double x, y;   // The coordinates of the center
+    public double r;      // The radius
+    // Methods that return the circumference and area of the circle
+    public double circumference() { return 2 * 3.14159 * r; }
+    public double area() { return 3.14159 * r*r; }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-1.1">Objects Are Instances of a Class</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.INSTANCES1"></A><A NAME="CH3.CLASS.INSTAN1"></A>Now that we've defined (at least partially) the class
+<tt CLASS=literal>Circle</tt>, we want to do something with it.
+We can't do anything with the class of circles itself--we
+need a particular circle to work with.  We need an
+<I CLASS=emphasis>instance</I> of the class, a single circle object.
+
+<P CLASS=para>
+By defining the <tt CLASS=literal>Circle</tt> class in Java, we have
+created a new data type.  We can declare variables of that
+type:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle c;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+But this variable <tt CLASS=literal>c</tt> is simply a name that <I CLASS=emphasis>refers
+to</I> a circle object; it is not an object itself.
+In Java, all objects must be created dynamically.  This is
+almost always done with the <tt CLASS=literal>new</tt> keyword:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle c;
+c = new Circle();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now we have created an instance of our <tt CLASS=literal>Circle</tt>
+class--a circle object--and have assigned it to the variable
+<tt CLASS=literal>c</tt>, which is of type <tt CLASS=literal>Circle</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-1.2">Accessing Object Data</A></h3>
+
+<P CLASS=para>
+Now that we've created an object, we can use its data
+fields.  The syntax should be familiar to C programmers:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle c = new Circle();
+c.x = 2.0;  // Initialize our circle to have center (2, 2) and radius 1.0.
+c.y = 2.0;
+c.r = 1.0;
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-1.3">Using Object Methods</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.METHODS1"></A>This is where things get interesting!  To access the
+methods of an object, we use the same syntax as
+accessing the data of an object:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Circle c = new Circle();
+double a;
+c.r = 2.5;
+a = c.area();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Take a look at that last line.  We did not say:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+a = area(c);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+We said:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+a = c.area();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This is why it is called "object-oriented" programming; the
+object is the focus here, not the function call.  This is
+probably the single most important feature of the
+object-oriented paradigm.
+
+<P CLASS=para>
+Note that we don't have to pass an argument to
+<tt CLASS=literal>c.area()</tt>.  The object we are operating on,
+<tt CLASS=literal>c</tt>, is implicit in the syntax.  Take a look at
+<A HREF="ch03_01.htm#JNUT2-CH-3-EX-1">Example 3.1</A>
+again: you'll notice the same thing in the definition of the
+<tt CLASS=literal>area()</tt> method--it doesn't take an argument.  It is
+implicit in the language that a method operates on an
+instance of the class within which it is defined.  Thus our
+<tt CLASS=literal>area()</tt> method can use the <tt CLASS=literal>r</tt> field of the
+class freely--it is understood that it is referring to the
+radius of whatever <tt CLASS=literal>Circle</tt> instance invokes the
+method.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-1.4">How It Works</A></h3>
+
+<P CLASS=para>
+What's going on here?  How can a method that takes no
+arguments know what data to operate on?  In fact, the
+<tt CLASS=literal>area()</tt> method does have an argument!  <tt CLASS=literal>area()</tt>
+is implemented with an implicit argument that is not shown
+in the method declaration.  The implicit argument is named
+<tt CLASS=literal>this</tt>, and refers to "this object"--the
+<tt CLASS=literal>Circle</tt> object through which the method is invoked.
+<tt CLASS=literal>this</tt> is often called the "this pointer."
+[4]
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+"this pointer" is C++ terminology.  Since Java does not
+support pointers, I prefer the term "this reference."
+</blockquote>
+<P CLASS=para>
+The implicit <tt CLASS=literal>this</tt> argument is not shown in method
+signatures because it is usually not needed--whenever a Java
+method accesses the fields in its class, it is implied that
+it is accessing fields in the object referred to by the
+<tt CLASS=literal>this</tt> argument.  The same is true, as we'll see, when
+a method in a class invokes other methods in the class--it
+is implicit that the methods are being invoked for the
+<tt CLASS=literal>this</tt> object.
+
+<P CLASS=para>
+We can use the <tt CLASS=literal>this</tt> keyword explicitly when we want
+to make explicit that a method is accessing its own
+variables and/or methods.  For example, we could rewrite the
+<tt CLASS=literal>area()</tt> method like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public double area() { return 3.14159 * this.r * this.r; }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In a method this simple, it is not necessary to be explicit.
+In more complicated cases, however, you may find that it
+increases the clarity of your code to use an explicit
+<tt CLASS=literal>this</tt> where it is not strictly required.
+
+<P CLASS=para>
+An instance where the <tt CLASS=literal>this</tt> keyword <I CLASS=emphasis>is</I> required
+is when a method argument or a local variable in a method
+has the same name as one of the fields of the class.  In
+this case, you must use <tt CLASS=literal>this</tt> to access the field.
+If you used the field name alone, you would end up accessing
+the argument or local variable with the same name.  We'll
+see examples of this in the next section.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_14.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Miscellaneous Differences</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Object Creation</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

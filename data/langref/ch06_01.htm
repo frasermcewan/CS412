@@ -1,0 +1,636 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] Statements and Control Structures</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:14:18 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+<script language='JavaScript'>
+<!--
+if (location.replace) {
+ location.replace ('ch06_js.htm');
+}
+// -->
+</script>
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JLR2-CH-6">6. Statements and Control Structures</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+<a href='ch06_02.htm'>Labeled Statements</a><br>
+<a href='ch06_03.htm'>The Empty Statement</a><br>
+<a href='ch06_04.htm'>Expression Statements</a><br>
+<a href='ch06_05.htm'>The if Statement</a><br>
+<a href='ch06_06.htm'>The switch Statement</a><br>
+<a href='ch06_07.htm'>Iteration Statements</a><br>
+<a href='ch06_08.htm'>The break Statement</a><br>
+<a href='ch06_09.htm'>The continue Statement</a><br>
+<a href='ch06_10.htm'>The return Statement</a><br>
+<a href='ch06_11.htm'>The throw Statement</a><br>
+<a href='ch06_12.htm'>The try Statement</a><br>
+<a href='ch06_13.htm'>The synchronized Statement</a><br>
+<p>
+<p>
+</DIV>
+
+<P CLASS=para>
+A statement is the construct used to control the flow of program
+execution in Java:
+
+
+<p>
+<img align=middle src="./figs/jlr0601.gif" alt="[Graphic: Figure from the text]" width=424 height=321 border=0>
+
+<P CLASS=para>
+Statements are executed in sequence, unless a statement alters the flow of
+control. Statements usually correspond to executable code.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<A HREF="ch06_08.htm#JLR2-CH-6-SECT-8">The break Statement</A>;
+<A HREF="ch06_09.htm#JLR2-CH-6-SECT-9">The continue Statement</A>;
+<A HREF="ch06_03.htm#JLR2-CH-6-SECT-3">The Empty Statement</A>;
+<A HREF="ch06_04.htm#JLR2-CH-6-SECT-4">Expression Statements</A>;
+<A HREF="ch06_05.htm#JLR2-CH-6-SECT-5">The if Statement</A>;
+<A HREF="ch06_07.htm#JLR2-CH-6-SECT-7">Iteration Statements</A>;
+<A HREF="ch06_02.htm#JLR2-CH-6-SECT-2">Labeled Statements</A>;
+<A HREF="ch06_10.htm#JLR2-CH-6-SECT-10">The return Statement</A>;
+<A HREF="ch06_06.htm#JLR2-CH-6-SECT-6">The switch Statement</A>;
+<A HREF="ch06_13.htm#JLR2-CH-6-SECT-13">The synchronized Statement</A>;
+<A HREF="ch06_11.htm#JLR2-CH-6-SECT-11">The throw Statement</A>;
+<A HREF="ch06_12.htm#JLR2-CH-6-SECT-12">The try Statement</A>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1">6.1 Blocks</A></h2>
+
+<P CLASS=para>
+A block is a sequence of zero or more statements,
+local variable declarations, or local class declarations 
+enclosed in curly braces:<A NAME="CH06.BLOCK1"></A><A NAME="CH06.BLOCK2"></A>
+
+
+<p>
+<img align=middle src="./figs/jlr0602.gif" alt="[Graphic: Figure from the text]" width=424 height=100 border=0>
+
+<P CLASS=para>
+The bodies of methods, constructors, static initializers,
+and instance initializers are blocks.
+A variable declaration in a block causes a local variable to be
+defined, while a class declaration in a block causes a local
+class to be defined. 
+A block is itself a kind of statement, so a block can contain
+other blocks. Here is an example of a block:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+{
+    int tmp = x;
+    x = y;
+    y = tmp;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The statements in a block are executed in the sequence in
+which they occur, unless a statement that alters the
+sequence of execution is executed. If, as a result of such a statement, the
+Java compiler can determine that a statement will never be executed,
+the compiler is required to produce an error message about the unreachable
+statement.
+
+<P CLASS=para>
+The one exception to this rule allows <tt CLASS=literal>if</tt>
+statements that have constant Boolean expressions. The compiler
+recognizes <tt CLASS=literal>if</tt> statements that have constant Boolean
+expressions and does not generate code for the portion of the statement
+that can never be executed. This mechanism can be used for conditional
+compilation; it is similar to the C/C++ preprocessor features that
+are used for this purpose.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_16.htm#JLR2-CH-4-SECT-16">Constant Expressions</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2">Local Classes</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.1">Local Variables</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<I CLASS=emphasis>Statement</I> 6;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.4">Static Initializers</A>;
+<A HREF="ch06_06.htm#JLR2-CH-6-SECT-6">The switch Statement</A>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1.1">Local Variables</A></h3>
+
+<P CLASS=para>
+<A NAME="CH06.LOCAL1"></A><A NAME="CH06.LOCAL2"></A>Local variables declared in a block exist only from their declaration
+to the end
+of the block. A local variable declaration cannot include any modifiers
+except the <tt CLASS=literal>final</tt> modifier.
+In other words, a variable declaration in a block cannot include
+any of the following keywords: <tt CLASS=literal>public</tt>,
+<tt CLASS=literal>protected</tt>, <tt CLASS=literal>private</tt>,
+<tt CLASS=literal>static</tt>, 
+<tt CLASS=literal>transient</tt>, or <tt CLASS=literal>volatile</tt>. 
+The syntax that permits the use of the <tt CLASS=literal>final</tt>
+modifier with local variables is new as of Java 1.1; the usage is not
+permitted with earlier versions of the language.
+
+<P CLASS=para>
+The syntax of a local variable
+declaration is:
+
+
+<p>
+<img align=middle src="./figs/jlr0603.gif" alt="[Graphic: Figure from the text]" width=450 height=103 border=0>
+
+<P CLASS=para>
+A local variable declaration is really made up of two distinct things:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>A type, which can be either a primitive type or a reference type.
+
+<P>
+<li CLASS=listitem>Any number of identifiers that name variables.
+Each name can be followed by pairs of square brackets to indicate
+an array variable, as well as an optional initializer for the variable.
+
+<P>
+</UL>
+<P CLASS=para>
+A local variable declared within a block that has an initializer
+is initialized when its declaration is executed. Within the body
+of a method or constructor, its formal parameters are treated as
+local variables. Formal parameters
+are initialized when a method is called. A local variable can also
+be declared in the header of a <tt CLASS=literal>for</tt> statement.
+
+<P CLASS=para>
+The following are some examples of local variable declarations:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int x;
+double[] k, m[];
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>;
+<I CLASS=emphasis>Expression</I> 4;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.1">Interface Variables</A>;
+<I CLASS=emphasis>Type</I> 3;
+<A HREF="ch06_07.htm#JLR2-CH-6-SECT-7.3">The for Statement</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1.1.1">Final local variables</A></h4>
+
+<P CLASS=para>
+If a local variable is declared with the <tt CLASS=literal>final</tt>
+modifier, the variable is a named constant value. As such, it must be
+assigned an initial value. Any assignment to a
+<tt CLASS=literal>final</tt> local variable, other than the one that
+provides its initial value, is a compile-time error. The initial value
+for a <tt CLASS=literal>final</tt> local variable is typically 
+provided by an initializer that is part of the variable's declaration.
+For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+final int X = 4;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>final</tt> local variable that is not initialized 
+in its declaration is called a <I CLASS=emphasis>blank final</I>. 
+A blank final must be assigned a value exactly once. The compiler
+uses flow analysis that takes <tt CLASS=literal>if</tt> statements
+and iteration statements
+into account to ensure that a blank final is assigned a value
+exactly once. Thus, it is possible to have multiple assignments to a blank
+final, so long as exactly one of them can be executed. For example,
+here is an instance initializer that sets the value of a blank final:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+{
+    final int DAYS_IN_YEAR;
+    if (isLeapYear(new Date()))
+        DAYS_IN_YEAR = 366;
+    else
+        DAYS_IN_YEAR = 365;
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Local variables that are declared <tt CLASS=literal>final</tt> 
+are not supported prior to Java 1.1.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>;
+<A HREF="ch06_07.htm#JLR2-CH-6-SECT-7.2">The do Statement</A>;
+<A HREF="ch06_07.htm#JLR2-CH-6-SECT-7.3">The for Statement</A>;
+<A HREF="ch06_05.htm#JLR2-CH-6-SECT-5">The if Statement</A>;
+<A HREF="ch06_07.htm#JLR2-CH-6-SECT-7.1">The while Statement</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.1">Variable modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1.1.2">Local variable type</A></h4>
+
+<P CLASS=para>
+A local variable
+declaration must always specify the type of the variable. If the
+declaration of a local variable uses a primitive type, the variable
+contains a value of the specified primitive type.
+If the declaration
+uses a reference type, the variable contains a reference to the
+specified type of object.
+
+<P CLASS=para>
+The presence of square brackets
+in a variable declaration, after either the type or the variable
+name, indicates that the variable contains a reference to an array.
+For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int a[];        // a is an array of int
+int[] b;        // b is also an array of int
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It is also possible to declare a variable to contain an array of arrays,
+or more generally, arrays nested to any level. Each pair of square
+brackets in the declaration corresponds to a dimension of the array;
+it makes no difference whether the brackets appear after the type
+or the variable name. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int[][][] d3;      // Each of these is an array of
+int[][] f3[];      // arrays of arrays of integers
+int[] g3[][];
+int h3[][][];
+int[] j3, k3[];    // An array and an array of arrays
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1">Primitive Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2">Reference Types</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1.1.3">Local variable name</A></h4>
+
+<P CLASS=para>
+The identifier that
+follows the variable type is the name of the local variable. When
+a local variable definition is in effect, all occurrences of that
+name are taken to mean the local variable. If a local variable is
+declared with the same name as a class, an interface, or a field
+of the class in which the local variable is declared, the definition
+of the class, interface, or field is hidden. Fields that are hidden by 
+a local variable can be referenced using the keyword <tt CLASS=literal>this</tt>.
+For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class myClass {
+    int value;
+    void doit(int x) {
+        int value;
+        value = x*4;               // Set local variable
+        this.value = value + 1;    // Set field variable
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A block cannot have multiple local variables with the same name. This
+means that a local variable
+cannot be declared at a point in a block where a local variable
+with the same name is already defined. For example, consider the
+following code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+myMethod(char c){
+    int j;        // Okay
+    char c;       // Error
+    int j;        // Error
+    {
+        int j;    // Error
+    }
+    {
+        int x;    // Okay
+    }
+    {
+        int x;    // Okay
+    }
+    int x;        // Okay
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above
+example, the declaration of <tt CLASS=literal>c</tt> as a local variable
+is an error because it occurs in a method that has a formal parameter
+with that name. The second declaration of <tt CLASS=literal>j</tt> is
+an error because there is already a local variable defined with
+that name. The third declaration of <tt CLASS=literal>j</tt> as a local
+variable is also an error for the same reason; the nested block
+sees all of the declarations that are visible in the enclosing block,
+including the declaration of <tt CLASS=literal>j</tt> in the outer block.
+
+<P CLASS=para>
+The first declaration of <tt CLASS=literal>x</tt> is fine
+because there is no previous declaration of <tt CLASS=literal>x</tt>
+for it to conflict with. The second declaration of <tt CLASS=literal>x</tt>
+is also fine because there is no previous declaration of <tt CLASS=literal>x</tt>
+in the enclosing block for it to conflict with. The first declaration
+of <tt CLASS=literal>x</tt> occurs in a nested block, so it is not visible
+in the enclosing block. The third declaration of <tt CLASS=literal>x</tt>
+is also fine because the preceding declarations occurred in nested
+blocks; they are not visible in the enclosing block.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.1">this</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1.1.4">Local variable initializers</A></h4>
+
+<P CLASS=para>
+A local variable
+declaration can contain an initializer. If the variable is of a
+non-array type, the expression in the initializer is evaluated and
+the variable is set to the result of the expression, as long as
+the result is assignment-compatible with the variable. If the variable
+is of an array type, the initializer must be an array initializer,
+as described in <A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>.
+If the variable is declared <tt CLASS=literal>final</tt>, the initializer
+sets the value of the named constant.
+
+<P CLASS=para>
+A local variable
+declaration with an initializer is similar in effect to a local
+variable declaration without an initializer immediately followed
+by an assignment statement that sets the declared variable. Take
+the following example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int a = 4;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This is equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int a;
+a = 4;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a local variable has an initializer, the value of the variable is
+set to the value of the initializer when the declaration is executed.
+
+<P CLASS=para>
+Any attempt to access the value of a local variable before
+its value is set by an assignment statement or an initializer is
+treated as an error by the Java compiler. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int foo(int x) {
+    int a = x + 1;
+    int b, c;
+    if (a &gt; 4)
+        b = 3;
+    a = a * c;        // Error: c not initialized
+    a = b * 8 + a;    // Error: b might not be initialized
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This example contains two errors. First, the compiler complains about
+the expression <tt CLASS=literal>a*c</tt>
+because <tt CLASS=literal>c</tt> is not initialized. The compiler also
+complains about the expression <tt CLASS=literal>b*</tt>
+<tt CLASS=literal>8+a</tt> because
+the preceding assignment to <tt CLASS=literal>b</tt> may not executed,
+depending on the value of <tt CLASS=literal>a</tt>. If the compiler
+cannot guarantee that a local variable will be initialized, it generates
+an error message when the variable is used.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.4">Variable initializers</A>;
+<A HREF="ch04_13.htm#JLR2-CH-4-SECT-13">Assignment Operators</A>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1.2">Local Classes</A></h3>
+
+<P CLASS=para>
+Local classes declared in a block exist only in the scope of that
+block. Local classes are not supported prior to Java 1.1
+Here's the syntax of a local class declaration:
+
+
+<p>
+<img align=middle src="./figs/jlr0604.gif" alt="[Graphic: Figure from the text]" width=424 height=50 border=0>
+
+<P CLASS=para>
+A local class can access local variables in the enclosing block that
+are declared <tt CLASS=literal>final</tt>.  A local class can also access
+instance variables of the enclosing class if they are not declared
+inside of a <tt CLASS=literal>static</tt> method or static initializer.
+
+<P CLASS=para>
+There is an alternate syntax for a local class that allows an
+anonymous local class to be defined. This syntax is available as part
+of an allocation expression.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_02.htm#JLR2-CH-4-SECT-2">Allocation Expressions</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.7.4">Anonymous classes</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.7.3">Local classes</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.1">Local Variables</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1.2.1">Local class modifiers</A></h4>
+
+<P CLASS=para>
+The keywords <tt CLASS=literal>abstract</tt> and <tt CLASS=literal>final</tt>
+can be used in the declaration of a local class.  These modifiers
+have the following meanings:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>abstract</tt><br>
+<DD>
+
+<P CLASS=para>
+If a local class is declared
+<tt CLASS=literal>abstract</tt>, no instances of the class may be
+created. A local class declared <tt CLASS=literal>abstract</tt> may
+contain <tt CLASS=literal>abstract</tt> methods. Classes not declared
+<tt CLASS=literal>abstract</tt> may not contain
+<tt CLASS=literal>abstract</tt> methods and must override any
+<tt CLASS=literal>abstract</tt> methods they inherit with methods that are
+not <tt CLASS=literal>abstract</tt>. Classes that implement
+an interface and are not declared <tt CLASS=literal>abstract</tt> must
+contain or inherit methods that are not <tt CLASS=literal>abstract</tt>
+that have the same name, have the same number of parameters,
+and have corresponding
+parameter types as the methods declared in the interfaces that the
+class implements.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>final</tt><br>
+<DD>
+
+<P CLASS=para>
+If a local class is declared
+<tt CLASS=literal>final</tt>, it cannot be subclassed. In other words, it
+cannot appear in the <tt CLASS=literal>extends</tt> clause of another
+class.</DL>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.1">Class Modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-6-SECT-1.2.2">Local class members</A></h4>
+
+<P CLASS=para>
+The body of a local class cannot declare any 
+<tt CLASS=literal>static</tt> variables, 
+<tt CLASS=literal>static</tt> methods, <tt CLASS=literal>static</tt> classes,
+or static initializers. Beyond those restrictions, 
+the remainder of the declaration is the same as that for a top-level 
+class declaration, which is described 
+in <A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6">Nested Top-Level and Member Classes</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.4">Static Initializers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Interface Declarations</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Labeled Statements</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

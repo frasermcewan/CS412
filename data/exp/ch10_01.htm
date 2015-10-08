@@ -1,0 +1,1602 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] Understand the Abstract Windowing Toolkit</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:59:51 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="EXJ-CH-10">10. Understand the Abstract Windowing Toolkit</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+GUI Concepts in Java<br>
+<A HREF="ch10_02.htm">Applets</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+<A NAME="CH10.AWT1"></A><A NAME="CH10.AWT2"></A>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The Abstract Windowing Toolkit (AWT), or
+"another windowing toolkit," as some people affectionately
+call it, provides a large collection of classes for building
+graphical user interfaces in Java. With AWT, you can
+create windows, draw, work with images, and use components like
+buttons, scrollbars, and pull-down menus in a platform independant way. 
+The <tt CLASS=literal>java.awt</tt> package contains the 
+AWT GUI classes.  
+The <tt CLASS=literal>java.awt.image</tt> package provides some additional
+tools for working with images.
+
+<P CLASS=para>
+AWT is the largest and most complicated part of the standard Java
+distribution, so it shouldn't be any surprise that we'll take several
+chapters (five, to be precise) to discuss it. Here's the lay of the
+land: 
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><A HREF="ch10_01.htm">Chapter 10, <i>Understand the Abstract Windowing Toolkit</i></A> covers the basic concepts 
+you need to understand how
+AWT builds user interfaces.
+<P>
+<li CLASS=listitem>In <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A>, we discuss the basic components from which
+user interfaces are built: lists, text fields, checkboxes, and so on.
+
+<P>
+<li CLASS=listitem><A HREF="ch12_01.htm">Chapter 12, <i>Layout Managers</i></A> discusses layout managers, which are responsible for
+arranging components within a display.
+
+<P>
+<li CLASS=listitem><A HREF="ch13_01.htm">Chapter 13, <i>Drawing With the AWT</i></A> discusses the fundamentals of drawing, 
+including simple image displays.
+
+<P>
+<li CLASS=listitem><A HREF="ch14_01.htm">Chapter 14, <i>Working With Images</i></A>, the last chapter to discuss the AWT in detail, covers the image
+generation and processing tools that are in the
+<tt CLASS=literal>java.awt.image</tt> package. We'll throw in
+audio for good measure.
+
+<P>
+</UL>
+<P CLASS=para>
+We can't cover the full functionality of AWT
+in this book; if you want complete coverage, see the Java AWT
+Reference (O'Reilly).
+Instead,
+we'll cover the basics of the tools you are most likely to
+use and show some examples of what can be done with some of the more
+advanced features. <A HREF="ch10_01.htm#EXJ-CH-10-FIG-1">Figure 10.1</A> shows the user
+interface portion of the <tt CLASS=literal>java.awt</tt> package.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-1">Figure 10.1: User-interface classes of the java.awt package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1001.gif" alt="[Graphic: Figure 10-1]" width=502 height=667 border=0>
+
+</DIV>
+
+<P CLASS=para>
+As its name suggests, AWT is an
+abstraction. Its classes and functionality are the same for all Java
+implementations, so Java applications built with
+AWT should work in the same way on all
+platforms. 
+You could choose to write your code on under Windows NT/95, and then 
+run it on an X Window System, or a Macintosh. 
+To achieve platform independence,
+AWT uses interchangeable toolkits that interact with the
+host windowing system to display user-interface components, thus
+shielding your application code from the details of the environment
+it's running in. Let's say you ask AWT
+to create a button. When your application or applet runs, a toolkit
+appropriate to the host environment renders the button appropriately: on
+Windows, you can get a button that looks like other Windows
+buttons; on a Macintosh, you can get a Mac button; and so on.
+
+<P CLASS=para>
+Working with user-interface components in AWT is
+meant to be easy.  While the low-level (possibly native) GUI
+toolkits may be complex, you won't have to work with
+them directly unless you want to port AWT to a new
+platform or provide an alternative "look and feel" for the
+built-in components. When building a user interface for your
+application, you'll be working with prefabricated
+components. It's easy to assemble a collection of user-interface
+components (buttons, text areas, etc.), and arrange them inside
+containers to build complex layouts. You can also use simple 
+components as building blocks for making entirely new kinds of
+interface gadgets that are completely portable and reusable.
+
+<P CLASS=para>
+AWT uses layout managers to arrange components
+inside containers and control their sizing and positioning. Layout
+managers define a strategy for arranging components instead of relying
+on absolute positioning. For example, you can define a user interface
+with a collection of buttons and text areas and be reasonably
+confident it will always display correctly. It doesn't matter
+that Windows, UNIX, and the Macintosh render your
+buttons and text areas differently; the layout manager should still position
+them sensibly with respect to each other.
+
+<P CLASS=para>
+Unfortunately, the reality is that most of the complaints about
+Java center around
+AWT. AWT is very different from
+what many people are used to and lacks some of the advanced features other
+GUI environments provide (at least for now). It's
+also true that most of the bugs in current implementations of Java lie
+in the AWT toolkits. As bugs are fixed and
+developers become accustomed to AWT, we would expect the
+number of complaints to diminish. Java 1.1 is a big improvement over
+previous versions. But at the time of this writing, there are
+some rough edges.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1">10.1 GUI Concepts in Java</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.GUI1"></A><A NAME="CH10.GUI2"></A><A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A> contains examples using most of the components in the
+<tt CLASS=literal>java.awt</tt> package. But before we dive 
+into those examples, we need to spend a bit of time talking about the
+concepts AWT uses for creating and handling
+user interfaces. This material should get you up to speed on
+GUI concepts and on how they are used in Java.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1.1">Components</A></h3>
+
+<P CLASS=para>
+<A NAME="CH10.COMP"></A>A component is the fundamental user-interface object in Java.
+Everything you see on the display in a Java application is an
+AWT component. This includes things like windows,
+drawing canvases, buttons, checkboxes, scrollbars, lists, menus, and
+text fields. To be used, a component must usually be placed in a
+Container. Container objects group components, arrange them for display, and
+associate them with a particular display device. All
+components are derived from the abstract
+<tt CLASS=literal>java.awt.Component</tt> class, as you saw in <A HREF="ch10_01.htm#EXJ-CH-10-FIG-1">Figure 10.1</A>. For example, the <tt CLASS=literal>Button</tt>
+class is a subclass of the <tt CLASS=literal>Component</tt> class, which
+is derived directly from <tt CLASS=literal>Object</tt>.
+
+<P CLASS=para>
+For the sake of simplicity, we can split the functionality of the
+<tt CLASS=literal>Component</tt> class into two categories: appearance and
+behavior. The <tt CLASS=literal>Component</tt> class contains methods and
+variables that control an object's general appearance. This
+includes basic attributes such as whether or not it's visible, its
+current size and location, and certain common graphical defaults like
+font and color. The <tt CLASS=literal>Component</tt> class also contains
+methods implemented by specific subclasses to produce the
+actual graphics the object displays. When a component is first
+displayed, it's associated with a particular display device. The
+<tt CLASS=literal>Component</tt> class encapsulates access to its display
+area on that device. This includes methods for accessing graphics and
+for working with off-screen drawing buffers for the display.
+
+<P CLASS=para>
+By a <tt CLASS=literal>Component</tt>'s behavior, we usually mean
+the way it responds to user-driven events. When the user performs an
+action (like pressing the mouse button) within a component's
+display area, an AWT thread delivers an event object
+that describes "what happened."  The event is delivered to
+objects that have registered themselves as "listeners" for that type 
+of event from that component. For example, when the user clicks on a
+button, the button delivers an
+<tt CLASS=literal>ActionEvent</tt>. To receive those events, an
+object registers with the button as an
+<tt CLASS=literal>ActionListener</tt>. 
+
+<P CLASS=para>
+Events are delivered by invoking designated event-handler methods within 
+the receiving object (the "listener").  Objects prepare themselves to
+receive events by 
+implementing methods for the types of events in which they are interested 
+and then registering as listeners with the sources of the events.
+There are specific types of events that cover different categories of 
+component and user interaction.
+For example, <tt CLASS=literal>MouseEvent</tt>s describe
+activities of the mouse within a component's 
+area, <tt CLASS=literal>KeyEvent</tt>s describe key presses, and
+functionally higher level events  
+such as <tt CLASS=literal>ActionEvent</tt>s indicate that a user
+interface component has done its job.
+
+<P CLASS=para>
+Although events are crucial to the workings of AWT, they aren't
+limited to building user interfaces. Events are an important interobject 
+communications mechanism that may be used by completely nongraphical 
+parts of an application as well. They are particularly important in
+the context of Java Beans, which use events as an extremely general
+notification mechanism.  We will
+describe events thoroughly in this chapter because they are so fundamental 
+to the way in which user interfaces function in Java, but it's good to
+keep the bigger picture in mind.
+<P CLASS=para>
+Containers often take on certain responsibilities for the components
+that they hold.  Instead of having every component handle events for its
+own bit of the user interface, a container may register itself or another
+object to receive the events for its child components, and "glue"
+those events to the correct application logic.
+
+<P CLASS=para>
+A component informs its container when it does something that might affect 
+other components in the container, such as changing
+its size or visibility.  The container can then tell the layout manager that
+it is time to rearrange the child components.
+
+<P CLASS=para>
+Containers in Java are themselves a kind of component. Because all
+components share this structure, container objects can manage and
+arrange <tt CLASS=literal>Component</tt> objects without knowing what they
+are and what they are doing. Components can be swapped and replaced
+with new versions easily and combined into composite user-interface
+objects that can be treated as individual components. This lends
+itself well to building larger, reusable user-interface items.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1.1.1">Peers</A></h4>
+
+<P CLASS=para>
+<A NAME="CH10.PEERS"></A>We have just described a nice system in which components govern their
+own appearance, and events are delivered to objects that are "listening"
+to those components.  Unfortunately, getting data
+out to a display medium and receiving events from input devices
+involve crossing the line from Java to the real world. The real world
+is a nasty place full of architecture dependence, local peculiarities,
+and strange physical devices like mice, trackballs, and '69 Buicks.
+
+<P CLASS=para>
+At some level, our components will have to talk to
+objects that contain native methods to interact with the host
+operating environment. To keep this interaction as clean and well-defined
+as possible, Java uses a set of <I CLASS=emphasis>peer</I>
+interfaces. The peer interface makes it possible for a pure Java-language 
+AWT component to use a corresponding real 
+component--the peer object--in the native environment. 
+You won't generally deal directly with peer interfaces or
+the objects behind them; peer handling is encapsulated within
+the <tt CLASS=literal>Component</tt> class. It's important to understand
+the architecture, though, because it imposes some limitations on what you
+can do with components.
+
+<P CLASS=para>
+For example, when a component such as a
+<tt CLASS=literal>Button</tt> is first created and displayed on the
+screen, code in the <tt CLASS=literal>Component</tt> class asks an
+AWT <tt CLASS=literal>Toolkit</tt> class to create a
+corresponding peer object, as shown in <A HREF="ch10_01.htm#EXJ-CH-10-FIG-2">Figure 10.2</A>. The <tt CLASS=literal>Toolkit</tt> is a
+<I CLASS=emphasis>factory</I> that knows how to create objects in 
+the native display system; Java uses this factory design pattern
+to provide an abstraction that separates the implementation of component 
+objects from their functionality. 
+The <tt CLASS=literal>Toolkit</tt> object contains methods
+for making instances of each type of component peer. (As a developer,
+you will probably never work with a native user-interface
+directly.) <tt CLASS=literal>Toolkit</tt>s can be swapped and
+replaced to provide new implementations of the components without
+affecting the rest of Java.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-2">Figure 10.2: A toolkit creating a peer object</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1002.gif" alt="[Graphic: Figure 10-2]" width=503 height=123 border=0>
+
+</DIV>
+
+<P CLASS=para>
+
+<A HREF="ch10_01.htm#EXJ-CH-10-FIG-2">Figure 10.2</A> shows a
+<tt CLASS=literal>Toolkit</tt> producing a peer object for a
+<tt CLASS=literal>Button</tt>. When you add a button to a container, the
+container calls the <tt CLASS=literal>Button</tt>'s
+<tt CLASS=literal>addNotify()</tt> method. In turn,
+<tt CLASS=literal>addNotify()</tt> calls the
+<tt CLASS=literal>Toolkit</tt>'s <tt CLASS=literal>createButton()</tt>
+method to make the <tt CLASS=literal>Button</tt>'s peer object in
+the real display system. Thereafter, the component class keeps a
+reference to the peer object and delegates calls to its methods.
+
+<P CLASS=para>
+The <tt CLASS=literal>java.awt.peer</tt> package, shown in <A HREF="ch10_01.htm#EXJ-CH-10-FIG-3">Figure 10.3</A>, parallels the <tt CLASS=literal>java.awt</tt>
+package and contains an interface for each type of component. For
+example, the <tt CLASS=literal>Button</tt> component has a
+<tt CLASS=literal>ButtonPeer</tt> interface, which defines the
+capabilities of a button.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-3">Figure 10.3: The java.awt.peer package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1003.gif" alt="[Graphic: Figure 10-3]" width=502 height=478 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The peer objects themselves can be built in whatever way is
+necessary, using a combination of Java and native code. (We will discuss
+the implementation of peers a bit more in the AWT performance section of this
+chapter.)
+A Java-land button doesn't know or care how the real-world button
+is implemented or what additional capabilities it may have; it knows
+only about the existence of the methods defined in the
+<tt CLASS=literal>ButtonPeer</tt> interface. <A HREF="ch10_01.htm#EXJ-CH-10-FIG-4">Figure 10.4</A> shows a call to the
+<tt CLASS=literal>setLabel()</tt> method of a <tt CLASS=literal>Button</tt>
+object, which results in a call to the corresponding
+<tt CLASS=literal>setLabel()</tt> method of the native button object.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-4">Figure 10.4: Invoking a method in the peer interface</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1004.gif" alt="[Graphic: Figure 10-4]" width=503 height=132 border=0>
+
+</DIV>
+
+<P CLASS=para>
+In this case, the only action a button peer must be able to perform is to set 
+its label text; <tt CLASS=literal>setLabel()</tt> is the only method in the
+<tt CLASS=literal>ButtonPeer</tt> interface. How the native button acts,
+responds to user input, etc. is entirely up to it. It might turn
+green when pressed or make a "ka-chunk" sound. The component in Java-land has no
+control over these aspects of the native button's behavior--and
+this has important implications.  This abstraction allows 
+AWT to use native components from whatever platform it 
+resides on.  However, it also means that a lot of a component's functionality
+is locked away where we can't get to it. 
+We'll see that we can usually intercept events before the peer object has a 
+chance to act on them, but we usually can't change much of the object's basic
+behavior.
+
+<P CLASS=para>
+A component gets its peer when it's added to a container. 
+Containers are associated with display devices through 
+<tt CLASS=literal>Toolkit</tt> objects, and thus control the process of
+peer creation.  We'll talk more the ramifications of this when we discuss
+addNotify() later.
+(See <A HREF="ch10_01.htm#EXJ-CH-10-SECT-1.3.3">"Component peers and addNotify()"</A>.)
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.1">The Model/View/Controller Framework</A></h4>
+
+<P CLASS=para>
+Before we continue our discussion of
+GUI concepts, I want to make a brief aside and talk
+about the Model/View/Controller (MVC)
+framework. MVC is a method of building reusable
+components that logically separates the structure, representation, and
+behavior of a component into separate pieces. MVC
+is primarily concerned with building user-interface components, but
+the basic ideas can be applied to many design issues; its principles
+can be seen throughout Java. Java doesn't implement all of
+MVC, whose origins are in Smalltalk, but
+MVC's influence is apparent throughout the
+language.
+
+<P CLASS=para>
+The fundamental
+idea behind MVC is the separation of the data model
+for an item from its presentation. For example, we can draw different
+representations (e.g., bar graphs, pie charts) of the data in a
+spreadsheet. The data is the "model"; the particular
+representation is the "view." A single model can have many
+views that show different representations of the data. The behavior of
+a user-interface component usually changes its model and affects how
+the component is rendered as a view. If we were to create a button
+component for example, its data model could be as simple as a
+<tt CLASS=literal>boolean</tt> value for whether it's up or down. The
+behavior for handling mouse-press events would alter the model, and the
+display would examine that data when it draws the on-screen
+representation.
+
+<P CLASS=para>
+The way in which AWT objects communicate, by passing events from sources
+to listeners, is part of this MVC concept of separation.  Event listeners
+are "observers" and event sources are "observables."  When an observable
+changes or performs a function, it notifies all of its observers of the 
+activity.[1]
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+Although they are not used by AWT, Java provides generic
+<tt CLASS=literal>Observer</tt> class and 
+<tt CLASS=literal>Observable</tt> interface in the
+<tt CLASS=literal>java.util</tt> package.  (In practice, these are
+more a design hint than of day to day usefulness.)
+</blockquote>
+<P CLASS=para>
+This model of operation is also central to the
+way in which Java works with graphics, as you'll see in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A>. Image information from a producer, such as a
+graphics engine or video stream, is distributed to consumers that can
+represent different views of the data. Consumers register with a
+producer and receive updates as the image is created or when the image has 
+changed.
+
+<P CLASS=para>
+The factory concept used by the <tt CLASS=literal>Toolkit</tt>
+objects is related to MVC; factories use Java
+interfaces to separate the implementation of an object from its
+behavior. An object that implements an interface doesn't have to
+fit into a particular class structure; it needs only to provide the
+methods defined by the interface. Thus, an AWT
+<tt CLASS=literal>Toolkit</tt> is a factory that produces native
+user-interface components that correspond to Java components. The
+native components don't need to match
+AWT's class structure, provided they
+implement the appropriate interface.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1.1.2">Painting and Updating</A></h4>
+
+<P CLASS=para>
+<A NAME="CH10.COMPUP1"></A><A NAME="CH10.COMPUP2"></A><A NAME="CH10.COMPUP4"></A><A NAME="CH10.COMPUP3"></A>Components can be asked to draw themselves at any time. In a more
+procedural programming environment, you might expect a component
+would be involved in drawing only when first created or when it
+changes its appearance. In Java, components act in a way that is more
+closely tied to the underlying behavior of the display
+environment. For example, when you obscure a component with a window
+and then reexpose it, an AWT thread asks the
+component to redraw itself.
+
+<P CLASS=para>
+AWT asks a component to draw itself by
+calling its <tt CLASS=literal>paint()</tt>
+method. <tt CLASS=literal>paint()</tt> may be called at any time, but in
+practice, it's called when the object is first made visible, whenever
+it changes its appearance, and whenever some tragedy in the display
+system messes up its area. Because
+<tt CLASS=literal>paint()</tt> can't make any assumptions about why
+it was called, it must redraw the component's entire display. 
+
+<P CLASS=para>
+However, redrawing the whole component is unnecessary if only a
+small part changes, especially in an anticipated way.  
+In this case, you'd like to specify what
+part of the component has changed, and redraw that part
+alone. Painting a large portion of the screen is time consuming, and
+can cause flickering that is especially annoying if you're
+redrawing the object frequently, as with animation. When a component
+realizes it needs to redraw itself, it should ask
+AWT to schedule a call to its
+<tt CLASS=literal>update()</tt> method. 
+<tt CLASS=literal>update()</tt> can
+do drawing of its own, but often, it simply defines a
+clipping region--by calling
+<tt CLASS=literal>clipRect()</tt>--on its graphics context; to limit 
+the extent of the painted area and then 
+calling <tt CLASS=literal>paint()</tt> explicitly. A simple
+component doesn't have to implement its own
+<tt CLASS=literal>update()</tt> method, but that doesn't mean the
+method doesn't exist. In this case, the component gets a default
+version of <tt CLASS=literal>update()</tt> that simply clears the
+component's area and calls <tt CLASS=literal>paint()</tt>.
+
+<P CLASS=para>
+A component never calls its <tt CLASS=literal>update()</tt> method
+directly. Instead, when a component requires redrawing, it schedules a
+call to <tt CLASS=literal>update()</tt> by invoking
+<tt CLASS=literal>repaint()</tt>. The <tt CLASS=literal>repaint()</tt> method
+asks AWT to schedule the component for
+repainting. At some point in the future, a call to
+<tt CLASS=literal>update()</tt> occurs. AWT is allowed
+to manage these requests in whatever way is most efficient. If there
+are too many requests to handle, or if there are multiple requests for
+the same component, AWT can reschedule a number of 
+repaint requests into a single call to <tt CLASS=literal>update()</tt>. 
+This means that you can't predict
+exactly when <tt CLASS=literal>update()</tt> will be called in response to
+a <tt CLASS=literal>repaint()</tt>; all you can expect is that it happens
+at least once, after you request it. 
+
+<P CLASS=para>
+Normally, calling repaint() is an implicit request to be updated as soon
+as possible.  There is another form of <tt CLASS=literal>repaint()</tt> 
+that allows you
+to specify a time period within which you would like an update, giving
+the system more flexibility in scheduling the request. An application
+can use this method to govern its refresh rate.  For example, 
+the rate at which you render frames for an animation might vary, depending
+on other factors (like the complexity of the image).  You could impose 
+an effective maximum frame rate by calling repaint() with a time (the inverse
+of the frame rate) as an argument.  If you then happen to make more than 
+one repaint request within that time period, AWT is not obliged to physically
+repaint for each one.  It can simply condense them to carry out a single 
+update within the time you have specified.
+
+<P CLASS=para>
+Both <tt CLASS=literal>paint()</tt> and <tt CLASS=literal>update()</tt>
+take a single argument: a <tt CLASS=literal>Graphics</tt> object. The
+<tt CLASS=literal>Graphics</tt> object represents the component's
+graphics context. It corresponds to the area of the screen on which
+the component can draw and provides the methods for performing
+primitive drawing and image manipulation. We'll look at the
+<tt CLASS=literal>Graphics</tt> class in detail in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A>.
+
+<P CLASS=para>
+All components paint and update themselves using this
+mechanism. However, you really care about it only when doing your own
+drawing, and in practice, you should be drawing only on a
+<tt CLASS=literal>Canvas</tt>, <tt CLASS=literal>Panel</tt>,
+<tt CLASS=literal>Applet</tt>, 
+or your own subclasses of Component.
+Other kinds of objects, like buttons and
+scrollbars, have lots of behavior built into their peers. You may be able to
+draw on one of these objects, but unless you specifically catch the
+appropriate events and redraw (which could get complicated), your
+handiwork is likely to disappear. 
+
+<P CLASS=para>
+<tt CLASS=literal>Canvas</tt>es,
+<tt CLASS=literal>Panel</tt>s, and lightweight components (which
+we will discuss fully later in this chapter) are "blank slates" for
+you to implement your own behavior and appearance.
+For example, by itself, the AWT <tt CLASS=literal>Canvas</tt> has no 
+outward appearance; it takes up space and has a background color, but 
+otherwise, it's empty. By subclassing <tt CLASS=literal>Canvas</tt> and 
+adding your own code, you can create a more complicated object like a 
+graph or a flying toaster.  A lightweight component is even "emptier" 
+than that.  It doesn't have a real <tt CLASS=literal>Toolkit</tt>
+peer for its implementation; 
+you get to specify all of the behavior and appearance yourself.  
+We'll talk more about using <tt CLASS=literal>Canvas</tt> and
+lightweight components to create new kinds of GUI objects later in
+this chapter. 
+
+<P CLASS=para>
+A <tt CLASS=literal>Panel</tt> is like a 
+<tt CLASS=literal>Canvas</tt>, but it's also a 
+<tt CLASS=literal>Container</tt>, so that it can hold other user-interface components.  In the same way, a lightweight container is a simple
+extension of the AWT <tt CLASS=literal>Container</tt> class.
+(More about that when we talk about containers below.)
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.2">Enabling and Disabling Components</A></h4>
+
+<P CLASS=para>
+Standard AWT components can be turned on and off by calling the
+<tt CLASS=literal>enable()</tt> and
+<tt CLASS=literal>disable()</tt> methods.
+When a component like a <tt CLASS=literal>Button</tt> or
+<tt CLASS=literal>TextField</tt> is disabled, it becomes
+"ghosted" or "greyed-out" and doesn't respond to user input.
+
+<P CLASS=para>
+For example, let's see how to create a component that can only be used
+once. This requires getting ahead of the story; I won't explain some
+aspects of this example until later. Earlier, I said that a
+<tt CLASS=literal>Button</tt> generates an
+<tt CLASS=literal>ActionEvent</tt> when it is pressed. This event
+is delivered to the listeners'
+<tt CLASS=literal>actionPerformed()</tt> method. The code below
+disables whatever component generated the event: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean void actionPerformed(ActionEvent e ) {
+    ...
+    ((Component)e.getSource()).disable();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This code calls <tt CLASS=literal>getSource()</tt> to find out
+which component generated the event. We cast the result to
+<tt CLASS=literal>Component</tt> because we don't necessarily
+know what kind of component we're dealing with; it might not be a
+button, because other kinds of components can generate action events.
+Once we have our component, we disable it.
+
+<P CLASS=para>
+You can also disable an entire container. Disabling a
+<tt CLASS=literal>Panel</tt>, for instance, disables all the components it
+contains.
+Unfortunately, disabling components and containers is handled by the 
+AWT Toolkit at a low level. It is currently not possible to have custom 
+(pure Java) components notified when their native containers are disabled.
+This flaw should be corrected in a future release.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.3">Focus, please</A></h4>
+
+<P CLASS=para>
+In order to receive keyboard events, a component has to have keyboard 
+<I CLASS=emphasis>focus</I>. The component with the focus is simply the
+currently selected input component. It receives all keyboard event
+information until the focus changes. A component can ask for 
+focus with the <tt CLASS=literal>Component</tt>'s
+<tt CLASS=literal>requestFocus()</tt> method. Text components like
+<tt CLASS=literal>TextField</tt> and
+<tt CLASS=literal>TextArea</tt> do this 
+automatically whenever you click the mouse in their area. A component
+can find out when it gains or loses focus through the
+<tt CLASS=literal>FocusListener</tt> interface (see the table of
+events below).
+If you want to create your own text-oriented
+component, you could implement this behavior yourself.  For instance,
+you might request focus when the mouse is clicked in your component's
+area. After receiving focus, you could change the cursor or do
+something else to highlight the component.
+
+<P CLASS=para>
+Many user interfaces are designed so that the focus automatically
+jumps to 
+the "next available" component when the user presses the TAB key.
+This behavior is particularly common in forms; users often expect to
+be able to tab to the next text entry field. AWT handles automatic
+focus traversal for you when it is applicable. 
+You can get control over the behavior through
+the <tt CLASS=literal>transferFocus()</tt> and
+<tt CLASS=literal>isFocusTraversable()</tt> methods of
+<tt CLASS=literal>Component</tt>.   
+<tt CLASS=literal>transferFocus()</tt> passes the focus to the
+next appropriate component.
+You can use <tt CLASS=literal>transferFocus()</tt> to control the
+order of tabbing between components by  
+overriding it in the container and implementing your own policy.
+<tt CLASS=literal>isFocusTraversable()</tt> returns a boolean
+value specifying whether or not the component
+should be considered eligible for receiving a transfer focus.
+Your components can override this method to determine whether or not they
+can be "tabbed to."
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.4">Other Component Methods</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>Component</tt> class is very large; it has
+to provide the base level 
+functionality for all of the various kinds of Java GUI objects.  We don't have
+room to document every method of the component class here, but we'll flesh
+out our discussion by covering some more of the important ones. 
+
+<P CLASS=para>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>Container getParent()</tt><br>
+<DD>
+
+<P CLASS=para>
+Return the container that holds this component.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>String getName() / void setName(String name)</tt><br>
+<DD>
+
+<P CLASS=para>
+Get or assign the String name of this component.  
+Giving a component a name is useful for debugging.  
+The name shows up when you do a <tt CLASS=literal>toString()</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>setVisible(boolean visible)</tt><br>
+<DD>
+
+<P CLASS=para>
+Make the component visible or invisible, within its container.
+If you change the components, visibility, remember to call
+<tt CLASS=literal>validate()</tt>  
+on the container; this causes the layout manager to lay out the
+container again. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>Color getForeground() / void setForeground(Color c)</tt><br><tt CLASS=literal>Color getBackground() / void setBackground(Color c)</tt><br>
+<DD>
+
+<P CLASS=para>
+Get and set the foreground and background colors for this component.
+The foreground color of any component is the default color used for
+drawing. For example, it is the color used for text in a text field;
+it is also the default drawing color for the
+<tt CLASS=literal>Graphics</tt> object passed to the component's
+<tt CLASS=literal>paint()</tt> method.
+The background color is used to fill the component's area when it is
+cleared by the default implementation of
+<tt CLASS=literal>update()</tt>. 
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>Font getFont() / void setFont(Font f)</tt><br>
+<DD>
+
+<P CLASS=para>
+Get or set the <tt CLASS=literal>Font</tt> for this component.
+(Fonts are discussed in <A HREF="ch13_01.htm">Chapter 13, <i>Drawing With the AWT</i></A>.) 
+You can set the <tt CLASS=literal>Font</tt> on text components
+like <tt CLASS=literal>TextField</tt> and
+<tt CLASS=literal>TextArea</tt>. 
+For <tt CLASS=literal>Canvas</tt>es,
+<tt CLASS=literal>Panel</tt>s, and lightweight components, this
+will also be the  
+default font used for drawing text on the Graphics context passed to
+<tt CLASS=literal>paint()</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>FontMetrics getFontMetrics(Font font)</tt><br>
+<DD>
+
+<P CLASS=para>
+Find out the characteristics of a font when rendered on this component.
+<tt CLASS=literal>FontMetrics</tt> allow you to find out the
+dimensions of text when rendered in that font.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>Dimension getSize() / void setSize(int width, int height)</tt><br>
+<DD>
+
+<P CLASS=para>
+Get and set the current size of the component.  Remember to call
+<tt CLASS=literal>validate()</tt> 
+on the component's container if you change its size (see Containers below).  
+There are other methods
+in <tt CLASS=literal>Component</tt> to set its location, but
+normally this is the job of a layout manager.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>Cursor getCursor() / void setCursor(Cursor cursor)</tt><br>
+<DD>
+
+<P CLASS=para>
+Get or set the type of cursor (mouse pointer) used when the mouse is over this 
+component's area.  For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Component myComponent = ...;
+Cursor crossHairs = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
+myComponent.setCursor( crossHairs );
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1.3">Containers</A></h3>
+
+<P CLASS=para>
+<A NAME="CH10.CONT1"></A>Now that you understand components a little better, our discussion of
+containers should be easy. 
+A container is a kind of component that holds and manages other
+AWT components.  If you look back to 
+<A HREF="ch10_01.htm#EXJ-CH-10-FIG-1">Figure 10.1</A>, you
+can see the part of the <tt CLASS=literal>java.awt</tt> class hierarchy
+that descends from <tt CLASS=literal>Container</tt>. 
+
+<P CLASS=para>
+The most useful <tt CLASS=literal>Container</tt> types are
+<tt CLASS=literal>Frame</tt>, <tt CLASS=literal>Panel</tt>,
+and <tt CLASS=literal>Applet</tt>.
+A <tt CLASS=literal>Frame</tt> is a top-level window on your
+display. <tt CLASS=literal>Frame</tt> is derived from
+<tt CLASS=literal>Window</tt>, which is pretty much the same, but lacks a
+border. A <tt CLASS=literal>Panel</tt> is a generic container element used
+to group components inside of <tt CLASS=literal>Frame</tt>s and other
+<tt CLASS=literal>Panel</tt>s. 
+The <tt CLASS=literal>Applet</tt> class is a kind of 
+<tt CLASS=literal>Panel</tt> that provides the foundation for
+applets that run inside Web browsers. 
+As a <tt CLASS=literal>Panel</tt>, an
+<tt CLASS=literal>Applet</tt> has the ability to contain other
+user-interface components.  All these classes are subclasses of the
+<tt CLASS=literal>Container</tt> class; you can also use the
+<tt CLASS=literal>Container</tt> class directly, like a
+<tt CLASS=literal>Panel</tt>, to hold 
+components inside of another container. This is called a "lightweight
+container," and is closely related to lightweight components. We'll
+discuss lightweight components and containers later in this chapter.
+
+<P CLASS=para>
+Because a <tt CLASS=literal>Container</tt> is a kind of
+<tt CLASS=literal>Component</tt>, it has all of the methods of
+the <tt CLASS=literal>Component</tt> class, including the
+graphical and event-related methods we're 
+discussing in this chapter.   But a container also maintains a
+list of "child" components, which are the components it manages, and
+therefore has methods for dealing with those components. By
+themselves, most components aren't very useful until they are added to
+a container and 
+displayed.  The <tt CLASS=literal>add()</tt>
+method of the <tt CLASS=literal>Container</tt> class adds a component to
+the container. Thereafter, this component can be displayed in the 
+container's area and positioned by its layout manager.  You can also
+remove a component 
+from a container with the <tt CLASS=literal>remove()</tt> method.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1.3.1">Layout managers</A></h4>
+
+<P CLASS=para>
+<A NAME="CH10.LAY1"></A><A NAME="CH10.LAY2"></A>A <I CLASS=emphasis>layout manager</I> is an object that controls the
+placement and sizing of components within the display area of a
+container. A layout manager is like a window manager in a display
+system; it controls where the components go and how big they
+are.  Every container has a default layout manager, but you can easily
+install a new one by calling the container's
+<tt CLASS=literal>setLayout()</tt> method.
+
+<P CLASS=para>
+AWT comes with a few layout managers that
+implement common layout schemes. The default layout manager for a
+<tt CLASS=literal>Panel</tt> is a
+<tt CLASS=literal>FlowLayout</tt>, which 
+tries to place objects at their preferred size from left to right and
+top to bottom in the container. The default for a
+<tt CLASS=literal>Frame</tt> is a
+<tt CLASS=literal>BorderLayout</tt>, which 
+places a limited number of objects at named locations like
+"North," "South," and "Center." Another layout
+manager, the <tt CLASS=literal>GridLayout</tt>, arranges components in a
+rectangular grid.  The most general (and difficult to use) layout manager 
+is <tt CLASS=literal>GridBagLayout</tt>, which lets you do the
+kinds of things you can do with  
+HTML tables.  We'll get into the details of all of these layout managers
+in <A HREF="ch12_01.htm">Chapter 12, <i>Layout Managers</i></A>.
+
+<P CLASS=para>
+As I mentioned above, you normally call
+<tt CLASS=literal>add()</tt> to add a component to a container. There is
+an overloaded version of <tt CLASS=literal>add()</tt> that you may
+need, depending on what layout manager you're using.
+Often you'll use the version of <tt CLASS=literal>add()</tt> that takes a
+single <tt CLASS=literal>Component</tt> as an argument. However, if
+you're using a layout manager that uses "constraints,"
+like <tt CLASS=literal>BorderLayout</tt> or GridBagLayout, you need to
+specify additional information about where to put the new component.  
+For that you can use the version that takes a constraint object:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+add( Component component, Object constraint);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+For example, to add a component to the top of a
+<tt CLASS=literal>BorderLayout</tt>, you might say: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+add( newComponent, "North");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this case, the constraint object is the string "North." The
+<tt CLASS=literal>GridBagLayout</tt> uses a much more complex
+constraint object to specify positioning. 
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.5">Insets</A></h4>
+
+<P CLASS=para>
+Insets specify a container's margins; the space specified by the
+container's insets won't be used by a layout manager. Insets are
+described by an <tt CLASS=literal>Insets</tt> object, which has
+four <tt CLASS=literal>int</tt> fields:
+<tt CLASS=literal>top</tt>, <tt CLASS=literal>bottom</tt>,
+<tt CLASS=literal>left</tt>, and
+<tt CLASS=literal>right</tt>. You normally don't need to worry
+about the insets, the container will set them automatically, taking
+into account extras like the menu bar that may appear at the top of a
+frame. However, you should modify the insets if you're doing something
+like adding a decorative border (for example, a set of
+"index tabs" at the top of a container) that reduces the space
+available for components. To change the insets, you override the
+component's <tt CLASS=literal>getInsets()</tt> method, which
+returns an <tt CLASS=literal>Insets</tt> object. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+//reserve 50 pixels at the top, 5 at the sides and 10 at the bottom
+public Insets getInsets() {
+    return new Insets (50,5,10,5);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.6">Z-ordering (stacking components)</A></h4>
+
+<P CLASS=para>
+In most layout schemes, components are not allowed to overlap, but they can.
+If they do, the order in which components were added to a container matters.
+When components overlap they are "stacked" in the order in which they were 
+added: the first component added to the container is on top, the last
+is on the bottom.  To give you more control over stacking, two
+additional forms of the <tt CLASS=literal>add()</tt> method 
+take an additional 
+integer argument that lets you specify the component's exact position
+in the container's stacking order.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1.3.2">validate(&nbsp;) and layout(&nbsp;)</A></h4>
+
+<P CLASS=para>
+A layout manager arranges the components in a container only when
+asked to. Several things can mess up a container after it's initially
+laid out:
+
+<P CLASS=para>
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Changing its size
+
+<P>
+<li CLASS=listitem>Resizing or moving one of its child components
+
+<P>
+<li CLASS=listitem>Adding, showing, removing, or hiding a child component
+
+<P>
+</UL>
+
+ 
+Any of these actions causes the container to be marked
+invalid. Saying that a container is invalid simply means it needs
+to have its child components readjusted by its layout manager. This is
+accomplished by calling the <tt CLASS=literal>Container</tt>'s
+<tt CLASS=literal>validate()</tt> method. <tt CLASS=literal>validate()</tt>
+then turns around and calls the <tt CLASS=literal>Container</tt>'s
+<tt CLASS=literal>doLayout()</tt> method, which asks the layout manager to
+do its job. In addition, <tt CLASS=literal>validate()</tt> also notes that
+the <tt CLASS=literal>Container</tt> has been fixed (i.e., it's valid
+again) and looks at each child component of the container, recursively
+validating any containers that are also messed up.
+
+<P CLASS=para>
+So if you have an applet that contains a small
+<tt CLASS=literal>Panel</tt>--say a keypad holding some
+buttons--and you change the size of the <tt CLASS=literal>Panel</tt>
+by calling its <tt CLASS=literal>resize()</tt> method, you should also
+call <tt CLASS=literal>validate()</tt> on the applet. The applet's
+layout manager may then reposition or resize 
+the keypad within the applet. It also
+automatically calls <tt CLASS=literal>validate()</tt> for the keypad, so
+that it can rearrange its buttons to fit inside its new area.
+
+<P CLASS=para>
+There are two things you should note. First, all components,
+not just containers, maintain a notion of when they are valid or
+invalid. But most components (e.g., buttons) don't do anything
+special when they're validated.  If you have a custom component that wants 
+to be notified when it is resized, it might be best to make it a 
+container (perhaps a lightweight container) and do your work in the 
+<tt CLASS=literal>doLayout()</tt> method.
+
+<P CLASS=para>
+Next, child containers are validated only if they are invalid. 
+That means that if you have an invalid
+component nested inside a valid component and you validate a container
+above them both, the invalid component may never be
+reached.  However, the <tt CLASS=literal>invalidate()</tt> method
+that marks a container as
+dirty automatically marks parent containers as well, all the way up
+the container hierarchy.  So that situation should never happen.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="EXJ-CH-10-SECT-1.3.3">Component peers and addNotify()</A></h4>
+
+<P CLASS=para>
+A component gets its peer when it's added to a container. 
+Containers are associated with display devices through 
+<tt CLASS=literal>Toolkit</tt> objects, and thus control the process of
+peer creation. This means that you can't ask certain questions about a 
+component before it's placed in a container.  
+For example, you can't find out about a component's size or 
+its default font until the component knows where it's being displayed (until
+it has its peer).  
+
+<P CLASS=para>
+You probably also shouldn't be able to ask a component with no peer
+about other resources controlled by the peer, such as off screen graphics
+areas and font metrics. Java's developers apparently thought this
+restriction too onerous so container-less components are
+associated with the "default" toolkit that can answer some of these 
+kinds of inquiries.  
+In practice, the default toolkit is usually able to provide
+the right answer, because with current implementations of Java the default
+toolkit is probably the only toolkit available. This approach may
+cause problems in the future, if Java's developers add the ability for
+different containers to have different toolkits.
+
+<P CLASS=para>
+The same issue (the existence of a component's peer) also comes up
+when you are making your own kinds of 
+components and need access to some of these peer resources before you can
+complete the setup.  For example, suppose that you want to set the size or
+some other feature of your component based on the default font used.  
+You can't complete this setup in your constructor, because the peer doesn't
+exist yet.  The solution to all of these problems is proper use of the
+<tt CLASS=literal>addNotify()</tt> method.  As its name implies,
+<tt CLASS=literal>addNotify()</tt> can be used to get 
+notification when the peer is created.  You can override it to do your
+own work, as long as you remember to call
+<tt CLASS=literal>super.addNotify()</tt> to complete the 
+peer creation.  For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class FancyLabel  {
+    FancyLabel() {
+        // No peer yet...
+    }
+    public void addNotify() {
+        super.addNotify();  // complete the peer creation
+        // Complete setup based on Fonts
+        // and other peer resources.
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.7">Managing Components</A></h4>
+
+<P CLASS=para>
+There are a few additional tools of the
+<tt CLASS=literal>Container</tt> class that we should mention.  
+
+<P CLASS=para>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>Component[] getComponents()</tt><br>
+<DD>
+
+<P CLASS=para>
+Returns the container's components in an array.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>void list(PrintWriter out, int indent)</tt><br>
+<DD>
+
+<P CLASS=para>
+Generates a list of the components in this container and writes them to
+the specified <tt CLASS=literal>PrintWriter</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>Component getComponentAt(int x, int y)</tt><br>
+<DD>
+
+<P CLASS=para>
+Tells you what component is at the specified coordinates in the container's
+coordinate system.  </DL>
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.8">Listening for Components</A></h4>
+
+<P CLASS=para>
+Finally, an important tool to be aware of is the
+<tt CLASS=literal>ContainerListener</tt> interface. 
+It lets you receive an event whenever a component is added to or removed from
+a container.  (It lets you hear the tiny cries of the component as it is 
+imprisoned in its container or torn away.)
+You can use the <tt CLASS=literal>ContainerListener</tt>
+interface to automate the process of 
+setting up components when they are added to your container.  For instance,
+your container might need to register other kinds of event listeners with 
+its components to track the mouse or handle certain kinds of actions.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.9">Windows and Frames</A></h4>
+
+<P CLASS=para>
+Windows and frames are the "top level" containers for Java components.
+A <tt CLASS=literal>Window</tt> is simply a plain, graphical
+screen that displays in your 
+windowing system.   Windows have no frills; they are mainly suitable for
+making "splash" screens and dialogs--things that limit the
+user's control.  <tt CLASS=literal>Frame</tt>, on the other hand,
+is a subclass of <tt CLASS=literal>Window</tt> 
+that have a border and can hold a menu-bar. Frames are under the control of 
+your window manager, so you can normally drag a Frame around on the 
+screen and resize it, using the normal controls for your environment.
+<A HREF="ch10_01.htm#EXJ-CH-10-FIG-5">Figure 10.5</A> shows a <tt CLASS=literal>Frame</tt> on the left and
+a <tt CLASS=literal>Window</tt> on the right.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-5">Figure 10.5: A typical frame and window</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1005.gif" alt="[Graphic: Figure 10-5]" width=503 height=273 border=0>
+
+</DIV>
+
+<P CLASS=para>
+All other components and
+containers in Java must be held, at some level, inside of a
+<tt CLASS=literal>Window</tt> or
+<tt CLASS=literal>Frame</tt>. 
+Applets, as we've mentioned a few times, are a kind of
+<tt CLASS=literal>Panel</tt>.  Even applets
+must be housed in a Java frame or window, though normally
+you don't see an applet's parent frame because it is part of (or
+simply is) the browser or appletviewer displaying the applet.
+
+<P CLASS=para>
+A <tt CLASS=literal>Frame</tt> is the only
+<tt CLASS=literal>Component</tt> that can be displayed 
+without being added to or attached to another
+<tt CLASS=literal>Container</tt>. 
+After creating a <tt CLASS=literal>Frame</tt>, you can call the
+<tt CLASS=literal>show()</tt> method to display it.
+Let's create a standalone equivalent of our
+<tt CLASS=literal>HelloWeb</tt> applet from <A HREF="ch02_01.htm">Chapter 2, <i>A First Applet</i></A>:
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-6">Figure 10.6: Standalone equivalent of the HelloWeb applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1006.gif" alt="[Graphic: Figure 10-6]" width=502 height=273 border=0>
+
+</DIV>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class HelloWebApp {
+    public static void main( String [] args ) {
+        Frame myFrame = new Frame("The Title");
+        myFrame.add("Center", new Label("Hello Web!", Label.CENTER) );
+        myFrame.pack();
+        myFrame.show();
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we've got our minimal, graphical, standalone Java application.
+The <tt CLASS=literal>Frame</tt> constructor can take a
+<tt CLASS=literal>String</tt> argument that supplies a title,
+displayed in the <tt CLASS=literal>Frame</tt>'s 
+title bar.  (Another approach would be to create the
+<tt CLASS=literal>Frame</tt> with no title, and call 
+<tt CLASS=literal>setTitle()</tt> to supply the title later.)
+After creating the <tt CLASS=literal>Frame</tt>, we add our 
+<tt CLASS=literal>Label</tt> to it and then call
+<tt CLASS=literal>pack()</tt>, which prepares the
+<tt CLASS=literal>Frame</tt> for display. 
+<tt CLASS=literal>pack()</tt> does a couple of things, but its
+most important effect  
+in this case is that it sets the size of the
+<tt CLASS=literal>Frame</tt>  to the smallest needed
+to hold all of its components.  Specifically,
+<tt CLASS=literal>pack()</tt> calls:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+setSize( preferredSize() );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Next, we call <tt CLASS=literal>show()</tt> to get the
+<tt CLASS=literal>Frame</tt> onto the screen.  The
+<tt CLASS=literal>show()</tt> method returns immediately, without
+blocking. Fortunately, our application does not exit while the
+<tt CLASS=literal>Frame</tt> is showing.
+To get rid of a <tt CLASS=literal>Frame</tt>, call the
+<tt CLASS=literal>dispose()</tt> method.  If you want to hide the
+<tt CLASS=literal>Frame</tt> temporarily, call
+<tt CLASS=literal>setVisible(false)</tt>.  You can check to see 
+if a <tt CLASS=literal>Frame</tt> is showing with the
+<tt CLASS=literal>isShowing()</tt> method. 
+
+<P CLASS=para>
+In this example, we let <tt CLASS=literal>pack()</tt> set the
+size of the <tt CLASS=literal>Frame</tt> for us 
+before we <tt CLASS=literal>show()</tt> it.  If we hadn't, the
+<tt CLASS=literal>Frame</tt> would have come up at an 
+undefined size.  If we instead want the
+<tt CLASS=literal>Frame</tt> to be a specific size  
+(not just hugging its child components) we could simply call
+<tt CLASS=literal>setSize()</tt> instead of
+<tt CLASS=literal>pack()</tt>.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+...
+myFrame.setSize( 300, 300 );
+myFrame.show();
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.10">Other Methods for Controlling Frames</A></h4>
+
+<P CLASS=para>
+The <tt CLASS=literal>setLocation()</tt> method of the
+<tt CLASS=literal>Component</tt> class can be used on a
+<tt CLASS=literal>Frame</tt> or 
+<tt CLASS=literal>Window</tt> to set its 
+position on the screen.  The x and y coordinates are considered relative
+to the screen's origin (the top left corner).
+
+<P CLASS=para>
+You can use the <tt CLASS=literal>toFront()</tt> and
+<tt CLASS=literal>toBack()</tt> methods, respectively, to pull a
+<tt CLASS=literal>Frame</tt> or
+<tt CLASS=literal>Window</tt> to the front of other windows, or
+push it to the background. 
+By default, a user is allowed to resize a
+<tt CLASS=literal>Frame</tt>, but you can prevent resizing by
+calling <tt CLASS=literal>setResizable(false)</tt> before showing
+the <tt CLASS=literal>Frame</tt>. 
+
+<P CLASS=para>
+On most systems, frames can be "iconfied";  
+that is, they can be represented by a little icon image.  
+You can get and set a frame's icon image by calling
+<tt CLASS=literal>getIconImage()</tt> and  
+<tt CLASS=literal>setIconImage()</tt>. 
+Remember that as with all components, you can set the cursor by
+calling the <tt CLASS=literal>setCursor()</tt> method.  
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.11">Using Windows</A></h4>
+
+<P CLASS=para>
+Windows and frames have a slightly convoluted relationship.  We said above that
+<tt CLASS=literal>Frame</tt> is a subclass of
+<tt CLASS=literal>Window</tt>.  However, if you look, you'll see
+that to
+create a <tt CLASS=literal>Window</tt> you have to have a
+<tt CLASS=literal>Frame</tt> available to serve as its parent. 
+The <tt CLASS=literal>Window</tt> constructor takes a
+<tt CLASS=literal>Frame</tt> as an argument.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Window myWindow = new Window( myFrame );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The rationale for this is long and boring.  Suffice it to say that this
+limitation will probably go away in the future.
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.12">Prepacking Windows and Frames</A></h4>
+
+<P CLASS=para>
+Earlier we said that calling <tt CLASS=literal>pack()</tt> on a
+<tt CLASS=literal>Frame</tt> sets the frame's size to the
+preferred size of its layout. However, the
+<tt CLASS=literal>pack()</tt> method
+is not simply equivalent to a call to
+<tt CLASS=literal>setSize()</tt>.
+ <tt CLASS=literal>pack()</tt> is often called before any of the
+frame's components have their peers. Therefore, calling
+<tt CLASS=literal>pack()</tt> forces the container to choose its
+<tt CLASS=literal>Toolkit</tt> and
+to create the peers of any components that have been added to it.  After
+that is done, the layout manager can reliably determine its preferred size.
+
+<P CLASS=para>
+For a large frame with lots of components, packing the frame is a
+convenient way to 
+do this setup work in advance, before the frame is displayed. Whether
+or not this is useful depends on whether you'd rather have your
+application start up
+faster, or pop up its frames faster, once it is running.
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch10-SECT2-AUTOID.1">AWT Performance and Lightweight Components</A></h3>
+
+<P CLASS=para>
+Java's developers initially decided to implement the standard AWT
+components with a "mostly native" Toolkit. As we described above, that
+means that most of the important 
+functionality of these classes is delegated to peer objects, which live in 
+the native operating system. Using native peers allows Java to 
+take on the look and feel of the local operating environment.
+Macintosh users see Mac applications, PC users see Windows' windows, 
+and Unix users can have their Motif motif; warm fuzzy feelings abound.
+Java's chameleon-like ability to blend into the native environment is 
+considered by many to be an integral part of platform independance.
+However, there are a few important downsides to this arrangement.
+
+<P CLASS=para>
+First, as we mentioned earlier, using native peer implementations
+makes it much more difficult (if not impossible) to subclass these
+components to specialize or modify 
+their behavior. Most of their behavior comes from the native peer, and
+therefore can't be overidden or extended easily.  As it turns out,
+this is not a terrible problem because of 
+the ease with which we can make our own components in Java; we will 
+give you an idea of how to start in <A HREF="ch11_01.htm">Chapter 11, <i>Using and Creating GUI Components</i></A>.  It is also
+true that a sophisticated new component, like an HTML viewer,
+would benefit little in deriving from a more primitive text viewing 
+component like <tt CLASS=literal>TextArea</tt>.
+
+<P CLASS=para>
+Next, porting the native code makes it much more difficult to bring
+Java to a new platform.
+For the user, this can only mean one thing: bugs.  Quite simply,
+while the Java language itself has been quite stable, the cross platform 
+behavior of the AWT has been an Achilles' heel.  Although the situation 
+is steadily improving, the lack of large, commercial quality Java 
+applications until relatively recently testifies to the difficulties involved.
+At this time, new development has been saturated with Java
+for well over a year (a decade in Net time) and very few real applications
+are with us.
+
+<P CLASS=para>
+Finally, we come to a somewhat counterintuitive problem with the use of 
+native peers.  In most current implementations of Java, the native 
+peers are quite "heavy" and consume a lot of resources.  You might expect that
+relying on native code would be much more efficient than creating the
+components in Java.  However, it can take a long time to 
+instantiate a large number of GUI elements when each requires the 
+creation of a native peer from the toolkit.  And in some cases you may find 
+that once they are created, they don't perform as well as the pure Java
+equivalents that you can create yourself.
+
+<P CLASS=para>
+An extreme example would be a spreadsheet that uses an AWT
+<tt CLASS=literal>TextField</tt> for
+each cell.  Creating hundreds of
+<tt CLASS=literal>TextFieldPeer</tt> objects would be 
+something between slow and impossible.  While simply saying "don't do
+that" might be a  
+valid answer, this begs the question: how do you create large
+applications with complex GUIs? Java would not be a very interesting
+environment if it was only limited to simple tasks. One solution,
+taken by development 
+environments like Sun's JavaWorkshop, is to use "wrapper" classes for
+the standard
+AWT components; the wrapper controls when peer objects are created.
+Another attack on the problem has been to create "lightweight"
+components that are written entirely in Java, and therefore don't
+require native code.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch10-SECT3-AUTOID.13">Using Lightweight Components and Containers</A></h4>
+
+<P CLASS=para>
+A "lightweight" component is simply a component that is implemented
+entirely in Java.  You implement all of its appearance by drawing in
+the <tt CLASS=literal>paint()</tt> and
+<tt CLASS=literal>update()</tt> methods; you implement its
+behavior by catching user events (usually at a low level) and possibly
+generating new events.  Lightweight components can be used to create
+new kinds of gadgets, in the same way you might use a
+<tt CLASS=literal>Canvas</tt> or a
+<tt CLASS=literal>Panel</tt>.  But they avoid some of the
+performance penalties inherent in the use of peers, and, perhaps more
+importantly, they provide more flexibility in their appearance.
+A lightweight component can have a transparent background, allowing its
+container to "show through" its own area.  It is also more reasonable
+to have another component or container overlap or draw into a lightweight 
+component's area.
+
+<P CLASS=para>
+You create a lightweight component by subclassing the
+<tt CLASS=literal>Component</tt> and
+<tt CLASS=literal>Container</tt> classes directly.
+That is, instead of writing:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class myCanvas extends Canvas { ... }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+you write:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class myCanvas extends Container { ... } // lightweight
+</PRE>
+</DIV>
+
+<P CLASS=para>
+That's often all you need to do to create a lightweight component.
+When the lightweight component is put into a container, it doesn't get a 
+native peer.  Instead, it gets a
+<tt CLASS=literal>LightweightPeer</tt> that serves as
+a place holder and identifies the component as lightweight 
+and in need of special help. 
+The container then takes over the responsibilities that 
+would otherwise be handled by a native peer:
+namely, low-level delivery of events and paint requests.  
+The container receives mouse movement events, key strokes, paint 
+requests, etc., for the lightweight component.  It then sorts out 
+the events that fall within the component's bounds and 
+dispatches them to it.  Similarly, it translates paint requests that overlap 
+the lightweight component's area and forwards them to it.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-10-FIG-7">Figure 10.7: Sending a paint() request to a component</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1007.gif" alt="[Graphic: Figure 10-7]" width=503 height=132 border=0>
+
+</DIV>
+
+<P CLASS=para>
+<A HREF="ch10_01.htm#EXJ-CH-10-FIG-7">Figure 10.7</A> shows a component receiving a
+<tt CLASS=literal>paint()</tt> request via its container.
+This makes it easy to see how a lightweight component can have a transparent
+background.  The component is actually drawing directly onto its
+container's graphics context. Conversely, anything that the container
+drew on its background is visible in the lightweight component. For an
+ordinary
+container, this will simply be the container's background color.  But you 
+can do much cooler things too.  (See the PictureButton example at the end
+of the next chapter.)  All of the normal rules still apply;  your 
+lightweight component's 
+<tt CLASS=literal>paint()</tt> method should render the
+component's entire image (assume that the container
+has obliterated it), but your <tt CLASS=literal>update()</tt>
+method can assume that whatever drawing it has done previously is
+still intact.
+
+<P CLASS=para>
+Just as you can create a lightweight component by subclassing
+<tt CLASS=literal>Component</tt>, you can create a lightweight
+container by subclassing <tt CLASS=literal>Container</tt>. A
+lightweight container can hold any components, including other
+lightweight components and containers. In this case, event handling
+and paint requests are managed by the first "regular" container in the
+container hierarchy. (There has to be one somewhere, if you think
+about it.) This brings us to the cardinal rule of subclassing containers,
+which is:
+
+<P CLASS=para>
+"Always call <tt CLASS=literal>super.paint()</tt> if you override
+a container's <tt CLASS=literal>paint()</tt> method."
+
+<P CLASS=para>
+If you don't, the container won't
+be able to manage lightweight components properly.
+
+<P CLASS=para>
+To summarize, lightweight components are very flexible, pure Java 
+components that are managed by their container and have 
+a transparent background by default.
+Lightweight components do not rely on native peers from the
+AWT toolkit to provide their implementations and so they can not readily 
+take on the look and feel of the local platform.  
+In a sense, a lightweight component is 
+just a convenient way to package an extension to a container's 
+painting and event handling methods.  But, again, all of this happens 
+automatically, behind the scenes; you can create 
+and use lightweight components as you would any other kind of component.  
+
+<P CLASS=para>
+We'll see examples of lightweight components and containers in the next
+chapter.
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Writing a Protocol Handler</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Applets</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

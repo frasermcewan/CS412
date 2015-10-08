@@ -1,0 +1,549 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 11] 11.7 ScrollPane and Scrollbars</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:01:14 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 11<br>Using and Creating GUI Components</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch11_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-11-SECT-8">11.7 ScrollPane and Scrollbars</A></h2>
+
+<P CLASS=para>
+<A NAME="CH10.SCROLL1"></A> <A NAME="CH10.SCROLL2"></A><A NAME="CH10.SCROLL3"></A>
+
+<P CLASS=para>
+One of the big advantages of Java 1.1 is the addition of a
+<tt CLASS=literal>ScrollPane</tt> container. Previously, unless
+you were working with a text component, you had to manage scrolling
+yourself. It wasn't terribly difficult, but it was a pain: you had to
+create <tt CLASS=literal>Scrollbar</tt> objects, attach them to
+whatever you were scrolling, 
+and redisplay everything with new positions whenever the user made an
+adjustment. <tt CLASS=literal>ScrollPane</tt> does it all for
+you. About the only time you absolutely need a
+<tt CLASS=literal>Scrollbar</tt> is when you want to create a
+"volume control-type" object. For example, you might want to create a
+paint mixer that blended different amounts of red, blue, and green,
+depending on some scrollbar settings. 
+
+<P CLASS=para>
+The unifying theme behind both <tt CLASS=literal>ScrollPane</tt>
+and <tt CLASS=literal>Scrollbar</tt> is the
+<tt CLASS=literal>Adjustable</tt>
+interface, which defines the responsibilities of scrollable objects.
+An object that implements <tt CLASS=literal>Adjustable</tt> lets
+you modify an integer value through some fixed range. When a user
+changes the value, the object generates an
+<tt CLASS=literal>AdjustmentEvent</tt>; as you might expect, to
+get an <tt CLASS=literal>AdjustmentEvent</tt>, you must implement
+<tt CLASS=literal>AdjustmentListener</tt> and register by calling
+<tt CLASS=literal>addAdjustmentListener()</tt>. Scrollbars
+implement <tt CLASS=literal>Adjustable</tt>, and a
+<tt CLASS=literal>ScrollPane</tt> can return
+<tt CLASS=literal>Adjustable</tt> objects for each of its
+scrollbars.[2]
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+There may be a bug in the
+<tt CLASS=literal>Adjustable</tt> objects you get from a
+<tt CLASS=literal>ScrollPane</tt>. Although you can read their
+settings, you can't change them; methods like
+<tt CLASS=literal>setMinimum()</tt> and
+<tt CLASS=literal>setMaximum()</tt> (which should set the
+object's minimum and maximum values) throw an
+<tt CLASS=literal>AWTError</tt>.
+</blockquote>
+<P CLASS=para>
+In this section, we'll demonstrate both the
+<tt CLASS=literal>ScrollPane</tt> and
+<tt CLASS=literal>Scrollbar</tt> classes. We'll start with a
+<tt CLASS=literal>ScrollPane</tt>.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch11-SECT2-AUTOID.4">Working With A ScrollPane</A></h3>
+
+<P CLASS=para>
+Technically, a <tt CLASS=literal>ScrollPane</tt> is a
+<tt CLASS=literal>Container</tt>, but it's a funny one. It has
+its own layout manager, which can't be changed. It can only accomodate
+one component at a time. This seems like a big limitation, but it
+isn't. If you want to put a lot of stuff in a
+<tt CLASS=literal>ScrollPane</tt>, just put your components into
+a <tt CLASS=literal>Panel</tt>, with whatever layout manager you
+like, and put that panel into the
+<tt CLASS=literal>ScrollPane</tt>.  
+
+<P CLASS=para>
+When you create a <tt CLASS=literal>ScrollPane</tt>, you can
+specify the conditions under which its srollbars will be displayed.
+This is called the scrollbar display policy; you can specify the
+policy by using one of the three constants below as an argument to the
+<tt CLASS=literal>ScrollPane</tt> constructor.
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>SCROLLBARS_AS_NEEDED</tt><br>
+<DD>
+
+<P CLASS=para>
+Only displays scrollbars if the object in the
+<tt CLASS=literal>ScrollPane</tt> doesn't fit.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SCROLLBARS_ALWAYS</tt><br>
+<DD>
+
+<P CLASS=para>
+Always displays scrollbars, regardless of the object's size.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>SCROLLBARS_NEVER</tt><br>
+<DD>
+
+<P CLASS=para>
+Never displays scrollbars, even if the object is too big. If you use
+this policy, you should provide some other way for the user to
+manipulate the <tt CLASS=literal>ScrollPane</tt>. </DL>
+<P CLASS=para>
+By default, the policy is
+<tt CLASS=literal>SCROLLBARS_AS_NEEDED</tt>. 
+
+<P CLASS=para>
+Here's an applet that uses a <tt CLASS=literal>ScrollPane</tt> to
+display a large image. As you'll see, the applet itself is very
+simple; all we do is get the image, set the applet's layout manager,
+create a <tt CLASS=literal>ScrollPane</tt>, put the image in our
+pane, and add the <tt CLASS=literal>ScrollPane</tt> to the
+applet. To make the program slightly cleaner, we create an
+<tt CLASS=literal>ImageComponent</tt> component to hold the image,
+rather than placing the image directly into the
+<tt CLASS=literal>ScrollPane</tt>. Here's the applet itself:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class ScrollPaneApplet extends java.applet.Applet { 
+    public void init() {
+        Image image = getImage( getClass().getResource(getParameter("image")) );
+        setLayout(  new BorderLayout() );
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.add( new ImageComponent(image) );
+        add( "Center", scrollPane );
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+And here's the <tt CLASS=literal>ImageComponent</tt>. It waits for
+the image to load, using a 
+<tt CLASS=literal>MediaTracker</tt>, and sets its size
+to the size of the image. It also provides a
+<tt CLASS=literal>paint()</tt> 
+method to draw the image. This takes a single call to
+<tt CLASS=literal>drawImage()</tt>. The first argument is the
+image itself; the next two are the coordinates of the image relative
+to the <tt CLASS=literal>ImageComponent</tt>; and the last is a
+reference to the <tt CLASS=literal>ImageComponent</tt> itself
+(<tt CLASS=literal>this</tt>), which serves as an image observer.
+(We'll discuss image observers in <A HREF="ch14_01.htm">Chapter 14, <i>Working With Images</i></A>; for the time being, take
+<tt CLASS=literal>this</tt> on faith.) 
+
+<P CLASS=para>
+We also supply an <tt CLASS=literal>update()</tt>
+method that calls <tt CLASS=literal>paint()</tt>.
+As we'll see later, the default version of
+<tt CLASS=literal>update()</tt> automatically clears the screen,
+which wastes time if we already know that our image will cover the
+entire screen. Therefore, we override
+<tt CLASS=literal>update()</tt> so that it doesn't bother
+clearing the screen first.
+
+<P CLASS=para>
+Finally, <tt CLASS=literal>ImageComponent</tt> provides a
+<tt CLASS=literal>getPreferredSize()</tt> method, overriding the
+method it inherits from <tt CLASS=literal>Component</tt>. This
+method simply returns the image's size, which is a
+<tt CLASS=literal>Dimension</tt> object. When you're using a
+<tt CLASS=literal>ScrollPane</tt>, it's important for the object
+you're scrolling to provide a reliable indication of its size,
+particularly if the object is a lightweight component. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+class ImageComponent extends Component {
+    Image image;
+    Dimension size;
+    ImageComponent ( Image image ) {
+        this.image = image;
+        MediaTracker mt = new MediaTracker(this);
+        mt.addImage( image, 0 );
+        try { mt.waitForAll(); } catch (InterruptedException e) { /* error */ };
+        size = new Dimension ( image.getWidth(null), image.getHeight(null) );
+        setSize( size );
+    }
+    public void update( Graphics g ) {
+        paint(g);
+    }
+    public void paint( Graphics g ) {
+        g.drawImage( image, 0, 0, this );
+    }
+    public Dimension getPreferredSize() {
+        return size;
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="ch11-SECT2-AUTOID.5">Using Scrollbars</A></h3>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Our next example is basically the same as the previous, except that it
+doesn't use the <tt CLASS=literal>ScrollPane</tt>; it implements
+its own scroller using scrollbars. With Java 1.1, you'd
+never write code like this, but it does show how much work the
+<tt CLASS=literal>ScrollPane</tt> saves, and also demonstrates
+how to use scrollbars in other situations. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-11-FIG-8">Figure 11.8: The ComponentScrollerApplet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je1108.gif" alt="[Graphic: Figure 11-8]" width=503 height=282 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Our applet is called
+<tt CLASS=literal>ComponentScrollerApplet</tt>; it uses a
+homegrown scroll pane called 
+<tt CLASS=literal>ComponentScroller</tt>. The component that we
+scroll is the <tt CLASS=literal>ImageComponent</tt> we developed in
+the previous example. 
+
+<P CLASS=para>
+Now let's dive into the code for
+<tt CLASS=literal>ComponentScrollerApplet</tt>:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class ComponentScrollerApplet extends java.applet.Applet { 
+    public void init() {
+        Image image = getImage( getClass().getResource(getParameter("image")) );
+        ImageComponent canvas = new ImageComponent( image );
+        setLayout(  new BorderLayout() );
+        add( "Center", new ComponentScroller(canvas) );
+    }
+}
+class ComponentScroller extends Container {
+    Scrollbar horizontal, vertical;
+    Panel scrollarea = new Panel();
+    Component component;
+    int orgX, orgY;
+    ComponentScroller( Component comp ) {
+        scrollarea.setLayout( null );  // We'll handle the layout
+        scrollarea.add( component = comp );
+        horizontal = new Scrollbar( Scrollbar.HORIZONTAL );
+        horizontal.setMaximum( component.getSize().width );
+        horizontal.addAdjustmentListener( new AdjustmentListener() {
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                component.setLocation( orgX = -e.getValue(), orgY ); 
+            } 
+        } );
+        vertical = new Scrollbar( Scrollbar.VERTICAL );
+        vertical.setMaximum( component.getSize().height);
+        vertical.addAdjustmentListener( new AdjustmentListener() {
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                component.setLocation( orgX, orgY = -e.getValue() ); 
+            } 
+        } );
+        setLayout( new BorderLayout() );
+        add( "Center", scrollarea );
+        add( "South", horizontal );
+        add( "East", vertical );
+    }
+    public void doLayout() {
+        super.doLayout();
+        horizontal.setVisibleAmount( scrollarea.getSize().width );
+        vertical.setVisibleAmount( scrollarea.getSize().height );
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+So, what do our new components do? Let's start at the top
+and work our way down. The applet itself
+is very simple; it does all of its work in
+<tt CLASS=literal>init()</tt>. First it sets its layout manager
+to <tt CLASS=literal>BorderLayout</tt>. Then it acquires an
+<tt CLASS=literal>Image</tt> object with a call to
+<tt CLASS=literal>getImage()</tt>. 
+Finally, the applet creates an <tt CLASS=literal>ImageComponent</tt>
+to hold our image, creates a
+<tt CLASS=literal>ComponentScroller</tt> to hold the
+<tt CLASS=literal>ImageComponent</tt>, and adds the scroller to the
+"Center" region of the layout. I chose 
+<tt CLASS=literal>BorderLayout</tt> because it resizes its
+central component to fill the entire area available.
+
+<P CLASS=para>
+Next comes the <tt CLASS=literal>ComponentScroller</tt> 
+itself. <tt CLASS=literal>ComponentScroller</tt> takes a
+reference to our <tt CLASS=literal>ImageComponent</tt> in its
+constructor. It adds the component it will be scrolling to a
+<tt CLASS=literal>Panel</tt> with no layout manager. It then
+creates horizontal and vertical
+<tt CLASS=literal>Scrollbar</tt> objects
+(<tt CLASS=literal>HORIZONTAL</tt> and
+<tt CLASS=literal>VERTICAL</tt> are constants of the
+<tt CLASS=literal>Scrollbar</tt> class, used to specify a
+scrollbar's direction), sets their maximum
+values using the height and width of the
+<tt CLASS=literal>Panel</tt>, and registers an
+<tt CLASS=literal>AdjustmentListener</tt> for each scrollbar. The
+<tt CLASS=literal>AdjustmentListener</tt> is an anonymous inner
+class that implements the
+<tt CLASS=literal>adjustmentValueChanged()</tt> method. This
+method is called whenever the user moves the scrollbar. It extracts
+the new scrollbar setting from an
+<tt CLASS=literal>AdjustmentEvent</tt> and uses this to move the
+component we're scrolling to its new location. We have a separate
+listener for each scrollbar, so we don't have to figure out which
+scrollbar generated the event. The listener for the horizontal
+scrollbar adjusts the component's x coordinate
+(<tt CLASS=literal>orgX</tt>) and leaves its y coordinate
+unchanged; likewise, the listener for the vertical scrollbar adjusts
+the component's y coordinate. By adjusting the location of the
+<tt CLASS=literal>ImageComponent</tt>, we control
+how much of the image is displayed; anything that falls outside of the
+scroller's <tt CLASS=literal>Panel</tt>
+(<tt CLASS=literal>scrollarea</tt>) isn't displayed. 
+<P CLASS=para>
+The <tt CLASS=literal>ComponentScroller</tt> overrides the
+<tt CLASS=literal>doLayout()</tt> method of the
+<tt CLASS=literal>Container</tt> class. This gives us an
+opportunity to change the size of the scrollbar "handles" whenever the
+scroller is resized. To do so, we call
+<tt CLASS=literal>super.doLayout()</tt> first, to make sure that
+the container gets arranged properly; although we're overriding this
+method, we need to make sure that it does its work. Then we call the
+<tt CLASS=literal>setVisibleAmount()</tt> method of each
+scrollbar with the new width and height of the scrolling area. 
+
+<P CLASS=para>
+So in review: we call <tt CLASS=literal>setMaximum()</tt> to set
+the vertical scrollbar's maximum value to the image's height; we call
+<tt CLASS=literal>setVisibleAmount()</tt> to tell the vertical
+scrollbar how much area we have available; and it sets the size of its
+"handle" accordingly. For example, if the image is 200 pixels high,
+and the visible amount is 100 pixels, the scrollbar sets its handle to
+be roughly half its length. We do similar things to the horizontal
+scrollbar. As a result, the handles grow or shrink as we change the
+size of the viewing area and indicate how much of the image is visible.
+
+<P CLASS=para>
+The <tt CLASS=literal>setMaximum()</tt> and
+<tt CLASS=literal>setVisibleAmount()</tt> are both part of the
+<tt CLASS=literal>Adjustable</tt> interface, which scrollbars
+implement. Other methods of this interface are: 
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getOrientation()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Tells you whether the scrollbar is HORIZONTAL or VERTICAL. There is no
+<tt CLASS=literal>setOrientation()</tt> method in the interface,
+but the <tt CLASS=literal>Scrollbar</tt> class does support
+<tt CLASS=literal>setOrientation()</tt>.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getVisibleAmount()</tt> and
+<tt CLASS=literal>setVisibleAmount()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lets you control the size of the scrollbar's handle (slider). As we
+saw above, this is a convenient way to give the user a feel for the
+size of the object you're scrolling.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getValue()</tt> and
+<tt CLASS=literal>setValue()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lets you retrieve or change the scrollbar's current setting.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getMinimum()</tt> and
+<tt CLASS=literal>setMinimum()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lets you control the scrollbar's minimum value. </TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getMaximum()</tt> and
+<tt CLASS=literal>setMaximum()</tt> </TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lets you control the scrollbar's maximum value.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getUnitIncrement()</tt> and
+<tt CLASS=literal>setUnitIncrement()</tt> </TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lets you control the amount the scrollbar will move if the user clicks
+on the scrollbar's arrows; in many environments, this means the user
+wants to move up or down one line.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getBlockIncrement()</tt> and
+<tt CLASS=literal>setBlockIncrement()</tt> </TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Lets you control the amount the scrollbar will move if the user clicks
+between an arrow and the slider; in many environments, this means the
+user wants to move up or down one page. </TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>addAdjustmentListener()</tt> and
+<tt CLASS=literal>removeAdjustmentListener()</tt> </TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Adds or removes listeners for the scrollbar's events.</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+It's worth asking why we put our image in a
+<tt CLASS=literal>Canvas</tt>, 
+which we then put into a <tt CLASS=literal>Panel</tt>, which we
+put into another <tt CLASS=literal>Panel</tt>, which we put into
+the applet. Surely there's a more efficient way. Yes there is, but we
+wanted to make as many reusable components as possible. With this
+design, you can use <tt CLASS=literal>ImageComponent</tt> wherever
+you need to display an image and check that it is loaded first; you
+can use <tt CLASS=literal>ComponentScroller</tt> wherever you
+need to scroll any kind of component, not just an image or a
+<tt CLASS=literal>Canvas</tt>. Making resuable components is one
+of the big advantages of object oriented design; it's something you
+should always keep in mind. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch11_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch11_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Checkboxes and CheckboxGroups</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Dialogs</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

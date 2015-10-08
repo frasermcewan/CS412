@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.4 A Simple Calculator</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:34:34 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Components</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-5-SECT-4">5.4 A Simple Calculator</A></h2>
+
+<P CLASS=para>
+It is always helpful to see complete and somewhat useful examples after learning 
+something new. <A HREF="ch05_04.htm#JAWT-CH-5-EX-2">Example 5.2</A> shows a working calculator that performs 
+floating point addition, subtraction, multiplication, and division. <A HREF="ch05_04.htm#JAWT-CH-5-FIG-4">Figure 5.4</A> shows the calculator in operation. The 
+button in the lower left corner is a decimal point. This applet uses a 
+number of classes that will be discussed later in the book (most notably, 
+some layout managers and a <tt CLASS=literal>Panel</tt>); 
+try to ignore them for now. Focus on the <tt CLASS=literal>action()</tt> 
+and <tt CLASS=literal>compute()</tt> methods; <tt CLASS=literal>action()</tt> 
+figures out which button was pressed, converting it to a digit (0-9 plus 
+the decimal point) or an operator (=, +, -, *, /). As you build a 
+number, it is displayed in the label <tt CLASS=literal>lab</tt>, 
+which conveniently serves to store the number in string form. The <tt CLASS=literal>compute()</tt> 
+method reads the label's text, converts it to a floating point number, 
+does the computation, and displays the result in the label. The <tt CLASS=literal>addButtons()</tt> 
+method is a helper method to create a group of <tt CLASS=literal>Button</tt> 
+objects at one time. 
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-5-EX-2">Example 5.2: Calculator Source Code</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+import java.applet.*;
+public class JavaCalc extends Applet {
+    Label lab;
+    boolean firstDigit = true;
+    float savedValue = 0.0f;     // Initial value
+    String operator = "=";  // Initial operator
+    public void addButtons (Panel p, String labels) {
+        int count = labels.length();
+        for (int i=0;i&lt;count;i++)
+            p.add (new Button (labels.substring(i,i+1)));
+    }
+    public void init () {
+        setLayout (new BorderLayout());
+        add ("North", lab = new Label ("0", Label.RIGHT));
+        Panel p = new Panel();
+        p.setLayout (new GridLayout (4, 4));
+        addButtons (p, "789/");
+        addButtons (p, "456*");
+        addButtons (p, "123-");
+        addButtons (p, ".0=+");
+        add ("Center", p);
+    }
+    public boolean action (Event e, Object o) {
+        if (e.target instanceof Button) {
+            String s = (String)o;
+            if ("0123456789.".indexOf (s) != -1) { // isDigit
+                if (firstDigit) {
+                    firstDigit = false;
+                    lab.setText (s);
+                } else {
+                    lab.setText (lab.getText() + s);
+                }
+            } else { // isOperator
+                if (!firstDigit) {
+                    compute (lab.getText());
+                    firstDigit = true;
+                }
+                operator = s;
+            }
+            return true;
+        }
+        return false;
+    }
+    public void compute (String s) {
+        float sValue = new Float (s).floatValue();
+        char c = operator.charAt (0);
+        switch (c) {
+            case '=':   savedValue  = sValue;
+                        break;
+            case '+':   savedValue += sValue;
+                        break;
+            case '-':   savedValue -= sValue;
+                        break;
+            case '*':   savedValue *= sValue;
+                        break;
+            case '/':   savedValue /= sValue;
+                        break;
+        }
+        lab.setText (String.valueOf(savedValue));
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-5-FIG-4">Figure 5.4: Calculator applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0504.gif" alt="[Graphic: Figure 5-4]" width=378 height=248 border=0>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Buttons</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Canvas</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

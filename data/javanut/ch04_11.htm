@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.11 Applet Changes</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:51:17 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>What's New in Java 1.1</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_12.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-4-SECT-11">4.11 Applet Changes</A></h2>
+
+<P CLASS=para>
+There are several new features in Java 1.1 that affect
+applets.  The first is the introduction of JAR files.  "JAR"
+stands for Java ARchive, and a JAR file is just that: an
+archive of files used by a Java applet.  An applet often
+requires multiple class files, as well as images, sounds,
+and other resources, to be loaded over the network.
+Prior to Java 1.1, each of these files was loaded through a
+separate HTTP request, which is fairly inefficient.  With
+Java 1.1, all (or many) of the files an applet needs can be
+combined into a single JAR file, which an applet viewer or
+Web browser can download with a single HTTP request.
+<A HREF="ch06_01.htm">Chapter 6, <i>Applets</i></A>, demonstrates the use of JAR files.
+
+<P CLASS=para>
+JAR files are stored in the ZIP file format.  A JAR archive
+can be created with the <I CLASS=emphasis>jar</I> tool shipped with the JDK.
+Once you have created a JAR file, you refer to it in a
+<tt CLASS=literal>&lt;APPLET&gt;</tt> tag with the <tt CLASS=literal>ARCHIVE</tt> attribute.
+This <tt CLASS=literal>ARCHIVE</tt> attribute may actually be set to a
+comma-separated list of archive files to be downloaded.
+Note that specifying an <tt CLASS=literal>ARCHIVE</tt> attribute simply
+tells the applet viewer or browser the name of a JAR file or
+files to load; it does not tell the browser the name of the
+applet that is to be run.  Thus, you still must specify the
+<tt CLASS=literal>CODE</tt> attribute (or the new <tt CLASS=literal>OBJECT</tt> attribute,
+as we'll see below).  For example, you might use an
+<tt CLASS=literal>&lt;APPLET&gt;</tt> tag like the following to tell the browser
+to download the <I CLASS=emphasis>animation.jar</I> file and start the
+applet contained in the file <I CLASS=emphasis>Animator.class</I>:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;APPLET CODE="Animator.class" ARCHIVE="animation.jar" WIDTH=500 HEIGHT=200&gt;
+&lt;/APPLET&gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+There is another advantage to the use of JAR files.  Every
+JAR file contains a "manifest" file, which you either
+specify explicitly when you create the archive, or which is
+created for you by the <I CLASS=emphasis>jar</I> tool.  The manifest is
+stored in a file named <tt CLASS=literal>META-INF/MANIFEST.MF</tt> and
+contains meta-information about the files in the archive.
+By default, the <I CLASS=emphasis>jar</I> tool creates a manifest file that
+contains MD5 and SHA message digests for
+each file in the archive.  This information can be used by
+the applet viewer or Web browser to verify that the files in
+the archive have not been corrupted since the JAR file was
+created.
+
+<P CLASS=para>
+The main reason to include message digests in the manifest
+file, however, is so that a JAR file can have digital
+signatures added to it.  An archive can be
+signed with the <I CLASS=emphasis>javakey</I> tool.  What a digital
+signature allows you to do is verify that the files in a JAR
+file have not been modified since the digital signature was
+added to the archive.  If you trust the person or entity who
+signed the file, then you ought to trust the applet
+contained in the JAR file.  (The <I CLASS=emphasis>javakey</I> tool allows
+you to specify whether or not you trust any given entity.)
+<A HREF="ch06_01.htm">Chapter 6, <i>Applets</i></A> also describes how you might use digital signatures
+and <I CLASS=emphasis>javakey</I>.
+
+<P CLASS=para>
+In JDK 1.1, the <I CLASS=emphasis>appletviewer</I> tool understands
+digitally signed JAR files. When it loads an applet
+that has been signed by a trusted entity, it runs that
+applet without subjecting it to the usual security
+restrictions--the applet can read and write files, and do
+anything that a standalone Java application can do.  Common
+Web browsers are likely to follow suit and give special
+privileges to trusted applets.  One refinement we may see in
+the future is the ability to specify varying levels of
+trust, and to assign different sets of privileges to applets
+at those varying trust levels.
+
+<P CLASS=para>
+Besides the introduction of JAR files and trusted applets,
+Java 1.1 also supports "serialized applets." In an
+<tt CLASS=literal>&lt;APPLET&gt;</tt> tag, you can specify the <tt CLASS=literal>OBJECT</tt>
+attribute instead of the <tt CLASS=literal>CODE</tt> attribute.  If you do
+this, the value of the <tt CLASS=literal>OBJECT</tt> attribute should be
+the name of a file that contains a serialized representation
+of the applet to be run.  Graphical application-builder
+tools may prefer to output applets as pre-initialized object
+trees, rather than generating custom Java code to perform
+the initializations. See <A HREF="ch09_01.htm">Chapter 9, <i>Object Serialization</i></A> for more information on
+serialized applets.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_12.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Enterprise APIs: JDBC, RMI, and Security</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>New JDK Utilities</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

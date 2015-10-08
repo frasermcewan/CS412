@@ -1,0 +1,268 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 14] System Properties</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:01:46 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 14</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JNUT2-CH-14">14. System Properties</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Standard System Properties<br>
+<A HREF="ch14_02.htm">Working with System Properties</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+Java programs cannot read environment variables the way that
+native programs can.  The reason is that environment
+variables are platform dependent. Similar mechanisms exist,
+however, that allow applications to read the
+value of a named resource.  These resource values allow
+customization of an application's behavior based
+on site-specific parameters, such as the type of host, or
+based on user preferences.<A NAME="CH14.SYSTEM.PROPE1"></A>
+
+<P CLASS=para>
+These named resource values are specified for applications
+in the "system properties" list.  Applications
+can read these "system
+properties" with the <tt CLASS=literal>System.getProperty()</tt> method, or
+can read the entire list of properties with
+<tt CLASS=literal>System.getProperties()</tt>.
+<tt CLASS=literal>System.getProperty()</tt> returns the property value as a
+string.  Applications can also read properties in parsed
+form using methods that are based on <tt CLASS=literal>System.getProperty()</tt>,
+such as <tt CLASS=literal>Font.getFont()</tt>, <tt CLASS=literal>Color.getColor()</tt>,
+<tt CLASS=literal>Integer.getInteger()</tt>, and
+<tt CLASS=literal>Boolean.getBoolean()</tt>.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-14-SECT-1">14.1 Standard System Properties</A></h2>
+
+<P CLASS=para>
+When the Java interpreter starts, it inserts a number of standard
+properties into the system properties list.  These
+properties, and the meaning of their values, are listed in
+<A HREF="ch14_01.htm#JNUT2-CH-14-TAB-1">Table 14.1</A>.
+The table also specifies whether untrusted applets are
+allowed (at least by default) to read the value of these
+properties.  For reasons of security, untrusted code is only
+allowed to read the values of properties to which it has
+explicitly been granted access.  (Untrusted applets are not
+allowed to set the value of system properties, nor are they
+allowed to call <tt CLASS=literal>System.getProperties()</tt> to obtain the
+entire list of properties.) 
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-14-TAB-1">Table 14.1: Standard System Properties</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Name</TH>
+<TH ALIGN="left">Value</TH>
+<TH ALIGN="left">Applet Access</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.version</TD>
+<TD ALIGN="left">Version of the Java interpreter</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.vendor</TD>
+<TD ALIGN="left">Vendor-specific identifier string</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.vendor.url</TD>
+<TD ALIGN="left">Vendor's URL</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.class.version</TD>
+<TD ALIGN="left">The version of the Java API</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.class.path</TD>
+<TD ALIGN="left">The classpath value</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.home</TD>
+<TD ALIGN="left">The directory Java is installed in</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.compiler</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+The JIT compiler to use, if any (Java 1.1)</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">os.name</TD>
+<TD ALIGN="left">The name of the operating system</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">os.arch</TD>
+<TD ALIGN="left">The host hardware architecture</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">os.version</TD>
+<TD ALIGN="left">Version of the host operating system</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">file.separator</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Platform-dependent file separator
+(e.g., <tt CLASS=literal>/</tt> or <tt CLASS=literal>#</tt>)</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">path.separator</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Platform-dependent path separator
+(e.g., <tt CLASS=literal>:</tt> or <tt CLASS=literal>;</tt>)</TD>
+<TD ALIGN="left">yes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">line.separator</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Platform-dependent line separator
+(e.g., <tt CLASS=literal>#n</tt> or <tt CLASS=literal>#r#n</tt>)</TD>
+<TD ALIGN="left">yes </TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">user.name</TD>
+<TD ALIGN="left">The username of the current user</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">user.home</TD>
+<TD ALIGN="left">The home directory of the current user</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">user.dir</TD>
+<TD ALIGN="left">The current working directory</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">user.language</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+The 2-letter language code of the default locale (Java 1.1)</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">user.region</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+The 2-letter country code of the default locale (Java 1.1)</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">user.timezone</TD>
+<TD ALIGN="left">The default time zone (Java 1.1)</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">file.encoding</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+The character encoding for the default locale (Java 1.1)</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">file.encoding.pkg</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+The package that contains converters between local
+encodings and Unicode (Java 1.1)</TD>
+<TD ALIGN="left">no</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch13_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Java Documentation Comment Syntax</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Working with System Properties</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 18] 18.53 java.awt.ScrollPane (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:10:54 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_52.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 18<br>The java.awt Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_54.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-53">18.53 java.awt.ScrollPane (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-53.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This <tt CLASS=literal>Container</tt> class creates horizontal and
+vertical scrollbars surrounding a "viewport" and allows a
+single child component to be displayed and scrolled within
+this viewport.  Typically the child of the
+<tt CLASS=literal>ScrollPane</tt> is larger than the
+<tt CLASS=literal>ScrollPane</tt> itself, so scrollbars allow the user to
+select the currently visible portion.
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>ScrollPane()</tt> constructor, you may
+optionally specify a scrollbar display policy, which should
+be one of the three constants defined by this class.  If you
+do not specify a policy, <tt CLASS=literal>ScrollPane</tt> uses the
+<tt CLASS=literal>SCROLLBARS_AS_NEEDED</tt> policy.
+
+<P CLASS=para>
+A program can programmatically scroll the child within the
+viewport by calling <tt CLASS=literal>setScrollPosition()</tt>.
+<tt CLASS=literal>getHAdjustable()</tt> and <tt CLASS=literal>getVAdjustable()</tt> return
+the horizontal and vertical <tt CLASS=literal>Adjustable</tt> objects that
+control scrolling (typically these are not actually
+instances of <tt CLASS=literal>Scrollbar</tt>).  You can use these
+<tt CLASS=literal>Adjustable</tt> objects to specify the unit and block
+increment values for the scrollbars. You can also
+directly set the <tt CLASS=literal>Adjustable</tt> value, as an alternative
+to <tt CLASS=literal>setScrollPosition()</tt>, but should not set other
+values of the <tt CLASS=literal>Adjustable</tt> objects.
+
+<P CLASS=para>
+Use <tt CLASS=literal>setSize()</tt> to set the size of the
+<tt CLASS=literal>ScrollPane</tt> container.  You may want to take the size
+of the scrollbars into account when computing the overall
+container size--use <tt CLASS=literal>getHScrollbarHeight()</tt> and
+<tt CLASS=literal>getVScrollbarWidth()</tt> to obtain these values.
+
+<P CLASS=para>
+<tt CLASS=literal>ScrollPane</tt> overrides the <tt CLASS=literal>printComponents()</tt>
+method of <tt CLASS=literal>Container</tt> so that when a
+<tt CLASS=literal>ScrollPane</tt> is printed, the entire child component is
+printed, rather than only the currently visible portion.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>ScrollPane</tt> extends Container {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>ScrollPane</tt>();
+            public <tt CLASS=literal>ScrollPane</tt>(int <tt CLASS=literal>scrollbarDisplayPolicy</tt>);
+    // <tt CLASS=literal>Constants</tt>
+            public static final int <tt CLASS=literal>SCROLLBARS_ALWAYS</tt>;
+            public static final int <tt CLASS=literal>SCROLLBARS_AS_NEEDED</tt>;
+            public static final int <tt CLASS=literal>SCROLLBARS_NEVER</tt>;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public void <tt CLASS=literal>addNotify</tt>();  //<tt CLASS=literal> Overrides Container</tt>
+            public void <tt CLASS=literal>doLayout</tt>();  //<tt CLASS=literal> Overrides Container</tt>
+            public Adjustable <tt CLASS=literal>getHAdjustable</tt>();
+            public int <tt CLASS=literal>getHScrollbarHeight</tt>();
+            public Point <tt CLASS=literal>getScrollPosition</tt>();
+            public int <tt CLASS=literal>getScrollbarDisplayPolicy</tt>();
+            public Adjustable <tt CLASS=literal>getVAdjustable</tt>();
+            public int <tt CLASS=literal>getVScrollbarWidth</tt>();
+            public Dimension <tt CLASS=literal>getViewportSize</tt>();
+        #   public void <tt CLASS=literal>layout</tt>();  //<tt CLASS=literal> Overrides Container</tt>
+            public String <tt CLASS=literal>paramString</tt>();  //<tt CLASS=literal> Overrides Container</tt>
+            public void <tt CLASS=literal>printComponents</tt>(Graphics <tt CLASS=literal>g</tt>);  //<tt CLASS=literal> Overrides Container</tt>
+            public final void <tt CLASS=literal>setLayout</tt>(LayoutManager <tt CLASS=literal>mgr</tt>);  //<tt CLASS=literal> Overrides Container</tt>
+            public void <tt CLASS=literal>setScrollPosition</tt>(int <tt CLASS=literal>x</tt>, int <tt CLASS=literal>y</tt>);
+            public void <tt CLASS=literal>setScrollPosition</tt>(Point <tt CLASS=literal>p</tt>);
+    // <tt CLASS=literal>Protected Instance Methods</tt>
+            protected final void <tt CLASS=literal>addImpl</tt>(Component <tt CLASS=literal>comp</tt>, Object <tt CLASS=literal>constraints</tt>, int <tt CLASS=literal>index</tt>);  //<tt CLASS=literal> Overrides Container</tt>
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-53.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Object->Component(ImageObserver, MenuContainer, Serializable)->Container->ScrollPane</tt>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-53.3">Passed To:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Toolkit.createScrollPane()</tt>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_52.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_54.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.awt.Rectangle (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.awt.Scrollbar (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 14] 14.2 Working with Audio</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 19:04:06 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 14<br>Working With Images</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="gloss_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-14-SECT-2">14.2 Working with Audio</A></h2>
+
+<P CLASS=para>
+<A NAME="CH11.SOUND1"></A><A NAME="CH11.SOUND2"></A><A NAME="CH11.SOUND3"></A>So you've read all the material on drawing and image processing,
+and you're wondering what in the world audio has to do with
+images. Well, not much actually, except that true multimedia
+presentations often combine image techniques such as animation with
+sound. So we're going to spend a few minutes here talking about
+audio, for lack of a better place to discuss it.
+
+<P CLASS=para>
+As we write this, the good people at Sun are hard at work
+developing the API that Java applets will use for playing audio. A
+future release of Java will undoubtedly have support for real-time and
+continuous audio streams, sound management, mixing, synchronization,
+and filtering. Unfortunately, at the moment, we can tell you
+only about the basics.
+
+<P CLASS=para>
+<tt CLASS=literal>java.applet.AudioClip</tt> defines an interface
+for objects that can play sound. An object that implements
+<tt CLASS=literal>AudioClip</tt> can be told to <tt CLASS=literal>play()</tt>
+its sound data, <tt CLASS=literal>stop()</tt> playing the sound, or
+<tt CLASS=literal>loop()</tt> continually.
+
+<P CLASS=para>
+An applet can call its <tt CLASS=literal>getAudioClip()</tt> method
+to retrieve sounds over the network. This method takes an absolute or
+relative URL to specify where the audio file is
+located. The viewer may take the sound from a cache or retrieve it
+over the network. The following applet,
+<tt CLASS=literal>NoisyButton</tt>, gives a simple example:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+import java.awt.*;
+import java.awt.event.*;
+public class NoisyButton extends java.applet.Applet implements ActionListener { 
+    java.applet.AudioClip sound;
+    public void init() {
+        sound = getAudioClip( getClass().getResource(getParameter("sound")) );
+        Button button = new Button("Play Sound");
+        button.addActionListener( this );
+        add ( button );
+    }
+    public void actionPerformed( ActionEvent e ) {
+        if ( sound != null )
+            sound.play();
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+    *** Update description... 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>NoisyButton</tt> retrieves an
+<tt CLASS=literal>AudioClip</tt> from the server; we use
+<tt CLASS=literal>getCodeBase()</tt> to find out where the applet lives
+and <tt CLASS=literal>getParameter()</tt> to find the name of the audio
+file. (The applet tag that displays <tt CLASS=literal>NoisyButton</tt>
+must include a parameter tag for <tt CLASS=literal>sound</tt>.)
+Unfortunately, this is about the extent of what we can do with sound
+right now. If you want to experiment, there are a few additional
+methods in the <tt CLASS=literal>sun.audio</tt> classes. 
+Stay tuned for a bigger and better audio API as part of
+the upcoming Java Media package.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="gloss_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Image Processing</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Glossary</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

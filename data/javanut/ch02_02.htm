@@ -1,0 +1,525 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.2 The Name Space: Packages, Classes, and Members</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:47:36 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>How Java Differs from C</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2">2.2 The Name Space: Packages, Classes, and Members</A></h2>
+
+<P CLASS=para>
+As a language that is designed to support dynamic loading of
+modules over the entire Internet, Java takes special care to avoid
+name space conflicts.  Global variables are simply not part
+of the language.  Neither are "global" functions or
+procedures, for that matter.  
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.1">No Global Variables</A></h3>
+
+<P CLASS=para>
+In Java, every field and method is declared within a class
+and forms part of that class.  Also, every class is part of
+a <I CLASS=emphasis>package</I> (in Java 1.1, classes can also be declared
+within other classes).  The fields and methods (and classes in 1.1) of
+a class are known as the <I CLASS=emphasis>members</I> of a class.  Every
+Java field or method may be referred to by its fully
+qualified name, which consists of the package name, the
+class name, and the member name (i.e., the field or the
+method name), all separated by periods.
+Package names are themselves usually composed of
+multiple period-separated components.  Thus, the fully
+qualified name for a method might be:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+david.games.tetris.SoundEffects.play()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.2">Java Filenames and Directory Structure</A></h3>
+
+<P CLASS=para>
+A file of Java source code has the extension <I CLASS=emphasis>.java</I>.
+It consists of an optional <tt CLASS=literal>package</tt> statement
+followed by any number of <tt CLASS=literal>import</tt> statements followed
+by one or more class or interface definitions.  (The
+<tt CLASS=literal>package</tt> and <tt CLASS=literal>import</tt> statements will be
+introduced shortly.)  If more than one class or interface is
+defined in a Java source file, only one of them may be
+declared <tt CLASS=literal>public</tt> (i.e., made available outside of the
+package), and the source file must have the same name as
+that public class or interface, plus the <I CLASS=emphasis>.java</I>
+extension.
+
+<P CLASS=para>
+Each class or interface definition in a <I CLASS=emphasis>.java</I> file is
+compiled into a separate file.  These files of compiled Java
+byte-codes are known as "class files," and must have the same
+name as the class or interface they define, with the
+extension <I CLASS=emphasis>.class</I> appended.  For example, the class
+<tt CLASS=literal>SoundEffects</tt> would be stored in the file
+<I CLASS=emphasis>SoundEffects.class</I>.
+
+<P CLASS=para>
+Class files are stored in a directory that has the same
+components as the package name. If the fully
+qualified name of a class is
+<tt CLASS=literal>david.games.tetris.SoundEffects</tt>, for example,
+the full path of the class file must be
+<I CLASS=emphasis>david/games/tetris/SoundEffects.class</I>. This filename
+is interpreted relative to the Java "class path," described
+below.
+[2]
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+We'll use UNIX-style directory specifications in this book.
+If you are a Windows programmer, simply change all the
+forward slashes in filenames to backward slashes.
+Similarly, in path specifications, change colons to
+semicolons.
+</blockquote>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.3">Packages of the Java API</A></h3>
+
+<P CLASS=para>
+The Java 1.1 API consists of the classes and
+interfaces defined in the 
+twenty-three packages listed in
+<A HREF="ch02_02.htm#JNUT2-CH-2-TAB-1">Table 2.1</A>.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JNUT2-CH-2-TAB-1">Table 2.1: The Packages of the Java API</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Package name</TH>
+<TH ALIGN="left">Contents</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.applet</TD>
+<TD ALIGN="left">Applet classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.awt</TD>
+<TD ALIGN="left">Graphics, window, and GUI classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.awt.datatransfer</TD>
+<TD ALIGN="left">Data transfer (e.g., cut-and-paste) classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.awt.event</TD>
+<TD ALIGN="left">Event processing classes and interfaces</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.awt.image</TD>
+<TD ALIGN="left">Image processing classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.awt.peer</TD>
+<TD ALIGN="left">GUI interfaces for platform independence</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.beans</TD>
+<TD ALIGN="left">JavaBeans component model API</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.io</TD>
+<TD ALIGN="left">Various types of input and output classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.lang</TD>
+<TD ALIGN="left">Core language classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.lang.reflect</TD>
+<TD ALIGN="left">Reflection API classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.math</TD>
+<TD ALIGN="left">Arbitrary precision arithmetic</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.net</TD>
+<TD ALIGN="left">Networking classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.rmi</TD>
+<TD ALIGN="left">Remote Method Invocation classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.rmi.dgc</TD>
+<TD ALIGN="left">RMI-related classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.rmi.registry</TD>
+<TD ALIGN="left">RMI-related classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.rmi.server</TD>
+<TD ALIGN="left">RMI-related classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.security</TD>
+<TD ALIGN="left">Security classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.security.acl</TD>
+<TD ALIGN="left">Security-related classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.security.interfaces</TD>
+<TD ALIGN="left">Security-related classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.sql</TD>
+<TD ALIGN="left">JDBC SQL API for database access</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.text</TD>
+<TD ALIGN="left">Internationalization classes</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.util</TD>
+<TD ALIGN="left">Various useful data types</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">java.util.zip</TD>
+<TD ALIGN="left">Compression and decompression classes</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.4">The Java Class Path</A></h3>
+
+<P CLASS=para>
+The Java interpreter knows where its standard system classes
+are installed, and loads them from that location as needed.
+By default, it looks up user-defined classes in or relative
+to the current directory.  You can set the <tt CLASS=literal>CLASSPATH</tt>
+environment variable to tell the interpreter where to look
+for user-defined classes.  The interpreter always appends
+the location of its system classes to the end of the path
+specified by this environment variable.  The entries in a
+class path specification should be directories or ZIP files
+that contain the classes.  The directories in a class path
+specification should be colon-separated on a UNIX system,
+and semicolon-separated on a Windows system.  For example,
+on a UNIX system, you might use:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+setenv CLASSPATH .:/home/david/classes:/usr/local/javatools/classes.zip
+</PRE>
+</DIV>
+
+<P CLASS=para>
+On a Windows system you could use:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+setenv CLASSPATH .;C:\david\classes;D:\local\javatools\classes.zip
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This tells Java to search in and beneath the specified
+directories for non-system classes.  Note that the current
+directory (<tt CLASS=literal>.</tt>) is included in these paths.
+
+<P CLASS=para>
+You can also specify a class path to the Java interpreter
+with the <tt CLASS=literal>-classpath</tt> command-line argument.  Setting
+this option overides any path specified in the
+<tt CLASS=literal>CLASSPATH</tt> environment variable.  Note that the
+interpreter does not append the location of the system
+classes to the end of this path, so you must be sure to
+specify those system classes yourself.  Finally, note that
+the Java compiler also recognizes and honors class paths
+specified with the <tt CLASS=literal>CLASSPATH</tt> environment variable
+and the <tt CLASS=literal>-classpath</tt> command-line argument.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.5">Globally Unique Package Names</A></h3>
+
+<P CLASS=para>
+The Java designers have proposed an
+Internet-wide unique package naming scheme that is based on
+the Internet domain name of the organization at which the package is
+developed.
+
+<P CLASS=para>
+<A HREF="ch02_02.htm#JNUT2-CH-2-FIG-1">Figure 2.1</A> 
+shows some fully qualified names, which include package,
+class, and field components.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JNUT2-CH-2-FIG-1">Figure 2.1: Fully qualified names in Java</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jn2_0201.gif" alt="[Graphic: Figure 2-1]" width=475 height=253 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Some organizations are following this naming scheme, and
+producing classes with names like
+<tt CLASS=literal>com.sybase.jdbc.SybDriver</tt>.  Another trend that is
+developing, however, is for companies to simply use their
+company name as the first component of their package names,
+and produce classes like
+<tt CLASS=literal>netscape.javascript.JSObject</tt>. 
+
+<P CLASS=para>
+The top-level package names <tt CLASS=literal>java</tt> and <tt CLASS=literal>sun</tt> are
+reserved for use by Sun, of course.  Developers should not
+define new classes within these packages.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.6">The package Statement</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>package</tt> statement must appear as the first
+statement (i.e., the first text other than comments and
+whitespace) in a file of Java source code, if it appears at all. 
+It specifies which package the code in the file is
+part of.  Java code that is part of a particular package has
+access to all classes (<tt CLASS=literal>public</tt> and
+non-<tt CLASS=literal>public</tt>) in the package, and to all
+non-<tt CLASS=literal>private</tt> methods and fields in all those classes.
+When Java code is part of a named package, the compiled
+class file must be placed at the appropriate position in the
+<tt CLASS=literal>CLASSPATH</tt> directory
+hierarchy before it can be accessed by
+the Java interpreter or other utilities.
+
+<P CLASS=para>
+If the <tt CLASS=literal>package</tt> statement is omitted from a file, the
+code in that file is part of an unnamed default package.
+This is convenient for small test programs, or during
+development, because it means that the code can be
+interpreted from the current directory.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.7">The import Statement</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>import</tt> statement makes Java classes available to
+the current class under an abbreviated name.  Public Java
+classes are always available by their fully qualified names,
+assuming that the appropriate class file can be found (and
+is readable) relative to the <tt CLASS=literal>CLASSPATH</tt> environment
+variable.  <tt CLASS=literal>import</tt> doesn't actually make the class
+available or "read it in"; it simply saves you typing and makes
+your code more legible.
+
+<P CLASS=para>
+Any number of <tt CLASS=literal>import</tt> statements may appear in a Java
+program.  They must appear, however, after the optional
+<tt CLASS=literal>package</tt> statement at the top of the file, and before
+the first class or interface definition in the file.
+
+<P CLASS=para>
+There are two forms of the <tt CLASS=literal>import</tt> statement:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+import <I CLASS=emphasis>package</I>.<I CLASS=emphasis>class</I> ;
+import <I CLASS=emphasis>package</I>.* ;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first form allows the specified class in the specified
+package to be known by its class name alone.  Thus, this
+<tt CLASS=literal>import</tt> statement allows you to type
+<tt CLASS=literal>Hashtable</tt> instead of <tt CLASS=literal>java.util.Hashtable</tt>:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.util.Hashtable;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The second form of the <tt CLASS=literal>import</tt> statement makes all
+classes in a package available by their class name.  For
+example, the following <tt CLASS=literal>import</tt> statement is implicit
+(you need not specify it yourself) in every Java program:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.lang.*;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+It makes the core classes of the language available by their
+unqualified class names.  If two packages imported with this
+form of the statement contain classes with the same name,
+it is an error to use either of those ambiguous classes
+without using its fully qualified name.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.8">Access to Packages, Classes, and Class Members</A></h3>
+
+<P CLASS=para>
+Java has the following rules about access to packages,
+classes, and class members. (Class members are the
+variables, methods, and, in Java 1.1, nested classes defined
+within a class).  Note that the <tt CLASS=literal>public</tt>,
+<tt CLASS=literal>private</tt>, and <tt CLASS=literal>protected</tt> keywords used in
+these rules will be explained in more detail in the next
+chapter.
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>A package is accessible if the appropriate files and
+directories are accessible (e.g., if local files have
+appropriate read permissions, or if they can be downloaded
+via the network).
+
+<P>
+<li CLASS=listitem>All classes and interfaces in a package are accessible to
+all other classes and interfaces in the same package.  It is
+not possible to define classes in Java that are
+visible only within a single file of source code.
+
+<P>
+<li CLASS=listitem>A class declared <tt CLASS=literal>public</tt> in one package is accessible
+within another package, assuming that the package itself is
+accessible.  A non-<tt CLASS=literal>public</tt> class is not accessible
+outside of its package.
+
+<P>
+<li CLASS=listitem>Members of a class are accessible from a different class
+within the same package, as long as they are not declared
+<tt CLASS=literal>private</tt>.  <tt CLASS=literal>private</tt> members are accessible
+only within their own class.
+
+<P>
+<li CLASS=listitem>Af member of a class <tt CLASS=literal>A</tt> is accessible from a class
+<tt CLASS=literal>B</tt> in a different package if <tt CLASS=literal>A</tt> is
+<tt CLASS=literal>public</tt> and the member is <tt CLASS=literal>public</tt>, or if
+<tt CLASS=literal>A</tt> is <tt CLASS=literal>public</tt>, the member is
+<tt CLASS=literal>protected</tt>, and <tt CLASS=literal>B</tt> is a subclass of <tt CLASS=literal>A</tt>.
+
+<P>
+<li CLASS=listitem>All members of a class are always accessible from within
+that class.
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-2.9">Local Variables</A></h3>
+
+<P CLASS=para>
+The name space rules we've been describing apply to
+packages, classes, and the members within classes.  Java
+also supports local variables, declared within method
+definitions.  These local variables behave just like local
+variables in C--they do not have globally unique
+hierarchical names, nor do they have access modifiers like
+<tt CLASS=literal>public</tt> and <tt CLASS=literal>private</tt>.  Local variables are
+quite different from class fields.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Program Structure and Environment</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Comments</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,1254 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 17] Vector</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:44:42 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_25.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 17<br>The java.util Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Vector</H1>
+
+<H2>Name</H2>
+
+Vector
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.182">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.Vector</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.Stack</tt>
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.io.Serializable</tt>, 
+<tt CLASS=literal>java.lang.Cloneable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+JDK 1.0 or later </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.183">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>Vector</tt> class implements 
+a variable-length array that can hold any kind of object. Like an array, 
+the elements in a <tt CLASS=literal>Vector</tt> are accessed with an integer index. However, unlike 
+an array, the size of a <tt CLASS=literal>Vector</tt> 
+can grow and shrink as needed to accommodate a changing number of objects. 
+<tt CLASS=literal>Vector</tt> provides methods to 
+add and remove elements, as well as ways to search for objects in a <tt CLASS=literal>Vector</tt> 
+and iterate through all of the objects. 
+
+<P CLASS=para>
+The initial capacity of a <tt CLASS=literal>Vector</tt> 
+specifies how many objects it can contain before more space must be allocated. 
+The capacity increment specifies how much more space is allocated each 
+time the <tt CLASS=literal>Vector</tt> needs to increase 
+its capacity. You can fine-tune the performance of a <tt CLASS=literal>Vector</tt> 
+by adjusting the initial capacity and capacity increment. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.184">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.util.Vector extends java.lang.Object
+             implements java.io.Serializable, java.lang.Cloneable {
+  // Variables
+  protected int capacityIncrement;
+  protected int elementCount;
+  protected Object[] elementData;
+  // Constructors
+  public Vector();
+  public Vector(int initialCapacity);
+  public Vector(int initialCapacity, int capacityIncrement);
+  // Instance Methods
+  public final synchronized void addElement(Object obj);
+  public final int capacity();
+  public synchronized Object clone();
+  public final boolean contains(Object elem);
+  public final synchronized void copyInto(Object[] anArray);
+  public final synchronized Object elementAt(int index);
+  public final synchronized Enumeration elements();
+  public final synchronized void ensureCapacity(int minCapacity);
+  public final synchronized Object firstElement();
+  public final int indexOf(Object elem);
+  public final synchronized int indexOf(Object elem, int index);
+  public final synchronized void insertElementAt(Object obj, int index);
+  public final boolean isEmpty();
+  public final synchronized Object lastElement();
+  public final int lastIndexOf(Object elem);
+  public final synchronized int lastIndexOf(Object elem, int index);
+  public final synchronized void removeAllElements();
+  public final synchronized boolean removeElement(Object obj);
+  public final synchronized void removeElementAt(int index);
+  public final synchronized void setElementAt(Object obj, int index);
+  public final synchronized void setSize(int newSize);
+  public final int size();
+  public final synchronized String toString();
+  public final synchronized void trimToSize();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.185">Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.282">capacityIncrement</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.322">protected int capacityIncrement</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The amount by which the internal array grows when more space is 
+needed. If the value is 0, the internal array doubles 
+in size when more space is needed. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.283">elementCount</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.323">protected int elementCount</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The count of how many objects are contained in 
+this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.284">elementData</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.324">protected Object[] elementData</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+The array that holds the contents of this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.186">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.285">Vector</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.325">public Vector()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>Vector</tt> 
+with the default capacity of 10 and the default capacity increment of 0. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.326">public Vector(int initialCapacity)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>initialCapacity</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial capacity of the <tt CLASS=literal>Vector</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>Vector</tt> 
+with the given capacity and the default capacity increment of 0. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.327">public Vector(int initialCapacity, int capacityIncrement)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>initialCapacity</tt><br>
+<DD>
+
+<P CLASS=para>
+The initial capacity of the <tt CLASS=literal>Vector</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>CapacityIncrement</tt><br>
+<DD>
+
+<P CLASS=para>
+The amount to increase the capacity when more space is needed. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an empty <tt CLASS=literal>Vector</tt> 
+with the given capacity and capacity increment. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.187">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.286">addElement</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.328">public final synchronized void addElement(Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be added. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method adds the given object to this <tt CLASS=literal>Vector</tt> 
+as its last element
+and increases its size by 1. The capacity of the <tt CLASS=literal>Vector</tt> 
+is increased if its size becomes greater than its capacity. Any kind of 
+object can be added to a <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.287">capacity</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.329">public final int capacity()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>The capacity of this Vector</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the size of the internal array of this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.288">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.330">public synchronized Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this <tt CLASS=literal>Vector</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>Vector</tt> 
+and returns it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.289">contains</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.331">public final boolean contains(Object elem)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>elem</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be found. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the given object is 
+contained in this <tt CLASS=literal>Vector</tt>; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method determines whether or not the given object is contained in 
+this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.290">copyInto</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.332">public final synchronized void copyInto(Object[] anArray)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>anArray</tt><br>
+<DD>
+
+<P CLASS=para>
+The array to be 
+filled. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArrayIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the given array is too small to hold all of the objects in this <tt CLASS=literal>Vector</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method copies the object references in this <tt CLASS=literal>Vector</tt> 
+to the given array. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.291">elementAt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.333">public final synchronized Object elementAt(int index)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the 
+object to be returned. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The object at the position given by <tt CLASS=literal>index</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArrayIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>index</tt> is less than zero 
+or greater than the size of this <tt CLASS=literal>Vector</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the object at the given index in this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.292">elements</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.334">public final synchronized Enumeration elements()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The objects in this <tt CLASS=literal>Vector</tt> 
+as an <tt CLASS=literal>Enumeration</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns an <tt CLASS=literal>Enumeration</tt> 
+that iterates through the objects in this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.293">ensureCapacity</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.335">public final synchronized void ensureCapacity(int minCapacity)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>minCapacity</tt><br>
+<DD>
+
+<P CLASS=para>
+The minimum 
+new capacity. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method expands the internal array, if necessary, to make the capacity 
+of the <tt CLASS=literal>Vector</tt> at least <tt CLASS=literal>minCapacity</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.294">firstElement</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.336">public final synchronized Object firstElement()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The first object in this Vector. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchElementException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>Vector</tt> is empty. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the object at index 0 in this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.295">indexOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.337">public final int indexOf(Object elem)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>elem</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be found. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the given object or <tt CLASS=literal>-1</tt> if it cannot be found. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the first occurrence of the given object 
+in this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.338">public final int indexOf(Object elem, int index)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>elem</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be found.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+The starting index. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the next occurrence of the given object after the specified 
+index or <tt CLASS=literal>-1</tt> if it cannot be found. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the next occurrence of the given object 
+in this <tt CLASS=literal>Vector</tt> after the given 
+index. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.296">insertElementAt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.339">public final synchronized void insertElementAt(Object obj, int index)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be inserted.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+The index at which 
+to insert the object. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArrayIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>index</tt> is less than zero 
+or greater than the size of this <tt CLASS=literal>Vector</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method inserts the given object at the given index in this <tt CLASS=literal>Vector</tt>. 
+Each object in the <tt CLASS=literal>Vector</tt> with 
+an index greater than or equal to <tt CLASS=literal>index</tt> 
+is shifted upward in the <tt CLASS=literal>Vector</tt>, 
+so that it has an index of one greater than it did previously. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.297">isEmpty</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.340">public final boolean isEmpty()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if there are no objects 
+in the <tt CLASS=literal>Vector</tt>; <tt CLASS=literal>false</tt> 
+otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>boolean</tt> 
+value that indicates whether or not the <tt CLASS=literal>Vector</tt> 
+is empty. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.298">lastElement</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.341">public final synchronized Object lastElement()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The last object in this <tt CLASS=literal>Vector</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>NoSuchElementException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>Vector</tt> is empty. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the last object in this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.299">lastIndexOf</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.342">public final int lastIndexOf(Object elem)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>elem</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be found. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the given object or <tt CLASS=literal>-1</tt> if it cannot be found. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the last occurrence of the given object 
+in this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.343">public final synchronized int lastIndexOf(Object elem, int index)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>elem</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be found.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+The starting index. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The index of the last occurrence of the given object before the specified 
+index or <tt CLASS=literal>-1</tt> if it cannot be found. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the index of the last occurrence of the given object 
+in this <tt CLASS=literal>Vector</tt> before the given 
+index. In other words, the method searches backwards from <tt CLASS=literal>index</tt> 
+for the next occurrence. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.300">removeAllElements</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.344">public final synchronized void removeAllElements()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method removes all of the objects from this <tt CLASS=literal>Vector</tt>, 
+but does not change its capacity or capacity increment. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.301">removeElement</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.345">public final synchronized boolean removeElement(Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be removed. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the given object is 
+found and removed; <tt CLASS=literal>false</tt> otherwise. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method searches for the first occurrence of the given object in this 
+<tt CLASS=literal>Vector</tt> and removes it. If the 
+object is found, each object in the <tt CLASS=literal>Vector</tt> 
+with an index greater than or equal to the index of the removed object 
+is shifted downward in the <tt CLASS=literal>Vector</tt>, 
+so that it has an index of one less than it did previously. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.302">removeElementAt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.346">public final synchronized void removeElementAt(int index)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+The index of the 
+object to be removed. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArrayIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>index</tt> is less than zero 
+or greater than the size of this <tt CLASS=literal>Vector</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method removes the object at the given index from this <tt CLASS=literal>Vector</tt>. 
+Each object in the <tt CLASS=literal>Vector</tt> with 
+an index greater than or equal to <tt CLASS=literal>index</tt> 
+is shifted downward in the <tt CLASS=literal>Vector</tt>, 
+so that it has an index of one less than it did previously. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.303">setElementAt</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.347">public final synchronized void setElementAt(Object obj, int index)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be put 
+in the <tt CLASS=literal>Vector</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>index</tt><br>
+<DD>
+
+<P CLASS=para>
+The index at which 
+to put the object. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>ArrayIndexOutOfBoundsException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>index</tt> is less than zero 
+or greater than the size of this <tt CLASS=literal>Vector</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method puts the given object at the given index in this <tt CLASS=literal>Vector</tt>, 
+replacing the object that was previously there. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.304">setSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.348">public final synchronized void setSize(int newSize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newSize</tt><br>
+<DD>
+
+<P CLASS=para>
+The new size. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the size (not the capacity) of this <tt CLASS=literal>Vector</tt>. 
+If the new size is bigger than the current size, <tt CLASS=literal>null</tt> 
+elements are added to the end of the <tt CLASS=literal>Vector</tt>. 
+If the new size is smaller than the current size, elements are discarded 
+from index <tt CLASS=literal>newSize</tt> to the end 
+of the <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.305">size</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.349">public final int size()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The size of this <tt CLASS=literal>Vector</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the number of objects contained in this <tt CLASS=literal>Vector</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.306">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.350">public final synchronized String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string that represents this <tt CLASS=literal>Vector</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of this <tt CLASS=literal>Vector</tt>. 
+The string includes every object that is contained in the <tt CLASS=literal>Vector</tt>, 
+so the string returned by <tt CLASS=literal>toString()</tt> 
+can be quite long. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.307">trimToSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.351">public final synchronized void trimToSize()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method sets the capacity of this <tt CLASS=literal>Vector</tt> 
+equal to its size. You can use this method to minimize the storage space 
+used by the <tt CLASS=literal>Vector</tt>, but any 
+subsequent calls to <tt CLASS=literal>addElement()</tt> 
+or <tt CLASS=literal>insertElement()</tt> forces 
+the <tt CLASS=literal>Vector</tt> to allocate more space. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.188">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>equals(Object)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="left">&nbsp;</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.189">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>, 
+<tt CLASS=literal>Cloneable</tt>, 
+<tt CLASS=literal>Enumeration</tt>, 
+<tt CLASS=literal>NoSuchElementException</tt>, 
+<tt CLASS=literal>Serializable</tt>, 
+<tt CLASS=literal>Stack</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_25.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>TooManyListenersException</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Adler32</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

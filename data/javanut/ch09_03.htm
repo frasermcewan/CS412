@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.3 Serialization and Class Versioning</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:56:46 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Object Serialization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-9-SECT-3">9.3 Serialization and Class Versioning</A></h2>
+
+<P CLASS=para>
+When an object is serialized, some information about its
+class must obviously be serialized with it, so that the
+correct class file can be loaded when the object is
+deserialized.  This information about the class is
+represented by the <tt CLASS=literal>java.io.ObjectStreamClass</tt> class.
+It contains the fully-qualified name of the class and a
+version number.  The version number is very important
+because an early version of a class may not be able to
+deserialize a serialized instance created by a later version
+of the same class.
+
+<P CLASS=para>
+The version number of a class is stored in a constant
+<tt CLASS=literal>long</tt> field named <tt CLASS=literal>serialVersionUID</tt>.  For
+example, a class might declare its version number with a
+field like this:
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+static final long serialVersionUID = 280432937854755317L;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a class does not define a <tt CLASS=literal>serialVersionUID</tt>
+constant, the <tt CLASS=literal>ObjectOutputStream</tt>
+automatically computes a unique version number for it by
+applying the Secure Hash Algorithm (SHA) to the name of the
+class, its interfaces, fields, and methods.  In this case,
+any change to a field in a class or to a
+non-private class method signature results in a change
+to the automatically-computed unique version number.
+
+<P CLASS=para>
+If you
+need to make minor changes to a class without breaking
+serialization compatibility, you should explicitly declare a
+<tt CLASS=literal>serialVersionUID</tt> constant so that an updated and
+incompatible version number is not automatically generated.
+You can use the <I CLASS=emphasis>serialver</I> program that is provided with the
+JDK to compute an initial value
+for this constant for the first version of your class.  When
+you make minor, compatible changes to the class, leave the
+constant unchanged.  Then, if you make larger changes that
+break serialization compatibility, run <I CLASS=emphasis>serialver</I> again
+to generate an updated version number.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Custom Serialization</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Serialized Applets</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

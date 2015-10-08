@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 3] 3.5 Object Destruction</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:49:45 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 3<br>Classes and Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-5">3.5 Object Destruction</A></h2>
+
+<P CLASS=para>
+<A NAME="CH3.GARBAGE.COLL1"></A>Now that we've seen how you can create and use objects, the
+next obvious question, a question that C and C++ programmers have
+been itching to have answered, is how do you destroy
+objects when they are no longer needed?
+
+<P CLASS=para>
+The answer is: You don't!  Objects are not passed to any
+<tt CLASS=literal>free()</tt> method, as allocated memory in C is.  And
+there is no <tt CLASS=literal>delete</tt> operator as there is in C++.
+Java takes care of object destruction for you, and lets you
+concentrate on other, more important things, like the
+algorithm you're working on.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-5.1">Garbage Collection</A></h3>
+
+<P CLASS=para>
+The technique Java uses to get rid of objects once they are
+no longer needed is called <I CLASS=emphasis>garbage collection</I>.  It is
+a technique that has been around for years in languages such
+as Lisp.  The Java interpreter knows what objects it has
+allocated.  It can also figure out which variables refer to
+which objects, and which objects refer to which other
+objects.  Thus, it can figure out when an allocated object
+is no longer referred to by any other object or variable.
+When it finds such an object, it knows that it can destroy
+it safely, and does so.  The garbage collector can also
+detect and destroy "cycles" of objects that refer to each
+other, but are not referred to by any other objects.
+
+<P CLASS=para>
+The Java garbage collector runs as a low-priority thread,
+and does most of its work when nothing else is going on.
+Generally, it runs during idle time while waiting for
+user input in the form of keystrokes or mouse events.
+The only time the garbage collector must run while something
+high-priority is going on (i.e., the only time it will
+actually slow down the system) is when the interpreter has
+run out of memory.  This doesn't happen often because there
+is that low-priority thread cleaning things up in the
+background.
+
+<P CLASS=para>
+This scheme may sound extremely slow and wasteful of memory.
+Actually though, good garbage collectors can be
+surprisingly efficient.  No, garbage collection will never
+be as efficient as explicit, well-written memory allocation
+and deallocation.  But it does make programming a lot easier
+and less prone to bugs.  And for most real-world programs,
+rapid development, lack of bugs, and easy maintenance are
+more important features than raw speed or memory efficiency.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-5.2">Putting the Trash Out</A></h3>
+
+<P CLASS=para>
+What garbage collection means for your programs is that when
+you are done with an object, you can just forget about
+it--the garbage collector finds it and takes care of it.
+<A HREF="ch03_05.htm#JNUT2-CH-3-EX-7">Example 3.7</A>
+shows an example.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-7">Example 3.7: Leaving an Object Out for Garbage Collection</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+String processString(String s)
+{
+    // Create a StringBuffer object to process the string in.
+    StringBuffer b = new StringBuffer(s);
+    // Process it somehow...
+    // Peturn it as a String. Just forget about the StringBuffer object:
+    // it will be automatically garbage collected.
+    return b.toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+If you're a C or C++ programmer, conditioned to allocating and
+deallocating your own dynamic memory, you may at first feel
+a nagging sense of misgiving when you write procedures that
+allocate and then forget objects.  You'll get used to it
+though, and even learn to love it!
+
+<P CLASS=para>
+There is an instance where you may want to take some action
+to help the garbage collection process along by "forgetting
+quickly."
+<A HREF="ch03_05.htm#JNUT2-CH-3-EX-8">Example 3.8</A>
+explains.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-8">Example 3.8: Forced Forgetting of an Object</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public static void main(String argv[]) 
+{
+    int big_array[] = new int[100000];
+    // Do some computations with big_array and get a result.
+    int result = compute(big_array);
+    // We no longer need big_array.  It will get garbage collected when 
+    // there are no more references.  Since big_array is a local variable, 
+    // it refers to the array until this method returns.  But this 
+    // method doesn't return.  So we've got to get rid of the reference 
+    // ourselves, just to help out the garbage collector.
+    big_array = null;
+    // Loop forever, handling the user's input.
+    for(;;) handle_input();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-3-SECT-5.3">Object Finalization</A></h3>
+
+<P CLASS=para>
+<A NAME="CH3.OBJECTS2"></A><A NAME="CH3.FINALIZER.ME1"></A>Just as a constructor method performs initialization for an
+object, a Java <I CLASS=emphasis>finalizer</I> method performs
+finalization for an object.
+
+<P CLASS=para>
+Garbage collection automatically frees up the memory
+resources used by objects.  But objects may hold other kinds
+of resources, such as file descriptors or sockets, as well.
+The garbage collector can't free these resources up for you,
+so you should write a finalizer method that takes care
+of things like closing open files, terminating network
+connections, and so on.
+
+<P CLASS=para>
+<A HREF="ch03_05.htm#JNUT2-CH-3-EX-9">Example 3.9</A>
+shows the finalizer method from the Java <tt CLASS=literal>FileOutputStream</tt>
+class. 
+
+<P CLASS=para>
+Note that a finalizer is an instance method
+(i.e., non-<tt CLASS=literal>static</tt>), takes no arguments, returns no
+value (i.e., <tt CLASS=literal>void</tt>), and must be named
+<tt CLASS=literal>finalize()</tt>.
+[6]
+
+<blockquote class=footnote>
+<P CLASS=para>[6] 
+C++ programmers, take note!  Although Java constructor
+methods are named like C++ constructors, Java finalization
+methods are not named like C++ destructor methods.
+</blockquote>
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-3-EX-9">Example 3.9: A Finalizer Method</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+/**
+ * Closes the stream when garbage is collected.
+ * Checks the file descriptor first to make sure it is not already closed.
+ */
+protected void finalize() throws IOException {
+    if (fd != null) close();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+There are some additional things to be aware of about finalizers:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If an object has a finalizer, that method is invoked before
+the system garbage collects the object.
+
+<P>
+<li CLASS=listitem>The Java interpreter may exit without garbage collecting all
+outstanding objects, so some finalizers may never be invoked.
+In this case, though, any outstanding resources are usually
+freed by the operating system.
+
+<P>
+<li CLASS=listitem>Java makes no guarantees about when garbage collection will
+occur, or what order objects will be collected in.
+Therefore, Java can make no guarantees about when a
+finalizer will be invoked, or in what order finalizers will be
+invoked, or what thread will execute finalizers.
+
+<P>
+<li CLASS=listitem>After a finalizer is invoked, objects are not freed right away.
+This is because a finalizer method may "resurrect" an object
+by storing the <tt CLASS=literal>this</tt> pointer somewhere, so that the
+object once again has references.  Thus, after
+<tt CLASS=literal>finalize()</tt> is called, an object must once again be
+determined to be unreferenced before it can actually be garbage
+collected.  Even if an object is "resurrected," the
+finalizer method is never invoked more than once.  Note that
+resurrecting an object is never a useful thing to do--just a
+strange quirk of object finalization.
+
+<P>
+<li CLASS=listitem>The finalizer shown in
+<A HREF="ch03_05.htm#JNUT2-CH-3-EX-9">Example 3.9</A>
+declares that it may throw an exception (exceptions are
+described in detail in <A HREF="ch02_01.htm">Chapter 2, <i>How Java Differs from C</i></A>).  If an uncaught
+exception actually occurs in a finalizer method, however,
+the exception is
+ignored by the system.
+
+<P>
+</UL>
+<P CLASS=para>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch03_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Class Methods</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Subclasses and Inheritance</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

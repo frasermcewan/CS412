@@ -1,0 +1,503 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.8 MediaTracker</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:25:21 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>Simple Graphics</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-8">2.8 MediaTracker</A></h2>
+
+<P CLASS=para>
+<A NAME="CH02.MEDIA2"></A><A NAME="CH02.MEDIA3"></A><A NAME="CH02.MEDIA4"></A><A NAME="CH02.MEDIA5"></A>The <tt CLASS=literal>MediaTracker</tt> class assists 
+in the loading of multimedia objects across the network. Tracking is necessary 
+because Java loads images in separate threads. Calls to <tt CLASS=literal>getImage()</tt> 
+return immediately; image loading starts only when you call the method <tt CLASS=literal>drawImage()</tt>. 
+<tt CLASS=literal>MediaTracker</tt> lets you force 
+images to start loading before you try to display them; it also gives you 
+information about the loading process, so you can wait until an image is 
+fully loaded before displaying it. 
+
+<P CLASS=para>
+Currently, <tt CLASS=literal>MediaTracker</tt> can 
+monitor the loading of images, but not audio, movies, or anything 
+else. Future versions are rumored to be able to monitor other media types. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-8.1">MediaTracker Methods</A></h3><A NAME="CH02.MEDIA1"></A><A NAME="CH02.MEDIA1A"></A>Constants
+
+<P CLASS=para>
+The <tt CLASS=literal>MediaTracker</tt> class defines 
+four constants that are used as return values from the class's methods. 
+These values serve as status indicators. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int LOADING </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>LOADING</tt> variable indicates 
+that the particular image being checked is still loading. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int ABORTED </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ABORTED</tt> variable indicates 
+that the loading process for the image being checked aborted. For example, 
+a timeout could have happened during the download. If something <tt CLASS=literal>ABORTED</tt> 
+during loading, it is possible to <tt CLASS=literal>flush()</tt> the image to force a retry. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int ERRORED </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ERRORED</tt> variable indicates 
+that an error occurred during the loading process for the image being checked. 
+For instance, the image file might not be available from the server (invalid 
+URL) or the file format could be invalid. If an image has <tt CLASS=literal>ERRORED</tt>, 
+retrying it will fail. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int COMPLETE </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>COMPLETE</tt> flag means that 
+the image being checked successfully loaded. </DL>
+<P CLASS=para>
+If <tt CLASS=literal>COMPLETE</tt>, <tt CLASS=literal>ABORTED</tt>, 
+or <tt CLASS=literal>ERRORED</tt> is set, the image 
+has stopped loading. If you are checking multiple images, you can OR 
+several of these values together to form a composite. For example, if you 
+are loading several images and want to find out about any malfunctions, 
+call <tt CLASS=literal>statusAll()</tt> and check 
+for a return value of <tt CLASS=literal>ABORTED | ERRORED</tt>. Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public MediaTracker (Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>MediaTracker</tt> constructor 
+creates a new <tt CLASS=literal>MediaTracker</tt> 
+object to track images to be rendered onto <tt CLASS=literal>component</tt>. </DL>
+Adding images
+
+<P CLASS=para>
+The <tt CLASS=literal>addImage()</tt> methods add 
+objects for the <tt CLASS=literal>MediaTracker</tt> 
+to track. When placing an object under a <tt CLASS=literal>MediaTracker</tt>'s 
+control, you must provide an identifier for grouping purposes. When multiple 
+images are grouped together, you can perform operations on the entire group 
+with a single request. For example, you might want to wait until all the 
+images in an animation sequence are loaded before starting the animation; 
+in this case, assigning the same ID to all the images makes good sense. 
+However, when multiple images are grouped together, you cannot check on 
+the status of a single image. The moral is: if you care about the status 
+of individual images, put each into a group by itself. 
+
+<P CLASS=para>
+Folklore has it that the identifier also serves as a loading priority, 
+with a lower ID meaning a higher priority. This is not completely true. 
+Current implementations start loading lower IDs first, but at 
+most, this is implementation-specific functionality for the JDK. Furthermore, 
+although an object with a lower identifier might be told to start loading 
+first, the <tt CLASS=literal>MediaTracker</tt> does 
+nothing to ensure that it finishes first. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addImage (Image image, int id, int width, int 
+height) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addImage()</tt> method tells 
+the <tt CLASS=literal>MediaTracker</tt> instance that 
+it needs to track the loading of <tt CLASS=literal>image</tt>. 
+The <tt CLASS=literal>id</tt> is used as a grouping. 
+Someone will eventually render the <tt CLASS=literal>image</tt> 
+at a scaled size of <tt CLASS=literal>width</tt> x <tt CLASS=literal>height</tt>. If <tt CLASS=literal>width</tt> 
+and <tt CLASS=literal>height</tt> are both -1, the image will be rendered unscaled. If you forget to notify 
+the <tt CLASS=literal>MediaTracker</tt> that the <tt CLASS=literal>image</tt> 
+will be scaled and ask the <tt CLASS=literal>MediaTracker</tt> 
+to <tt CLASS=literal>waitForID (id)</tt>, it is possible 
+that the image may not be fully ready when you try to draw it. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addImage (Image image, int id) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addImage()</tt> method tells 
+the <tt CLASS=literal>MediaTracker</tt> instance that 
+it needs to track the loading of <tt CLASS=literal>image</tt>. 
+The <tt CLASS=literal>id</tt> is used as a grouping. 
+The <tt CLASS=literal>image</tt> will be rendered 
+at its actual size, without scaling. </DL>
+Removing images
+
+<P CLASS=para>
+Images that have finished loading are still watched by the <tt CLASS=literal>MediaTracker</tt>. 
+The <tt CLASS=literal>removeImage()</tt> methods, 
+added in Java 1.1, allow you to remove objects from the <tt CLASS=literal>MediaTracker</tt>. 
+Once you no longer care about an image (usually after waiting for it to 
+load), you can remove it from the tracker. Getting rid of loaded images results in better 
+performance because the tracker has fewer objects to check. In Java 1.0, you can't remove an 
+image from <tt CLASS=literal>MediaTracker</tt>.
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeImage (Image image)  <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeImage()</tt> method tells 
+the <tt CLASS=literal>MediaTracker</tt> to remove 
+all instances of <tt CLASS=literal>image</tt> from 
+its tracking list. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeImage (Image image, int id)  <img src="gifs/bstar.gif" alt="(New)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeImage()</tt> method tells 
+the <tt CLASS=literal>MediaTracker</tt> to remove 
+all instances of <tt CLASS=literal>image</tt> from 
+group <tt CLASS=literal>id</tt> of its tracking list. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeImage (Image image, int id, int width, int height)  <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This <tt CLASS=literal>removeImage()</tt> method tells 
+the <tt CLASS=literal>MediaTracker</tt> to remove 
+all instances of <tt CLASS=literal>image</tt> from 
+group <tt CLASS=literal>id</tt> and scale <tt CLASS=literal>width </tt>x <tt CLASS=literal>height </tt>of 
+its tracking list. </DL>
+Waiting
+
+<P CLASS=para>
+A handful of methods let you wait for a particular image, image group, 
+all images, or a particular time period. They enable you to be sure that 
+an image has finished trying to load prior to continuing. The fact that 
+an image has finished loading does not imply it has successfully loaded. 
+It is possible that an error condition arose, which caused loading to stop. 
+You should check the status of the image (or group) for actual success. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void waitForID (int id) throws InterruptedException </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>waitForID()</tt> method blocks 
+the current thread from running until the images added with <tt CLASS=literal>id</tt> 
+finish loading. If the wait is interrupted, <tt CLASS=literal>waitForID()</tt> 
+throws an <tt CLASS=literal>InterruptedException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean waitForID (int id, long ms) throws InterruptedException </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>waitForID()</tt> method blocks 
+the current thread from running until the images added with <tt CLASS=literal>id</tt> 
+finish loading or until <tt CLASS=literal>ms</tt> 
+milliseconds have passed. If all the images have loaded, <tt CLASS=literal>waitForID()</tt> 
+returns <tt CLASS=literal>true</tt>; if the timer 
+has expired, it returns <tt CLASS=literal>false</tt>, 
+and one or more images in the <tt CLASS=literal>id</tt> 
+set have not finished loading. If <tt CLASS=literal>ms</tt> 
+is 0, it waits until all images added with <tt CLASS=literal>id</tt> 
+have loaded, with no timeout. If the wait is interrupted, <tt CLASS=literal>waitForID()</tt> 
+throws an <tt CLASS=literal>InterruptedException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void waitForAll () throws InterruptedException </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>waitForAll()</tt> method blocks 
+the current thread from running until all images controlled by this <tt CLASS=literal>MediaTracker</tt> 
+finish loading. If the wait is interrupted, <tt CLASS=literal>waitForAll()</tt> 
+throws an <tt CLASS=literal>InterruptedException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean waitForAll (long ms) throws InterruptedException </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>waitForAll()</tt> method blocks 
+the current thread from running until all images controlled by this <tt CLASS=literal>MediaTracker</tt> 
+finish loading or until <tt CLASS=literal>ms</tt> 
+milliseconds have passed. If all the images have loaded, <tt CLASS=literal>waitForAll()</tt> 
+returns <tt CLASS=literal>true</tt>; if the timer 
+has expired, it returns <tt CLASS=literal>false</tt>, 
+and one or more images have not finished loading. If <tt CLASS=literal>ms</tt> 
+is 0, it waits until all images have loaded, with no timeout. When you 
+interrupt the waiting, <tt CLASS=literal>waitForAll()</tt> 
+throws an <tt CLASS=literal>InterruptedException</tt>. </DL>
+Checking status
+
+<P CLASS=para>
+<A NAME="CH02.STAT1"></A>Several methods are available to check on the status of images loading. 
+None of these methods block, so you can continue working while images 
+are loading. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean checkID (int id) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>checkID()</tt> method determines 
+if all the images added with the <tt CLASS=literal>id</tt> 
+tag have finished loading. The method returns <tt CLASS=literal>true</tt> 
+if all images have completed loading (successfully or unsuccessfully). 
+Since this can return <tt CLASS=literal>true</tt> 
+on error, you should also use <tt CLASS=literal>isErrorID()</tt> 
+to check for errors. If loading has not completed, <tt CLASS=literal>checkID()</tt> 
+returns <tt CLASS=literal>false</tt>. This method 
+does not force images to start loading. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean checkID (int id, boolean load) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>checkID()</tt> method determines 
+if all the images added with the <tt CLASS=literal>id</tt> 
+tag have finished loading. If the <tt CLASS=literal>load</tt> 
+flag is <tt CLASS=literal>true</tt>, any images in 
+the <tt CLASS=literal>id</tt> group that have not 
+started loading yet will start. The method returns <tt CLASS=literal>true</tt> 
+if all images have completed loading (successfully or unsuccessfully). 
+Since this can return <tt CLASS=literal>true</tt> 
+on error, you should also use <tt CLASS=literal>isErrorID()</tt> 
+to check for errors. If loading has not completed, <tt CLASS=literal>checkID()</tt> 
+returns <tt CLASS=literal>false</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean checkAll () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>checkAll()</tt> method determines 
+if all images associated with the <tt CLASS=literal>MediaTracker</tt> 
+have finished loading. The method returns <tt CLASS=literal>true</tt> 
+if all images have completed loading (successfully or unsuccessfully). 
+Since this can return <tt CLASS=literal>true</tt> 
+on error, you should also use <tt CLASS=literal>isErrorAny()</tt> 
+to check for errors. If loading has not completed, <tt CLASS=literal>checkAll()</tt> 
+returns <tt CLASS=literal>false</tt>. This method 
+does not force images to start loading. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean checkAll (boolean load) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>checkAll()</tt> method determines 
+if all images associated with the <tt CLASS=literal>MediaTracker</tt> 
+have finished loading. If the <tt CLASS=literal>load</tt> 
+flag is <tt CLASS=literal>true</tt>, any image that 
+has not started loading yet will start. The method returns <tt CLASS=literal>true</tt> 
+if all images have completed loading (successfully or unsuccessfully). 
+Since this can return <tt CLASS=literal>true</tt> 
+on error, you should also use <tt CLASS=literal>isErrorAny()</tt> 
+to check for errors. If loading has not completed, <tt CLASS=literal>checkAll()</tt> 
+returns <tt CLASS=literal>false</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int statusID (int id, boolean load) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>statusID()</tt> method checks 
+on the load status of the images in the <tt CLASS=literal>id</tt> 
+group. If there are multiple images in the group, the results are ORed 
+together. If the <tt CLASS=literal>load</tt> flag 
+is <tt CLASS=literal>true</tt>, any image in the <tt CLASS=literal>id</tt> 
+group that has not started loading yet will start. The return value is 
+some combination of the class constants <tt CLASS=literal>LOADING</tt>, 
+<tt CLASS=literal>ABORTED</tt>, <tt CLASS=literal>ERRORED</tt>, 
+and <tt CLASS=literal>COMPLETE</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int statusAll (boolean load) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>statusAll()</tt> method determines 
+the load status of all the images associated with the <tt CLASS=literal>MediaTracker</tt>. 
+If this <tt CLASS=literal>MediaTracker</tt> is watching 
+multiple images, the results are ORed 
+together. If the <tt CLASS=literal>load</tt> flag 
+is <tt CLASS=literal>true</tt>, any image that has 
+not started loading yet will start. The return value is some combination 
+of the class constants <tt CLASS=literal>LOADING</tt>, 
+<tt CLASS=literal>ABORTED</tt>, <tt CLASS=literal>ERRORED</tt>, 
+and <tt CLASS=literal>COMPLETE</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean isErrorID (int id) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isErrorId()</tt> method checks 
+whether any media in the <tt CLASS=literal>id</tt> 
+group encountered an error while loading. If any image resulted in an error, 
+<tt CLASS=literal>isErrorId()</tt> returns <tt CLASS=literal>true</tt>; 
+if there were no errors, it returns <tt CLASS=literal>false</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized boolean isErrorAny () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isErrorAny()</tt> method checks 
+to see if any image associated with the <tt CLASS=literal>MediaTracker</tt> 
+encountered an error. If there was an error, the method returns <tt CLASS=literal>true</tt>; 
+if none, <tt CLASS=literal>false</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized Object[] getErrorsID (int id) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getErrorsID()</tt> method returns 
+an array of the objects that encountered errors in the group ID during 
+loading. If loading caused no errors, the method returns <tt CLASS=literal>null</tt>. The return 
+type is an <tt CLASS=literal>Object</tt> array instead 
+of an <tt CLASS=literal>Image</tt> array because <tt CLASS=literal>MediaTracker</tt> 
+will eventually support additional media types. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized Object[] getErrorsAny () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getErrorsAny()</tt> method returns 
+an array of all the objects that encountered an error during loading. If 
+there were no errors, the method returns <tt CLASS=literal>null</tt>. The return type is an <tt CLASS=literal>Object</tt> 
+array instead of an <tt CLASS=literal>Image</tt> array 
+because <tt CLASS=literal>MediaTracker</tt> will eventually 
+support additional media types. </DL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-2-SECT-8.2">Using a MediaTracker</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>init()</tt> method improves the <tt CLASS=literal>AnimateApplet</tt> 
+from <A HREF="ch02_07.htm#JAWT-CH-2-EX-2">Example 2.2</A> to ensure that images load before the 
+animation sequence starts. Waiting for images to load is particularly important 
+if there is a slow link between the computer on which the applet is running 
+and the server for the image files. Note that in a few cases, like 
+interlaced GIF files, you might be willing to display an image before 
+it has completely loaded. However, judicious use of <tt CLASS=literal>MediaTracker</tt> 
+will give you much more control over your program's behavior. 
+
+<P CLASS=para>
+The new <tt CLASS=literal>init()</tt> method 
+creates a <tt CLASS=literal>MediaTracker</tt>, puts 
+all the images in the animation sequence under the tracker's control, 
+and then calls <tt CLASS=literal>waitForAll()</tt> 
+to wait until the images are loaded. Once the images are loaded, it calls 
+<tt CLASS=literal>isErrorsAny()</tt> to make sure 
+that the images loaded successfully. 
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void init () {
+    MediaTracker mt = new MediaTracker (this);
+    im = new Image[numImages];
+    for (int i=0;i&lt;numImages;i++) {
+        im[i] = getImage (getDocumentBase(), "clock"+i+".jpg");
+        mt.addImage (im[i], i);
+    }
+    try {
+        mt.waitForAll();
+        if (mt.isErrorAny())
+            System.out.println ("Error loading images");
+    } catch (Exception e) {
+        e.printStackTrace ();
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Image</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Fonts and Colors</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

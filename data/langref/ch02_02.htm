@@ -1,0 +1,1330 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.2 Tokenization</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:06:20 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>Lexical Analysis</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2">2.2 Tokenization</A></h2>
+
+<P CLASS=para>
+<A NAME="CH02.TOKEN"></A>The tokenization phase of lexical analysis in Java handles breaking
+down the lines of Unicode source code into comments, white space,
+and tokens. The rule that defines the overall lexical organization
+of Java programs is <I CLASS=emphasis>TokenStream:</I>
+
+
+<p>
+<img align=middle src="./figs/jlr0203.gif" alt="[Graphic: Figure from the text]" width=424 height=193 border=0>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.6">Comments</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.2">Keywords</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.3">Literals</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.5">Operators</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.4">Separators</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.7">White Space</A>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.1">Identifiers</A></h3>
+
+<P CLASS=para>
+<A NAME="CH02.IDENT"></A>An <I CLASS=emphasis>identifier</I>
+is generally used as the name for a thing in a program. A few identifiers
+are reserved by Java for special uses; these are called <I CLASS=emphasis>keywords</I>.
+
+<P CLASS=para>
+From the viewpoint of lexical analysis, an identifier
+is a sequence of one or more Unicode characters. The first character
+must be a letter, underscore, or dollar sign. The other characters
+must be letters, numbers, underscores, or dollar signs. An identifier
+can't have the same Unicode character sequence as a keyword:
+
+
+<p>
+<img align=middle src="./figs/jlr0204.gif" alt="[Graphic: Figure from the text]" width=424 height=136 border=0>
+
+<P CLASS=para>
+For example, <tt CLASS=literal>foo21</tt>, <tt CLASS=literal>_foo</tt>,
+and <tt CLASS=literal>$foo</tt>
+are all valid identifiers; <tt CLASS=literal>3foo</tt> is not a valid
+identifier. There is no limit to the length of an identifier in
+Java. Although <tt CLASS=literal>$</tt> is a legal character in an identifier, you should avoid using it to eliminate confusion with compiler-generated identifiers.
+
+<P CLASS=para>
+A <I CLASS=emphasis>UnicodeDigit</I>
+is a Unicode character that is classified as a digit by
+<tt CLASS=literal>Character.isDigit()</tt>.
+
+<P CLASS=para>
+A <I CLASS=emphasis>UnicodeLetter</I>
+is a Unicode character code that is classified as a letter
+by <tt CLASS=literal>Character.isLetter()</tt>.
+
+<P CLASS=para>
+Two identifiers are the same if they have
+the same length and if corresponding characters in each identifier
+have the same Unicode character code. It is possible, however, to
+have identifiers that are distinct to a Java compiler, but not to
+the human eye. For example, the Java compiler recognizes lowercase
+Latin `a' (<tt CLASS=literal>\u0061</tt>) and lowercase Cyrillic `a'
+(<tt CLASS=literal>\u0430</tt>) as different characters, although they
+may well be visually indistinguishable.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch10_03.htm">Character</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.2">Keywords</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.2">Keywords</A></h3>
+
+<P CLASS=para>
+<A NAME="CH02.KEY"></A>Keywords are identifiers that
+have a special meaning to Java. Because of their special meanings,
+keywords are not available for use as names of things defined in
+programs. A <I CLASS=emphasis>Keyword</I> is one of the following:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>abstract</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>default</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>goto</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>null</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>synchronized</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>boolean</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>do</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>if</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>package</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>this</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>break</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>double</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>implements</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>private</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>throw</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>byte</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>else</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>import</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>protected</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>throws</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>case</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>extends</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>instanceof</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>public</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>transient</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>catch</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>false</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>int</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>return</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>true</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>char</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>final</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>interface</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>short</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>try</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>class</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>finally</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>long</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>static</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>void</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>const</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>float</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>native</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>super</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>volatile</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>continue</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>for</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>new</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>switch</tt></TD>
+<TD ALIGN="left"><tt CLASS=literal>while</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+The keywords <tt CLASS=literal>const</tt> and
+<tt CLASS=literal>goto</tt> are not currently used for any purpose in
+Java, although they may be assigned meaning in future versions of
+the Java language.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.1">Identifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.3">Literals</A></h3>
+
+<P CLASS=para>
+<A NAME="CH02.LIT"></A>A <I CLASS=emphasis>literal</I>
+is a token that represents a constant value of a primitive data
+type or a <tt CLASS=literal>String</tt> object:
+
+
+<p>
+<img align=middle src="./figs/jlr0205.gif" alt="[Graphic: Figure from the text]" width=424 height=123 border=0>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.3.3">Boolean literals</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.3.4">Character literals</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.3.2">Floating-point literals</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.3.1">Integer literals</A>;
+<A HREF="ch02_02.htm#JLR2-CH-2-SECT-2.3.5">String literals</A>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.3.1">Integer literals</A></h4>
+
+<P CLASS=para>
+<A NAME="CH02.INTLIT"></A><A NAME="CH02.INTLIT2"></A>An integer literal represents
+an integer constant:
+
+
+<p>
+<img align=middle src="./figs/jlr0206.gif" alt="[Graphic: Figure from the text]" width=450 height=199 border=0>
+
+<P CLASS=para>
+<I CLASS=emphasis>NonZeroDigit</I>
+is defined as one of the following characters: <tt CLASS=literal>1</tt>,
+<tt CLASS=literal>2</tt>, <tt CLASS=literal>3</tt>, <tt CLASS=literal>4</tt>,
+<tt CLASS=literal>5</tt>, <tt CLASS=literal>6</tt>, <tt CLASS=literal>7</tt>,
+<tt CLASS=literal>8</tt>, or <tt CLASS=literal>9</tt>.
+
+<P CLASS=para>
+<I CLASS=emphasis>OctalDigit</I>
+is defined as one of the following characters: <tt CLASS=literal>0</tt>,
+<tt CLASS=literal>1</tt>, <tt CLASS=literal>2</tt>, <tt CLASS=literal>3</tt>,
+<tt CLASS=literal>4</tt>, <tt CLASS=literal>5</tt>, <tt CLASS=literal>6</tt>,
+or <tt CLASS=literal>7</tt>.
+
+<P CLASS=para>
+Integer literals that begin
+with a non-zero digit are in base 10 and are called <I CLASS=emphasis>decimal
+literals</I>. Integer
+literals that begin with <tt CLASS=literal>0x</tt> are in base 16 and
+are called <I CLASS=emphasis>hexadecimal literals</I>.
+Integer literals that begin with <tt CLASS=literal>0</tt> followed by
+<tt CLASS=literal>0-7</tt> are in base 8 and are called <I CLASS=emphasis>octal
+literals</I>.
+
+<P CLASS=para>
+If an integer literal ends with <tt CLASS=literal>L</tt> or <tt CLASS=literal>l</tt>,
+its type is <tt CLASS=literal>long</tt>; otherwise its type is
+<tt CLASS=literal>int</tt>.
+
+<P CLASS=para>
+Integer literals cannot begin with a <tt CLASS=literal>+</tt>
+or a <tt CLASS=literal>-</tt>. If either of these characters precedes
+an integer literal, it is treated as a unary operator, a separate
+token in its own right.
+
+<P CLASS=para>
+Here are some examples of <tt CLASS=literal>int</tt>
+literals:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+0
+92
+0642
+0xDeadBeef
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here are some examples of <tt CLASS=literal>long</tt> literals:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+0L
+1414213562373l
+0x2000000000L
+075204l
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Note that the preceding examples end with either an uppercase
+or lowercase "L". They do not end with the digit 1 (one).
+
+<P CLASS=para>
+Decimal literals of type <tt CLASS=literal>int</tt> may not be greater than
+2147483647, which represents 2^31-1.
+Decimal literals of type <tt CLASS=literal>long</tt>
+may not be greater than 9223372036854775807L, which represents
+2^63-1.
+Decimal literals cannot be used directly to represent negative values.
+To represent negative values using a decimal literal, you must use
+the decimal literal in conjunction with the unary minus operator.
+For example, representing -321 requires the use of a unary minus
+and a decimal literal. To represent the <tt CLASS=literal>int</tt> -2147483648,
+use <tt CLASS=literal>0x80000000</tt>. To represent the <tt CLASS=literal>long</tt>
+-9223372036854775808L, use <tt CLASS=literal>0x8000000000000000L</tt>.
+
+<P CLASS=para>
+Hexadecimal and octal literals may be positive or negative
+because they represent either a 32-bit (<tt CLASS=literal>int</tt>)
+or 64-bit (<tt CLASS=literal>long</tt>) two's-complement quantity. Two's
+complement is a binary encoding technique that represents both positive
+and negative values. The range of values that can be represented
+by <tt CLASS=literal>int</tt> hexadecimal and octal literals is shown
+in Table 2-1.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="ch02-TABLE-AUTOID.1">Table 2.1: Minimum and Maximum int Literals</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Representation</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Minimum Value</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Maximum Value</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Hexadecimal</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0x80000000</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0x7fffffff</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Octal</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>020000000000</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>017777777777</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Base 10 equivalent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>-2147483648</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>2147483647</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+The range of values that can be represented
+by <tt CLASS=literal>long</tt> hexadecimal and octal literals is shown
+in Table 2-2.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="ch02-TABLE-AUTOID.2">Table 2.2: Minimum and Maximum long Literals</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Representation</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Minimum Value</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Maximum Value</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Hexadecimal</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0x8000000000000000L</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0x7fffffffffffffffL</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Octal</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>01000000000000000000000L</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>0777777777777777777777L</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Base 10 equivalent</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>-9223372036854775808</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>9223372036854775807</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_01.htm#DIGIT">**UNKNOWN XREF**</A>;
+<A HREF="ch02_01.htm#HEXDIGIT">**UNKNOWN XREF**</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.1.1">Integer types</A>;
+<A HREF="ch02_01.htm#JLR2-CH-2-SECT-1.1">Conversion to Unicode</A>;
+<A HREF="ch04_04.htm#JLR2-CH-4-SECT-4">Unary Operators</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.3.2">Floating-point literals</A></h4>
+
+<P CLASS=para>
+A floating-point
+literal represents a constant value of type <tt CLASS=literal>float</tt>
+or <tt CLASS=literal>double</tt> :
+
+
+<p>
+<img align=middle src="./figs/jlr0207.gif" alt="[Graphic: Figure from the text]" width=424 height=299 border=0>
+
+<P CLASS=para>
+A floating-point literal must minimally contain at least one digit
+and either a decimal point or an exponent.
+
+<P CLASS=para>
+The data
+type of a floating-point literal is <tt CLASS=literal>float</tt> if
+and only if the suffix <tt CLASS=literal>f</tt> or <tt CLASS=literal>F</tt>
+appears at the end of the literal. If there is no suffix or the
+suffix is <tt CLASS=literal>d</tt> or <tt CLASS=literal>D</tt>, the data
+type is <tt CLASS=literal>double</tt>.
+
+<P CLASS=para>
+Floating-point literals
+cannot begin with a <tt CLASS=literal>+</tt> or a <tt CLASS=literal>-</tt>.
+If either of these precedes a floating-point literal, it is treated
+as a separate token, a unary operator.
+
+<P CLASS=para>
+Here are some
+examples of <tt CLASS=literal>float</tt> literals:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+23e4f
+1.E2f
+.31416e1F
+2.717f
+7.63e+9f
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here are some examples of <tt CLASS=literal>double</tt> literals:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+23e4
+1.E2
+.31415e1D
+2.717
+7.53e+9d
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The ranges of values that can be represented by <tt CLASS=literal>float</tt> and
+<tt CLASS=literal>double</tt> literals are shown in Table 2-3.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="ch02-TABLE-AUTOID.3">Table 2.3: Minimum and Maximum Floating-Point Literals</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Representation</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Minimum Value</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Maximum Value</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+float</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>1.40239846e-45f</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>3.40282347e38f</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+double</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>4.94065645841246544e-324</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>1.79769313486231570e308</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+Floating-point literals that exceed these
+limits are treated as errors by the Java compiler. The special floating-point
+values positive infinity, negative infinity, and not-a-number are
+available as predefined constants in Java, as part of the
+<tt CLASS=literal>Float</tt> and <tt CLASS=literal>Double</tt> classes.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_01.htm#DIGIT">**UNKNOWN XREF**</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.1.2">Floating-point types</A>;
+<A HREF="ch04_04.htm#JLR2-CH-4-SECT-4">Unary Operators</A>;
+<A HREF="ch10_08.htm">Double</A>;
+<A HREF="ch10_09.htm">Float</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.3.3">Boolean literals</A></h4>
+
+<P CLASS=para>
+There are two <tt CLASS=literal>boolean</tt>
+literal values, represented by the keywords <tt CLASS=literal>true</tt>
+and <tt CLASS=literal>false:</tt>
+
+
+<p>
+<img align=middle src="./figs/jlr0208.gif" alt="[Graphic: Figure from the text]" width=424 height=48 border=0>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.2">Boolean Type</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.3.4">Character literals</A></h4>
+
+<P CLASS=para>
+<A NAME="CH02.CHAR1"></A>A character literal
+represents a constant value of type <tt CLASS=literal>char</tt>
+(an unsigned 16-bit quantity). A character
+literal consists of either the character being represented, or an
+equivalent escape sequence, enclosed in single quotes:
+
+
+<p>
+<img align=middle src="./figs/jlr0209.gif" alt="[Graphic: Figure from the text]" width=424 height=52 border=0>
+
+
+<p>
+<img align=middle src="./figs/jlr0210.gif" alt="[Graphic: Figure from the text]" width=450 height=230 border=0>
+
+<P CLASS=para>
+Here are some examples of character literals:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+'c'
+'n'
+'\\'
+'\u0138'
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The character sequence <tt CLASS=literal>\u</tt><I CLASS=emphasis>xxxx</I>
+is not defined above as a valid <I CLASS=emphasis>Escape</I>, even though it can
+be used as a legal character literal. This sequence of characters
+is defined as an <I CLASS=emphasis>EscapedSourceCharacter</I>, which
+is handled during the pre-processing phase, before tokenization
+takes place. As a result, the tokenization phase never sees an <I CLASS=emphasis>EscapedSourceCharacter</I>.
+Tokenization sees only the single Unicode character that replaces
+the <I CLASS=emphasis>EscapedSourceCharacter</I> during pre-processing.
+
+<P CLASS=para>
+The translations of the different types of escape sequences
+supported in Java are shown in Table 2-4.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="ch02-TABLE-AUTOID.4">Table 2.4: Java Escape Sequences</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Escape Sequence</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Unicode Equivalent</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Meaning</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\b</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0008</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Backspace</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\t</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0009</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Horizontal tab</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\n</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000a</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Linefeed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\f</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000c</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Form feed</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\r</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u000d</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Carriage return</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\"</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0022</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Double quote</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\'</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0027</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Single quote</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\\</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u005c</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Backslash</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\</tt><I CLASS=emphasis>xxx</I></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>\u0000</tt> to <tt CLASS=literal>\u00ff</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+The character corresponding to the octal value <I CLASS=emphasis>xxx</I></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+A character literal representing a carriage
+return character can be written only as <tt CLASS=literal>'\r'</tt>;
+a character literal representing a linefeed character can be written
+only as <tt CLASS=literal>'\n'</tt>. During the pre-processing that
+precedes token recognition, these characters are classified as line
+terminators, so neither carriage return (<tt CLASS=literal>\u000d</tt>)
+nor linefeed (<tt CLASS=literal>\u000a</tt>) characters in Java source
+code can ever be seen by the Java compiler as being part of a character
+literal.
+
+<P CLASS=para>
+If a backslash that is not part of a legal
+<I CLASS=emphasis>Escape</I> appears in a character literal, it is
+flagged as an error. This is different from languages like C++ that
+ignore backslashes in character literals that are not part of an
+escape.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_01.htm#JLR2-CH-2-SECT-1.1">Conversion to Unicode</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.1.1">Integer types</A>;
+<A HREF="ch02_02.htm#OCTALDIGIT">**UNKNOWN XREF**</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.3.5">String literals</A></h4>
+
+<P CLASS=para>
+A string literal represents
+a constant string value and consists of the characters in the string
+or the equivalent escapes:
+
+
+<p>
+<img align=middle src="./figs/jlr0211.gif" alt="[Graphic: Figure from the text]" width=424 height=74 border=0>
+
+<P CLASS=para>
+Here are some examples of string literals:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+""                         // the empty string
+"Hello World"
+"This has \"escapes\"\n"   // a string literal with escapes
+</PRE>
+</DIV>
+
+<P CLASS=para>
+There is no primitive type for
+representing strings in Java. Instead, each string literal becomes
+a reference to a <tt CLASS=literal>String</tt> object. If two or more
+string literals consist of the same sequence of characters, they
+refer to the same <tt CLASS=literal>String</tt> object. Using one <tt CLASS=literal>String</tt>
+object to represent multiple string literals works because, once
+created, the contents of a <tt CLASS=literal>String</tt> object cannot
+be changed.
+
+<P CLASS=para>
+For a string literal to contain a carriage
+return or linefeed character, the carriage return or linefeed must
+be written as <tt CLASS=literal>\r</tt> or <tt CLASS=literal>\n</tt>. Neither
+carriage return (<tt CLASS=literal>\u000d</tt>) nor linefeed (<tt CLASS=literal>\u000a</tt>)
+characters in Java source code can ever be seen by the Java compiler
+as part of a string literal. These characters are classified as
+line terminators during the pre-processing phase that precedes token
+recognition. For the same reason, <tt CLASS=literal>\u</tt> Unicode
+escapes for carriage return and linefeed characters cannot be directly
+used in string literals.
+
+<P CLASS=para>
+If a backslash that is not
+part of a legal <I CLASS=emphasis>Escape</I> appears in a string
+literal it is flagged as an error. This is different from languages
+like C++ that ignore backslashes in string literals that are not
+part of an escape.
+
+<P CLASS=para>
+Because operations on strings are
+generally based on the length of the string, Java does not automatically
+supply a NUL character (<tt CLASS=literal>\u0000</tt>) at the end of
+a string literal. For the same reason, it is not customary for Java
+programs to put a NUL character at the end of a string.
+
+<P CLASS=para>
+<b>References</b>
+<I CLASS=emphasis>Escape</I> 2.2.3.4;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.1.1">Specially supported classes</A>;
+<A HREF="ch10_20.htm">String</A>;
+<A HREF="ch10_21.htm">StringBuffer</A>;
+<A HREF="ch04_06.htm#JLR2-CH-4-SECT-6.3">String Concatenation Operator +</A>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.4">Separators</A></h3>
+
+<P CLASS=para>
+A <I CLASS=emphasis>separator</I>
+is any one of the punctuation tokens in the following railroad diagram:
+
+
+<p>
+<img align=middle src="./figs/jlr0212.gif" alt="[Graphic: Figure from the text]" width=424 height=220 border=0>
+
+<P CLASS=para>
+Separator tokens are used to separate other types of tokens. Thus,
+separators are a part
+of a higher-level syntactic construct. Although separators have
+syntactic significance, they do not imply any operation on data.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.5">Operators</A></h3>
+
+<P CLASS=para>
+An operator is a token that
+implies an operation on data. Java has both assignment and non-assignment
+operators:
+
+
+<p>
+<img align=middle src="./figs/jlr0213.gif" alt="[Graphic: Figure from the text]" width=424 height=48 border=0>
+
+<P CLASS=para>
+A <I CLASS=emphasis>NonAssignmentOperator</I> is one of the following:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>+</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>-</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>^</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>++</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>*</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&gt;=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>%</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>--</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>/</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>!=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>?</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&gt;&gt;</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>!</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&amp;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>==</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>:</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&gt;&gt;</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>~</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>|</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&amp;&amp;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&gt;&gt;&gt;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal></tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+An <I CLASS=emphasis>AssignmentOperator</I> is one of the following:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>-=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>*=</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>/=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>|=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&amp;=</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>^=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>+=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>%=</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;&lt;=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&gt;&gt;=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&gt;&gt;&gt;=</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+Unlike C/C++, Java does not have a comma
+operator. Java does allow a comma to be used as a separator in the
+header portion of <tt CLASS=literal>for</tt> statements, however. Java
+also omits a number of other operators found in C and C++. Most
+notably, Java does not include operators for accessing physical
+memory as an array of bytes, such as <tt CLASS=literal>sizeof</tt>,
+<tt CLASS=literal>unary &amp; (address of)</tt>,
+<tt CLASS=literal>unary * (contents of)</tt>,
+or <tt CLASS=literal>-&gt; (contents of field)</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.6">Comments</A></h3>
+
+<P CLASS=para>
+Java supports three styles of
+comments:<A NAME="CH02.COM"></A>
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>A standard C-style comment, where all of the
+characters between <tt CLASS=literal>/*</tt> and <tt CLASS=literal>*/</tt>
+are ignored.
+
+<P>
+<li CLASS=listitem>A single-line comment, where all of the
+characters from <tt CLASS=literal>//</tt> to the end of the line are
+ignored.
+
+<P>
+<li CLASS=listitem>A documentation comment that begins with <tt CLASS=literal>/**</tt>
+and ends with <tt CLASS=literal>*/</tt>. These comments are similar
+to standard C-style comments, but the contents of a documentation
+comment can be extracted to produce automatically generated documentation.
+
+<P>
+</UL>
+<P CLASS=para>
+The formal definition of a comment is:
+
+
+<p>
+<img align=middle src="./figs/jlr0214.gif" alt="[Graphic: Figure from the text]" width=424 height=149 border=0>
+
+<P CLASS=para>
+C-style comments and documentation
+comments do not nest. For example, consider the following arrangement
+of comments:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+/*   ...   /*   ...   */   ...   */
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The Java compiler interprets the first <tt CLASS=literal>*/</tt>
+to be the end of the comment, so that what follows is a syntax error.
+
+<P CLASS=para>
+However, in a single-line comment (i.e., one that starts with
+<tt CLASS=literal>//</tt> ), the sequences <tt CLASS=literal>/*</tt>,
+<tt CLASS=literal>/**</tt>,
+and <tt CLASS=literal>*/</tt> have no special meaning. Similarly, in
+a C-style comment or a documentation comment (i.e., comments that
+begin with <tt CLASS=literal>/*</tt> or <tt CLASS=literal>/**</tt>), the
+sequence <tt CLASS=literal>//</tt> has no special meaning.
+
+<P CLASS=para>
+In
+order to comment out large chunks of code, you need to adopt a commenting
+style. The C/C++ practice of using <tt CLASS=literal>#if</tt> to comment
+out multiple lines of code is not available for Java programs because
+Java does not have a conditional compilation mechanism. If you use C-style comments in your code, you'll need to use
+the <tt CLASS=literal>//</tt> style of comment to comment out multiple
+lines of code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+///*
+// * Prevent instantiation of RomanNumeral objects without
+// * parameters.
+// */
+//    private RomanNumeral() {
+//        super();
+//    }
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The
+<tt CLASS=literal>/* */</tt> style of comment cannot
+be used to comment out the lines in the above example because the
+example already contains that style of comment, and these comments
+do not nest.
+
+<P CLASS=para>
+If, however, you stick to using the <tt CLASS=literal>//</tt>
+style of comment in your code, you can use C-style comments to comment
+out large blocks of code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+/*
+ *// Prevent instantiation of RomanNumeral objects without
+ *// parameters.
+ *    private RomanNumeral() {
+ *        super();
+ *     }
+ */
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Which style you
+choose is less important than using it consistently, so that you
+avoid inadvertently nesting comments in illegal ways.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch07_04.htm#JLR2-CH-7-SECT-4">Documentation Comments</A>;
+<A HREF="ch02_01.htm#JLR2-CH-2-SECT-1.2">Division of the Input Stream into Lines</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-2-SECT-2.7">White Space</A></h3>
+
+<P CLASS=para>
+White space denotes characters such
+as space, tab, and form feed that do not have corresponding glyphs,
+but alter the position of following glyphs. White space and
+comments are discarded. The purpose of white space is to separate
+tokens from each other:
+
+
+<p>
+<img align=middle src="./figs/jlr0215.gif" alt="[Graphic: Figure from the text]" width=424 height=121 border=0>
+
+<P CLASS=para>
+<I CLASS=emphasis>SpaceCharacter</I>
+is equivalent to <tt CLASS=literal>\u0020</tt>.
+
+<P CLASS=para>
+<I CLASS=emphasis>HorizontalTabCharacter</I>
+is equivalent to <tt CLASS=literal>\u0009</tt> or <tt CLASS=literal>\t</tt>.
+
+<P CLASS=para>
+<I CLASS=emphasis>FormFeedCharacter</I>
+is equivalent to <tt CLASS=literal>\u000C</tt> or <tt CLASS=literal>\f</tt>.
+
+<P CLASS=para>
+<I CLASS=emphasis>EndOf&nbsp;FileMarker</I> is defined as
+<tt CLASS=literal>\u001A</tt>. Also known
+as Control-Z, this is the last character in a pre-processed compilation
+unit. It is treated as white space if it is the last character in a file,
+to enhance compatibility with
+older MS-DOS programs and other operating environments that recognize
+<tt CLASS=literal>\u001A</tt> as an end-of-file marker.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch02_01.htm#JLR2-CH-2-SECT-1.2">Division of the Input Stream into Lines</A>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch03_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Pre-Processing</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Data Types</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

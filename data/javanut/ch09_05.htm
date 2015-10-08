@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] 9.5 Advanced Serialization</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:56:49 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9<br>Object Serialization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-9-SECT-5">9.5 Advanced Serialization</A></h2>
+
+<P CLASS=para>
+The Object Serialization API also has some advanced features
+beyond those demonstrated above.  One such feature is the
+<tt CLASS=literal>Externalizable</tt> interface.  If a class implements
+this interface, the <tt CLASS=literal>ObjectInputStream</tt> and
+<tt CLASS=literal>ObjectOutputStream</tt> classes use an object's
+<tt CLASS=literal>readExternal()</tt> and <tt CLASS=literal>writeExternal()</tt> methods
+to read and write its state from a stream.  Most classes
+that want custom serialization behavior simply implement
+<tt CLASS=literal>readObject()</tt> and <tt CLASS=literal>writeObject()</tt> methods to
+do pre- and post-processing.
+<tt CLASS=literal>Externalizable</tt> objects, on the other hand, take
+complete control over reading and writing their state.  This
+interface is intended for objects that do not even want to
+use the basic serialized object data format used for all
+<tt CLASS=literal>Serializable</tt> objects.  A word processor object, for
+example, might "externalize" itself using its own native
+file format.
+
+<P CLASS=para>
+Another advanced serialization feature is the ability to
+register an <tt CLASS=literal>ObjectInputValidation</tt> object that can
+verify that an object graph has been deserialized in a
+consistent, valid state.  Typically, the root of an object
+graph registers such a validation object by calling the
+<tt CLASS=literal>registerValidation()</tt> method of the
+<tt CLASS=literal>ObjectInputStream</tt> from its own custom
+<tt CLASS=literal>readObject()</tt> method.  Then, when the graph has been
+read completely, the <tt CLASS=literal>validateObject()</tt> method of the
+<tt CLASS=literal>ObjectInputValidation</tt> object is called to perform
+whatever validity checks are necessary.
+
+<P CLASS=para>
+Finally, you may notice that <tt CLASS=literal>ObjectOutputStream</tt> and
+<tt CLASS=literal>ObjectInputStream</tt> have methods like
+<tt CLASS=literal>annotateClass()</tt>, <tt CLASS=literal>replaceObject()</tt>,
+<tt CLASS=literal>resolveClass()</tt>, and <tt CLASS=literal>resolveObject()</tt>.  These
+are intended for use by subclasses of the object streams
+that implement special kinds of object serialization
+behavior.
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch09_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Serialized Applets</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Java Beans</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.2 Writing Classes to Work with Serialization</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:15:20 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Object Serialization</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-7-SECT-2">7.2 Writing Classes to Work with Serialization</A></h2>
+
+<P CLASS=para>
+Writing a class that works with serialization is a bit more
+complicated than simply using that class for
+serialization. Essentially, an <tt CLASS=literal>ObjectOutputStream</tt>
+must write enough of an object's state information so that the
+object can be reconstructed. If an object refers to other objects,
+those objects must be written, and so on, until all of the objects
+the original object refers to, directly or indirectly, are
+written. An <tt CLASS=literal>ObjectOutputStream</tt> does not actually
+write a <tt CLASS=literal>Class</tt> object that describes an object it is
+serializing. Instead, an <tt CLASS=literal>ObjectOutputStream</tt> writes
+an <tt CLASS=literal>ObjectStreamClass</tt> object that identifies the
+class of the object. Thus, a program that reads a serialized object
+must have access to a <tt CLASS=literal>Class</tt> object that describes
+the object being deserialized.
+
+<P CLASS=para>
+When you are writing a new class, you need to decide whether or not it
+should be serializable. Serialization does not make sense for every
+class.  For example, a <tt CLASS=literal>Thread</tt> object encapsulates
+information that is meaningful only within the process that created
+it, so serialization is not appropriate. In order for instances of a
+class to be serializable, the class must implement the
+<tt CLASS=literal>Serializable</tt> interface. The
+<tt CLASS=literal>Serializable</tt> interface does not declare any methods
+or variables, so it simply acts as an indicator of
+serializability. The <tt CLASS=literal>writeObject()</tt> method of an
+<tt CLASS=literal>ObjectOutputStream</tt> throws a
+<tt CLASS=literal>NotSerializableException</tt> if it is asked to
+serialize an object that does not implement the
+<tt CLASS=literal>Serializable</tt> interface.
+
+<P CLASS=para>
+The default serialization mechanism is implemented by the
+<tt CLASS=literal>writeObject()</tt> method in
+<tt CLASS=literal>ObjectOutputStream</tt>.  When an object is serialized,
+the class of the object is encoded, along with the class name, the
+signature of the class, the values of the
+non-<tt CLASS=literal>static</tt> and non-<tt CLASS=literal>transient</tt>
+fields of the object, including any other objects referenced by the
+object (except those that do not implement the
+<tt CLASS=literal>Serializable</tt> interface themselves). Multiple
+references to the same object are encoded using a reference-sharing
+mechanism, so that a graph of objects can be restored
+appropriately. Strings and arrays are objects in Java, so they are
+treated as objects during serialization (and deserialization).
+
+<P CLASS=para>
+The default deserialization mechanism mirrors the serialization
+mechanism.  The default deserialization mechanism is implemented by
+the <tt CLASS=literal>readObject()</tt> method in
+<tt CLASS=literal>ObjectInputStream</tt>.  When an object is deserialized,
+the non-<tt CLASS=literal>static</tt> and non-<tt CLASS=literal>transient</tt>
+fields of the object are restored to the values they had when the
+object was serialized, including any other objects referenced by the
+object (except for those objects that do not implement the
+<tt CLASS=literal>Serializable</tt> interface themselves). New object
+instances are always allocated during the deserialization process, to
+prevent existing objects from being overwritten.  Deserialized objects
+are returned as instances of type <tt CLASS=literal>Object</tt>, so they
+should be cast to the appropriate type.
+
+<P CLASS=para>
+Some classes can simply implement the <tt CLASS=literal>Serializable</tt>
+interface and make use of the default serialization and
+deserialization mechanisms. However, a class may need to handle two
+other issues in order to work with serialization:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>If any of the superclasses of the class do not
+implement the <tt CLASS=literal>Serializable</tt> interface, the class
+must take care of writing any necessary state information for those
+superclasses during serialization and reading the information back
+during deserialization.
+
+<P CLASS=para>
+When an object is serialized, all of the serializable state
+information defined by its class and any superclasses that implement
+the <tt CLASS=literal>Serializable</tt> interface is written to the byte
+stream. However, any state information defined by superclasses that do
+not implement the <tt CLASS=literal>Serializable</tt> interface is not
+written to the byte stream.
+
+<P CLASS=para>
+When an object is deserialized, the state information defined by its
+<tt CLASS=literal>Serializable</tt> superclasses is restored from the byte
+stream. By default, the state information for a superclass that does
+not implement the <tt CLASS=literal>Serializable</tt> interface is
+initialized by called the no-argument constructor for the
+superclass. If that superclass does not have a no-argument
+constructor, deserialization fails and the
+<tt CLASS=literal>readObject()</tt> method throws a
+<tt CLASS=literal>NoSuchMethodError</tt>.
+
+<P CLASS=para>
+If the objects of a class refer to other objects that are not
+<tt CLASS=literal>Serializable</tt>, the class must take care of writing
+any necessary state information for the referenced objects during
+serialization and reading the information back during deserialization.
+
+<P>
+</UL>
+<P CLASS=para>
+A class can override the default serialization logic by defining the following 
+method: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+private void writeObject(ObjectOutputStream stream) throws IOException
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now, when an object of the class is serialized, this method is called instead 
+of the default mechanism. Note that <tt CLASS=literal>writeObject()</tt> 
+is <tt CLASS=literal>private</tt>, so it is not inherited 
+by subclasses. The implementation of a <tt CLASS=literal>writeObject()</tt> 
+method normally begins by calling the <tt CLASS=literal>defaultWriteObject()</tt> 
+method of <tt CLASS=literal>ObjectOutputStream</tt>, 
+which implements the default serialization logic. After that, a <tt CLASS=literal>writeObject()</tt> 
+method normally goes on to write whatever information is appropriate to 
+reconstruct values that are not directly serialized. 
+
+<P CLASS=para>
+By the same token, a class can override the default deserialization logic 
+by defining the following method: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+private void readObject(ObjectInputStream stream)
+             throws IOException, ClassNotFoundException
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now, when an object of the class is deserialized, this method is called 
+instead of the default mechanism. <tt CLASS=literal>readObject()</tt> 
+is also private and thus not inherited by subclasses. The implementation 
+of a <tt CLASS=literal>readObject()</tt> method normally 
+begins by calling the <tt CLASS=literal>defaultReadObject()</tt> 
+method of <tt CLASS=literal>ObjectInputStream</tt>, 
+which implements the default deserialization logic. After that, a <tt CLASS=literal>readObject()</tt> 
+method normally goes on to read whatever information is appropriate to 
+reconstruct the values that are not directly serialized. 
+
+<P CLASS=para>
+Let's take a look at a <tt CLASS=literal>Serializable</tt> 
+class that has <tt CLASS=literal>writeObject()</tt> 
+and <tt CLASS=literal>readObject()</tt> methods. The 
+example below is a partial listing of a class that accesses data using 
+a <tt CLASS=literal>RandomAccessFile</tt> object. 
+<tt CLASS=literal>RandomAccessFile</tt> objects are 
+not <tt CLASS=literal>Serializable</tt> because they 
+encapsulate information that is meaningful only on the local system and 
+only for a limited amount of time. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class TextFileReader implements Serializable {
+    private transient RandomAccessFile file;
+    private String browseFileName;
+    ...
+    private void writeObject(ObjectOutputStream stream) throws IOException{
+        stream.defaultWriteObject();
+        stream.writeLong(file.getFilePointer());
+    }
+    private void readObject(ObjectInputStream stream) throws IOException {
+        try {
+            stream.defaultReadObject();
+        }catch (ClassNotFoundException e) {
+            String msg = "Unable to find class";
+            if (e.getMessage() != null)
+                msg += ": " + e.getMessage();
+            throw new IOException(msg);
+        }
+        file = new RandomAccessFile(browseFileName, "r");
+        file.seek(stream.readLong());
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The above example gets around being unable to serialize
+<tt CLASS=literal>RandomAccessFile</tt> objects by having enough
+information during deserialization to construct a
+<tt CLASS=literal>RandomAccessFile</tt> object that is similar to the
+original. The name of the file accessed by the
+<tt CLASS=literal>RandomAccessFile</tt> object is specified by the
+<tt CLASS=literal>browseFileName</tt> variable; this state information is
+handled by the default serialization mechanism. In addition, the
+<tt CLASS=literal>writeObject()</tt> method writes out the current value
+returned by the original <tt CLASS=literal>RandomAccessFile</tt>
+object's <tt CLASS=literal>getFilePointer()</tt> method, so that
+<tt CLASS=literal>readObject()</tt> can pass that value to the
+<tt CLASS=literal>seek()</tt> method of a new
+<tt CLASS=literal>RandomAccessFile</tt> object.
+
+<P CLASS=para>
+Some sets of objects are more complicated to reconstruct than an instance 
+of the above class and its <tt CLASS=literal>RandomAccessFile</tt> 
+object. In such cases, the information to reconstruct the objects may be 
+spread out over multiple objects in the set. The <tt CLASS=literal>ObjectInputValidation</tt> 
+interface provides a way to handle this situation. As the <tt CLASS=literal>readObject()</tt> 
+method of <tt CLASS=literal>ObjectInputStream</tt> 
+reads a set of objects, it notices which of those objects implement the 
+<tt CLASS=literal>ObjectInputValidation</tt> interface. 
+After <tt CLASS=literal>readObject()</tt> is done 
+reading a set of objects, but before it returns, it calls the <tt CLASS=literal>validateObject()</tt> 
+method for each object in the set that implements the <tt CLASS=literal>ObjectInputValidation</tt> 
+interface. If one of those methods is unable to properly reconstruct something 
+or detects an inconsistency of some sort, it should throw an <tt CLASS=literal>ObjectInvalidException</tt>. 
+Note that the order in which the <tt CLASS=literal>validateObject()</tt> 
+methods are called is not documented. 
+
+<P CLASS=para>
+It is also possible for a class to take complete control over its serialized 
+representation, using the <tt CLASS=literal>Externalizable</tt> 
+interface. The <tt CLASS=literal>Externalizable</tt> 
+interface extends the <tt CLASS=literal>Serializable</tt> 
+interface and defines two methods: <tt CLASS=literal>writeExternal()</tt> 
+and <tt CLASS=literal>readExternal()</tt>. During 
+serialization, if an object implements <tt CLASS=literal>Externalizable</tt>, 
+its <tt CLASS=literal>writeExternal()</tt> method 
+is called. The <tt CLASS=literal>writeExternal()</tt> 
+method is responsible for writing all of the information in the object. 
+Similarly, during deserialization, if an object implements <tt CLASS=literal>Externalizable</tt>, 
+its <tt CLASS=literal>readExternal()</tt> method is 
+called. The <tt CLASS=literal>readExternal()</tt> 
+method is responsible for reading all of the information in the object. 
+Note that the <tt CLASS=literal>Externalizable</tt> 
+mechanism is used instead of, not in addition to, the mechanism for handling 
+<tt CLASS=literal>Serializable</tt> objects. 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Object Serialization Basics</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Versioning of Classes</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

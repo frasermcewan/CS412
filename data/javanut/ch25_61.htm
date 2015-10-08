@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 25] 25.61 java.lang.Thread (JDK 1.0)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:27:51 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_60.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 25<br>The java.lang Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch25_62.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-61">25.61 java.lang.Thread (JDK 1.0)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-61.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This class encapsulates all the information about a
+single thread of control running on the Java
+interpreter. To create a thread, you must pass a
+<tt CLASS=literal>Runnable</tt> object (i.e., an object that implements
+the <tt CLASS=literal>Runnable</tt> interface by defining a
+<tt CLASS=literal>run()</tt> method) to the <tt CLASS=literal>Thread</tt>
+constructor, or you must subclass <tt CLASS=literal>Thread</tt> so
+that it defines its own <tt CLASS=literal>run()</tt> method.
+
+<P CLASS=para>
+The <tt CLASS=literal>run()</tt> method of
+the <tt CLASS=literal>Thread</tt> or of the specified <tt CLASS=literal>Runnable</tt> object is the
+"body" of the thread. It begins executing when the
+<tt CLASS=literal>start()</tt> method of the <tt CLASS=literal>Thread</tt> object is
+called. The thread runs until the <tt CLASS=literal>run()</tt> method
+returns or until the <tt CLASS=literal>stop()</tt> method of its
+<tt CLASS=literal>Thread</tt> object is called. The static methods of
+this class operate on the currently running thread. 
+The instance methods may be called from one thread to
+operate on a different thread.
+
+<P CLASS=para>
+<tt CLASS=literal>start()</tt> starts a thread running. <tt CLASS=literal>stop()</tt>
+stops it by throwing a <tt CLASS=literal>ThreadDeath</tt> error.
+<tt CLASS=literal>suspend()</tt> temporarily halts a thread.
+<tt CLASS=literal>resume()</tt> allows it to resume. <tt CLASS=literal>sleep()</tt> makes
+the current thread stop for a specified amount of time.
+<tt CLASS=literal>yield()</tt> makes the current thread give up control to
+any other threads of equal priority that are waiting to run.
+<tt CLASS=literal>join()</tt> waits for a thread to die.
+<tt CLASS=literal>interrupt()</tt> wakes up a waiting or sleeping thread
+(with an <tt CLASS=literal>InterruptedException</tt>) or sets an
+"interrupted" flag on a non-sleeping thread.  A thread can
+test its own "interrupted" flag with <tt CLASS=literal>interrupted()</tt>
+or can test the flag of another thread with
+<tt CLASS=literal>isInterrupted()</tt>.  The <tt CLASS=literal>Object</tt> <tt CLASS=literal>wait()</tt>
+method makes the current thread block until the object's
+<tt CLASS=literal>notify()</tt> method is called by another thread.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class <tt CLASS=literal>Thread</tt> extends Object implements Runnable {
+    // <tt CLASS=literal>Public Constructors</tt>
+            public <tt CLASS=literal>Thread</tt>();
+            public <tt CLASS=literal>Thread</tt>(Runnable <tt CLASS=literal>target</tt>);
+            public <tt CLASS=literal>Thread</tt>(ThreadGroup <tt CLASS=literal>group</tt>, Runnable <tt CLASS=literal>target</tt>);
+            public <tt CLASS=literal>Thread</tt>(String <tt CLASS=literal>name</tt>);
+            public <tt CLASS=literal>Thread</tt>(ThreadGroup <tt CLASS=literal>group</tt>, String <tt CLASS=literal>name</tt>);
+            public <tt CLASS=literal>Thread</tt>(Runnable <tt CLASS=literal>target</tt>, String <tt CLASS=literal>name</tt>);
+            public <tt CLASS=literal>Thread</tt>(ThreadGroup <tt CLASS=literal>group</tt>, Runnable <tt CLASS=literal>target</tt>, String <tt CLASS=literal>name</tt>);
+    // <tt CLASS=literal>Constants</tt>
+            public static final int <tt CLASS=literal>MAX_PRIORITY</tt>;
+            public static final int <tt CLASS=literal>MIN_PRIORITY</tt>;
+            public static final int <tt CLASS=literal>NORM_PRIORITY</tt>;
+    // <tt CLASS=literal>Class Methods</tt>
+            public static int <tt CLASS=literal>activeCount</tt>();
+            public static native Thread <tt CLASS=literal>currentThread</tt>();
+            public static void <tt CLASS=literal>dumpStack</tt>();
+            public static int <tt CLASS=literal>enumerate</tt>(Thread[] <tt CLASS=literal>tarray</tt>);
+            public static boolean <tt CLASS=literal>interrupted</tt>();
+            public static native void <tt CLASS=literal>sleep</tt>(long <tt CLASS=literal>millis</tt>) throws InterruptedException;
+            public static void <tt CLASS=literal>sleep</tt>(long <tt CLASS=literal>millis</tt>, int <tt CLASS=literal>nanos</tt>) throws InterruptedException;
+            public static native void <tt CLASS=literal>yield</tt>();
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public void <tt CLASS=literal>checkAccess</tt>();
+            public native int <tt CLASS=literal>countStackFrames</tt>();
+            public void <tt CLASS=literal>destroy</tt>();
+            public final String <tt CLASS=literal>getName</tt>();
+            public final int <tt CLASS=literal>getPriority</tt>();
+            public final ThreadGroup <tt CLASS=literal>getThreadGroup</tt>();
+            public void <tt CLASS=literal>interrupt</tt>();
+            public final native boolean <tt CLASS=literal>isAlive</tt>();
+            public final boolean <tt CLASS=literal>isDaemon</tt>();
+            public boolean <tt CLASS=literal>isInterrupted</tt>();
+            public final synchronized void <tt CLASS=literal>join</tt>(long <tt CLASS=literal>millis</tt>) throws InterruptedException;
+            public final synchronized void <tt CLASS=literal>join</tt>(long <tt CLASS=literal>millis</tt>, int <tt CLASS=literal>nanos</tt>) throws InterruptedException;
+            public final void <tt CLASS=literal>join</tt>() throws InterruptedException;
+            public final void <tt CLASS=literal>resume</tt>();
+            public void <tt CLASS=literal>run</tt>();  //<tt CLASS=literal> From Runnable</tt>
+            public final void <tt CLASS=literal>setDaemon</tt>(boolean <tt CLASS=literal>on</tt>);
+            public final void <tt CLASS=literal>setName</tt>(String <tt CLASS=literal>name</tt>);
+            public final void <tt CLASS=literal>setPriority</tt>(int <tt CLASS=literal>newPriority</tt>);
+            public synchronized native void <tt CLASS=literal>start</tt>();
+            public final void <tt CLASS=literal>stop</tt>();
+            public final synchronized void <tt CLASS=literal>stop</tt>(Throwable <tt CLASS=literal>o</tt>);
+            public final void <tt CLASS=literal>suspend</tt>();
+            public String <tt CLASS=literal>toString</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-61.2">Passed To:</A></h3>
+
+<P CLASS=para>
+SecurityManager.checkAccess(), 
+Thread.enumerate(), 
+ThreadGroup.enumerate(), 
+ThreadGroup.uncaughtException()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-25-SECT-61.3">Returned By:</A></h3>
+
+<P CLASS=para>
+Thread.currentThread()
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch25_60.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch25_62.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.lang.System (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.lang.ThreadDeath (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

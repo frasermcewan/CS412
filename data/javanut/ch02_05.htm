@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 2] 2.5 Unicode and Character Escapes</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:47:45 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 2<br>How Java Differs from C</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch02_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-2-SECT-5">2.5 Unicode and Character Escapes</A></h2>
+
+<P CLASS=para>
+<A NAME="UNICODE-CHARACTER-SET"></A><A NAME="CHARACTER-ESCAPES"></A>Java characters, strings, and identifiers (e.g., variable,
+method, and class names) are composed of 16-bit Unicode
+characters.  This makes Java programs relatively easy to
+internationalize for non-English-speaking users. It also
+makes the language easier to work with for non-English-speaking
+programmers--a Thai programmer could use the Thai alphabet
+for class and method names in her Java code.  
+
+<P CLASS=para>
+If two-byte characters seem confusing or intimidating to you,
+fear not.  The Unicode character set is compatible with
+ASCII and the first 256 characters (0x0000 to 0x00FF) are
+identical to the ISO8859-1 (Latin-1) characters 0x00 to
+0xFF.  Furthermore, the Java language design and the Java
+<tt CLASS=literal>String</tt> API make the character representation
+entirely transparent to you.  If you are using only Latin-1
+characters, there is no way that you can even
+distinguish a Java 16-bit character from the 8-bit
+characters you are familiar with. For more information on 
+Unicode, see <A HREF="ch11_01.htm">Chapter 11, <i>Internationalization</i></A>.
+
+<P CLASS=para>
+Most platforms cannot display all 38,885 currently defined Unicode characters,
+so Java programs may be written (and Java output may appear)
+with special Unicode escape sequences.  Anywhere within a
+Java program (not only within character and string
+literals), a Unicode character may be represented with the
+Unicode escape sequence <tt CLASS=literal>\u</tt><I CLASS=emphasis><tt CLASS=literal>xxxx</tt></I>, where <I CLASS=emphasis><tt CLASS=literal>xxxx</tt></I> is a sequence of four hexadecimal digits.
+
+<P CLASS=para>
+<A NAME="C-PROGRAMMING-LANGUAGE2"></A>Java also supports all of the standard C character escape
+sequences, such as <tt CLASS=literal>\n</tt>, <tt CLASS=literal>\t</tt>, and
+<tt CLASS=literal>\</tt><I CLASS=emphasis><tt CLASS=literal>xxx</tt></I> 
+(where <tt CLASS=literal>\</tt><I CLASS=emphasis><tt CLASS=literal>xxx</tt></I>is three octal digits).
+Note, however, that Java does not support line continuation
+with <tt CLASS=literal>\</tt> at the end of a line.  Long strings must
+either be specified on a single long line, or they must be
+created from shorter strings using the string concatenation
+(<tt CLASS=literal>+</tt>) operator.  
+(Note that the concatenation of two
+constant strings is done at compile-time rather than at
+run-time, so using the <tt CLASS=literal>+</tt> operator in this way is not
+inefficient.)
+
+<P CLASS=para>
+There are two important differences between Unicode escapes
+and C-style escape characters.  First, as we've noted,
+Unicode escapes can appear anywhere within a Java program,
+while the other escape characters can appear only in
+character and string constants.
+
+<P CLASS=para>
+The second, and more subtle, difference is that Unicode
+<tt CLASS=literal>\u</tt> escape sequences are processed before the other
+escape characters, and thus the two types of escape
+sequences can have very different semantics.  A Unicode
+escape is simply an alternative way to represent a character
+that may not be displayable on certain (non-Unicode)
+systems.  Some of the character escapes, however, represent
+special characters in a way that prevents the usual
+interpretation of those characters by the compiler.  The
+following examples make this difference clear.  Note that
+<tt CLASS=literal>\u0022</tt> and <tt CLASS=literal>\u005c</tt> are the Unicode escapes
+for the double-quote character and the backslash character.
+
+<P CLASS=para>
+<DIV CLASS=screen>
+<P>
+<PRE>
+// \" represents a " character, and prevents the normal
+// interpretation of that character by the compiler.
+// This is a string consisting of a double-quote character.
+String quote = "\"";
+// We can't represent the same string with a single Unicode escape.
+// \u0022 has exactly the same meaning to the compiler as ".
+// The string below turns into """: an empty string followed
+// by an unterminated string, which yields a compilation error.
+String quote = "\u0022";
+// Here we represent both characters of an \" escape as
+// Unicode escapes. This turns into "\"", and is the same
+// string as in our first example.
+String quote = "\u005c\u0022";
+</PRE>
+</DIV>
+
+<P CLASS=para>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch02_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch02_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>No Preprocessor</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Primitive Data Types</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

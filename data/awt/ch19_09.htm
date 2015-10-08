@@ -1,0 +1,906 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 19] CardLayout</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:09:37 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 19<br>java.awt Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch19_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>CardLayout</H1>
+
+<H2>Name</H2>
+
+CardLayout
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch19-REFSECT1-AUTOID.9"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/cardlay.gif" alt="[Graphic: Figure from the text]" width=502 height=113 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-1">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>CardLayout</tt> <tt CLASS=literal>LayoutManager</tt> 
+provides the means to manage multiple components, displaying one at a time. 
+Components are displayed in the order in which they are added to the layout, 
+or in an arbitrary order by using an assignable name. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-2">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.awt.CardLayout
+    extends java.lang.Object
+    implements java.awt.LayoutManager2, java.io.Serializable {
+  
+  // Constructors
+  public CardLayout();
+  public CardLayout (int hgap, int vgap);
+  
+  // Instance Methods
+  public void addLayoutComponent (Component comp, 
+      Object constraints); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public void addLayoutComponent (String name, Component component); <img src="gifs/wstar.gif" alt="(Deprecated)" border=0>
+  public void first (Container parent);
+  public int getHgap(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract float getLayoutAlignmentX(Container target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract float getLayoutAlignmentY(Container target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public int getVgap(); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public abstract void invalidateLayout(Container target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public void last (Container parent); 
+  public void layoutContainer (Container target); 
+  public abstract Dimension maximumLayoutSize(Container target); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public Dimension minimumLayoutSize (Container target); 
+  public void next (Container parent); 
+  public Dimension preferredLayoutSize (Container target); 
+  public void previous (Container parent); 
+  public void removeLayoutComponent (Component component); 
+  public void setHgap (int hgap); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public void setVgap (int vgap); <img src="gifs/bstar.gif" alt="(New)" border=0>
+  public void show (Container parent, String name); 
+  public String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-3">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-3.1">CardLayout</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-3.1.1">public CardLayout()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>CardLayout</tt> object. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-3.1.2">public CardLayout (int hgap, int vgap)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>hgap</I><br>
+<DD>
+
+<P CLASS=para>
+Horizontal space around left and right of container 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>vgap</I><br>
+<DD>
+
+<P CLASS=para>
+Vertical space around top and bottom of container </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs a <tt CLASS=literal>CardLayout</tt> object 
+with the values specified as the gaps around the container managed by this 
+instance of <tt CLASS=literal>CardLayout</tt>. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.1">addLayoutComponent</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.1.1">public void addLayoutComponent (Component comp, Object constraints) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>comp</I><br>
+<DD>
+
+<P CLASS=para>
+The component being added. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>constraints</I><br>
+<DD>
+
+<P CLASS=para>
+An object describing the constraints on this component. </DL>
+<p>
+<DT CLASS=varlistentry>Implements <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager2.addLayoutComponent()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Adds the component <tt CLASS=literal>comp</tt> to 
+a container subject to the given <tt CLASS=literal>constraints</tt>. 
+This is a more generalized version of <tt CLASS=literal>addLayoutComponent(String, 
+Component)</tt>. It corresponds to <tt CLASS=literal>java.awt.Container's 
+add(Component, Object)</tt>. In practice, it is used 
+the same in Java 1.1 as in Java 1.0.2, except with the parameters 
+swapped: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Panel p = new Panel();
+p.setLayoutManager(new CardLayout());
+p.add(new Button("OK"), "Don Julio");
+</PRE>
+</DIV>
+
+</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.2">addLayoutComponent</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.2.1">public void addLayoutComponent (String name, Component component) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>name</I><br>
+<DD>
+
+<P CLASS=para>
+Name of the component to add. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>component</I><br>
+<DD>
+
+<P CLASS=para>
+The actual component being added. </DL>
+<p>
+<DT CLASS=varlistentry>Implements <br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.addLayoutComponent()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Places <tt CLASS=literal>component</tt> under the 
+layout's management, assigning it the given <tt CLASS=literal>name</tt>. 
+This has been replaced in version 1.1 with the more general <tt CLASS=literal>addLayoutComponent(Component, 
+Object)</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.3">first</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.3.1">public void first (Container parent)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>parent</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose displayed component is changing. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>LayoutManager</tt> of <tt CLASS=literal>parent</tt> is not <tt CLASS=literal>CardLayout</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the container to display the first component in parent. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.4">getHgap</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.4.1">public int getHgap() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The horizontal gap for this <tt CLASS=literal>CardLayout</tt> 
+instance. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.5">getLayoutAlignmentX</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.5.1">public abstract float getLayoutAlignmentX (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container to inspect. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value .5 for all containers. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the preferred alignment of the given container <tt CLASS=literal>target</tt>. 
+A return value of 0 is left aligned, .5 is centered, and 1 is right aligned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.6">getLayoutAlignmentY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.6.1">public abstract float getLayoutAlignmentY (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container to inspect. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The value .5 for all containers. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the preferred alignment of the given container <tt CLASS=literal>target</tt>. 
+A return value of 0 is top aligned, .5 is centered, and 1 is bottom aligned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.7">getVgap</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.7.1">public int getVgap() <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The vertical gap for this <tt CLASS=literal>CardLayout</tt> 
+instance. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.8">invalidateLayout</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.8.1">public abstract void invalidateLayout (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container to invalidate. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Does nothing. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.9">last</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.9.1">public void last (Container parent)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>parent</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose displayed component is changing. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>LayoutManager</tt> of <tt CLASS=literal>parent</tt> is not <tt CLASS=literal>CardLayout</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the container to display the final component in parent. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.10">layoutContainer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.10.1">public void layoutContainer (Container target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container that needs to be redrawn. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.layoutContainer()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Displays the currently selected component contained within <tt CLASS=literal>target</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.11">maximumLayoutSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.11.1">public abstract Dimension maximumLayoutSize (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container to inspect. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A <tt CLASS=literal>Dimension</tt> whose horizontal 
+and vertical components are <tt CLASS=literal>Integer.MAX_VALUE</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+For <tt CLASS=literal>CardLayout</tt>, a maximal <tt CLASS=literal>Dimension</tt> 
+is always returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.12">minimumLayoutSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.12.1">public Dimension minimumLayoutSize (Container target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose size needs to be calculated. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Minimum <tt CLASS=literal>Dimension</tt> of the container 
+<tt CLASS=literal>target</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.minimumLayoutSize()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Calculates minimum size of the <tt CLASS=literal>target</tt> container. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.13">next</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.13.1">public void next (Container parent)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>parent</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose displayed component is changing. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>LayoutManager</tt> of <tt CLASS=literal>parent</tt> is not <tt CLASS=literal>CardLayout</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the container to display the following component in the parent. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.14">preferredLayoutSize</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.14.1">public Dimension preferredLayoutSize (Container target)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>target</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose size needs to be calculated. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+Preferred <tt CLASS=literal>Dimension o</tt>f the 
+container <tt CLASS=literal>target</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.preferredLayoutSize()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Calculates preferred size of the <tt CLASS=literal>target</tt> 
+container. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.15">previous</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.15.1">public void previous (Container parent)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>parent</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose displayed component is changing. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the <tt CLASS=literal>LayoutManager</tt> of <tt CLASS=literal>parent</tt> is not <tt CLASS=literal>CardLayout</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the container to display the prior component in <tt CLASS=literal>parent</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.16">removeLayoutComponent</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.16.1">public void removeLayoutComponent (Component component)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>component</I><br>
+<DD>
+
+<P CLASS=para>
+Component to stop tracking. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>LayoutManager.removeLayoutComponent()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Removes <tt CLASS=literal>component</tt> from the 
+layout manager's internal tables. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.17">setHgap</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.17.1">public void setHgap (int hgap) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>hgap</I><br>
+<DD>
+
+<P CLASS=para>
+The horizontal gap value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the horizontal gap for the left and right of the container. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.18">setVgap</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.18.1">public void setVgap (int vgap) <img src="gifs/bstar.gif" alt="(New)" border=0></A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>vgap</I><br>
+<DD>
+
+<P CLASS=para>
+The vertical gap value. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the vertical gap for the top and bottom of the container. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.19">show</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.19.1">public void show (Container parent, String name)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>parent</I><br>
+<DD>
+
+<P CLASS=para>
+The container whose displayed component is changing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>name</I><br>
+<DD>
+
+<P CLASS=para>
+Name of component to display. </DL>
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>IllegalArgumentException</tt><br>
+<DD>
+
+<P CLASS=para>
+If <tt CLASS=literal>LayoutManager</tt> 
+of <tt CLASS=literal>parent</tt> is not <tt CLASS=literal>CardLayout</tt>. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the container to display the component <tt CLASS=literal>name</tt> 
+in <tt CLASS=literal>parent</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.20">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-4.20.1">public String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of the <tt CLASS=literal>CardLayout</tt> object. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="JAWT-CH-19-REF-CARDLAYOUT-SECT-5">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Component</tt>, <tt CLASS=literal>Container</tt>, 
+<tt CLASS=literal>Dimension</tt>, <tt CLASS=literal>LayoutManager</tt>, 
+<tt CLASS=literal>LayoutManager2</tt>, <tt CLASS=literal>Object</tt>, 
+<tt CLASS=literal>String</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch19_08.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch19_10.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Canvas</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Checkbox</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

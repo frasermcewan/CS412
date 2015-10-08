@@ -1,0 +1,588 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.5 Frames</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:36:54 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Containers</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-5">6.5 Frames</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.FRAME"></A>The <tt CLASS=literal>Frame</tt> is a special type 
+of <tt CLASS=literal>Window</tt> that looks like other 
+high level programs in your windowing environment. It adds a <tt CLASS=literal>MenuBar</tt>, 
+window title, and window gadgets (like resize, maximize, minimize, window 
+menu) to the basic <tt CLASS=literal>Window</tt> object. 
+All the menu-related pieces are discussed in <A HREF="ch10_01.htm">Chapter 10, <i>Would You Like to Choose from the Menu?</i></A> 
+
+<P CLASS=para>
+The default layout manager for a <tt CLASS=literal>Frame</tt> 
+is <tt CLASS=literal>BorderLayout</tt>. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-5.1">Frame Constants</A></h3><A NAME="CH06.FRAMECLASS"></A>
+
+<P CLASS=para>
+The <tt CLASS=literal>Frame</tt> class includes a number of constants used
+to specify cursors.  These constants are left over from Java 1.0 and
+maintained for compatibility.  In Java 1.1, you should use the new
+<tt CLASS=literal>Cursor</tt> class, introduced in the previous chapter,
+and the <tt CLASS=literal>Component.setCursor()</tt> method to change the
+cursor over a frame. Avoid using the <tt CLASS=literal>Frame</tt>
+constants for new code. To see these cursors, refer to <A HREF="ch05_07.htm#JAWT-CH-5-FIG-6">Figure 5.6</A>.
+
+<DIV CLASS=simplelist>
+
+<P>
+<I CLASS=emphasis>public final static int DEFAULT_CURSOR </I><br>
+<I CLASS=emphasis>public final static int CROSSHAIR_CURSOR </I><br>
+<I CLASS=emphasis>public final static int TEXT_CURSOR </I><br>
+<I CLASS=emphasis>public final static int WAIT_CURSOR </I><br>
+<I CLASS=emphasis>public final static int SW_RESIZE_CURSOR </I><br>
+<I CLASS=emphasis>public final static int SE_RESIZE_CURSOR </I><br>
+<I CLASS=emphasis>public final static int NW_RESIZE_CURSOR </I><br>
+<I CLASS=emphasis>public final static int NE_RESIZE_CURSOR </I><br>
+<I CLASS=emphasis>public final static int N_RESIZE_CURSOR </I><br>
+<I CLASS=emphasis>public final static int S_RESIZE_CURSOR </I><br>
+<I CLASS=emphasis>public final static int W_RESIZE_CURSOR </I><br>
+<I CLASS=emphasis>public final static int E_RESIZE_CURSOR </I><br>
+<I CLASS=emphasis>public final static int HAND_CURSOR </I><br>
+<I CLASS=emphasis>public final static int MOVE_CURSOR </I><br>
+</DIV>
+
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>HAND_CURSOR</tt> and 
+<tt CLASS=literal>MOVE_CURSOR</tt> are not available 
+on Windows platforms with Java 1.0. If you ask to use these and they are 
+not available, you get <tt CLASS=literal>DEFAULT_CURSOR</tt>. 
+</blockquote><P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-5.2">Frame Constructors</A></h3>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Frame () </I><br>
+<DD>
+
+<P CLASS=para>
+The constructor for <tt CLASS=literal>Frame</tt> creates 
+a hidden window with a window title of "Untitled" (&nbsp;&nbsp;Java1.0) 
+or an empty string (&nbsp;&nbsp;Java1.1). Like <tt CLASS=literal>Window</tt>, 
+the default <tt CLASS=literal>LayoutManager</tt> of 
+a <tt CLASS=literal>Frame</tt> is <tt CLASS=literal>BorderLayout</tt>. 
+<tt CLASS=literal>DEFAULT_CURSOR</tt> is the initial cursor. 
+To position the <tt CLASS=literal>Frame</tt> on the 
+screen, call <tt CLASS=literal>Component.move()</tt>. 
+Since the <tt CLASS=literal>Frame</tt> is initially 
+hidden, you need to call the <tt CLASS=literal>show()</tt> 
+method before the user sees the <tt CLASS=literal>Frame</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Frame (String title) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>Frame</tt>'s constructor is identical to the first but 
+sets the window title to <tt CLASS=literal>title</tt>. 
+<A HREF="ch06_05.htm#JAWT-CH-6-FIG-3">Figure 6.3</A> shows the results of a call to <tt CLASS=literal>new 
+Frame("My Frame")</tt> followed by <tt CLASS=literal>resize()</tt> 
+and <tt CLASS=literal>show()</tt>. </DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-3">Figure 6.3: A typical Frame</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0603.gif" alt="[Graphic: Figure 6-3]" width=185 height=185 border=0>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-5.3">Frame Methods</A></h3>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getTitle () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getTitle()</tt> method returns 
+the current title for the <tt CLASS=literal>Frame</tt>. 
+If there is no title, this method returns <tt CLASS=literal>null</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setTitle (String title) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setTitle()</tt> method changes 
+the <tt CLASS=literal>Frame</tt>'s title to 
+<tt CLASS=literal>title</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Image getIconImage () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getIconImage()</tt> method returns 
+the image used as the icon. Initially, this returns <tt CLASS=literal>null</tt>. 
+For some platforms, the method should not be used because the platform 
+does not support the concept. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setIconImage (Image image) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setIconImage()</tt> method changes 
+the image to display when the <tt CLASS=literal>Frame</tt> 
+is iconified to <tt CLASS=literal>image</tt>. Not 
+all platforms utilize this resource. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public MenuBar getMenuBar () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getMenuBar()</tt> method retrieves 
+the <tt CLASS=literal>Frame</tt>'s current menu 
+bar. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void setMenuBar (MenuBar bar) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setMenuBar()</tt> method changes the menu bar of the
+<tt CLASS=literal>Frame</tt> to <tt CLASS=literal>bar</tt>. If
+<tt CLASS=literal>bar</tt> is <tt CLASS=literal>null</tt>, it removes the menu
+bar so that none is available. It is possible to have multiple menu
+bars based upon the context of the application. However, the same menu
+bar cannot appear on multiple frames and only one can appear at a
+time. The <tt CLASS=literal>MenuBar</tt> class, and everything to do with
+menus, is covered in <A HREF="ch10_01.htm">Chapter 10, <i>Would You Like to Choose from the Menu?</i></A>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void remove (MenuComponent component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>remove()</tt> method removes 
+<tt CLASS=literal>component</tt> from <tt CLASS=literal>Frame</tt> 
+if <tt CLASS=literal>component</tt> is the frame's 
+menu bar. This is equivalent to calling <tt CLASS=literal>setMenuBar()</tt> 
+with a parameter of <tt CLASS=literal>null</tt> and 
+in actuality is what <tt CLASS=literal>remove()</tt> 
+calls. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void dispose () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>dispose()</tt> method frees 
+up the system resources used by the <tt CLASS=literal>Frame</tt>. 
+If any <tt CLASS=literal>Dialogs</tt> or <tt CLASS=literal>Windows</tt> 
+are associated with this <tt CLASS=literal>Frame</tt>, 
+their resources are freed, too. Some people like to call <tt CLASS=literal>Component.hide()</tt> 
+before calling the <tt CLASS=literal>dispose()</tt> method so 
+users do not see the frame decomposing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isResizable () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isResizable()</tt> method will 
+tell you if the current <tt CLASS=literal>Frame</tt> 
+is resizable. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setResizable (boolean resizable) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setResizable()</tt> method changes 
+the resize state of the <tt CLASS=literal>Frame</tt>. 
+A <tt CLASS=literal>resizable</tt> value of <tt CLASS=literal>true</tt> 
+means the user can resize the <tt CLASS=literal>Frame</tt>, 
+<tt CLASS=literal>false</tt> means the user cannot. 
+This must be set before the <tt CLASS=literal>Frame</tt> 
+is shown or the peer created. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setCursor (int cursorType) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setCursor()</tt> method changes 
+the cursor of the <tt CLASS=literal>Frame</tt> to 
+<tt CLASS=literal>cursorType</tt>. <tt CLASS=literal>cursorType</tt> 
+must be one of the cursor constants provided with the <tt CLASS=literal>Frame</tt> 
+class. You cannot create your own cursor image yet. When changing from 
+the <tt CLASS=literal>DEFAULT_CURSOR</tt> to another 
+cursor, the mouse must be moved for the cursor icon to change to the new 
+cursor. If <tt CLASS=literal>cursorType</tt> is not 
+one of the predefined cursor types, <tt CLASS=literal>setCursor()</tt> 
+throws the <tt CLASS=literal>IllegalArgumentException</tt> run-time exception. 
+
+<P CLASS=para>
+This method has been replaced by the <tt CLASS=literal>Component.setCursor()</tt> 
+method. Both function equivalently, but this method is being phased out. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getCursorType () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getCursorType()</tt> method 
+retrieves the current cursor. 
+
+<P CLASS=para>
+This method has been replaced by the <tt CLASS=literal>Component.getCursor()</tt> 
+method. Both function equivalently, but this method is being phased out. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>Frame</tt> peer. This 
+is automatically done when you call the <tt CLASS=literal>show()</tt> 
+method of the <tt CLASS=literal>Frame</tt>. If you 
+override this method, first call <tt CLASS=literal>super.addNotify()</tt>, 
+then add your customizations for the new class. Then you can do everything 
+you need to do with the information about the newly created peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString () </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>Frame</tt>, the default 
+<tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Component</tt> 
+is called. This in turn calls <tt CLASS=literal>paramString()</tt>, 
+which builds up the string to display. At the <tt CLASS=literal>Frame</tt> 
+level, <tt CLASS=literal>paramString()</tt> appends 
+<tt CLASS=literal>resizable</tt> (if <tt CLASS=literal>true</tt>) 
+and the <tt CLASS=literal>title</tt> (if present). Using the default <tt CLASS=literal>Frame</tt> 
+constructor, the results would be: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Frame[0,0,0x0,invalid,hidden,layout=java.awt.BorderLayout,
+resizable,title=]
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Until the <tt CLASS=literal>Frame</tt> is shown, via 
+<tt CLASS=literal>show()</tt>, the position and size 
+are not known and therefore appear as zeros. After showing the <tt CLASS=literal>Frame</tt>, 
+you might see: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Frame[44,44,300x300,layout=java.awt.BorderLayout,
+resizable,title=]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-5.4">Frame Events</A></h3>
+
+<P CLASS=para>
+In Java 1.0, a <tt CLASS=literal>Frame</tt> peer generates all the events that 
+are generated by the <tt CLASS=literal>Component</tt> 
+class; it does not generate events that are specific to a particular type 
+of component. That is, it generates key events, mouse events, and focus 
+events; it doesn't generate action events or list events. If an event 
+happens within a child component of a <tt CLASS=literal>Frame</tt>, 
+the target of the event is the child component, not the <tt CLASS=literal>Frame</tt>.Window
+
+<P CLASS=para>
+In addition to the <tt CLASS=literal>Component</tt> 
+events, <tt CLASS=literal>Frame</tt> generates the 
+<tt CLASS=literal>WINDOW</tt> events. These events are <tt CLASS=literal>WINDOW_DESTROY</tt>, 
+<tt CLASS=literal>WINDOW_EXPOSE</tt>, <tt CLASS=literal>WINDOW_ICONIFY</tt>, 
+<tt CLASS=literal>WINDOW_DEICONIFY</tt>, and <tt CLASS=literal>WINDOW_MOVED</tt>. 
+
+<P CLASS=para>
+One common event, <tt CLASS=literal>WINDOW_DESTROY</tt>, 
+is generated when the user tries to close the <tt CLASS=literal>Frame</tt> 
+by selecting Quit, Close, or Exit 
+(depending on your windowing environment) from the window manager's 
+menu. By default, this event does nothing. You must provide an event handler 
+that explicitly closes the <tt CLASS=literal>Frame</tt>. 
+If you do not, your <tt CLASS=literal>Frame</tt> will 
+close only when the Java Virtual Machine exits--for example, when 
+you quit Netscape Navigator. The <tt CLASS=literal>handleEvent()</tt> 
+method in the following example, or one like it, should therefore be included in all 
+classes that extend <tt CLASS=literal>Frame</tt>. 
+If a <tt CLASS=literal>WINDOW_DESTROY</tt> event occurs, 
+it gets rid of the <tt CLASS=literal>Frame</tt> and exits the program. Make sure your method calls 
+<tt CLASS=literal>super.handleEvent()</tt> to process 
+the other events. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean handleEvent (Event e) {
+    if (e.id == Event.WINDOW_DESTROY) {
+        hide();
+        dispose();
+        System.exit(0);
+        return true;          // boolean method, must return something
+    } else {
+                              // handle other events we find interesting
+    }
+                              // make sure normal event processing happens
+    return super.handleEvent (e);
+}
+</PRE>
+</DIV>
+
+Listeners and 1.1 event handling
+
+<P CLASS=para>
+With the 1.1 event model, you register listeners for different event types; 
+the listeners are told when the event happens. The <tt CLASS=literal>Frame</tt> class inherits all its listener handling from <tt CLASS=literal>Window</tt>.
+
+<P CLASS=para>
+Here's the Java 1.1 code necessary to handle <tt CLASS=literal>WINDOW_CLOSING</tt> 
+events; it is equivalent to the <tt CLASS=literal>handleEvent()</tt> 
+method in the previous example. First, you must add the following line to the <tt CLASS=literal>Frame</tt>'s 
+constructor: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+enableEvents (AWTEvent.WINDOW_EVENT_MASK);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This line guarantees that we will receive window events, even if there 
+is no listener. The <tt CLASS=literal>processWindowEvent()</tt> 
+method in the following code does the actual work of closing things down: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+protected void processWindowEvent(WindowEvent e) {
+    if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+        // Notify others we are closing
+        if (windowListener != null)
+            windowListener.windowClosing(e);
+        System.exit(0);
+    } else {
+        super.processEvent(e);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If you forget to enable events, <tt CLASS=literal>processWindowEvent()</tt> 
+may never be called, and your windows will not shut down until the Java 
+Virtual Machine exits. All subclasses of <tt CLASS=literal>Frame</tt> 
+should include code like this to make sure they terminate gracefully. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-5.5">Building a New Component from a Window</A></h3>
+
+<P CLASS=para>
+Now that we have discussed the <tt CLASS=literal>Frame</tt> and <tt CLASS=literal>Window</tt> objects, we can briefly 
+investigate some ways to use them together. Previously I said that you can 
+use a <tt CLASS=literal>Window</tt> to build your own pop-up menu. That's no longer necessary 
+in Java 1.1, but the same techniques apply to plenty of other objects. In the following example, we build a set of pop-up buttons; it also uses the 
+<tt CLASS=literal>Toolkit</tt> of a <tt CLASS=literal>Frame</tt> 
+to load images within an application. The pop-up button set appears when 
+the user presses the right mouse button over the image. It is positioned 
+at the coordinates of the <tt CLASS=literal>mouseDown()</tt> 
+event; to do so, we add the current <tt CLASS=literal>location()</tt> 
+of the <tt CLASS=literal>Frame</tt> to the mouse's 
+<tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt> 
+coordinates. <A HREF="ch06_05.htm#JAWT-CH-6-FIG-4">Figure 6.4</A> shows what this application 
+looks like when the pop-up button set is on the screen. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+public class PopupButtonFrame extends Frame {
+    Image im;
+    Window w = new PopupWindow (this);
+    PopupButtonFrame () {
+        super ("PopupButton Example");
+        resize (250, 100);
+        show();
+        im = getToolkit().getImage ("rosey.jpg");
+        MediaTracker mt = new MediaTracker (this);
+        mt.addImage (im, 0);
+        try {
+            mt.waitForAll();
+        } catch (Exception e) {e.printStackTrace(); }
+    }
+    public static void main (String args[]) {
+        Frame f = new PopupMenuFrame ();
+    }
+    public void paint (Graphics g) {
+        if (im != null)
+            g.drawImage (im, 20, 20, this);
+    }
+    public boolean mouseDown (Event e, int x, int y) {
+        if (e.modifiers == Event.META_MASK) {
+            w.move (location().x+x, location().y+y);
+            w.show();
+            return true;
+        }
+        return false;
+    }
+}
+class PopupWindow extends Window {
+    PopupWindow (Frame f) {
+        super (f);
+        Panel p = new Panel ();
+        p.add (new Button ("About"));
+        p.add (new Button ("Save"));
+        p.add (new Button ("Quit"));
+        add ("North", p);
+        setBackground (Color.gray);
+        pack();
+    }
+    public boolean action (Event e, Object o) {
+        if ("About".equals (o))
+            System.out.println ("About");
+        else if ("Save".equals (o))
+            System.out.println ("Save Me");
+        else if ("Quit".equals (o))
+            System.exit (0);
+        hide();
+        return true;
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-4">Figure 6.4: Pop-up buttons</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0605.gif" alt="[Graphic: Figure 6-4]" width=185 height=185 border=0>
+
+</DIV>
+
+<P CLASS=para>
+The most interesting method in this application is <tt CLASS=literal>mouseDown()</tt>. 
+When the user clicks on the mouse, <tt CLASS=literal>mouseDown()</tt> 
+checks whether the <tt CLASS=literal>META_MASK</tt> 
+is set in the event modifiers; this indicates that the user pressed the 
+right mouse button, or pressed the left button while pressing the Meta key. 
+If this is <tt CLASS=literal>true</tt>, <tt CLASS=literal>mouseDown()</tt> 
+moves the window to the location of the mouse click, calls <tt CLASS=literal>show()</tt> to display 
+the window, and returns <tt CLASS=literal>true</tt> 
+to indicate that the event was handled completely. If <tt CLASS=literal>mouseDown</tt> were called with any other 
+kind of mouse event, we return <tt CLASS=literal>false</tt> 
+to let the event propagate to any other object that might be interested. 
+Remember that the coordinates passed with the mouse event are the coordinates 
+of the mouse click relative to the <tt CLASS=literal>Frame</tt>; to find out where to position 
+the pop-up window, we need an absolute location and therefore ask the <tt CLASS=literal>Frame</tt> 
+for its location. 
+
+<P CLASS=para>
+<tt CLASS=literal>PopupWindow</tt> itself is a simple 
+class. Its constructor simply creates a display with three buttons. The 
+call to <tt CLASS=literal>pack()</tt> sizes the window 
+so that it provides a nice border around the buttons but isn't excessively 
+large; you can change the border by playing with the window's insets 
+if you want, but that usually isn't necessary. The class <tt CLASS=literal>PopupWindow</tt> 
+has an <tt CLASS=literal>action()</tt> method that 
+is called when the user clicks one of the buttons. When the user clicks 
+on a button, <tt CLASS=literal>action()</tt> prints 
+a message and hides the window. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Window</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Dialogs</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

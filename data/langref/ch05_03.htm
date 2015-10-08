@@ -1,0 +1,1183 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.3 Object-Orientation Java Style</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:12:33 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Declarations</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3">5.3 Object-Orientation Java Style</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.STYLE"></A>Before considering class and interface declarations in Java, it is
+essential that you understand the object-oriented model used by the
+language. No useful programs can be written in Java without using
+objects.  Java deliberately omits certain C++ features that promote a
+less object-oriented style of programming. Thus, all executable code
+in a Java program must be part of an object (or a class to be more precise).
+
+<P CLASS=para>
+The two main characteristics of objects in Java are:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Objects are always dynamically allocated. The
+lifetime of the storage occupied by an object is determined by the
+program's logic, not by the lifetime of a procedure call or the
+boundaries of a block. The lifetime of the storage occupied by an
+object refers to the span of time that begins when the object is
+created and ends at the earliest time it can be freed by the garbage
+collector.
+
+<P>
+<li CLASS=listitem>Objects are not contained by variables. Instead,
+a variable contains a reference to an object. A reference is similar
+to what is called a pointer in some other languages.  If there are two
+variables of the same reference type and one of the variables is
+assigned to the other, both variables refer to the same object. If the
+information in that object is changed, the change is visible through
+both variables.
+
+<P>
+</UL>
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.1">Classes</A></h3>
+
+<P CLASS=para>
+An object is a collection of
+variables, associated methods, and other associated 
+classes. Objects in Java are described
+by <I CLASS=emphasis>classes</I>; a particular object is an <I CLASS=emphasis>instance</I>
+of a particular class. A class describes the data an object can
+contain by defining variables to contain the data in each instance
+of the class. A class describes the behavior of an object by defining
+methods for the class and possibly other auxiliary classes. 
+Methods are named pieces of executable code;
+they are similar to what other programming languages call functions
+or procedures. Collectively, the variables, methods, and auxiliary
+classes of a class are called its members.
+
+<P CLASS=para>
+A class can define multiple methods with the same name if the number
+or type of parameters for each method is different. Multiple methods
+with the same name are called <I CLASS=emphasis>overloaded
+methods</I>. Like C++, Java supports overloaded methods, but
+unlike C++, Java does not support overloaded operators. Overloaded
+methods are useful when you want to describe similar operations on
+different types of data. For example, Java provides a class called
+<tt CLASS=literal>java.io.OutputStream</tt> that is used to write
+data. The <tt CLASS=literal>OutputStream</tt> class defines three
+different <tt CLASS=literal>write()</tt> methods: one to write a single
+byte of data, another to write some of the bytes in an array, and
+another to write all of the bytes in an array.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.2">Encapsulation</A></h3>
+
+<P CLASS=para>
+<I CLASS=emphasis>Encapsulation</I> is the technique of hiding the
+details of the implementation of an object, while making its
+functionality available to other objects. When encapsulation is used
+properly, you can change an object's implementation without worrying
+that any other object can see, and therefore depend on, the
+implementation details.
+
+<P CLASS=para>
+The portion of an object that is accessible to other types of objects
+is called the object's
+<I CLASS=emphasis>interface</I>.[1]
+For example, consider a class called <tt CLASS=literal>Square</tt>.
+The interface for this class might consist of:
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+The notion
+of an object's interface is a commonly accepted concept
+in the object-oriented community. Later in this chapter, a Java
+construct called an interface is described. A Java interface is
+not the same thing as the interface of an object, so there is some
+potential for confusion. Outside of this section, the term "interface" is only used to mean the Java interface construct.
+</blockquote>
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Methods to get and set the size of a square.
+
+<P>
+<li CLASS=listitem>A method to tell a square to draw itself at a particular location on
+the screen.
+
+<P>
+</UL>
+<P CLASS=para>
+The implementation of this <tt CLASS=literal>Square</tt> class
+would include executable code that implements the various methods,
+as well as an internal variable that an object would use to remember
+its size. Variables that an object uses to remember things about
+itself are called <I CLASS=emphasis>state variables</I>.
+
+<P CLASS=para>
+The point of the distinction between the interface and the
+implementation of a class is that it makes programs easier to
+maintain. The implementation of a class may change, but as long as the
+interface remains the same, these changes do not require changes to
+any other classes that may use the class.
+
+<P CLASS=para>
+In Java, encapsulation is implemented using the
+<tt CLASS=literal>public</tt>, <tt CLASS=literal>protected</tt>, and
+<tt CLASS=literal>private</tt> access modifiers. If a field of a class is
+part of the interface for the class, the field should be declared with
+the <tt CLASS=literal>public</tt> modifier or with no access modifier. The
+<tt CLASS=literal>private</tt> and <tt CLASS=literal>protected</tt> modifiers
+limit the accessibility of a field, so these modifiers should be used
+for state variables and other implementation-specific functionality.
+
+<P CLASS=para>
+Here's a partial definition of a <tt CLASS=literal>Square</tt>
+class that has the interface just described:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Square {
+    private int sideLength;
+    public void setSideLength(int len) {
+        sideLength = len;
+    }
+    public int getSideLength() {
+        return sideLength;
+    }
+    public void draw(int x, int y) {
+        // code to draw the square
+        ...
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.1">Method modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1.1">Variable modifiers</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.3">Object Creation</A></h3>
+
+<P CLASS=para>
+An object is typically created using an allocation expression. The
+<tt CLASS=literal>newInstance()</tt> methods of the
+<tt CLASS=literal>Class</tt> or <tt CLASS=literal>java.lang.reflect.Contructor</tt> class can also be used to create an instance of a
+class. In either case, the storage needed for the object is allocated
+by the system.
+
+<P CLASS=para>
+When a class is instantiated, a special kind of method called a
+<I CLASS=emphasis>constructor</I> is invoked. A constructor for a class
+does not have its own name; instead it has the same name as the class
+of which it is a part.  Constructors can have parameters, just like
+regular methods, and they can be overloaded, so a class can have
+multiple constructors.  A constructor does not have a return type. The main purpose of
+a constructor is to do any initialization that is necessary for an
+object.
+
+<P CLASS=para>
+If a class declaration does not define any constructors, Java supplies
+a default <tt CLASS=literal>public</tt> constructor that takes no parameters.
+You can prevent a class from being instantiated by methods in other
+classes by defining at least
+one <tt CLASS=literal>private</tt> constructor for the class without
+defining any <tt CLASS=literal>public</tt> constructors.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch10_04.htm">Class</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.3">Constructors</A>;
+<A HREF="ch04_02.htm#JLR2-CH-4-SECT-2.1">Object Allocation Expressions</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.4">Object Destruction</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.GARB"></A>Java does not provide
+any way to explicitly destroy an object. Instead, an object is automatically
+destroyed when the garbage collector detects that it is safe to
+do so. The idea behind <I CLASS=emphasis>garbage collection</I>
+<I CLASS=emphasis></I>is that if it is possible to prove that a piece of storage
+will never be accessed again, that piece of storage can be freed
+for reuse. This is a more reliable way of managing storage than
+having a program explicitly deallocate its own storage. Explicit
+memory allocation and deallocation is the single largest source
+of programming errors in C/C++. Java eliminates this source of errors
+by handling the deallocation of memory for you.
+
+<P CLASS=para>
+Java's garbage collector runs continuously in a low priority
+thread. You can cause the garbage collector to take a single pass
+through allocated storage by calling <tt CLASS=literal>System.gc()</tt>.
+
+<P CLASS=para>
+Garbage collection will never free storage before it is safe
+to do so. However, garbage collection usually does not free storage
+as soon as it would be freed using explicit deallocation. The logic
+of a program can sometimes help the garbage collector recognize
+that it is safe to free some storage sooner rather than later. Consider
+the following code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class G {
+    byte[] buf;
+    String readIt(FileInputStream f) throws IOException {
+        buf = new byte[20000];
+        int length = f.read(buf);
+        return new String(buf, 0, 0, length);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first time <tt CLASS=literal>readIt()</tt> is called, it allocates an
+array that is referenced by the instance variable
+<tt CLASS=literal>buf</tt>.  The variable <tt CLASS=literal>buf</tt> continues
+to refer to the array until the next time that
+<tt CLASS=literal>readIt()</tt> is called, when <tt CLASS=literal>buf</tt> is
+set to a new array. Since there is no longer any reference to the old
+array, the garbage collector will free the storage on its next
+pass. This situation is less than optimal. It would be better if the
+garbage collector could recognize that the array is no longer needed
+once  a call to <tt CLASS=literal>readIt()</tt> returns. Defining the
+variable <tt CLASS=literal>buf</tt> as a local variable in
+<tt CLASS=literal>readIt()</tt> solves this problem:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class G {
+    String readIt(FileInputStream f) throws IOException {
+        byte[] buf;
+        buf = new byte[20000];
+        int length = f.read(buf);
+        return new String(buf, 0, 0, length);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Now the reference to the array is in a local variable that disappears
+when <tt CLASS=literal>readIt()</tt> returns. After
+<tt CLASS=literal>readIt()</tt> returns, there is no longer any reference
+to the array, so the garbage collector will free the storage on its
+next pass.
+
+<P CLASS=para>
+Just as a constructor is called when an object is created, there is a
+special method that is called before an object is destroyed by the
+garbage collector. This method is called a
+<I CLASS=emphasis>finalizer</I> ; it has the name
+<tt CLASS=literal>finalize()</tt>. A <tt CLASS=literal>finalize()</tt> method
+is similar to a destructor in C++. The <tt CLASS=literal>finalize()</tt>
+method for a class must be declared with no parameters, the
+<tt CLASS=literal>void</tt> return type, and no modifiers. A finalizer can
+be used to clean up after a class, by doing such things as closing
+files and terminating network connections.
+
+<P CLASS=para>
+If an object has a <tt CLASS=literal>finalize()</tt> method, it is
+normally called by the garbage collector before the object is
+destroyed. A program can also explicitly call an object's
+<tt CLASS=literal>finalize()</tt> method, but in this case, the garbage
+collector does not call the method during the object destruction
+process. If the garbage collector does call an object's
+<tt CLASS=literal>finalize()</tt> method, the garbage collector does not
+immediately destroy the object because the
+<tt CLASS=literal>finalize()</tt> method might do something that causes a variable
+to refer to the object again.[2]
+Thus the garbage collector waits to destroy the object until it
+can again prove it is safe to do so. The next time the garbage collector
+decides it is safe to destroy the object, it does so without calling
+the finalizer again. In any case, a <tt CLASS=literal>finalize()</tt>
+method is never called more than once for a particular object.
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+A <tt CLASS=literal>finalize()</tt>
+method should not normally
+do something that results in a reference to the object being destroyed,
+but Java does not do anything to prevent this situation from happening.
+</blockquote>
+<P CLASS=para>
+The garbage collector guarantees that the thread it uses to call a
+<tt CLASS=literal>finalize()</tt> method will not be holding any
+programmer-visible synchronization locks when the method is
+called. This means that a <tt CLASS=literal>finalize()</tt> method never
+has to wait for the garbage collector to release a lock. If the
+garbage collector calls a <tt CLASS=literal>finalize()</tt> method and the
+<tt CLASS=literal>finalize()</tt> method throws any kind of exception, the
+garbage collector catches and ignores the exception.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch10_22.htm">System</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.7">The finalize method</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.5">Inheritance</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.IN"></A>One of the most important benefits of object-oriented programming is
+that it promotes the reuse of code, particularly by means of
+inheritance. <I CLASS=emphasis>Inheritance</I> is a way of organizing
+related classes so that they can share common code and state
+information.  Given an existing class declaration, you can create a
+similar class by having it inherit all of the fields in the existing
+definition.  Then you can add any fields that are needed in the new
+class. In addition, you can replace any methods that need to behave
+differently in the new class.
+
+<P CLASS=para>
+To illustrate the way that inheritance
+works, let's start with the following class definition:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class RegularPolygon {
+    private int numberOfSides;
+    private int sideLength;
+    RegularPolygon(int n, int len) {
+        numberOfSides = n;
+        sideLength = len;
+    }
+    public void setSideLength(int len) {
+        sideLength = len;
+    }
+    public int getSideLength() {
+        return sideLength;
+    }
+    public void draw(int x, int y) {
+        // code to draw the regular polygon
+        ...
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>RegularPolygon</tt> class defines a constructor,
+methods to set and get the side length of the regular polygon, and a
+method to draw the regular polygon.  Suppose that after writing this
+class you realize that you have been using it to draw a lot of
+squares. You can use inheritance to build a more specific
+<tt CLASS=literal>Square</tt> class from the existing
+<tt CLASS=literal>RegularPolygon</tt> class as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Square extends   RegularPolygon {
+    Square(int len) {
+        super(4,len);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>extends</tt> clause indicates that the
+<tt CLASS=literal>Square</tt> class is a <I CLASS=emphasis>subclass</I> of
+the <tt CLASS=literal>RegularPolygon</tt> class, or looked at another way,
+<tt CLASS=literal>RegularPolygon</tt> is a <I CLASS=emphasis>superclass</I>
+of <tt CLASS=literal>Square</tt>.  When one class is a subclass of another
+class, the subclass inherits all of the
+fields of its superclass that are not <tt CLASS=literal>private</tt>. Thus <tt CLASS=literal>Square</tt> inherits
+<tt CLASS=literal>setSideLength()</tt>,
+<tt CLASS=literal>getSideLength()</tt>, and <tt CLASS=literal>draw()</tt>
+methods from <tt CLASS=literal>RegularPolygon</tt>. These methods work
+fine without any modification, which is why the definition of
+<tt CLASS=literal>Square</tt> is so short. All the
+<tt CLASS=literal>Square</tt> class needs to do is define a constructor,
+since constructors are not inherited.
+
+<P CLASS=para>
+There is no limit to the depth to which you can carry subclassing.
+For example, you could choose to write a class called
+<tt CLASS=literal>ColoredSquare</tt> that is a subclass of the
+<tt CLASS=literal>Square</tt> class. The <tt CLASS=literal>ColoredSquare</tt>
+class would inherit the public methods from both
+<tt CLASS=literal>Square</tt> and
+<tt CLASS=literal>RegularPolygon</tt>. However,
+<tt CLASS=literal>ColoredSquare</tt> would need to override the
+<tt CLASS=literal>draw()</tt> method with an implementation that handles
+drawing in color.
+
+<P CLASS=para>
+Having defined the three classes <tt CLASS=literal>RegularPolygon</tt>,
+<tt CLASS=literal>Square</tt>, and <tt CLASS=literal>ColoredSquare</tt>, it is
+correct to say that <tt CLASS=literal>RegularPolygon</tt> and
+<tt CLASS=literal>Square</tt> are superclasses of
+<tt CLASS=literal>ColoredSquare</tt> and <tt CLASS=literal>ColoredSquare</tt>
+and <tt CLASS=literal>Square</tt> are subclasses of
+<tt CLASS=literal>RegularPolygon</tt>.  To describe a relationship between
+classes that extends through exactly one level of inheritance, you can
+use the terms <I CLASS=emphasis>immediate superclass</I> and
+<I CLASS=emphasis>immediate subclass</I>. For example,
+<tt CLASS=literal>Square</tt> is an immediate subclass of
+<tt CLASS=literal>RegularPolygon</tt>, while
+<tt CLASS=literal>ColoredSquare</tt> is an immediate subclass of
+<tt CLASS=literal>Square</tt>.  By the same token,
+<tt CLASS=literal>RegularPolygon</tt> is the immediate superclass of
+<tt CLASS=literal>Square</tt>, while <tt CLASS=literal>Square</tt> is the
+immediate superclass of <tt CLASS=literal>ColoredSquare</tt>.
+
+<P CLASS=para>
+A class can have any number of subclasses or superclasses.
+However, a class can only have one immediate superclass. This constraint
+is enforced by the syntax of the <tt CLASS=literal>extends</tt> clause;
+it can only specify the name of one superclass. This style of inheritance
+is called <I CLASS=emphasis>single inheritance</I> ; it is different
+from the multiple inheritance scheme that is used in C++.
+
+<P CLASS=para>
+Every class in Java (except <tt CLASS=literal>Object</tt>) has the class
+<tt CLASS=literal>Object</tt> as its ultimate superclass. The class
+<tt CLASS=literal>Object</tt> has no superclass. The subclass
+relationships between all of the Java classes can be drawn as a tree
+that has the <tt CLASS=literal>Object</tt> class as its root. Another
+important difference between Java and C++ is that C++ does not have a
+class that is the ultimate superclass of all of its classes.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.3">Class Inheritance</A>;
+<A HREF="ch05_03.htm#JLR2-CH-5-SECT-3.6">Interfaces</A>;
+<A HREF="ch10_14.htm">Object</A>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.5.1">Abstract classes</A></h4>
+
+<P CLASS=para>
+If a class is declared with the <tt CLASS=literal>abstract</tt> modifier,
+the class cannot be instantiated. This is different than C++, which
+has no way of explicitly specifying that a class cannot be instantiated.  An
+<tt CLASS=literal>abstract</tt> class is typically used to declare a
+common set of methods for a group of classes when there are no
+reasonable or useful implementations of the methods at that level of
+abstraction.
+
+<P CLASS=para>
+For example, the <tt CLASS=literal>java.lang</tt> package includes classes
+called <tt CLASS=literal>Byte</tt>, <tt CLASS=literal>Short</tt>,
+<tt CLASS=literal>Integer</tt>, <tt CLASS=literal>Long</tt>,
+<tt CLASS=literal>Float</tt>, and <tt CLASS=literal>Double</tt>. These classes
+are subclasses of the <tt CLASS=literal>abstract</tt> class
+<tt CLASS=literal>Number</tt>, which declares the following methods:
+<tt CLASS=literal>byteValue()</tt>, <tt CLASS=literal>shortValue()</tt>,
+<tt CLASS=literal>intValue()</tt>, <tt CLASS=literal>longValue()</tt>,
+<tt CLASS=literal>floatValue()</tt>, and
+<tt CLASS=literal>doubleValue()</tt>. The purpose of these methods is to
+return the value of an object converted to the type implied by the
+method's name. Every subclass of <tt CLASS=literal>Number</tt> implements
+all of these methods. The advantage of the abstraction is that it
+allows you to write code to extract whatever type of value you need
+from a <tt CLASS=literal>Number</tt> object, without knowing the actual
+type of the underlying object.
+
+<P CLASS=para>
+Methods defined in an <tt CLASS=literal>abstract</tt> class can be
+declared <tt CLASS=literal>abstract</tt>. An <tt CLASS=literal>abstract</tt>
+method is declared without any implementation; it must be overridden
+in a subclass to provide an implementation.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.1">Class Modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2.1">Local class modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.1">Method modifiers</A>;
+<A HREF="ch10_13.htm">Number</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.5.2">Final classes</A></h4>
+
+<P CLASS=para>
+If a class is declared with the <tt CLASS=literal>final</tt> modifier, the
+class cannot be subclassed. Declaring a class <tt CLASS=literal>final</tt>
+is useful if you need to ensure the exact properties and behavior of
+that class. Many of the classes in the <tt CLASS=literal>java.lang</tt>
+package are declared <tt CLASS=literal>final</tt> for that reason.
+
+<P CLASS=para>
+Methods defined in a non-<tt CLASS=literal>abstract</tt> class can be
+declared <tt CLASS=literal>final</tt>. A <tt CLASS=literal>final</tt> method
+cannot be overridden by any subclasses of the class in which it
+appears.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.1">Class Modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6.1">Inner class modifiers</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2.1">Local class modifiers</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.1">Method modifiers</A>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.6">Interfaces</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.INT"></A>Java provides a construct called an interface to support certain
+multiple inheritance features that are desirable in an object-oriented
+language. An interface is similar to a class, in that an interface
+declaration can define both variables and methods. But unlike a class, an
+interface cannot provide implementations for its methods.
+
+<P CLASS=para>
+A class declaration can include an <tt CLASS=literal>implements</tt>
+clause that specifies the name of an interface. When a class
+declaration specifies that it implements an interface, the class
+inherits all of the variables and methods declared in that
+interface. The class declaration must then provide implementations for
+all of the methods declared in the interface, unless the class is
+declared as an <tt CLASS=literal>abstract</tt> class. Unlike the
+<tt CLASS=literal>extends</tt> clause, which can only specify one class,
+the <tt CLASS=literal>implements</tt> clause can specify any number of
+interfaces. Thus a class can implement an unlimited number of
+interfaces.
+
+<P CLASS=para>
+Interfaces are most
+useful for declaring that an otherwise unrelated set of classes
+have a common set of methods, without needing to provide a common
+implementation. For example, if you want to store a variety of objects
+in a database, you might want all of the those objects to have a
+common set of methods for storing and fetching. Since the fetch
+and store methods for each object need to be different, it is appropriate
+to declare these methods in an interface. Then any class that needs
+fetch and store methods can implement the interface.
+
+<P CLASS=para>
+Here is a simplistic example that illustrates such an interface:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public interface Db {
+    void dbStore(Database d, Object key);
+    Object dbFetch(Database d, Object key);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>Db</tt> interface declaration contains two methods,
+<tt CLASS=literal>dbStore()</tt> and <tt CLASS=literal>dbFetch()</tt>.
+Here is a partial class definition for a class that implements the
+<tt CLASS=literal>Db</tt> interface:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class DbSquare extends Square implements Db {
+    public void dbStore(Database d, Object key) {
+        // Perform database operation to store Square
+        ...
+    }
+    public Square dbFetch(Database d, Object key) {
+        // Perform database operation to fetch Square
+        ...
+    }
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>DbSquare</tt> class defines implementations
+for both of the methods declared in the <tt CLASS=literal>Db</tt> interface.
+The point of this interface is that it provides a uniform way for
+unrelated objects to arrange to be stored in a database. The following
+code shows part of a class that encapsulates database operations:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Database {
+    ...
+    public void store(Object o, Object key) {
+        if (o instanceof Db)
+          ((Db)o).dbStore(this, key);
+    }
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When the database is asked to store an object, it does so only if the
+object implements the <tt CLASS=literal>Db</tt> interface, in which case
+it can call the <tt CLASS=literal>dbStore()</tt> of the object.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5">Interface Declarations</A>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.7">Inner Classes</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.INNER1"></A><A NAME="CH05.INNER2"></A>Java 1.1 provides a new feature that allows programmers to encapsulate
+even more functionality within objects. With the addition of inner
+classes to the Java language, classes can be defined as members of
+other classes, just like variables and methods. Classes can also be
+defined within blocks of Java code, just like local variables.  The
+ability to declare a class inside of another class allows you to
+encapsulate auxiliary classes inside of a class, thereby limiting
+access to the auxiliary classes. A class that is declared inside of
+another class may have access to the instance variables of the
+enclosing class; a class declared within a block may have access to
+the local variable and/or formal parameters of that block.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.7.1">Nested top-level classes and interfaces</A></h4>
+
+<P CLASS=para>
+A <I CLASS=emphasis>nested top-level class</I> or
+<I CLASS=emphasis>interface</I> is declared
+as a <tt CLASS=literal>static</tt> member of an enclosing top-level class
+or interface. The declaration of a nested top-level class uses the
+<tt CLASS=literal>static</tt> modifier, so you may also see these classes
+called <I CLASS=emphasis>static classes</I>. A nested interface is
+implicitly <tt CLASS=literal>static</tt>, but you can declare it to be
+<tt CLASS=literal>static</tt> to make it explicit. 
+Nested top-level classes and interfaces are typically used to 
+group related classes in a convenient way.
+
+<P CLASS=para>
+A nested top-level class or
+interface functions like a normal top-level class or interface,
+except that the name of the nested entity includes the name of the
+class in which it is defined. For example, consider the
+following declaration:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Queue {
+    ...
+    public static class EmptyQueueException extends Exception {
+    } 
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Code that calls a method in <tt CLASS=literal>Queue</tt> 
+that throws an <tt CLASS=literal>EmptyQueueException</tt> can catch 
+that exception with a <tt CLASS=literal>try</tt> statement like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    ...
+} catch (Queue.EmptyQueueException e) {
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A nested top-level class cannot access the instance variables of its
+enclosing class. It also cannot call any non-<tt CLASS=literal>static</tt>
+methods of the enclosing class without an explicit reference to an
+instance of that class. However, a nested top-level class can
+use any of the <tt CLASS=literal>static</tt> variables and methods of
+its enclosing class without qualification.
+
+<P CLASS=para>
+Only top-level classes in Java can contain nested top-level classes.
+In other words, a <tt CLASS=literal>static</tt> class can only be
+declared as a direct member of a class that is declared at the
+top level, directly as a member of a package. In addition, 
+a nested top-level class cannot declare any <tt CLASS=literal>static</tt>
+variables, <tt CLASS=literal>static</tt> methods, or static initializers.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6">Nested Top-Level and Member Classes</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.7.2">Member classes</A></h4>
+
+<P CLASS=para>
+A <I CLASS=emphasis>member class</I> is an inner class that is declared
+within an enclosing class without the <tt CLASS=literal>static</tt>
+modifier. Member classes are analogous to the other members of a
+class, namely the instance variables and methods. The code within a
+member class can refer to any of the variables and methods of its
+enclosing class, including <tt CLASS=literal>private</tt> variables and
+methods.
+
+<P CLASS=para>
+Here is a partial definition of a <tt CLASS=literal>Queue</tt>
+class that uses a member class:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Queue {
+    private QueueNode queue;
+    ...
+    public Enumeration elements() {
+        return new QueueEnumerator();
+    } 
+    ...
+    private class QueueEnumerator implements Enumeration {
+        private QueueNode start, end;
+        QueueEnumerator() {
+            synchronized (Queue.this) {
+                if (queue != null) {
+                    start = queue.next;
+                    end = queue;
+                } 
+            } 
+        } 
+        public boolean hasMoreElements() {
+            return start != null;
+        } 
+        public synchronized Object nextElement() {
+            ...
+        } 
+    } 
+    private static class QueueNode {
+        private Object obj;
+        QueueNode next;
+        QueueNode(Object obj) {
+            this.obj = obj;
+        }
+        Object getObject() {
+            return obj;
+        }
+    } 
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>QueueEnumerator</tt> class is a
+<tt CLASS=literal>private</tt> member class that implements the
+<tt CLASS=literal>java.util.Enumeration</tt> interface. The advantage of
+this approach is that the <tt CLASS=literal>QueueEnumerator</tt> class can
+access the <tt CLASS=literal>private</tt> instance variable
+<tt CLASS=literal>queue</tt> of the enclosing <tt CLASS=literal>Queue</tt>
+class. If <tt CLASS=literal>QueueEnumerator</tt> were declared outside of
+the <tt CLASS=literal>Queue</tt> class, this <tt CLASS=literal>queue</tt>
+variable would need to be <tt CLASS=literal>public</tt>, which would
+compromise the encapsulation of the <tt CLASS=literal>Queue</tt> class.
+Using a member class that implements the
+<tt CLASS=literal>Enumeration</tt> interface provides a means to offer
+controlled access to the data in a <tt CLASS=literal>Queue</tt> without
+exposing the internal data structure of the class.
+
+<P CLASS=para>
+An instance of a member class has access to the instance variables of
+exactly one instance of its enclosing class. That instance of the
+enclosing class is called the <I CLASS=emphasis>enclosing instance</I>.
+Thus, every <tt CLASS=literal>QueueEnumerator</tt> object has exactly one
+<tt CLASS=literal>Queue</tt> object that is its enclosing instance.  To
+access an enclosing instance, you use the construct
+<I CLASS=emphasis>ClassName</I><tt CLASS=literal>.this</tt>. The
+<tt CLASS=literal>QueueEnumerator</tt> class uses this construct in the
+<tt CLASS=literal>synchronized</tt> statement in its constructor to
+synchronize on its enclosing instance. This synchronization is
+necessary to ensure that the newly created
+<tt CLASS=literal>QueueEnumerator</tt> object
+has exclusive access to the internal data of the
+<tt CLASS=literal>Queue</tt> object.
+
+<P CLASS=para>
+The <tt CLASS=literal>Queue</tt> class also contains a nested top-level,
+or <tt CLASS=literal>static</tt>, class,
+<tt CLASS=literal>QueueNode</tt>. However, this class is also declared
+<tt CLASS=literal>private</tt>, so it is not accessible outside of
+<tt CLASS=literal>Queue</tt>. The main difference between
+<tt CLASS=literal>QueueEnumerator</tt> and <tt CLASS=literal>QueueNode</tt> is
+that <tt CLASS=literal>QueueNode</tt> does not need access to any instance
+data of <tt CLASS=literal>Queue</tt>.
+
+<P CLASS=para>
+A member class cannot declare any <tt CLASS=literal>static</tt>
+variables, <tt CLASS=literal>static</tt> methods, 
+<tt CLASS=literal>static</tt> classes, or static initializers.
+
+<P CLASS=para>
+Although member classes are often declared <tt CLASS=literal>private</tt>,
+they can also be <tt CLASS=literal>public</tt> or
+<tt CLASS=literal>protected</tt> or have the default accessibility. To
+refer to a class declared inside of another class from outside of that
+class, you prefix the class name with the names of the enclosing
+classes, separated by dots. For example, consider the following
+declaration:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class A {
+    public class B {
+        public class C {
+            ...
+        } 
+        ...
+    } 
+    ...
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Outside of the class named <tt CLASS=literal>A</tt>, you can refer to the 
+class named <tt CLASS=literal>C</tt> as <tt CLASS=literal>A.B.C</tt>. 
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.6">Field Expressions</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.6">Nested Top-Level and Member Classes</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.7.3">Local classes</A></h4>
+
+<P CLASS=para>
+A <I CLASS=emphasis>local class</I> is an inner class that is declared
+inside of a block of Java code. A local class is only visible within
+the block in which it is declared, so it is analogous to a local
+variable. However, a local class can access the variables and methods
+of any enclosing classes. In addition, a local class can access any
+<tt CLASS=literal>final</tt> local variables or method parameters that are
+in the scope of the block that declares the class.
+
+<P CLASS=para>
+Local classes are most often used for <I CLASS=emphasis>adapter
+classes</I>.  An adapter class is a class that implements a
+particular interface, so that another class can call a particular
+method in the adapter class when a certain event occurs. In other
+words, an adapter class is Java's way of implementing a "callback"
+mechanism. Adapter classes are commonly used with the new
+event-handling model required by the Java 1.1 AWT and by the JavaBeans
+API.
+
+<P CLASS=para>
+Here is an example of a local class functioning as an adapter class:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Z extends Applet {
+    public void init() {
+        final Button b = new Button("Press Me");
+        add(b);
+        class ButtonNotifier implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                b.setLabel("Press Me Again");
+                doIt();
+            } 
+        } 
+        b.addActionListener(new ButtonNotifier());
+    } 
+    ...
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The above example is from an applet that has a
+<tt CLASS=literal>Button</tt> in its user interface. To tell a
+<tt CLASS=literal>Button</tt> object that you want to be notified when it
+is pressed, you pass an instance of an adapter class that implements
+the <tt CLASS=literal>ActionListener</tt> interface to its
+<tt CLASS=literal>addActionListener()</tt> method.  A class that
+implements the <tt CLASS=literal>ActionListener</tt> interface is required
+to implement the <tt CLASS=literal>actionPerformed()</tt> method. When the
+<tt CLASS=literal>Button</tt> is pressed, it calls the adapter object's
+<tt CLASS=literal>actionPerformed()</tt> method. The main advantage of
+declaring the <tt CLASS=literal>ButtonNotifier</tt> class in the method
+that creates the <tt CLASS=literal>Button</tt> is that it puts all of the
+code related to creating and setting up the <tt CLASS=literal>Button</tt>
+in one place.
+
+<P CLASS=para>
+As the preceding example shows, a local class can access local variables of the
+block in which it is declared. However, any local variables that are
+accessed by a local class must be declared <tt CLASS=literal>final</tt>.
+A local class can also access method parameters and the exception
+parameter of a <tt CLASS=literal>catch</tt> statement that are accessible
+within the scope of its block, as long as the parameter is declared
+<tt CLASS=literal>final</tt>.
+The Java compiler complains if a local class uses a 
+non-<tt CLASS=literal>final</tt> local variable or parameter. The lifetime of a parameter or local variable is extended indefinitely, as long as there is an instance of a local class that refers to it.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1">Blocks</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.2">Local Classes</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.1">Local Variables</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2.4">Method formal parameters</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.2">Methods</A>;
+<A HREF="ch06_12.htm#JLR2-CH-6-SECT-12">The try Statement</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.7.4">Anonymous classes</A></h4>
+
+<P CLASS=para>
+An <I CLASS=emphasis>anonymous class</I> is a kind of local class
+that does not have a name and is declared inside of an allocation
+expression. As such, an anonymous class is a more 
+concise declaration of a local class that combines the declaration
+of the class with its instantiation.
+
+<P CLASS=para>
+Here is how you can rewrite the previous adapter class example to 
+use an anonymous class instead of a local class:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class Z extends Applet {
+    public void init() {
+        final Button b = new Button("Press Me");
+        add(b);
+        b.addActionListener(new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
+                b.setLabel("Press Me Again");
+            } 
+        } );
+    } 
+    ...
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As you can see, an anonymous class is declared as part of an
+allocation expression.
+If the name after <tt CLASS=literal>new</tt> is the name of an interface,
+as is the case in the preceding example, the anonymous class is an
+immediate subclass of <tt CLASS=literal>Object</tt> that implements the
+given interface. If the name after <tt CLASS=literal>new</tt> is the name
+of a class, the anonymous class is an immediate subclass of the named
+class. 
+
+<P CLASS=para>
+Obviously, an anonymous class doesn't have a name. The other
+restriction on an anonymous class is it can't have any
+constructors other than the default constructor. Any constructor-like
+initialization must be done using an instance initializer.  Other than
+these differences, anonymous classes function just like local classes.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_02.htm#JLR2-CH-4-SECT-2">Allocation Expressions</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4">Class Declarations</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.5">Instance Initializers</A>;
+<A HREF="ch10_14.htm">Object</A>
+
+</DIV>
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="JLR2-CH-5-SECT-3.7.5">Implementation of inner classes</A></h4>
+
+<P CLASS=para>
+It is possible to use inner classes without knowing anything about how
+they are implemented. However, a high-level understanding can help you
+comprehend the filenames that the compiler produces, and also some of
+the restrictions associated with inner classes.  The implementation of
+inner classes is less than transparent in a number of ways, primarily
+because the Java virtual machine does not know about inner
+classes. Instead, the Java compiler implements inner classes by
+rewriting them in a form that does not use inner classes. The
+advantage of this approach is that the Java virtual machine does not
+require any new features to be able to run programs that use inner
+classes.
+
+<P CLASS=para>
+Since a class declared inside another class is rewritten by the
+compiler as an external class, the compiler must give it a name
+unique outside of the class in which it is declared.
+The unique name is formed by prefixing the name
+of the inner class with the name of the class in which it is declared 
+and a dollar sign (<tt CLASS=literal>$</tt>). Thus, when the 
+<tt CLASS=literal>Queue</tt> class is compiled, the Java compiler produces 
+four <I CLASS=emphasis>.class</I> files:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><I CLASS=emphasis>Queue.class</I>
+
+<P>
+<li CLASS=listitem><I CLASS=emphasis>Queue$EmptyQueueException.class</I>
+
+<P>
+<li CLASS=listitem><I CLASS=emphasis>Queue$QueueEnumerator.class</I>
+
+<P>
+<li CLASS=listitem><I CLASS=emphasis>Queue$QueueNode.class</I>
+
+<P>
+</UL>
+<P CLASS=para>
+Because anonymous classes do not have names, the Java compiler 
+gives each anonymous class a number for a name; the numbers start at 1. 
+When the version of the <tt CLASS=literal>Z</tt> applet that uses 
+an anonymous class is compiled, the Java compiler produces 
+two <I CLASS=emphasis>.class</I> files:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><I CLASS=emphasis>Z.class</I>
+
+<P>
+<li CLASS=listitem><I CLASS=emphasis>Z$1.class</I>
+
+<P>
+</UL>
+<P CLASS=para>
+In order to give an inner class access to the variables of its
+enclosing instance, the compiler adds a <tt CLASS=literal>private</tt>
+variable to the inner class that references the enclosing
+instance. The compiler also inserts a formal parameter into each
+constructor of the inner class and passes the reference to
+the enclosing instance using this parameter.
+Therefore, the <tt CLASS=literal>QueueEnumerator</tt> class is rewritten
+as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Queue$QueueEnumerator implements Enumeration {
+    private Queue this$0;
+    private QueueNode start, end;
+    QueueEnumerator(Queue this$0) {
+        this.this$0 = this$0;
+        synchronized (this$0) {
+            if (queue != null) {
+                start = queue.next;
+                end = queue;
+            } 
+        } 
+    }
+    ...
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+As you can see, the compiler rewrites all references to the enclosing
+instance as <tt CLASS=literal>this$0</tt>. One implication of this
+implementation is that you cannot pass the enclosing instance as an
+argument to its superclass's constructor because
+<tt CLASS=literal>this$0</tt> is not available until after the superclass's
+constructor returns.
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Lexical Scope of Declarations</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Class Declarations</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

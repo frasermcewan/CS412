@@ -1,0 +1,625 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 9] Pick Me</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:43:59 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 9</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-9">9. Pick Me</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Choice<br>
+<A HREF="ch09_02.htm">Lists</A><BR>
+<A HREF="ch09_03.htm">Checkbox</A><BR>
+<A HREF="ch09_04.htm">CheckboxGroup</A><BR>
+<A HREF="ch09_05.htm">ItemSelectable</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+Three AWT components let you present a list of choices to users: <tt CLASS=literal>Choice</tt>, 
+<tt CLASS=literal>List</tt>, and <tt CLASS=literal>Checkbox</tt>. 
+All three components implement the <tt CLASS=literal>ItemSelectable</tt> 
+interface (&nbsp;&nbsp;Java1.1). These components are comparable to selection mechanisms 
+in modern GUIs so most readers will be able to learn them easily, but 
+I'll point out some special enhancements that they provide. 
+
+<P CLASS=para>
+<tt CLASS=literal>Choice</tt> and <tt CLASS=literal>List</tt> 
+are similar; both offer a list of choices for the user to select. <tt CLASS=literal>Choice</tt> 
+provides a pull-down list that offers one selection at a time, whereas 
+<tt CLASS=literal>List</tt> is a scrollable list that 
+allows a user to make one or multiple selections. From a design standpoint, 
+which you choose depends at least partially on screen real estate; 
+if you want the user to select from a large group of alternatives, <tt CLASS=literal>Choice</tt> 
+requires the least space, <tt CLASS=literal>List</tt> 
+requires somewhat more, while <tt CLASS=literal>Checkbox</tt> 
+requires the most. <tt CLASS=literal>Choice</tt> is 
+the only component in this group that does not allow multiple selections. 
+A <tt CLASS=literal>List</tt> allows multiple or single 
+selection; because each <tt CLASS=literal>Checkbox</tt> 
+is a separate component, checkboxes inherently allow multiple selection. 
+In order to create a list of mutually exclusive checkboxes, in which only 
+one box can be selected at a time (commonly known as radio buttons), you 
+can put several checkboxes together into a <tt CLASS=literal>CheckboxGroup</tt>, 
+which is discussed at the end of this chapter. 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-9-SECT-1">9.1 Choice</A></h2>
+
+<P CLASS=para>
+<A NAME="CH09.CHOICE1"></A><A NAME="CH09.CHOICE2"></A><A NAME="CH09.CHOICE3"></A><A NAME="CH09.CHOICE4"></A>The <tt CLASS=literal>Choice</tt> component provides 
+pop-up/pull-down lists. It is the equivalent of Motif's OptionMenu 
+or Windows MFC's ComboBox. (&nbsp;&nbsp;Java 1.1 departs from the MFC world.) 
+With the <tt CLASS=literal>Choice</tt> component, 
+you can provide a short list of choices to the user, while taking up the 
+space of a single item on the screen. When the component is selected, the 
+complete list of available choices appears on the screen. After the user 
+has selected an option, the list is removed from the screen and the selected 
+item is displayed. Selecting any item automatically deselects the previous 
+selection. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-9-SECT-1.1">Component Methods</A></h3>Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Choice () </I><br>
+<DD>
+
+<P CLASS=para>
+There is only one constructor for <tt CLASS=literal>Choice</tt>. 
+When you call it, a new instance of <tt CLASS=literal>Choice</tt> 
+is created. The component is initially empty, with no items to select. 
+Once you add some items using <tt CLASS=literal>addItem()</tt> 
+(version 1.0) or <tt CLASS=literal>add()</tt> (version 
+1.1) and display the <tt CLASS=literal>Choice</tt> 
+on the screen, it will look something like the leftmost component in <A HREF="ch09_01.htm#JAWT-CH-9-FIG-1">Figure 9.1</A>. The center component shows what a <tt CLASS=literal>Choice</tt> 
+looks like when it is selected, while the one on the right shows what a 
+<tt CLASS=literal>Choice</tt> looks like before any items have been added to it. </DL>
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-9-FIG-1">Figure 9.1: How Choices are displayed</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0901.gif" alt="[Graphic: Figure 9-1]" width=349 height=155 border=0>
+
+</DIV>
+
+Items
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getItemCount () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public int countItems () <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getItemCount()</tt> method returns 
+the number of selectable items in the <tt CLASS=literal>Choice</tt> 
+object. In <A HREF="ch09_01.htm#JAWT-CH-9-FIG-1">Figure 9.1</A>, <tt CLASS=literal>getItemCount()</tt> 
+would return 6. 
+
+<P CLASS=para>
+<tt CLASS=literal>countItems()</tt> is the Java 1.0 
+name for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getItem (int index) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getItem()</tt> method returns 
+the text for the item at position <tt CLASS=literal>index</tt> 
+in the <tt CLASS=literal>Choice</tt>. If <tt CLASS=literal>index</tt> 
+is invalid--either <tt CLASS=literal>index</tt> 
+&lt; 0 or <tt CLASS=literal>index</tt> &gt;= <tt CLASS=literal>getItemCount()</tt>--the <tt CLASS=literal>getItem()</tt> method 
+throws the <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> run-time exception. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void add (String item) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br><I CLASS=emphasis>public synchronized void addItem (String item) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>add()</tt> adds <tt CLASS=literal>item</tt> 
+to the list of available choices. If <tt CLASS=literal>item</tt> 
+is already an option in the <tt CLASS=literal>Choice</tt>, 
+this method adds it again. If <tt CLASS=literal>item</tt> 
+is <tt CLASS=literal>null</tt>, <tt CLASS=literal>add()</tt> 
+throws the run-time exception <tt CLASS=literal>NullPointerException</tt>. 
+The first <tt CLASS=literal>item</tt> added to a <tt CLASS=literal>Choice</tt> 
+becomes the initial (default) selection. 
+
+<P CLASS=para>
+<tt CLASS=literal>addItem()</tt> is the Java 1.0 name 
+for this method. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void insert (String item, int index) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>insert()</tt> adds <tt CLASS=literal>item</tt> 
+to the list of available choices at position <tt CLASS=literal>index</tt>. 
+An index of 0 adds the item at the beginning. An index larger than the 
+number of choices adds the item at the end. If <tt CLASS=literal>item</tt> 
+is <tt CLASS=literal>null</tt>, <tt CLASS=literal>insert()</tt> 
+throws the run-time exception <tt CLASS=literal>NullPointerException</tt>. 
+If <tt CLASS=literal>index</tt> is negative, <tt CLASS=literal>insert()</tt> 
+throws the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void remove (String item) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>remove()</tt> removes <tt CLASS=literal>item</tt> 
+from the list of available choices. If <tt CLASS=literal>item</tt> 
+is present in <tt CLASS=literal>Choice</tt> multiple 
+times, a call to <tt CLASS=literal>remove()</tt> removes 
+the first instance. If <tt CLASS=literal>item</tt> 
+is <tt CLASS=literal>null</tt>, <tt CLASS=literal>remove()</tt> 
+throws the run-time exception <tt CLASS=literal>NullPointerException</tt>. 
+If <tt CLASS=literal>item</tt> is not found in the 
+<tt CLASS=literal>Choice</tt>, <tt CLASS=literal>remove()</tt> 
+throws the <tt CLASS=literal>IllegalArgumentException</tt> run-time exception. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void remove (int position) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>remove()</tt> removes the item at 
+<tt CLASS=literal>position</tt> from the list of available 
+choices. If <tt CLASS=literal>position</tt> is invalid--either <tt CLASS=literal>position</tt> &lt; 
+0 or <tt CLASS=literal>position</tt> &gt;= <tt CLASS=literal>getItemCount()</tt>--<tt CLASS=literal>remove()</tt> throws the 
+run-time exception <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void removeAll () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeAll()</tt> method removes 
+every option from the <tt CLASS=literal>Choice</tt>. 
+This allows you to refresh the list from scratch, rather than creating 
+a new <tt CLASS=literal>Choice</tt> and repopulating 
+it. </DL>
+Selection
+
+<P CLASS=para>
+The <tt CLASS=literal>Choice</tt> has one item selected 
+at a time. Initially, it is the first item that was added to the <tt CLASS=literal>Choice</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getSelectedItem () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedItem()</tt> method 
+returns the currently selected item as a <tt CLASS=literal>String</tt>. 
+The text returned is the parameter used in the <tt CLASS=literal>addItem()</tt> 
+or <tt CLASS=literal>add()</tt> call that put the 
+option in the <tt CLASS=literal>Choice</tt>. If <tt CLASS=literal>Choice</tt> 
+is empty, <tt CLASS=literal>getSelectedItem()</tt> 
+returns <tt CLASS=literal>null</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Object[] getSelectedObjects () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedObjects()</tt> method 
+returns the currently selected item as an <tt CLASS=literal>Object</tt> 
+array, instead of a <tt CLASS=literal>String</tt>. 
+The array will either be a one-element array, or <tt CLASS=literal>null</tt> 
+if there are no items. This method is required by the <tt CLASS=literal>ItemSelectable</tt> 
+interface and allows you to use the same method to look at the items selected 
+by a <tt CLASS=literal>Choice</tt>, <tt CLASS=literal>List</tt>, 
+or <tt CLASS=literal>Checkbox</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public int getSelectedIndex () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getSelectedIndex()</tt> method 
+returns the position of the currently selected item. The <tt CLASS=literal>Choice</tt> 
+list uses zero-based indexing, so the position of the first item is zero. 
+The position of the last item is the value of <tt CLASS=literal>countItems()-1</tt>. 
+If the list is empty, this method returns -1. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void select (int position) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the <tt CLASS=literal>select()</tt> 
+method makes the item at <tt CLASS=literal>position</tt> 
+the selected item in the <tt CLASS=literal>Choice</tt>. 
+If <tt CLASS=literal>position</tt> is too big, <tt CLASS=literal>select()</tt> 
+throws the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+If <tt CLASS=literal>position</tt> is negative, nothing 
+happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void select (String string) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of <tt CLASS=literal>select()</tt> makes 
+the item with the label <tt CLASS=literal>string</tt> 
+the selected item. If <tt CLASS=literal>string</tt> 
+is in the <tt CLASS=literal>Choice</tt> multiple times, 
+this method selects the first. If <tt CLASS=literal>string</tt> 
+is not in the <tt CLASS=literal>Choice</tt>, nothing 
+happens. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>Choice</tt>'s peer. If 
+you override this method, call <tt CLASS=literal>super.addNotify()</tt> 
+first, then add your customizations for the new class. You will then be 
+able to do everything you need with the information about the newly created 
+peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString ()  </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of a <tt CLASS=literal>Choice</tt>, the default 
+<tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Component</tt> 
+gets called. This in turn calls <tt CLASS=literal>paramString()</tt> 
+which builds up the string to display. At the <tt CLASS=literal>Choice</tt> 
+level, <tt CLASS=literal>paramString()</tt> appends 
+the currently selected item (the result of <tt CLASS=literal>getSelectedItem()</tt>) 
+to the output. Using the first <tt CLASS=literal>Choice</tt> 
+instance in <A HREF="ch09_01.htm#JAWT-CH-9-FIG-1">Figure 9.1</A>, the results would be: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Choice[139,5,92x27,current=Dialog]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-9-SECT-1.2">Choice Events</A></h3>
+
+<P CLASS=para>
+<A NAME="CH09.EVENT1"></A><A NAME="CH09.EVENT1A"></A>The primary event for a <tt CLASS=literal>Choice</tt> 
+occurs when the user selects an item in the list. With the 1.0 event model, 
+selecting an item generates an <tt CLASS=literal>ACTION_EVENT</tt>, which triggers a call to the 
+<tt CLASS=literal>action()</tt> method. Once the <tt CLASS=literal>Choice</tt> 
+has the input focus, the user can change the selection by using the arrow 
+or keyboard keys. The arrow keys scroll through the list of choices, triggering 
+the <tt CLASS=literal>KEY_ACTION</tt>, <tt CLASS=literal>ACTION_EVENT</tt>, 
+and <tt CLASS=literal>KEY_ACTION_RELEASE</tt> event 
+sequence, which in turn invokes the <tt CLASS=literal>keyDown()</tt>, 
+<tt CLASS=literal>action()</tt>, and <tt CLASS=literal>keyUp()</tt> 
+methods, respectively. If the mouse is used to choose an item, no mouse 
+events are triggered as you scroll over each item, and an <tt CLASS=literal>ACTION_EVENT</tt> 
+occurs only when a specific choice is selected. 
+
+<P CLASS=para>
+With the 1.1 event model, you register <tt CLASS=literal>ItemListener</tt> 
+with <tt CLASS=literal>addItemListener()</tt>. Then when the user selects the <tt CLASS=literal>Choice</tt>, 
+the <tt CLASS=literal>ItemListener.itemStateChanged()</tt> 
+method is called through the protected <tt CLASS=literal>Choice.processItemEvent()</tt> 
+method. Key, mouse, and focus listeners are registered through the <tt CLASS=literal>Component</tt> 
+methods of <tt CLASS=literal>addKeyListener()</tt>, 
+<tt CLASS=literal>addMouseListener()</tt>, and <tt CLASS=literal>addFocusListener()</tt>, 
+respectively. Action
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean action (Event e, Object o)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>action()</tt> method for a choice 
+signifies that the user selected an item. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>o</tt> is 
+the <tt CLASS=literal>String</tt> from the call to <tt CLASS=literal>addItem()</tt> 
+or <tt CLASS=literal>add()</tt> that represents 
+the current selection. Here's a trivial implementation of the method: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+public boolean action (Event e, Object o) {
+    if (e.target instanceof Choice) {
+        System.out.println ("Choice is now set to " + o);
+    }
+    return false;
+}
+</PRE>
+</DIV>
+
+Keyboard
+
+<P CLASS=para>
+The keyboard events for a <tt CLASS=literal>Choice</tt> 
+can be generated once the <tt CLASS=literal>Choice</tt> 
+has the input focus. In addition to the <tt CLASS=literal>KEY_ACTION</tt> 
+and <tt CLASS=literal>KEY_ACTION_RELEASE</tt> events 
+you get with the arrow keys, an <tt CLASS=literal>ACTION_EVENT</tt> 
+is generated over each entry. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyDown (Event e, int key)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyDown()</tt> method is called 
+whenever the user presses a key and the <tt CLASS=literal>Choice</tt> 
+has the input focus. <tt CLASS=literal>e</tt> is the 
+<tt CLASS=literal>Event</tt> instance for the specific 
+event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) for <tt CLASS=literal>keyDown()</tt> 
+could be either <tt CLASS=literal>Event.KEY_PRESS</tt> 
+for a regular key or <tt CLASS=literal>Event.KEY_ACTION</tt> 
+for an action-oriented key (i.e., arrow or function key). If you check 
+the current selection in this method through the method <tt CLASS=literal>getSelectedItem()</tt> 
+or <tt CLASS=literal>getSelectedIndex()</tt>, you 
+will be given the previously selected item because the <tt CLASS=literal>Choice</tt>'s 
+selection has not changed yet. <tt CLASS=literal>keyDown()</tt> 
+is not called when the <tt CLASS=literal>Choice</tt> 
+is changed by using the mouse. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean keyUp (Event e, int key)</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>keyUp()</tt> method is called 
+whenever the user releases a key. <tt CLASS=literal>e</tt> 
+is the <tt CLASS=literal>Event</tt> instance for the 
+specific event, while <tt CLASS=literal>key</tt> 
+is the integer representation of the character pressed. The identifier 
+for the event (<tt CLASS=literal>e.id</tt>) for <tt CLASS=literal>keyUp()</tt> 
+could be either <tt CLASS=literal>KEY_RELEASE</tt> 
+for a regular key or <tt CLASS=literal>KEY_ACTION_RELEASE</tt> 
+for an action oriented key (i.e., arrow or function key). </DL>
+Mouse
+
+<P CLASS=para>
+Ordinarily, the <tt CLASS=literal>Choice</tt> component 
+does not trigger any mouse events. Focus
+
+<P CLASS=para>
+Ordinarily, the <tt CLASS=literal>Choice</tt> component 
+does not trigger any focus events. Listeners and 1.1 event handling
+
+<P CLASS=para>
+<A NAME="CH09.LISTEN1"></A>With the 1.1 event model, you register listeners for different event types; 
+the listeners are told when the event happens. These methods register listeners, 
+and let the <tt CLASS=literal>Choice</tt> component 
+inspect its own events. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addItemListener(ItemListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addItemListener()</tt> method 
+registers <tt CLASS=literal>listener</tt> as an object 
+interested in being notified when an <tt CLASS=literal>ItemEvent</tt> 
+passes through the <tt CLASS=literal>EventQueue</tt> 
+with this <tt CLASS=literal>Choice</tt> as its target. 
+The <tt CLASS=literal>listener.itemStateChanged()</tt> 
+method is called when an event occurs. Multiple listeners can be registered. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeItemListener(ItemListener listener) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeItemListener()</tt> method 
+removes <tt CLASS=literal>listener</tt> as a interested 
+listener. If <tt CLASS=literal>listener</tt> is not 
+registered, nothing happens. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processEvent(AWTEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processEvent()</tt> method receives 
+all <tt CLASS=literal>AWTEvent</tt>s with this <tt CLASS=literal>Choice</tt> 
+as its target. <tt CLASS=literal>processEvent()</tt> 
+then passes them along to any listeners for processing. When you subclass 
+<tt CLASS=literal>Choice</tt>, overriding <tt CLASS=literal>processEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding <tt CLASS=literal>processEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processEvent()</tt>, 
+remember to call <tt CLASS=literal>super.processEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected void processItemEvent(ItemEvent e) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>processItemEvent()</tt> method 
+receives all <tt CLASS=literal>ItemEvent</tt>s with 
+this <tt CLASS=literal>Choice</tt> as its target. 
+<tt CLASS=literal>processItemEvent()</tt> then passes 
+them along to any listeners for processing. When you subclass <tt CLASS=literal>Choice</tt>, 
+overriding <tt CLASS=literal>processItemEvent()</tt> 
+allows you to process all events yourself, before sending them to any listeners. 
+In a way, overriding <tt CLASS=literal>processItemEvent()</tt> 
+is like overriding <tt CLASS=literal>handleEvent()</tt> 
+using the 1.0 event model. 
+
+<P CLASS=para>
+If you override <tt CLASS=literal>processItemEvent()</tt>, 
+remember to call the method <tt CLASS=literal>super.processItemEvent(e)</tt> 
+last to ensure that regular event processing can occur. If you want to 
+process your own events, it's a good idea to call <tt CLASS=literal>enableEvents()</tt> 
+(inherited from <tt CLASS=literal>Component</tt>) 
+to ensure that events are delivered even in the absence of registered listeners. </DL>
+<P CLASS=para>
+The following simple applet below demonstrates how a component can receive its own 
+events by overriding <tt CLASS=literal>processItemEvent()</tt>, 
+while still allowing other objects to register as listeners. <tt CLASS=literal>MyChoice11</tt> 
+is a subclass of <tt CLASS=literal>Choice</tt> that 
+processes its own item events. <tt CLASS=literal>choice11</tt> 
+is an applet that uses the <tt CLASS=literal>MyChoice11</tt> 
+component and registers itself as a listener for item events. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// Java 1.1 only
+import java.awt.*;
+import java.applet.*;
+import java.awt.event.*;
+class MyChoice11 extends Choice {
+    MyChoice11 () {
+        super ();
+        enableEvents (AWTEvent.ITEM_EVENT_MASK);
+    }
+    protected void processItemEvent(ItemEvent e) {
+        ItemSelectable ie = e.getItemSelectable();
+        System.out.println ("Item Selected: " + ie.getSelectedObjects()[0]);
+        // If you do not call super.processItemEvent()
+        // no listener will be notified
+        super.processItemEvent (e);
+    }
+}
+public class choice11 extends Applet implements ItemListener {
+    Choice c;
+    public void init () {
+        String []fonts;
+        fonts = Toolkit.getDefaultToolkit().getFontList();
+        c = new MyChoice11();
+        for (int i = 0; i &lt; fonts.length; i++) {
+            c.add (fonts[i]);
+        }
+        add (c);
+        c.addItemListener (this);
+   }
+    public void itemStateChanged(ItemEvent e)  {
+        ItemSelectable ie = e.getItemSelectable();
+        System.out.println ("State Change: " + ie.getSelectedObjects()[0]);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A few things are worth noticing. <tt CLASS=literal>MyChoice11</tt> 
+calls <tt CLASS=literal>enableEvents()</tt> in its 
+constructor to make sure that item events are delivered, even if nobody 
+registers as a listener: <tt CLASS=literal>MyChoice11</tt> 
+needs to make sure that it receives events, even in the absence of listeners. 
+Its <tt CLASS=literal>processItemEvent()</tt> method 
+ends by calling the superclass's <tt CLASS=literal>processItemEvent()</tt> 
+method, with the original item event. This call ensures that normal item 
+event processing occurs; <tt CLASS=literal>super.processItemEvent()</tt> 
+is responsible for distributing the event to any registered listeners. 
+The alternative would be to implement the whole registration and event 
+distribution mechanism inside <tt CLASS=literal>myChoice11</tt>, 
+which is precisely what object-oriented programming is supposed to avoid, 
+or being absolutely sure that you will only use <tt CLASS=literal>MyChoice11</tt> 
+in situations in which there won't be any listeners, drastically limiting 
+the usefulness of this class. 
+
+<P CLASS=para>
+<tt CLASS=literal>choice11</tt> doesn't contain 
+many surprises. It implements <tt CLASS=literal>ItemListener</tt>, 
+the listener interface for item events; provides the required <tt CLASS=literal>itemStateChanged()</tt> 
+method, which is called whenever an item event occurs; and calls <tt CLASS=literal>MyChoice11</tt>'s method 
+<tt CLASS=literal>addItemListener()</tt> to 
+register as a listener for item events. (<tt CLASS=literal>MyChoice11</tt> 
+inherits this method from the <tt CLASS=literal>Choice</tt> 
+class.) 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Extending TextField</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Lists</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

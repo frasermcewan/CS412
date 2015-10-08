@@ -1,0 +1,687 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.11 The sun.awt Layout Collection</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:40:03 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Layouts</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_12.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-11">7.11 The sun.awt Layout Collection</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.SUN1"></A><A NAME="CH07.SUN2"></A>The <tt CLASS=literal>sun.awt</tt> package defines 
+four additional layouts. The first two, <tt CLASS=literal>HorizBagLayout</tt> 
+and <tt CLASS=literal>VerticalBagLayout</tt>, are 
+available only when used with Sun's JDK or Internet Explorer, since 
+they are not provided with Netscape Navigator and may not be available 
+from other vendors. Therefore, these layout managers should be used
+selectively within applets. The third layout manager, 
+<tt CLASS=literal>VariableGridLayout</tt>, is available 
+with Netscape Navigator 2.0 or 3.0 and Internet Explorer. Usage of 
+this layout manager is safer 
+within applets but is still at your own risk. The final layout manager 
+is introduced in Java 1.1, <tt CLASS=literal>OrientableFlowLayout</tt>. 
+Only time will tell where that one will be available. Any of these layout 
+managers could be moved into a future version of <tt CLASS=literal>java.awt</tt> 
+if there is enough interest. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-11.1">HorizBagLayout</A></h3>
+
+<P CLASS=para>
+In a <tt CLASS=literal>HorizBagLayout</tt>, the components 
+are all arranged in a single row, from left to right. The height of each 
+component is the height of the container; the width of each component is 
+its preferred width. <A HREF="ch07_11.htm#JAWT-CH-7-FIG-16">Figure 7.16</A> shows <tt CLASS=literal>HorizBagLayout</tt> 
+in use. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-16">Figure 7.16: HorizBagLayout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0716.gif" alt="[Graphic: Figure 7-16]" width=450 height=102 border=0>
+
+</DIV>
+
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public HorizBagLayout () </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>HorizBagLayout</tt> 
+with a horizontal gap of zero pixels. The gap is the space between the 
+different components in the horizontal direction. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public HorizBagLayout (int hgap) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>HorizBagLayout</tt> 
+using a horizontal gap of <tt CLASS=literal>hgap</tt> 
+pixels. </DL>
+LayoutManager methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addLayoutComponent (String name, Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addLayoutComponent()</tt> method 
+of <tt CLASS=literal>HorizBagLayout</tt> does nothing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeLayoutComponent (Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeLayoutComponent()</tt> 
+method of <tt CLASS=literal>HorizBagLayout</tt> does 
+nothing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension preferredLayoutSize (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>preferredLayoutSize()</tt> method 
+of <tt CLASS=literal>HorizBagLayout</tt> sums up the 
+preferred widths of all the components in <tt CLASS=literal>target</tt>, 
+along with the <tt CLASS=literal>hgap</tt> and right and left insets to get the width of the <tt CLASS=literal>target</tt>. 
+The height returned will be the preferred height of the tallest component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension minimumLayoutSize (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>minimumLayoutSize()</tt> method 
+of <tt CLASS=literal>HorizBagLayout</tt> sums up the 
+minimum widths of all the components in <tt CLASS=literal>target</tt>, 
+along with the <tt CLASS=literal>hgap</tt> and right and left insets to get the width of the <tt CLASS=literal>target</tt>. 
+The height returned will be the minimum height of the tallest component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void layoutContainer (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>layoutContainer()</tt> method 
+draws <tt CLASS=literal>target</tt>'s components 
+on the screen in one row. The height of each component is the height of 
+the container. Each component's width is its preferred width, if 
+enough space is available. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>HorizBagLayout</tt> 
+returns a string with the current horizontal gap setting--for example: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+sun.awt.HorizBagLayout[hgap=0]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-11.2">VerticalBagLayout</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>VerticalBagLayout</tt> places 
+all the components in a single column. The width of each component is the 
+width of the container; each component is given its preferred height. <A HREF="ch07_11.htm#JAWT-CH-7-FIG-17">Figure 7.17</A> shows <tt CLASS=literal>VerticalBagLayout</tt> 
+in use. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-17">Figure 7.17: VerticalBagLayout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0717.gif" alt="[Graphic: Figure 7-17]" width=450 height=149 border=0>
+
+</DIV>
+
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public VerticalBagLayout () </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>VerticalBagLayout</tt> 
+with a vertical gap of zero pixels. The gap is the space between components 
+in the vertical direction. With a gap of 0, adjacent components will touch 
+each other. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public VerticalBagLayout (int vgap) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>VerticalBagLayout</tt> 
+with a vertical gap of <tt CLASS=literal>vgap</tt> 
+pixels. </DL>
+LayoutManager methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void addLayoutComponent (String name, Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addLayoutComponent()</tt> method 
+of <tt CLASS=literal>VerticalBagLayout</tt> does nothing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void removeLayoutComponent (Component component) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>removeLayoutComponent()</tt> 
+method of <tt CLASS=literal>VerticalBagLayout</tt> 
+does nothing. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension preferredLayoutSize (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+To get the preferred height of the layout, the <tt CLASS=literal>preferredLayoutSize()</tt> 
+method sums up the preferred height of all the components in <tt CLASS=literal>target</tt> 
+along with the <tt CLASS=literal>vgap</tt> and top and bottom insets. For the preferred width, 
+<tt CLASS=literal>preferredLayoutSize()</tt> returns 
+the preferred width of the widest component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension minimumLayoutSize (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+To get the minimum height of the layout, the <tt CLASS=literal>minimumLayoutSize()</tt> 
+method sums up the minimum height of all the components in <tt CLASS=literal>target</tt> 
+along with the <tt CLASS=literal>vgap</tt> and top and bottom insets. For the minimum width, <tt CLASS=literal>minimumLayoutSize()</tt> 
+returns the minimum width of the widest component. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void layoutContainer (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>layoutContainer()</tt> method 
+draws <tt CLASS=literal>target</tt>'s components 
+on the screen in one column. The width of each component is the width of 
+the container. Each component's height is its <tt CLASS=literal>preferredSize()</tt> 
+height, if available. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>VerticalBagLayout</tt> 
+returns a string with the current vertical gap setting. For example: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+sun.awt.VerticalBagLayout[vgap=0]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-11.3">VariableGridLayout</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.VAR1"></A><A NAME="CH07.VAR2"></A><A NAME="CH07.VAR3"></A>The <tt CLASS=literal>VariableGridLayout</tt> builds 
+upon the <tt CLASS=literal>GridLayout</tt>. It arranges 
+components on a grid of rows and columns. However, instead of giving all 
+components the same size, the <tt CLASS=literal>VariableGridLayout</tt> 
+allows you to size rows and columns fractionally. Another difference between 
+<tt CLASS=literal>VariableGridLayout</tt> and <tt CLASS=literal>GridBagLayout</tt> 
+is that a <tt CLASS=literal>VariableGridLayout</tt> 
+has a fixed size. If you ask for a 3x3 grid, you will get exactly that. 
+The layout manager throws the <tt CLASS=literal>ArrayIndexOutOfBoundsException</tt> 
+run-time exception if you try to add too many components. 
+
+<P CLASS=para>
+<A HREF="ch07_11.htm#JAWT-CH-7-FIG-18">Figure 7.18</A> shows a <tt CLASS=literal>VariableGridLayout</tt> 
+in which row one takes up 50 percent of the screen, and rows two and three take 
+up 25 percent of the screen each. Column one takes up 50 percent of the screen; columns 
+two and three take 25 percent each. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-18">Figure 7.18: VariableGridLayout in Netscape Navigator</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0718.gif" alt="[Graphic: Figure 7-18]" width=236 height=242 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Here is the code that creates <A HREF="ch07_11.htm#JAWT-CH-7-FIG-18">Figure 7.18</A>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+java.applet.Applet;
+import sun.awt.VariableGridLayout;
+public class vargrid extends Applet {
+    public void init () {
+        VariableGridLayout vgl;
+        setLayout (vgl = new VariableGridLayout (3,3));
+        vgl.setRowFraction (0, 1.0/2.0);
+        vgl.setRowFraction (1, 1.0/4.0);
+        vgl.setRowFraction (2, 1.0/4.0);
+        vgl.setColFraction (0, 1.0/2.0);
+        vgl.setColFraction (1, 1.0/4.0);
+        vgl.setColFraction (2, 1.0/4.0);
+        add (new Button ("One"));
+        add (new Button ("Two"));
+        add (new Button ("Three"));
+        add (new Button ("Four"));
+        add (new Button ("Five"));
+        add (new Button ("Six"));
+        add (new Button ("Seven"));
+        add (new Button ("Eight"));
+        add (new Button ("Nine"));
+    }
+}
+</PRE>
+</DIV>
+
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public VariableGridLayout (int rows, int columns) </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>VariableGridLayout</tt> 
+with the specified number of <tt CLASS=literal>rows</tt> 
+and <tt CLASS=literal>columns</tt>. You cannot specify 
+zero for one dimension. If either <tt CLASS=literal>rows</tt> 
+or <tt CLASS=literal>columns</tt> is zero, the constructor 
+throws the <tt CLASS=literal>NullPointerException</tt> run-time exception. 
+This constructor uses the default values for horizontal and vertical gaps 
+(zero pixels), which means that components in adjacent cells will touch 
+each other. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public VariableGridLayout (int rows, int columns, int hgap, int vgap) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the constructor is called by the previous one. It creates 
+a <tt CLASS=literal>VariableGridLayout</tt> with the 
+specified number of <tt CLASS=literal>rows</tt> and 
+<tt CLASS=literal>columns</tt>, a horizontal gap of 
+<tt CLASS=literal>hgap</tt>, and a vertical gap of 
+<tt CLASS=literal>vgap</tt>. The gaps specify in pixels the 
+space between adjacent components in the horizontal and vertical directions. It is possible to have negative gaps if you want components 
+to overlap. You cannot specify zero for the number of rows or columns. 
+If either <tt CLASS=literal>rows</tt> or <tt CLASS=literal>columns</tt> 
+is zero, the constructor throws the run-time exception <tt CLASS=literal>NullPointerException</tt>. </DL>
+Support methods
+
+<P CLASS=para>
+The distinguishing feature of a <tt CLASS=literal>VariableGridLayout</tt> 
+is that you can tell a particular row or column to take up a certain fraction 
+of the display. By default, the horizontal space available is split evenly 
+among the grid's columns; vertical space is split evenly among the 
+rows. This group of methods lets you find out how much space is allotted 
+to each row or column and lets you change that allocation. The sum of 
+the fractional amounts for each direction should add up to one. If greater 
+than one, part of the display will be drawn offscreen. If less than one, 
+additional screen real estate will be unused. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setRowFraction (int rowNumber, double fraction) </I><br>
+<DD>
+
+<P CLASS=para>
+This method sets the percentage of space available for row <tt CLASS=literal>rowNumber</tt> 
+to <tt CLASS=literal>fraction</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setColFraction (int colNumber, double fraction) </I><br>
+<DD>
+
+<P CLASS=para>
+This method sets the percentage of space available for column <tt CLASS=literal>colNumber</tt> 
+to <tt CLASS=literal>fraction</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public double getRowFraction (int rowNumber) </I><br>
+<DD>
+
+<P CLASS=para>
+This method returns the current fractional setting for row <tt CLASS=literal>rowNumber</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public double getColFraction (int colNumber) </I><br>
+<DD>
+
+<P CLASS=para>
+This method returns the current fractional setting for column <tt CLASS=literal>colNumber</tt>. </DL>
+LayoutManager methods
+
+<P CLASS=para>
+The only method from <tt CLASS=literal>GridLayout</tt> that is overridden is the <tt CLASS=literal>layoutContainer()</tt> 
+method. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void layoutContainer (Container target) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>layoutContainer()</tt> method 
+draws <tt CLASS=literal>target</tt>'s components 
+on the screen in a series of rows and columns. The size of each component 
+within a <tt CLASS=literal>VariableGridLayout</tt> 
+is determined by the <tt CLASS=literal>RowFraction</tt> 
+and <tt CLASS=literal>ColFraction</tt> settings for 
+its row and column. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>VariableGridLayout</tt> 
+returns a string with the current horizontal and vertical gap settings, 
+the number of rows and columns, and the row and column fractional amounts. 
+For example, the string produced by <A HREF="ch07_11.htm#JAWT-CH-7-FIG-19">Figure 7.19</A> would 
+be: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+sun.awt.VariableGridLayout[hgap=0,vgap=0,rows=3,cols=3,
+    rowFracs=[3]&lt;0.50&gt;&lt;0.25&gt;&lt;0.25&gt;,colFracs=[3]&lt;0.50&gt;&lt;0.25&gt;&lt;0.25&gt;]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-7-SECT-11.4">OrientableFlowLayout</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.OR1"></A><A NAME="CH07.OR2"></A><A NAME="CH07.OR3"></A>The <tt CLASS=literal>OrientableFlowLayout</tt> is 
+available for those who want something like a <tt CLASS=literal>FlowLayout</tt> 
+that lets you arrange components from top to bottom. <A HREF="ch07_11.htm#JAWT-CH-7-FIG-19">Figure 7.19</A> 
+shows <tt CLASS=literal>OrientableFlowLayout</tt> 
+in use. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-7-FIG-19">Figure 7.19: OrientableFlowLayout</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0719.gif" alt="[Graphic: Figure 7-19]" width=424 height=286 border=0>
+
+</DIV>
+
+Constants
+
+<P CLASS=para>
+Since <tt CLASS=literal>OrientableFlowLayout</tt> 
+subclasses <tt CLASS=literal>FlowLayout</tt>, the 
+<tt CLASS=literal>FlowLayout</tt> constants of <tt CLASS=literal>LEFT</tt>, 
+<tt CLASS=literal>RIGHT</tt>, and <tt CLASS=literal>CENTER</tt> 
+are still available. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int HORIZONTAL <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>HORIZONTAL</tt> constant tells 
+the layout manager to arrange components from left to right, like the <tt CLASS=literal>FlowLayout</tt> 
+manager. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int VERTICAL <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>VERTICAL</tt> constant tells 
+the layout manager to arrange components from top to bottom. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int TOP <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>TOP</tt> constant tells the 
+layout manager to align the first component at the top of the screen (top 
+justification). 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public static final int BOTTOM <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>BOTTOM</tt> constant tells the 
+layout manager to align the first component at the bottom of the screen 
+(bottom justification). </DL>
+Constructors
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public OrientableFlowLayout () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>OrientableFlowLayout</tt> 
+that acts like the default <tt CLASS=literal>FlowLayout</tt>. 
+The objects flow from left to right and have an <tt CLASS=literal>hgap</tt> 
+and <tt CLASS=literal>vgap</tt> of 5. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public OrientableFlowLayout (int direction) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>OrientableFlowLayout</tt> 
+in the given <tt CLASS=literal>direction</tt>. Valid 
+values are <tt CLASS=literal>OrientableFlowLayout.HORIZONTAL</tt> 
+or <tt CLASS=literal>OrientableFlowLayout.VERTICAL</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public OrientableFlowLayout (int direction, int horizAlignment, int vertAlignment) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>OrientableFlowLayout</tt> 
+in the given direction. Valid values are <tt CLASS=literal>OrientableFlowLayout.HORIZONTAL</tt> 
+or <tt CLASS=literal>OrientableFlowLayout.VERTICAL</tt>. 
+<tt CLASS=literal>horizAlignment</tt> provides 
+the horizontal alignment setting. <tt CLASS=literal>vertAlignment</tt> 
+provides a vertical alignment setting; it may be <tt CLASS=literal>OrientableFlowLayout.TOP</tt>, 
+<tt CLASS=literal>FlowLayout.CENTER</tt>, or <tt CLASS=literal>OrientableFlowLayout.BOTTOM</tt>. 
+If <tt CLASS=literal>direction</tt> is <tt CLASS=literal>HORIZONTAL</tt>, 
+the vertical alignment is ignored. If <tt CLASS=literal>direction</tt> 
+is <tt CLASS=literal>VERTICAL</tt>, the horizontal 
+alignment is ignored. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public OrientableFlowLayout (int direction, int horizAlignment, int 
+vertAlignment, int horizHgap, int horizVgap, int vertHgap, 
+int vertVgap) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The final constructor adds separate horizontal and vertical gaps to the 
+settings of <tt CLASS=literal>OrientableFlowLayout</tt>. 
+The <tt CLASS=literal>horizHgap</tt> and <tt CLASS=literal>horizVgap</tt> 
+parameters are the gaps when horizontally aligned. The <tt CLASS=literal>vertHgap</tt> 
+and <tt CLASS=literal>vertVgap</tt> parameters 
+are the gaps when vertically aligned. </DL>
+LayoutManager methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension preferredLayoutSize (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>preferredLayoutSize()</tt> method 
+of <tt CLASS=literal>OrientableFlowLayout</tt> calculates 
+the preferred dimensions for the <tt CLASS=literal>target</tt> 
+container. The <tt CLASS=literal>OrientableFlowLayout</tt> 
+computes the preferred size by placing all the components in one row or 
+column, depending upon the current orientation, and adding their individual 
+preferred sizes along with gaps and insets. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dimension minimumLayoutSize (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>minimumLayoutSize()</tt> method 
+of <tt CLASS=literal>OrientableFlowLayout</tt> calculates 
+the minimum dimensions for the container by adding up the sizes of the 
+components. The <tt CLASS=literal>OrientableFlowLayout</tt> 
+computes the minimum size by placing all the components in one row or column, 
+depending upon the current orientation, and adding their individual minimum 
+sizes along with gaps and insets. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void layoutContainer (Container target) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>layoutContainer()</tt> method 
+draws <tt CLASS=literal>target</tt>'s <tt CLASS=literal>Component</tt>s 
+on the screen, starting with the first row or column of the display, and 
+going from left to right across the screen, or from top to bottom, based 
+on the current orientation. When it reaches the margin of the container, 
+it skips to the next row or column and continues drawing additional components. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void orientHorizontally () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>orientHorizontally()</tt> method 
+allows you to change the orientation of the <tt CLASS=literal>LayoutManager</tt> 
+to horizontal. The container must be validated before you see the effect 
+of the change. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void orientVertically () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>orientVertically()</tt> method 
+allows you to change the orientation of the <tt CLASS=literal>LayoutManager</tt> 
+to vertical. The container must be validated before you see the effect 
+of the change. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String toString () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>OrientableFlowLayout</tt> 
+returns a string with the current orientation setting, along with the entire 
+<tt CLASS=literal>FlowLayout.toString()</tt> results. 
+For example: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+sun.awt.OrientableFlowLayout[orientation=vertical, 
+sun.awt.OrientableFlowLayout[hgap=5,vgap=5,align=center]]
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_10.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_12.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Designing Your Own LayoutManager</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Other Layouts Available on the Net</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

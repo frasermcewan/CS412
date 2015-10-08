@@ -1,0 +1,574 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.6 Dialogs</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:37:02 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>Containers</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-6">6.6 Dialogs</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.DIALOG1"></A><A NAME="CH06.DIALOG2"></A>The <tt CLASS=literal>Dialog</tt> class provides a 
+special type of display window that is normally used for pop-up messages 
+or input from the user. It should be associated with a <tt CLASS=literal>Frame</tt> 
+(a required parameter for the constructor), and whenever anything happens 
+to this <tt CLASS=literal>Frame</tt>, the same thing 
+will happen to the <tt CLASS=literal>Dialog</tt>. 
+For instance, if the parent <tt CLASS=literal>Frame</tt> 
+is iconified, the <tt CLASS=literal>Dialog</tt> disappears 
+until the <tt CLASS=literal>Frame</tt> is de-iconified. 
+If the <tt CLASS=literal>Frame</tt> is destroyed, 
+so are all the associated dialogs. <A HREF="ch06_06.htm#JAWT-CH-6-FIG-5">Figure 6.5</A> and <A HREF="ch06_06.htm#JAWT-CH-6-FIG-6">Figure 6.6</A> show typical dialog boxes.
+
+<P CLASS=para>
+In addition to being associated with a <tt CLASS=literal>Frame</tt>, 
+<tt CLASS=literal>Dialog</tt> is either modeless 
+or modal. A modeless <tt CLASS=literal>Dialog</tt> 
+means a user can interact with both the <tt CLASS=literal>Frame</tt> 
+and the <tt CLASS=literal>Dialog</tt> at the same 
+time. A modal <tt CLASS=literal>Dialog</tt> is one 
+that blocks input to the remainder of the application, including the <tt CLASS=literal>Frame</tt>, 
+until the <tt CLASS=literal>Dialog</tt> box is acted 
+upon. Note that the parent <tt CLASS=literal>Frame</tt> 
+is still executing; unlike some windowing systems, Java does not suspend 
+the entire application for a modal <tt CLASS=literal>Dialog</tt>. 
+Normally, blocking access would be done to get input from the user or to 
+show a warning message. <A HREF="ch06_06.htm#JAWT-CH-6-EX-2">Example 6.2</A> shows how to create and use a modal <tt CLASS=literal>Dialog</tt> box, as we will see later in the chapter. 
+
+<P CLASS=para>
+Since <tt CLASS=literal>Dialog</tt> subclasses <tt CLASS=literal>Window</tt>, 
+its default <tt CLASS=literal>LayoutManager</tt> is 
+<tt CLASS=literal>BorderLayout</tt>. 
+
+<P CLASS=para>
+In applets, when you create a <tt CLASS=literal>Dialog</tt>, 
+you need to provide a reference to the browser's <tt CLASS=literal>Frame</tt>, 
+not the applet. In order to get this, you can try to go up the container 
+hierarchy of the <tt CLASS=literal>Applet</tt> with 
+<tt CLASS=literal>getParent()</tt> until it returns 
+<tt CLASS=literal>null</tt>. (You cannot specify a 
+null parent as you can with a <tt CLASS=literal>Window</tt>.) 
+See <A HREF="ch06_04.htm#JAWT-CH-6-EX-1">Example 6.1</A> for a utility method to do this. Simple include a line like the following in your applet: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Frame top = ComponentUtilities.getTopLevelParent (this);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Then pass <tt CLASS=literal>top</tt> to the <tt CLASS=literal>Dialog</tt> 
+constructor. Another alternative is to create a new <tt CLASS=literal>Frame</tt> 
+to associate with your dialog. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-6.1">Dialog Constructors and Methods</A></h3>Constructors
+
+<P CLASS=para>
+If any constructor is passed a <tt CLASS=literal>null</tt> 
+parent, the constructor throws the run-time exception <tt CLASS=literal>IllegalArgumentException</tt>. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dialog (Frame parent) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an instance of <tt CLASS=literal>Dialog</tt> 
+with no title and with <tt CLASS=literal>parent</tt> 
+as the <tt CLASS=literal>Frame</tt> owning it. It 
+is not modal and is initially resizable. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dialog (Frame parent, boolean modal) <img src="gifs/wstar.gif" alt="(Deprecated)" border=0></I><br>
+<DD>
+
+<P CLASS=para>
+This constructor creates an instance of <tt CLASS=literal>Dialog</tt> 
+with no title and with <tt CLASS=literal>parent</tt> 
+as the <tt CLASS=literal>Frame</tt> owning it. If 
+<tt CLASS=literal>modal</tt> is <tt CLASS=literal>true</tt>, 
+the <tt CLASS=literal>Dialog</tt> grabs all the user 
+input of the program until it is closed. If <tt CLASS=literal>modal</tt> 
+is <tt CLASS=literal>false</tt>, there is no special 
+behavior associated with the <tt CLASS=literal>Dialog</tt>. 
+Initially, the <tt CLASS=literal>Dialog</tt> will 
+be resizable. This constructor is comment-flagged as deprecated.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dialog (Frame parent, String title) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the constructor creates an instance of <tt CLASS=literal>Dialog</tt> 
+with <tt CLASS=literal>parent</tt> as the <tt CLASS=literal>Frame</tt> 
+owning it and a window title of <tt CLASS=literal>title</tt>. 
+It is not modal and is initially resizable. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public Dialog (Frame parent, String title, boolean modal) </I><br>
+<DD>
+
+<P CLASS=para>
+This version of the constructor creates an instance of <tt CLASS=literal>Dialog</tt> 
+with <tt CLASS=literal>parent</tt> as the <tt CLASS=literal>Frame</tt> 
+owning it and a window title of <tt CLASS=literal>title</tt>. 
+If <tt CLASS=literal>mode</tt> is <tt CLASS=literal>true</tt>, 
+the <tt CLASS=literal>Dialog</tt> grabs all the user 
+input of the program until it is closed. If <tt CLASS=literal>modal</tt> 
+is <tt CLASS=literal>false</tt>, there is no special 
+behavior associated with the <tt CLASS=literal>Dialog</tt>. 
+Initially, the <tt CLASS=literal>Dialog</tt> will 
+be resizable. </DL>
+<DIV CLASS=note>
+<P CLASS=note><BLOCKQUOTE><P><B>NOTE:</B> 
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+In some 1.0 versions of Java, modal dialogs were not supported properly. 
+You needed to create some multithreaded contraption that simulated modality. 
+Modal dialogs work properly in 1.1. 
+</blockquote><P>
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-5">Figure 6.5: A Dialog in an application or local applet</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0606.gif" alt="[Graphic: Figure 6-5]" width=185 height=214 border=0>
+
+</DIV>
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-6">Figure 6.6: The same Dialog in an applet that came across the network</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0607.gif" alt="[Graphic: Figure 6-6]" width=261 height=120 border=0>
+
+</DIV>
+
+Appearance methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public String getTitle () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getTitle()</tt> method returns 
+the current title for the <tt CLASS=literal>Dialog</tt>. 
+If there is no title for the <tt CLASS=literal>Dialog</tt>, 
+<tt CLASS=literal>getTitle()</tt> returns <tt CLASS=literal>null</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setTitle (String title) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setTitle()</tt> method changes 
+the current title of the <tt CLASS=literal>Dialog</tt> 
+to <tt CLASS=literal>title</tt>. To turn off any title 
+for the <tt CLASS=literal>Dialog</tt>, use <tt CLASS=literal>null</tt> 
+for <tt CLASS=literal>title</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isResizable () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isResizable()</tt> method tells 
+you if the current <tt CLASS=literal>Dialog</tt> is 
+resizable. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setResizable (boolean resizable) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setResizable()</tt> method changes 
+the resize state of the <tt CLASS=literal>Dialog</tt>. 
+A <tt CLASS=literal>resizable</tt> value of <tt CLASS=literal>true</tt> 
+means the user can resize the <tt CLASS=literal>Dialog</tt>, 
+while <tt CLASS=literal>false</tt> means the user 
+cannot. This must be set before the <tt CLASS=literal>Dialog</tt> 
+is shown or the peer created. </DL>
+Modal methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public boolean isModal () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>isModal()</tt> method returns 
+the current mode of the <tt CLASS=literal>Dialog</tt>. 
+<tt CLASS=literal>true</tt> indicates the dialog traps 
+all user input. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void setModal (boolean mode) <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>setModal()</tt> method changes 
+the current mode of the <tt CLASS=literal>Dialog</tt> 
+to <tt CLASS=literal>mode</tt>. The next time the 
+dialog is displayed via <tt CLASS=literal>show()</tt>, 
+it will be modal. If the dialog is currently displayed, <tt CLASS=literal>setModal()</tt> 
+has no immediate effect. The change will take place the next time <tt CLASS=literal>show()</tt> 
+is called. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public void show () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>show()</tt> method brings the 
+<tt CLASS=literal>Dialog</tt> to the front and displays 
+it. If the dialog is modal, <tt CLASS=literal>show()</tt> 
+takes care of blocking events so that they don't reach the parent 
+<tt CLASS=literal>Frame</tt>. </DL>
+Miscellaneous methods
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public synchronized void addNotify () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>addNotify()</tt> method creates 
+the <tt CLASS=literal>Dialog</tt> peer. The 
+peer is created automatically when you call the dialog's <tt CLASS=literal>show()</tt> 
+method. If you override the method <tt CLASS=literal>addNotify()</tt>, 
+first call <tt CLASS=literal>super.addNotify()</tt>, 
+then add your customizations for the new class. You will then be able to 
+do everything you need with the information about the newly created peer. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>protected String paramString () </I><br>
+<DD>
+
+<P CLASS=para>
+When you call the <tt CLASS=literal>toString()</tt> 
+method of <tt CLASS=literal>Dialog</tt>, the default 
+<tt CLASS=literal>toString()</tt> method of <tt CLASS=literal>Component</tt> 
+is called. This in turn calls <tt CLASS=literal>paramString()</tt> 
+which builds up the string to display. At the <tt CLASS=literal>Dialog</tt> 
+level, <tt CLASS=literal>paramString()</tt> appends 
+the current mode (modal/modeless) and title (if present). Using 
+the constructor <tt CLASS=literal>Dialog (top, `Help`, true)</tt>, 
+the results would be as follows: </DL>
+<DIV CLASS=screen>
+<P>
+<PRE>
+java.awt.Dialog[0,0,0x0,invalid,hidden,layout=java.awt.BorderLayout,
+    modal,title=Help]
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-6.2">Dialog Events</A></h3>
+
+<P CLASS=para>
+In Java 1.0, a <tt CLASS=literal>Dialog</tt> peer generates all the events 
+that are generated by the <tt CLASS=literal>Component</tt> 
+class; it does not generate events that are specific to a particular type 
+of component. That is, it generates key events, mouse events, and focus 
+events; it doesn't generate action events or list events. If an event 
+happens within a child component of a <tt CLASS=literal>Dialog</tt>, 
+the target of the event is the child component, not the <tt CLASS=literal>Dialog</tt>.Window
+
+<P CLASS=para>
+In addition to the <tt CLASS=literal>Component</tt> 
+events, <tt CLASS=literal>Dialog</tt> generates the 
+<tt CLASS=literal>WINDOW</tt> events. These events are <tt CLASS=literal>WINDOW_DESTROY</tt>, 
+<tt CLASS=literal>WINDOW_EXPOSE</tt>, <tt CLASS=literal>WINDOW_ICONIFY</tt>, 
+<tt CLASS=literal>WINDOW_DEICONIFY</tt>, and <tt CLASS=literal>WINDOW_MOVED</tt>. Listeners and 1.1 event handling
+
+<P CLASS=para>
+With the 1.1 event model, you register listeners for different event types; 
+the listeners are told when the event happens. The <tt CLASS=literal>Dialog</tt> class inherits all its listener handling from <tt CLASS=literal>Window</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-6-SECT-6.3">Dialog Example</A></h3>
+
+<P CLASS=para>
+<A HREF="ch06_06.htm#JAWT-CH-6-EX-2">Example 6.2</A> demonstrates how a modal <tt CLASS=literal>Dialog</tt> 
+tries to work in Java 1.0. In some windowing systems, "modal" 
+means that the calling application, and sometimes the entire system stops, 
+and input to anything other than the <tt CLASS=literal>Dialog</tt> 
+is blocked. With Java 1.0, a modal <tt CLASS=literal>Dialog</tt> 
+acts only on the parent frame and simply prevents it from getting screen-oriented 
+input by disabling all components within the frame. The Java program as 
+a whole continues to execute. 
+
+<P CLASS=para>
+<A HREF="ch06_06.htm#JAWT-CH-6-EX-2">Example 6.2</A> displays a <tt CLASS=literal>Dialog</tt> 
+window with username and password fields, and an Okay button. 
+When the user selects the Okay button, a realistic application 
+would validate the username and password; in this case, they are just displayed 
+on a <tt CLASS=literal>Frame</tt>. Since the <tt CLASS=literal>Frame</tt> 
+must wait for the <tt CLASS=literal>Dialog</tt> to 
+finish before looking at the values of the two fields, the <tt CLASS=literal>Dialog</tt> 
+must tell the <tt CLASS=literal>Frame</tt> when it 
+can look. This is done through a custom interface implemented by the parent 
+<tt CLASS=literal>Frame</tt> and invoked by the <tt CLASS=literal>Dialog</tt> 
+in its action method. 
+
+<P CLASS=para>
+<A HREF="ch06_06.htm#JAWT-CH-6-FIG-7">Figure 6.7</A> is the initial <tt CLASS=literal>Dialog</tt>; 
+<A HREF="ch06_06.htm#JAWT-CH-6-FIG-8">Figure 6.8</A> shows the result after you click Okay. <A HREF="ch06_06.htm#JAWT-CH-6-EX-2">Example 6.2</A> contains the source code. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-7">Figure 6.7: Username and password Dialog</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0608.gif" alt="[Graphic: Figure 6-7]" width=117 height=105 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Notice the use of the newly created <tt CLASS=literal>DialogHandler</tt> 
+interface when the user selects the Okay button. Also, see 
+how the pre- and post-event-handling methods are separated. All the pre-event 
+processing takes place before the <tt CLASS=literal>Dialog</tt> 
+is shown. The post-event processing is called by the <tt CLASS=literal>Dialog</tt> 
+through the new <tt CLASS=literal>DialogHandler</tt> 
+interface method, <tt CLASS=literal>dialogDoer()</tt>. 
+The interface provides a common method name for all your <tt CLASS=literal>Dialog</tt> 
+boxes to call. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JAWT-CH-6-FIG-8">Figure 6.8: Resulting Frame</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jawt0609.gif" alt="[Graphic: Figure 6-8]" width=503 height=282 border=0>
+
+</DIV>
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JAWT-CH-6-EX-2">Example 6.2: Modal Dialog Usage</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.awt.*;
+interface DialogHandler {
+    void dialogDoer (Object o);
+}
+class modeTest extends Dialog {
+    TextField user;
+    TextField pass;
+    modeTest (DialogHandler parent) {
+        super ((Frame)parent, "Mode Test", true);
+        add ("North", new Label ("Please enter username/password"));
+        Panel left = new Panel ();
+        left.setLayout (new BorderLayout ());
+        left.add ("North", new Label ("Username"));
+        left.add ("South", new Label ("Password"));
+        add ("West", left);
+        Panel right = new Panel ();
+        right.setLayout (new BorderLayout ());
+        user = new TextField (15);
+        pass = new TextField (15);
+        pass.setEchoCharacter ('*');
+        right.add ("North", user);
+        right.add ("South", pass);
+        add ("East", right);
+        add ("South", new Button ("Okay"));
+        resize (250, 125);
+    }
+    public boolean handleEvent (Event e) {
+        if (e.id == Event.WINDOW_DESTROY) {
+            dispose();
+            return true;
+        } else if ((e.target instanceof Button) &amp;&amp;
+             (e.id == Event.ACTION_EVENT)) {
+            ((DialogHandler)getParent ()).dialogDoer(e.arg);
+        }
+        return super.handleEvent (e);
+    }
+}
+public class modeFrame extends Frame implements DialogHandler {
+    modeTest d;
+    modeFrame (String s) {
+        super (s);
+        resize (100, 100);
+        d = new modeTest (this);
+        d.show ();
+    }
+    public static void main (String []args) {
+        Frame f = new modeFrame ("Frame");
+    }
+    public boolean handleEvent (Event e) {
+        if (e.id == Event.WINDOW_DESTROY) {
+            hide();
+            dispose();
+            System.exit (0);
+        }
+        return super.handleEvent (e);
+    }
+    public void dialogDoer(Object o) {
+        d.dispose();
+        add ("North", new Label (d.user.getText()));
+        add ("South", new Label (d.pass.getText()));
+        show ();
+    }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<P CLASS=para>
+Since the Java 1.1 modal <tt CLASS=literal>Dialog</tt> 
+blocks the calling <tt CLASS=literal>Frame</tt> appropriately, 
+the overhead of the <tt CLASS=literal>DialogHandler</tt> 
+interface is not necessary and all the work can be combined into the <tt CLASS=literal>main()</tt> 
+method, as shown in the following: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+// only reliable in Java 1.1
+import java.awt.*;
+class modeTest11 extends Dialog {
+    TextField user;
+    TextField pass;
+    modeTest11 (Frame parent) {
+        super (parent, "Mode Test", true);
+        add ("North", new Label ("Please enter username/password"));
+        Panel left = new Panel ();
+        left.setLayout (new BorderLayout ());
+        left.add ("North", new Label ("Username"));
+        left.add ("South", new Label ("Password"));
+        add ("West", left);
+        Panel right = new Panel ();
+        right.setLayout (new BorderLayout ());
+        user = new TextField (15);
+        pass = new TextField (15);
+        pass.setEchoCharacter ('*');
+        right.add ("North", user);
+        right.add ("South", pass);
+        add ("East", right);
+        add ("South", new Button ("Okay"));
+        resize (250, 125);
+    }
+    public boolean handleEvent (Event e) {
+        if (e.id == Event.WINDOW_DESTROY) {
+            dispose();
+            return true;
+        } else if ((e.target instanceof Button) &amp;&amp;
+             (e.id == Event.ACTION_EVENT)) {
+            hide();
+        }
+        return super.handleEvent (e);
+    }
+}
+public class modeFrame11 extends Frame {
+    modeFrame11 (String s) {
+        super (s);
+        resize (100, 100);
+    }
+    public static void main (String []args) {
+        Frame f = new modeFrame11 ("Frame");
+        modeTest11 d;
+        d = new modeTest11 (f);
+        d.show ();
+        d.dispose();
+        f.add ("North", new Label (d.user.getText()));
+        f.add ("South", new Label (d.pass.getText()));
+        f.show ();
+    }
+    public boolean handleEvent (Event e) {
+        if (e.id == Event.WINDOW_DESTROY) {
+            hide();
+            dispose();
+            System.exit (0);
+        }
+        return super.handleEvent (e);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The remainder of the code is virtually identical. The most significant 
+difference is that the dialog's <tt CLASS=literal>handleEvent()</tt>method 
+just hides the dialog, rather than calling <tt CLASS=literal>DialogHandler.dialogDoer()</tt>. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_07.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Frames</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>FileDialog</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

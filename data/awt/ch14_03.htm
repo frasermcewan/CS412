@@ -1,0 +1,272 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 14] 14.3 AppletContext Interface</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:54:02 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 14<br>And Then There Were Applets</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch14_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-14-SECT-3">14.3 AppletContext Interface</A></h2>
+
+<P CLASS=para>
+<A NAME="CH14.APPLET2"></A>The <tt CLASS=literal>AppletContext</tt> interface 
+provides the means to control the browser environment where the applet 
+is running. Methods
+
+<P CLASS=para>
+Some of these methods are so frequently used that they are also provided 
+within the <tt CLASS=literal>Applet</tt> class. 
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract AudioClip getAudioClip (URL url) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getAudioClip()</tt> method loads 
+the audio file located at <tt CLASS=literal>url</tt>. 
+<tt CLASS=literal>url</tt> must be a complete and 
+valid URL. Upon success, <tt CLASS=literal>getAudioClip()</tt> 
+returns an instance of a class that implements the <tt CLASS=literal>AudioClip</tt> 
+interface. You can then call methods in the <tt CLASS=literal>AudioClip</tt> 
+interface (see <A HREF="ch14_02.htm#JAWT-CH-14-SECT-2">AudioClip Interface</A>) to play the clip. If 
+an error occurs during loading (e.g., because the file was not found or the URL was invalid), <tt CLASS=literal>getAudioClip()</tt> 
+returns <tt CLASS=literal>null</tt>. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Image getImage (URL url) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getImage()</tt> method loads 
+the image file located at <tt CLASS=literal>url</tt>. <tt CLASS=literal>url</tt> 
+must be a complete and valid URL. The method returns a system-specific 
+object that subclasses <tt CLASS=literal>Image</tt> and returns immediately. The <tt CLASS=literal>Image</tt> 
+is not loaded until needed. A call to <tt CLASS=literal>prepareImage()</tt>, 
+<tt CLASS=literal>MediaTracker</tt>, or <tt CLASS=literal>drawImage()</tt> forces loading to start. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Applet getApplet (String name) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getApplet()</tt> method fetches 
+the <tt CLASS=literal>Applet</tt> from the current 
+HTML page named <tt CLASS=literal>name</tt>, which 
+can be the applet's class 
+name or the name provided in the <tt CLASS=literal>NAME</tt> 
+parameter of the <tt CLASS=literal>&lt;APPLET&gt;</tt> 
+tag. <tt CLASS=literal>getApplet()</tt> returns <tt CLASS=literal>null</tt> 
+if the applet does not exist in the current context. This method allows 
+you to call methods of other applets within the same context, loaded by 
+the same <tt CLASS=literal>ClassLoader</tt>. For example: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+MyApplet who = (MyApplet)getAppletContext().getApplet("hey");
+who.method();
+</PRE>
+</DIV>
+
+<DIV CLASS=tip>
+<P CLASS=tip><BLOCKQUOTE><P><I>TIP:</I>
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+Netscape Navigator 3.0 restricts which applets can communicate with each other. Internet Explorer seems to have a similar restriction. For applets to communicate, they must:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Have the same <tt CLASS=literal>CODEBASE</tt>.
+
+<P>
+<li CLASS=listitem>Have the same or no <tt CLASS=literal>ARCHIVES</tt> tag.
+
+<P>
+<li CLASS=listitem>Have <tt CLASS=literal>MAYSCRIPT</tt> tags and appear in the same frame; alternatively, neither applet may have a <tt CLASS=literal>MAYSCRIPT</tt> tag.
+
+<P>
+</UL>
+<P CLASS=para>
+If these conditions are not met and you try to cast the return value of 
+<tt CLASS=literal>getApplet()</tt>  or <tt CLASS=literal>getApplets()</tt>
+ to the appropriate class, either the cast will throw a 
+<tt CLASS=literal>ClassCastException</tt>; or nothing will happen, and the method will not continue beyond the point of the failure.
+</blockquote><P>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract Enumeration getApplets () </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getApplets()</tt> method gathers 
+all the <tt CLASS=literal>Applets</tt> in the current 
+context, loaded by the same <tt CLASS=literal>ClassLoader</tt>, 
+into a collection and returns the <tt CLASS=literal>Enumeration</tt>. 
+You can then cycle through them to perform some operation collectively. 
+For example: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Enumeration e = getAppletContext().getApplets();
+while (e.hasMoreElements()) {
+    Object o = e.nextElement();
+    if (o instance of MyApplet) {
+        MyApplet a = (Object)o;
+        a.MyAppletMethod();
+    }
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=tip>
+<P CLASS=tip><BLOCKQUOTE><P><I>TIP:</I>
+</blockquote><P>
+</DIV>
+
+<P CLASS=para>
+If you want communication between applets on one page, be aware that there is no guarantee which applet will start first. Communications must be synchronized by using a controlling class or continual polling.
+</blockquote><P>
+</DIV>
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void showDocument (URL url) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>showDocument()</tt> method shows 
+<tt CLASS=literal>url</tt> in the current browser 
+window. The browser may ignore the request if it so desires. 
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void showDocument (URL url, String frame) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>showDocument()</tt> method shows 
+<tt CLASS=literal>url</tt> in a browser window specified 
+by <tt CLASS=literal>frame</tt>. Different <tt CLASS=literal>frame</tt> 
+values and the results are shown in <A HREF="ch14_03.htm#JAWT-CH-14-TAB-1">Table 14.1</A>. 
+The browser may ignore the request, as <I CLASS=emphasis>appletviewer</I> does. 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    URL u = new URL (getDocumentBase(), (String) file);
+    getAppletContext().showDocument (u, "_blank");
+} catch (Exception e) {
+}
+</PRE>
+</DIV>
+
+</DL>
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JAWT-CH-14-TAB-1">Table 14.1: Target Values</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Target String</TH>
+<TH ALIGN="left">Results</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>_blank</tt></TD>
+<TD ALIGN="left">Show <tt CLASS=literal>url</tt>  new browser window with no name.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>_parent</tt></TD>
+<TD ALIGN="left">Show <tt CLASS=literal>url</tt> in the parent frame of the current window.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>_self</tt></TD>
+<TD ALIGN="left">Replace current <tt CLASS=literal>url</tt> with <tt CLASS=literal>url</tt> (i.e., display in the current window).</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>_top</tt></TD>
+<TD ALIGN="left">Show <tt CLASS=literal>url</tt> in top-most frame.</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>name</tt></TD>
+<TD ALIGN="left">Show <tt CLASS=literal>url</tt> in new browser window named <tt CLASS=literal>name</tt>.</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract void showStatus (String message) </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>showStatus()</tt> method displays 
+<tt CLASS=literal>message</tt> on the browser's 
+status line, if it has one. How to display this string is up to the browser, 
+and the browser can overwrite it whenever it wants. You should use 
+<tt CLASS=literal>showStatus()</tt> only for messages that 
+the user can afford to miss. </DL>
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch14_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch14_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>AudioClip Interface</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>AppletStub Interface</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

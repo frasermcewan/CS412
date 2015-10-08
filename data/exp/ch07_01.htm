@@ -1,0 +1,1029 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] Basic Utility Classes</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:55:22 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="EXJ-CH-7">7. Basic Utility Classes</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Strings<br>
+<A HREF="ch07_02.htm">Math Utilities</A><BR>
+<A HREF="ch07_03.htm">Dates</A><BR>
+<A HREF="ch07_04.htm">Vectors and Hashtables</A><BR>
+<A HREF="ch07_05.htm">Properties</A><BR>
+<A HREF="ch07_06.htm">The Security Manager</A><BR>
+<A HREF="ch07_07.htm">Internationalization</A><BR>
+
+<p>
+</DIV>
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+</PRE>
+</DIV>
+
+<P CLASS=para>
+ 
+If you've been reading this book sequentially, you've
+read all about the core Java language constructs, including the 
+object-oriented aspects of the language and the use of threads. Now
+it's time to shift gears and talk about the Java Application
+Programming Interface (API), the collection of
+classes that comes with every Java implementation. The
+Java API encompasses all the public methods and
+variables in the classes that comprise the core Java packages,
+listed in <A HREF="ch07_01.htm#EXJ-CH-7-TAB-1">Table 7.1</A>. This table also lists the
+chapters in this book that describe each of the packages.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-1">Table 7.1: Packages of the Java API</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Package</TH>
+<TH ALIGN="left">Contents</TH>
+<TH ALIGN="left">Chapter(s)</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.lang</tt></TD>
+<TD ALIGN="left">Basic language classes</TD>
+<TD ALIGN="left">4, 5, 6, 7</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.io</tt></TD>
+<TD ALIGN="left">Input and output</TD>
+<TD ALIGN="left">8</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.util</tt></TD>
+<TD ALIGN="left">Utilities and collections classes</TD>
+<TD ALIGN="left">7</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.text</tt></TD>
+<TD ALIGN="left">International text classes</TD>
+<TD ALIGN="left">7</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.net</tt></TD>
+<TD ALIGN="left">Sockets and URLs</TD>
+<TD ALIGN="left">9</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.applet</tt></TD>
+<TD ALIGN="left">The applet API</TD>
+<TD ALIGN="left">10</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.awt</tt></TD>
+<TD ALIGN="left">The Abstract Windowing Toolkit</TD>
+<TD ALIGN="left">10, 11, 12, 13, 14</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.awt.image</tt></TD>
+<TD ALIGN="left">AWT image classes</TD>
+<TD ALIGN="left">13, 14</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.beans</tt></TD>
+<TD ALIGN="left">Java Beans API</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.rmi</tt></TD>
+<TD ALIGN="left">RMI classes</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.security</tt></TD>
+<TD ALIGN="left">Encryption and signing</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>java.sql</tt></TD>
+<TD ALIGN="left">JDBC classes</TD>
+<TD ALIGN="left">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+As you can see in <A HREF="ch07_01.htm#EXJ-CH-7-TAB-1">Table 7.1</A>, we've
+already examined some of the classes in <tt CLASS=literal>java.lang</tt>
+in earlier chapters on the core language constructs. Starting with
+this chapter, we'll throw open the Java toolbox and begin
+examining the rest of the classes in the API.
+
+<P CLASS=para>
+<A NAME="CH07.LANG"></A>We'll begin our exploration with some of the fundamental
+language classes in <tt CLASS=literal>java.lang</tt>, including strings
+and math utilities. <A HREF="ch07_01.htm#EXJ-CH-7-FIG-1">Figure 7.1</A> shows the class
+hierarchy of the <tt CLASS=literal>java.lang</tt> package.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-7-FIG-1">Figure 7.1: The java.lang package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0701.gif" alt="[Graphic: Figure 7-1]" width=502 height=513 border=0>
+
+</DIV>
+
+<P CLASS=para>
+We cover some of the classes in <tt CLASS=literal>java.util</tt>, 
+such as classes that support date and time values, random numbers, vectors, 
+and hashtables. <A HREF="ch07_01.htm#EXJ-CH-7-FIG-2">Figure 7.2</A> shows the class hierarchy 
+of the <tt CLASS=literal>java.util</tt> package. 
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-7-FIG-2">Figure 7.2: The java.util package</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0702.gif" alt="[Graphic: Figure 7-2]" width=502 height=298 border=0>
+
+</DIV>
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1">7.1 Strings</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.STRINGS1"></A>In this section, we take a closer look at the Java
+<tt CLASS=literal>String</tt> class (or more specifically,
+<tt CLASS=literal>java.lang.String</tt>). Because strings are used so
+extensively throughout Java (or any programming language, for that
+matter), the Java <tt CLASS=literal>String</tt> class has quite a bit of
+functionality. We'll test drive most of the important features,
+but before you go off and 
+write a complex parser or regular expression
+library, you should probably refer to a Java class reference manual
+for additional details.
+
+<P CLASS=para>
+Strings are immutable; once you create a
+<tt CLASS=literal>String</tt> object, you can't change its
+value. Operations that would otherwise change the characters or the
+length of a string instead return a new <tt CLASS=literal>String</tt>
+object that copies the needed parts of the original. Because of this
+feature, strings can be safely shared. Java makes an effort to
+consolidate identical strings and string literals in the same class
+into a shared string pool.
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.1">String Constructors</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.CONST1"></A><A NAME="CH07.CONST2"></A>To create a string, assign a double-quoted constant 
+to a <tt CLASS=literal>String</tt> variable: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String quote = "To be or not to be"; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Java automatically converts the string literal into a
+<tt CLASS=literal>String</tt> object. If you're a C or C++
+programmer, you may be wondering if <tt CLASS=literal>quote</tt> is
+null-terminated. This question doesn't make any sense with Java
+strings. The <tt CLASS=literal>String</tt> class actually uses a Java
+character array internally. It's <tt CLASS=literal>private</tt> to the
+<tt CLASS=literal>String</tt> class, so you can't get at the
+characters and change them. As always, arrays in Java are real objects
+that know their own length, so <tt CLASS=literal>String</tt> objects in
+Java don't require special terminators (not even internally).
+ If you
+need to know the length of a <tt CLASS=literal>String</tt>, use the
+<tt CLASS=literal>length()</tt> method:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int length = quote.length(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Strings can take advantage of the only overloaded operator in Java,
+the <tt CLASS=literal>+</tt> operator, for string concatenation. The
+following code produces equivalent strings:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String name = "John " + "Smith"; 
+String name = "John ".concat("Smith"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Literal strings can't span lines in Java source files, but we can concatenate 
+lines to produce the same effect: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String poem = 
+    "'Twas brillig, and the slithy toves\n" + 
+    "   Did gyre and gimble in the wabe:\n" + 
+    "All mimsy were the borogoves,\n" + 
+    "   And the mome raths outgrabe.\n"; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Of course, embedding lengthy text in source code should now be a thing
+of the past, given that we can retrieve a <tt CLASS=literal>String</tt>
+from anywhere on the planet via a URL. In <A HREF="ch09_01.htm">Chapter 9, <i>Network Programming</i></A>, we'll see how to do things like:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String poem =  
+    (String) new URL 
+       ("http://server/~dodgson/jabberwocky.txt").getContent(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In addition to making strings from literal expressions, we can construct 
+a <tt CLASS=literal>String</tt> from an array of characters: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+char [] data = { 'L', 'e', 'm', 'm', 'i', 'n', 'g' }; 
+String lemming = new String( data ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Or from an array of bytes: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+byte [] data = { 97, 98, 99 }; 
+String abc = new String(data, "8859_5"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The second argument to the <tt CLASS=literal>String</tt> constructor 
+for byte arrays is the name of an encoding scheme. It's used to convert the
+given bytes to the 
+string's Unicode characters. Unless you know something 
+about Unicode, you can probably use the form of the constructor that
+accepts only a byte array; the default encoding scheme will be used. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.2">Strings from Things</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.CONV1"></A><A NAME="CH07.CONV2"></A><A NAME="CH07.CONV3"></A>We can get the string representation of most things with the static <tt CLASS=literal>String.valueOf()</tt> 
+method. Various overloaded versions of this method give us string values 
+for all of the primitive types: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String one = String.valueOf( 1 ); 
+String two = String.valueOf( 2.0f ); 
+String notTrue = String.valueOf( false ); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+All objects in Java have a <tt CLASS=literal>toString()</tt> method,
+inherited from the <tt CLASS=literal>Object</tt> class (see <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>). For class-type references,
+<tt CLASS=literal>String.valueOf()</tt> invokes the object's
+<tt CLASS=literal>toString()</tt> method to get its string
+representation. If the reference is <tt CLASS=literal>null</tt>, the
+result is the literal string "null":
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String date = String.valueOf( new Date() ); 
+System.out.println( date ); 
+// Sun Dec 19 05:45:34 CST 1999 
+ 
+date = null; 
+System.out.println( date ); 
+// null 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.3">Things from Strings</A></h3>
+
+<P CLASS=para>
+Producing primitives like numbers from <tt CLASS=literal>String</tt>
+objects is not a function of the <tt CLASS=literal>String</tt> class. For
+that we need the primitive wrapper classes; they are described in the
+next section on the <tt CLASS=literal>Math</tt> class. The wrapper classes
+provide <tt CLASS=literal>valueOf()</tt> methods that produce an object
+from a <tt CLASS=literal>String</tt>, as well as corresponding methods to
+retrieve the value in various primitive forms. Two examples are:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i = Integer.valueOf("123").intValue(); 
+double d = Double.valueOf("123.0").doubleValue(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above code, the <tt CLASS=literal>Integer.valueOf()</tt> call
+yields an <tt CLASS=literal>Integer</tt> object that represents the value
+123. An <tt CLASS=literal>Integer</tt> object can provide its primitive
+value in the form of an <tt CLASS=literal>int</tt> with the
+<tt CLASS=literal>intValue()</tt> method.
+
+<P CLASS=para>
+Although the techniques above may work for simple cases, they will
+not work internationally.  Let's pretend for a moment that we are programming
+Java in the rolling hills of Tuscany.  We would follow the local
+customs for representing numbers and write code like the following.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+double d = Double.valueOf("1.234,56").doubleValue();    // oops!
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Unfortunately, this code throws a
+<tt CLASS=literal>NumberFormatException</tt>.  The
+<tt CLASS=literal>java.text</tt> package, which we'll
+discuss later, contains
+the tools we need to generate and parse strings in different
+countries and languages.
+
+<P CLASS=para>
+The <tt CLASS=literal>charAt()</tt> method of the
+<tt CLASS=literal>String</tt> class lets us get at the characters of a
+<tt CLASS=literal>String</tt> in an array-like fashion:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String s = "Newton"; 
+ 
+for ( int i = 0; i &lt; s.length(); i++ )     System.out.println( s.charAt( i ) );
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This code prints the characters of the string one at a time.
+Alternately, we can get the characters all at once with
+<tt CLASS=literal>toCharArray()</tt>. Here's a way to save typing a
+bunch of single quotes:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+char [] abcs = "abcdefghijklmnopqrstuvwxyz".toCharArray(); 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.4">Comparisons</A></h3>
+
+<P CLASS=para>
+Just as in C, you can't compare strings for equality with
+"<tt CLASS=literal>==</tt>" because as in C, strings are actually
+references. If your Java compiler doesn't happen to coalesce
+multiple instances of the same string literal to a single string pool
+item, even the expression <tt CLASS=literal>"foo"</tt>
+<tt CLASS=literal>==</tt> <tt CLASS=literal>"foo"</tt> will return
+<tt CLASS=literal>false</tt>. Comparisons with <tt CLASS=literal>&lt;</tt>,
+<tt CLASS=literal>&gt;</tt>, <tt CLASS=literal>&lt;=</tt>, and <tt CLASS=literal>&gt;=</tt>
+don't work at all, because Java can't convert references to
+integers.
+
+<P CLASS=para>
+Use the <tt CLASS=literal>equals()</tt> method to compare strings:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String one = "Foo"; 
+ 
+char [] c = { 'F', 'o', 'o' }; 
+String two = new String ( c ); 
+ 
+if ( one.equals( two ) )                // yes 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+An alternate version, <tt CLASS=literal>equalsIgnoreCase()</tt>, can 
+be used to check the equivalence of strings in a case-insensitive way: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String one = "FOO"; 
+String two = "foo"; 
+ 
+if ( one.equalsIgnoreCase( two ) )      // yes 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>compareTo()</tt> method compares the lexical value
+of the <tt CLASS=literal>String</tt> against another
+<tt CLASS=literal>String</tt>. It returns an integer that is less than,
+equal to, or greater than zero, just like the C routine
+<tt CLASS=literal>string()</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String abc = "abc"; 
+String def = "def"; 
+String num = "123"; 
+ 
+if ( abc.compareTo( def ) &lt; 0 )         // yes 
+if ( abc.compareTo( abc ) == 0 )        // yes
+if ( abc.compareTo( num ) &gt; 0 )         // yes 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+On some systems, the behavior of lexical comparison is complex, and
+obscure alternative character sets exist. Java avoids this problem by
+comparing characters strictly by their position in the Unicode
+specification.
+
+<P CLASS=para>
+In Java 1.1, the <tt CLASS=literal>java.text</tt> package
+provides a sophisticated set of classes for comparing strings,
+even in different languages.  German, for example, has vowels
+with umlauts (those funny dots) over them and a weird-looking
+beta character that represents a double-s.  How should we
+sort these? Although the rules for sorting these characters are
+precisely defined, you can't assume that the lexical comparison we
+used above works correctly for languages other than English. 
+Fortunately, the
+<tt CLASS=literal>Collator</tt> class takes care of these complex
+sorting problems.  In the 
+following example, we use a <tt CLASS=literal>Collator</tt>
+designed to compare German strings.  (We'll talk about
+<tt CLASS=literal>Locale</tt>s in a later section.)  You can
+obtain a default <tt CLASS=literal>Collator</tt> by calling
+the <tt CLASS=literal>Collator.getInstance()</tt> method that has no
+arguments.  Once you
+have an appropriate <tt CLASS=literal>Collator</tt>
+instance, you can use its <tt CLASS=literal>compare()</tt> method,
+which returns values just like <tt CLASS=literal>String</tt>'s
+<tt CLASS=literal>compareTo()</tt> method.  The code below
+creates two strings for the German translations of "fun" and "later,"
+using Unicode constants for these two special characters.
+It then compares them, using a <tt CLASS=literal>Collator</tt>
+for the German locale; the result is that "later" (spaeter) sorts
+before "fun" (spass). 
+
+<P CLASS=para>
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String fun = "Spa\u00df";
+String later = "sp\u00e4ter";
+Collator german = Collator.getInstance(Locale.GERMAN);
+if (german.compare(later, fun) &lt; 0)  // yes
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Using collators is essential if you're working with languages other
+than English. In Spanish, for example, "ll" and "ch" are treated as
+separate characters, and alphabetized separately. A collator handles
+cases like these automatically.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.5">Searching</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> class provides several methods for
+finding substrings within a string. The
+<tt CLASS=literal>startsWith()</tt> and <tt CLASS=literal>endsWith()</tt>
+methods compare an argument <tt CLASS=literal>String</tt> with the
+beginning and end of the <tt CLASS=literal>String</tt>, respectively:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String url = "http://foo.bar.com/"; 
+if ( url.startsWith("http:") ) 
+    // do HTTP 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Overloaded versions of <tt CLASS=literal>indexOf()</tt> search for the 
+first occurrence of a character or substring: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int i = abcs.indexOf( 'p' );            // i = 15 
+int i = abcs.indexOf( "def" );          // i = 3 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Correspondingly, overloaded versions of
+<tt CLASS=literal>lastIndexOf()</tt> search for the last occurrence of a
+character or substring.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.6">Editing</A></h3>
+
+<P CLASS=para>
+A number of methods operate on the <tt CLASS=literal>String</tt> and 
+return a new <tt CLASS=literal>String</tt> as a result. While this is 
+useful, you should be aware that creating lots of strings in this manner 
+can affect performance. If you need to modify a string often, you should 
+use the <tt CLASS=literal>StringBuffer</tt> class, as I'll discuss 
+shortly. 
+
+<P CLASS=para>
+<tt CLASS=literal>trim()</tt> is a useful method that removes
+leading and trailing white space (i.e., carriage return, newline, and
+tab) from the <tt CLASS=literal>String</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String abc = "   abc   "; 
+abc = abc.trim();                       // "abc" 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above example, we have thrown away the original
+<tt CLASS=literal>String</tt> (with excess white space), so it will be
+garbage collected.
+
+<P CLASS=para>
+The <tt CLASS=literal>toUpperCase()</tt> and
+<tt CLASS=literal>toLowerCase()</tt> methods return a new
+<tt CLASS=literal>String</tt> of the appropriate case:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String foo = "FOO".toLowerCase(); 
+String FOO = foo.toUpperCase(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>substring()</tt> returns a specified range of
+characters. The starting index is inclusive; the ending is exclusive:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String abcs = "abcdefghijklmnopqrstuvwxyz"; 
+String cde = abcs.substring(2, 5);      // "cde" 
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.7">String Method Summary</A></h3>
+
+<P CLASS=para>
+Many people complain when they discover the Java
+<tt CLASS=literal>String</tt> class is <tt CLASS=literal>final</tt> (i.e., it
+can't be subclassed). There is a lot of functionality in
+<tt CLASS=literal>String</tt>, and it would be nice to be able to modify
+its behavior directly. Unfortunately, there is also a serious need to
+optimize and rely on the performance of <tt CLASS=literal>String</tt>
+objects. As I discussed in <A HREF="ch05_01.htm">Chapter 5, <i>Objects in Java</i></A>, the Java
+compiler can optimize <tt CLASS=literal>final</tt> classes by inlining
+methods when appropriate. The implementation of
+<tt CLASS=literal>final</tt> classes can also be trusted by classes that
+work closely together, allowing for special cooperative
+optimizations. If you want to make a new string class that uses basic
+<tt CLASS=literal>String</tt> functionality, use a
+<tt CLASS=literal>String</tt> object in your class and provide methods
+that delegate method calls to the appropriate
+<tt CLASS=literal>String</tt> methods.
+
+<P CLASS=para>
+<A HREF="ch07_01.htm#EXJ-CH-7-TAB-2">Table 7.2</A> summarizes the methods provided
+by the <tt CLASS=literal>String</tt> class.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="EXJ-CH-7-TAB-2">Table 7.2: String Methods</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">Method</TH>
+<TH ALIGN="left">Functionality</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>charAt()</tt></TD>
+<TD ALIGN="left">Gets at a particular character in the string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>compareTo()</tt></TD>
+<TD ALIGN="left">Compares the string with another string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>concat()</tt></TD>
+<TD ALIGN="left">Concatenates the string with another string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>copyValueOf()</tt></TD>
+<TD ALIGN="left">Returns a string equivalent to the specified character array</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>endsWith()</tt></TD>
+<TD ALIGN="left">Checks if the string ends with a suffix</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>equals()</tt></TD>
+<TD ALIGN="left">Compares the string with another string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>equalsIgnoreCase()</tt></TD>
+<TD ALIGN="left">Compares the string with another string and ignores case</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getBytes()</tt></TD>
+<TD ALIGN="left">Copies characters from the string into a byte array</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>getChars()</tt></TD>
+<TD ALIGN="left">Copies characters from the string into a character array</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>hashCode()</tt></TD>
+<TD ALIGN="left">Returns a hashcode for the string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>indexOf()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Searches for the first occurrence of a character or substring in the string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>intern()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Fetches a unique instance of the string from a global shared string pool</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>lastIndexOf()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Searches for the last occurrence of a character or substring in a string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>length()</tt></TD>
+<TD ALIGN="left">Returns the length of the string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>regionMatches()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Checks whether a region of the string matches the specified region of another string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>replace()</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+Replaces all occurrences of a character in the string with another character</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>startsWith()</tt></TD>
+<TD ALIGN="left">Checks if the string starts with a prefix</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>substring()</tt></TD>
+<TD ALIGN="left">Returns a substring from the string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>toCharArray()</tt></TD>
+<TD ALIGN="left">Returns the array of characters from the string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>toLowerCase()</tt></TD>
+<TD ALIGN="left">Converts the string to uppercase</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>toString()</tt></TD>
+<TD ALIGN="left">Converts the string to a string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>toUpperCase()</tt></TD>
+<TD ALIGN="left">Converts the string to lowercase</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>trim()</tt></TD>
+<TD ALIGN="left">Removes the leading and trailing white space from the string</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left"><tt CLASS=literal>valueOf()</tt></TD>
+<TD ALIGN="left">Returns a string representation of a value</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.8">java.lang.StringBuffer</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.BUFF"></A>The <tt CLASS=literal>java.lang.StringBuffer</tt> class is a growable
+buffer for characters. It's an efficient alternative to
+code like the following:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String ball = "Hello"; 
+ball = ball + " there."; 
+ball = ball + " How are you?"; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The above example repeatedly produces new <tt CLASS=literal>String</tt>
+objects. This means that the character array must be copied over and
+over, which can adversely affect performance. A more economical
+alternative is to use a <tt CLASS=literal>StringBuffer</tt> object and its
+<tt CLASS=literal>append()</tt> method:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+StringBuffer ball = new StringBuffer("Hello"); 
+ball.append(" there."); 
+ball.append(" How are you?"); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>StringBuffer</tt> class actually provides a number
+of overloaded <tt CLASS=literal>append()</tt> methods, for appending
+various types of data to the buffer.
+
+<P CLASS=para>
+We can get a <tt CLASS=literal>String</tt> from the
+<tt CLASS=literal>StringBuffer</tt> with its
+<tt CLASS=literal>toString()</tt> method:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String message = ball.toString(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>StringBuffer</tt> also provides a number of overloaded 
+<tt CLASS=literal>insert()</tt> methods for inserting various types 
+of data at a particular location in the string buffer. 
+
+<P CLASS=para>
+The <tt CLASS=literal>String</tt> and <tt CLASS=literal>StringBuffer</tt> 
+classes cooperate, so that even in this last operation, no copy has to 
+be made. The string data is shared between the objects, unless and until 
+we try to change it in the <tt CLASS=literal>StringBuffer</tt>. 
+
+<P CLASS=para>
+So, when should you use a <tt CLASS=literal>StringBuffer</tt>
+instead of a <tt CLASS=literal>String</tt>? If you need to keep adding
+characters to a string, use a <tt CLASS=literal>StringBuffer</tt>; it's
+designed to efficiently handle such modifications. You'll still
+have to convert the <tt CLASS=literal>StringBuffer</tt> to a
+<tt CLASS=literal>String</tt> when you need to use any of the methods in
+the <tt CLASS=literal>String</tt> class. You can print a
+<tt CLASS=literal>StringBuffer</tt> directly using
+<tt CLASS=literal>System.out.println()</tt>because
+<tt CLASS=literal>println()</tt> calls the <tt CLASS=literal>toString()</tt>
+for you.
+
+<P CLASS=para>
+Another thing you should know about
+<tt CLASS=literal>StringBuffer</tt> methods is that they are thread-safe,
+just like all public methods in the Java API. This means that any time
+you modify a <tt CLASS=literal>StringBuffer</tt>, you don't have to
+worry about another thread coming along and messing up the string
+while you are modifying it. If you recall our discussion of
+synchronization in <A HREF="ch06_01.htm">Chapter 6, <i>Threads</i></A>, you know that being
+thread-safe means that only one thread at a time can change the state
+of a <tt CLASS=literal>StringBuffer</tt> instance.
+
+<P CLASS=para>
+On a final note, I mentioned earlier that strings take
+advantage of the single overloaded operator in Java,
+<tt CLASS=literal>+</tt>, for concatenation. You might be interested to
+know that the compiler uses a <tt CLASS=literal>StringBuffer</tt> to
+implement concatenation. Consider the following expression:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String foo = "To " + "be " + "or";
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This is equivalent to: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String foo = new
+  StringBuffer().append("To ").append("be ").append("or").toString();
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This kind of chaining of expressions is one of the things
+operator overloading hides in other languages.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-7-SECT-1.9">java.util.StringTokenizer</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.TOKEN1"></A><A NAME="CH07.TOKEN2"></A>A common programming task involves parsing a string of text into words
+or "tokens" that are separated by some set of delimiter
+characters. The <tt CLASS=literal>java.util.StringTokenizer</tt> class is
+a utility that does just this. The following example reads words from
+the string <tt CLASS=literal>text</tt>:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String text = "Now is the time for all good men (and women)..."; 
+StringTokenizer st = new StringTokenizer( text ); 
+ 
+while ( st.hasMoreTokens() )  { 
+    String word = st.nextToken(); 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+First, we create a new <tt CLASS=literal>StringTokenizer</tt> from the
+<tt CLASS=literal>String</tt>. We invoke the
+<tt CLASS=literal>hasMoreTokens()</tt> and <tt CLASS=literal>nextToken()</tt>
+methods to loop over the words of the text. By default, we use white
+space (i.e., carriage return, newline, and tab) as delimiters.
+
+<P CLASS=para>
+The <tt CLASS=literal>StringTokenizer</tt> implements the
+<tt CLASS=literal>java.util.Enumeration</tt> interface, which means that
+<tt CLASS=literal>StringTokenizer</tt> also implements two more general
+methods for accessing elements: <tt CLASS=literal>hasMoreElements()</tt>
+and <tt CLASS=literal>nextElement()</tt>. These methods are defined by the
+<tt CLASS=literal>Enumeration</tt> interface; they provide a standard way
+of returning a sequence of values, as we'll discuss a bit
+later. The advantage of <tt CLASS=literal>nextToken()</tt> is that it
+returns a <tt CLASS=literal>String</tt>, while
+<tt CLASS=literal>nextElement()</tt> returns an
+<tt CLASS=literal>Object</tt>. The <tt CLASS=literal>Enumeration</tt>
+interface is implemented by many items that return sequences or
+collections of objects, as you'll see when we talk about
+hashtables and vectors later in the chapter. Those of you who have
+used the C <tt CLASS=literal>strtok()</tt>function should appreciate how
+useful this object-oriented equivalent is.
+
+<P CLASS=para>
+You can also specify your own set of delimiter characters in
+the <tt CLASS=literal>StringTokenizer</tt> constructor, using another
+<tt CLASS=literal>String</tt> argument to the constructor. Any combination
+of the specified characters is treated as the equivalent of white
+space for tokenizing:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+text = "http://foo.bar.com/"; 
+tok = new StringTokenizer( text, "/:" ); 
+ 
+if ( tok.countTokens() &lt; 2 )            // bad URL 
+ 
+String protocol = tok.nextToken();      // protocol = "http" String host = tok.nextToken();          // host = "foo.bar.com" 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The example above parses a URL specification to get
+at the protocol and host components. The characters "/"
+and ":" are used as separators. The <tt CLASS=literal>countTokens()</tt>
+method provides a fast way to see how many tokens will be returned by
+<tt CLASS=literal>nextToken()</tt>, without actually creating the
+<tt CLASS=literal>String</tt> objects.
+
+<P CLASS=para>
+An overloaded form of <tt CLASS=literal>nextToken()</tt> accepts a
+string that defines a new delimiter set for that and subsequent
+reads. And finally, the <tt CLASS=literal>StringTokenizer</tt> constructor
+accepts a flag that specifies that separator characters are to be
+returned individually as tokens themselves. By default, the token
+separators are not returned.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Scheduling and Priority</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Math Utilities</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

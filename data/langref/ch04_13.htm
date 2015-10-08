@@ -1,0 +1,460 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.13 Assignment Operators</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:10:41 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>Expressions</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_14.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-13">4.13 Assignment Operators</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.ASSIGN1"></A><A NAME="CH04.ASSIGN2"></A>Assignment operators
+set the values of variables and array elements. An assignment operator
+may appear in an assignment expression:
+
+
+<p>
+<img align=middle src="./figs/jlr0426.gif" alt="[Graphic: Figure from the text]" width=450 height=56 border=0>
+
+<P CLASS=para>
+The actual assignment
+operator in an assignment expression can be the simple assignment
+operator <tt CLASS=literal>=</tt> or one of the compound assignment
+operators shown below. All of the assignment operators are equal
+in precedence. Assignment operators are evaluated from right to
+left, so <tt CLASS=literal>a=b=c</tt> is equivalent to <tt CLASS=literal>a=(b=c)</tt>.
+
+<P CLASS=para>
+The left operand of an assignment operator must be an expression
+that produces a variable or an array element. The left operand of
+an assignment operator cannot be an expression that evaluates to
+a pure value, or a compile-time error occurs. So, for example, the
+left operand cannot be a <tt CLASS=literal>final</tt> variable, since
+a <tt CLASS=literal>final</tt> variable evaluates to a pure value, not
+a variable.
+
+<P CLASS=para>
+The assignment operator itself produces
+a pure value, not a variable or an array element. The pure value
+produced by an assignment operator is the value of the variable
+or array element after it has been set by the assignment operation.
+The type of this pure value is the type of the variable or array
+element.
+
+<P CLASS=para>
+The simple assignment operator <tt CLASS=literal>=</tt>
+just sets the value of a variable or array element. It does not
+imply any other computation. The right operand of the simple assignment
+operator can be of any type, as long as that type is assignment-compatible
+with the type of the left operand, as described in the
+next section. If the right operand is not assignment-compatible,
+a compile-time error occurs.
+
+<P CLASS=para>
+The compound assignment operators are:
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>+=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>-=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>*=</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>/=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>|=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&amp;=</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>^=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>%=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;&lt;=</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&gt;&gt;=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&gt;&gt;&gt;=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal></tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+<P CLASS=para>
+Both of the operands of a compound assignment
+operator must be of primitive types, or a compile-time error occurs.
+The one exception is if the left operand of the <tt CLASS=literal>+=</tt>
+operator is of type <tt CLASS=literal>String</tt>; in this case the
+right operand can be of any type.
+
+<P CLASS=para>
+A compound assignment
+operator combines a binary operator with the simple assignment operator
+<tt CLASS=literal>=</tt>. Thus, to be assignment-compatible, the right
+operand of a compound assignment operator must be of a type that
+complies with the rules for the indicated binary operation. Otherwise,
+a compile-time error occurs. An assignment expression of the form:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+e1 op = e2
+</PRE>
+</DIV>
+
+<P CLASS=para>
+is approximately equivalent to:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+e1 = (type) ((e1) op (e2))
+</PRE>
+</DIV>
+
+<P CLASS=para>
+where <I CLASS=emphasis>type</I> is the type of the expression
+<tt CLASS=literal>e1</tt>. The only
+difference is that <tt CLASS=literal>e1</tt> is only evaluated once
+in the expression that uses the compound assignment operator.
+
+<P CLASS=para>
+For example, consider the following code fragment:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+j = 0;
+a[0] = 3;
+a[1]=6;
+a[j++] += 2;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+After this code is executed, <tt CLASS=literal>j</tt>
+equals 1 and <tt CLASS=literal>a[0]</tt> is 5. Contrast this with the
+following code:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+j = 0;
+a[0] = 3;
+a[1]=6;
+a[j++] = a[j++] + 2;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+After this code is executed,
+<tt CLASS=literal>j</tt> equals 2 and <tt CLASS=literal>a[0]</tt> is 8 because
+<tt CLASS=literal>j++</tt> is evaluated twice.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch02_02.htm#ASSIGNMENTOPERATOR">**UNKNOWN XREF**</A>;
+<A HREF="ch04_12.htm#JLR2-CH-4-SECT-12">Conditional Operator</A>;
+<A HREF="ch05_05.htm#JLR2-CH-5-SECT-5.4.1">Interface Variables</A>;
+<A HREF="ch06_01.htm#JLR2-CH-6-SECT-1.1">Local Variables</A>;
+<A HREF="ch04_14.htm#JLR2-CH-4-SECT-14">Order of Operations</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1">Primitive Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2">Reference Types</A>;
+<A HREF="ch10_20.htm">String</A>;
+<A HREF="ch04_04.htm#JLR2-CH-4-SECT-4">Unary Operators</A>;
+<A HREF="ch05_04.htm#JLR2-CH-5-SECT-4.4.1">Variables</A>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-13.1">Assignment Compatibility</A></h3>
+
+<P CLASS=para>
+<A NAME="CH04.COMPAT20"></A><A NAME="CH04.COMPAT21"></A><A NAME="CH04.COMPAT22"></A>Saying that
+one type of value is <I CLASS=emphasis>assignment-compatible</I>
+<I CLASS=emphasis></I>with another type of value means that a value of the
+first type can be assigned to a variable of the second type. Here
+are the rules for assignment compatibility in Java:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Every
+type is assignment-compatible with itself.
+
+<P>
+<li CLASS=listitem>The <tt CLASS=literal>boolean</tt>
+type is not assignment-compatible with any other type.
+
+<P>
+<li CLASS=listitem>A
+value of any integer type can be assigned to a variable of any other
+integer type if the variable is of a type that allows it to contain
+the value without any loss of information.
+
+<P>
+<li CLASS=listitem>A value of
+any integer type can be assigned to a variable of any floating-point
+type, but a value of any floating-point type cannot be assigned
+to a variable of any integer type.
+
+<P>
+<li CLASS=listitem>A <tt CLASS=literal>float</tt>
+value can be assigned to a <tt CLASS=literal>double</tt> variable, but
+a <tt CLASS=literal>double</tt> value cannot be assigned to a <tt CLASS=literal>float</tt>
+variable.
+
+<P>
+<li CLASS=listitem>With a type cast, a value of any arithmetic
+type can be assigned to a variable of any other arithmetic type.
+
+<P>
+<li CLASS=listitem>Any reference can be assigned to a variable that is declared
+of type <tt CLASS=literal>Object</tt>.
+
+<P>
+<li CLASS=listitem>A reference to an
+object can be assigned to a class-type reference variable if the
+class of the variable is the same class or a superclass of the class
+of the object.
+
+<P>
+<li CLASS=listitem>A reference to an object can be assigned
+to an interface-type reference variable if the class of the object
+implements the interface.
+
+<P>
+<li CLASS=listitem>A reference to an array can
+be assigned to an array variable if either of the following conditions
+is true:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Both array types contain elements of the same
+type.
+
+<P>
+<li CLASS=listitem>Both array types contain object references and
+the type of reference contained in the elements of the array reference
+can be assigned to the type of reference contained in the elements
+of the variable.
+
+<P>
+</UL>
+<P>
+</UL>
+<P CLASS=para>
+Here's an example that illustrates
+the rules about assignment compatibility of arrays:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+class Triangle extends Shape {...}
+...
+int[] i = new int[8];
+int j[];
+long l[];
+short s[];
+Triangle[] t;
+Shape[] sh;
+j = i;    // Okay
+s = i;    // Error
+l = i;    // Error
+sh = t;   // Okay
+t = sh;   // Error
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Assigning <tt CLASS=literal>i</tt>
+to <tt CLASS=literal>j</tt> is fine because both variables are declared
+as references to arrays that contain <tt CLASS=literal>int</tt> values.
+On the other hand, assigning <tt CLASS=literal>i</tt> to <tt CLASS=literal>s</tt>
+is an error because the variables are declared as references to
+arrays that contain different kinds of elements and these elements
+are not object references. Assigning <tt CLASS=literal>i</tt> to
+<tt CLASS=literal>l</tt>
+is an error for the same reason. Assigning <tt CLASS=literal>t</tt>
+to <tt CLASS=literal>sh</tt> is fine because the variables are declared
+as references to arrays that contain object references, and
+<tt CLASS=literal>sh[0]=t[0]</tt>
+is legal. However, assigning <tt CLASS=literal>sh</tt> to <tt CLASS=literal>t</tt>
+is an error because <tt CLASS=literal>t[0]=sh[0]</tt> is not legal.
+
+<P CLASS=para>
+It is not always possible for the compiler to determine if
+an assignment to an array element is legal; in these cases the assignment
+compatibility is checked at runtime. This situation can occur when
+a variable contains a reference to an array whose type of elements
+is specified by a class or interface name. In this case, it may
+not be possible to determine the actual type of the array elements
+until runtime. Consider the following example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+void foo (InputStream a[]) {
+    a[0] = new FileInputStream("/dev/null");
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+<A HREF="ch04_13.htm#JLR2-CH-4-FIG-1">Figure 4.1</A> shows
+the <tt CLASS=literal>InputStream</tt> class
+and some of its subclasses in the <tt CLASS=literal>java.io</tt> package.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="JLR2-CH-4-FIG-1">Figure 4.1: InputStream and some of its classes</A></h4>
+
+
+<p>
+<img align=middle src="./figs/jlrf0401.gif" alt="[Graphic: Figure 4-1]" width=503 height=153 border=0>
+
+</DIV>
+
+<P CLASS=para>
+Any array with elements that contain references
+to objects of class <tt CLASS=literal>InputStream</tt> or any of its
+subclasses can be passed to the method <tt CLASS=literal>foo()</tt>
+shown in the above example. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream f[] = new FileInputStream[3];
+foo(f);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Since <tt CLASS=literal>FileInputStream</tt> is a subclass of
+<tt CLASS=literal>InputStream</tt>, the call to <tt CLASS=literal>foo()</tt>
+does not cause any problems at runtime.
+
+<P CLASS=para>
+However, the
+following call to <tt CLASS=literal>foo()</tt> is problematic:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+DataInputStream f[] = new DataInputStream[3];
+foo(f);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This call causes an <tt CLASS=literal>ArrayStoreException</tt>
+to be thrown at runtime. Although <tt CLASS=literal>DataInputStream</tt>
+is a subclass of <tt CLASS=literal>InputStream</tt>, it is not a superclass
+of <tt CLASS=literal>FileInputStream</tt>, so the array element assignment
+in <tt CLASS=literal>foo()</tt> is not assignment-compatible.
+
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.1">Arithmetic Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.3">Array Types</A>;
+<A HREF="ch03_01.htm#JLR2-CH-3-SECT-1.2">Boolean Type</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.1">Class Types</A>;
+<A HREF="ch03_02.htm#JLR2-CH-3-SECT-2.2">Interface Types</A>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_12.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_14.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Conditional Operator</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Order of Operations</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

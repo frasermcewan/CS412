@@ -1,0 +1,487 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 4] 4.14 Order of Operations</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:10:45 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_13.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 4<br>Expressions</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch04_15.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-4-SECT-14">4.14 Order of Operations</A></h2>
+
+<P CLASS=para>
+<A NAME="CH04.ORDER1"></A><A NAME="CH04.ORDER2"></A><A NAME="CH04.ORDER3"></A><A NAME="CH04.ORDER4"></A>In an expression
+that contains multiple operators, Java uses a number of rules to
+decide the order in which the operators are evaluated. The first
+and most important rule is called <I CLASS=emphasis>operator precedence</I>.
+Operators in an expression that have higher precedence are executed
+before operators with lower precedence. For example, multiplication
+has a higher precedence than addition. In the expression <tt CLASS=literal>2+3*4</tt>,
+the multiplication is done before the addition, producing a result
+of 14.
+
+<P CLASS=para>
+If consecutive operators in an expression have
+the same precedence, a rule called <I CLASS=emphasis>associativity</I> is
+used to decide the order in which those operators are evaluated.
+An operator can be left-associative, right-associative, or non-associative:
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Left-associative operators of the same precedence are evaluated
+in order from left to right. For example, addition and subtraction
+have the same precedence and they are left-associative. In the expression
+<tt CLASS=literal>10-4+2</tt>, the subtraction is done first because
+it is to the left of the addition, producing a value of 8.
+
+<P>
+<li CLASS=listitem>Right-associative operators of the same precedence are evaluated in order
+from right to left. For example, assignment is right-associative.
+Consider the following code fragment:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+int a = 3;
+int b = 4;
+a = b = 5;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+After the code has been evaluated,
+both <tt CLASS=literal>a</tt> and <tt CLASS=literal>b</tt> contain 5 because
+the assignments are evaluated from right to left.
+
+<P>
+<li CLASS=listitem>A
+non-associative operator cannot be combined with other operators
+of the same precedence.
+
+<P>
+</UL>
+<P CLASS=para>
+Table 4-2 shows the precedence
+and associativity of all the operators
+in Java.[7]
+
+<blockquote class=footnote>
+<P CLASS=para>[7] 
+Although the
+precedence of operators in Java is similar to that in C++, there
+are some differences. For example, <tt CLASS=literal>new</tt> has a
+higher precedence in Java than it does in C++. Another difference
+is that the <tt CLASS=literal>++</tt> and <tt CLASS=literal>- -</tt> operators
+are effectively non-associative in Java.
+</blockquote>
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="ch04-TABLE-AUTOID.2">Table 4.2: Precedence and Associativity of Operators in Java</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="CENTER">
+
+<P CLASS=para>
+Precedence</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Operator</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Associativity</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+1</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>()</tt>, <tt CLASS=literal>[]</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+non-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+2</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>new</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+non-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+3</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>.</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+4</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>++</tt>, <tt CLASS=literal>- -</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+non-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+5</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>-</tt> (unary), <tt CLASS=literal>+</tt> (unary),
+<tt CLASS=literal>!</tt>, <tt CLASS=literal>~</tt>, <tt CLASS=literal>++</tt>,
+<tt CLASS=literal>- -</tt>, 
+<tt CLASS=literal>(</tt><I CLASS=emphasis>type</I><tt CLASS=literal>)</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+right-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+6</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+*, <tt CLASS=literal>/</tt>,
+<tt CLASS=literal>%</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+7</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>+</tt>, <tt CLASS=literal>-</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+8</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;&lt;</tt>, <tt CLASS=literal>&gt;&gt;</tt>,
+<tt CLASS=literal>&gt;&gt;&gt;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+9</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&lt;</tt>, <tt CLASS=literal>&gt;</tt>,
+<tt CLASS=literal>&lt;=</tt>, <tt CLASS=literal>&gt;=</tt>,
+<tt CLASS=literal>instanceof</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+non-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+10</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>==</tt>, <tt CLASS=literal>!=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+11</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&amp;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+12</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>^</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+13</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>|</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+14</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>&amp;&amp;</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+15</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>||</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+left-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+16</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>?:</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+right-associative</TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="CENTER">
+
+<P CLASS=para>
+17</TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>=</tt>, <tt CLASS=literal>*=</tt>, 
+<tt CLASS=literal>/=</tt>,
+<tt CLASS=literal>%=</tt>, <tt CLASS=literal>-=</tt>, <tt CLASS=literal>&lt;&lt;=</tt>,
+<tt CLASS=literal>&gt;&gt;=</tt>, <tt CLASS=literal>&gt;&gt;&gt;=</tt>,
+<tt CLASS=literal>&amp;=</tt>, <tt CLASS=literal>^=</tt>, <tt CLASS=literal>|=</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+right-associative</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+As in C/C++, the order in which operators
+are evaluated can be modified by the use of parentheses.
+
+<P CLASS=para>
+The
+rest of the rules that concern order of operations have to do with
+the evaluation of operands or arguments in a single expression.
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>The left operand of a binary operator is evaluated
+before its right operand.
+
+<P>
+<li CLASS=listitem>The operands of an operator
+are evaluated before the operator is evaluated. Consider the following
+expression:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+((x=4) * x)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+First, the left
+operand of <tt CLASS=literal>*</tt> is evaluated; it produces the 
+value 4. Then the right operand of <tt CLASS=literal>*</tt>
+is evaluated. Since evaluation of the left operand
+set <tt CLASS=literal>x</tt> to 4, evaluation of the right operand 
+produces 4. Finally, the <tt CLASS=literal>*</tt> operator itself is
+evaluated, producing the value 16.
+
+<P>
+<li CLASS=listitem>In an index expression, the expression to the
+left of the square brackets is evaluated before the expression inside
+the square brackets.
+
+<P>
+<li CLASS=listitem>In an expression that calls a method
+through an object reference, the object reference is evaluated before
+the argument expressions.
+
+<P>
+<li CLASS=listitem>In any expression that calls
+a method or constructor, the expressions supplied as the actual
+arguments are evaluated from left to right.
+
+<P>
+<li CLASS=listitem>In an array
+allocation expression, the expressions that appear in square brackets
+and provide the dimensions of the array are evaluated from left
+to right.
+
+<P>
+</UL>
+<P CLASS=para>
+The intent of all of these rules is to guarantee
+that every implementation of Java evaluates any given expression
+in the same way.[8]
+In order to produce optimized code,
+a Java compiler is allowed to deviate from the rules governing the
+order in which operations are performed, provided that the result
+is the same as if it had followed the rules.
+
+<blockquote class=footnote>
+<P CLASS=para>[8] 
+This is different than C/C++, which
+leaves a number of details of expression evaluation up to an implementation,
+such as the order in which the actual parameters of a function call
+are evaluated.
+</blockquote>
+<P CLASS=para>
+<b>References</b>
+<A HREF="ch04_02.htm#JLR2-CH-4-SECT-2.2">Array Allocation Expressions</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.7">Index Expressions</A>;
+<A HREF="ch04_01.htm#JLR2-CH-4-SECT-1.8">Method Call Expression</A>;
+<A HREF="ch04_02.htm#JLR2-CH-4-SECT-2.1">Object Allocation Expressions</A>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch04_13.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch04_15.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Assignment Operators</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Data Type of an Expression</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

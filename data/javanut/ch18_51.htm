@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 18] 18.51 java.awt.PrintJob (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:10:48 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_50.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 18<br>The java.awt Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_52.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-51">18.51 java.awt.PrintJob (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-51.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>PrintJob</tt> object represents a single printing
+session or "job."  The job may consist of one or more
+individual pages.
+
+<P CLASS=para>
+<tt CLASS=literal>PrintJob</tt> is abstract so it cannot be instantiated
+directly.  Instead, you must call the <tt CLASS=literal>getPrintJob()</tt>
+method of the <tt CLASS=literal>Toolkit</tt> object.  Calling this method
+posts an appropriate print dialog box to request
+information from the user, such as which printer should be
+used.  An application has no control over this process, but
+may pass a <tt CLASS=literal>Properties</tt> object in which the dialog
+stores the user's printing preferences.  This
+<tt CLASS=literal>Properties</tt> object can then be reused when initiating
+subsequent print jobs.
+
+<P CLASS=para>
+Once a <tt CLASS=literal>PrintJob</tt> object has been obtained from the
+<tt CLASS=literal>Toolkit</tt> object, you call the
+<tt CLASS=literal>getGraphics()</tt> method of <tt CLASS=literal>PrintJob</tt> to obtain a
+<tt CLASS=literal>Graphics</tt> object.  Any drawing done with this
+<tt CLASS=literal>Graphics</tt> object is printed rather than being
+displayed on-screen.  The object
+returned by <tt CLASS=literal>getGraphics()</tt> implements the
+<tt CLASS=literal>PrintGraphics</tt> interface.  Do not make any
+assumptions about the initial state of the <tt CLASS=literal>Graphics</tt>
+object; in particular note that you must specify a font
+before you can draw any text.
+
+<P CLASS=para>
+When you are done drawing all the desired output on a page, 
+call the <tt CLASS=literal>dispose()</tt> method of the
+<tt CLASS=literal>Graphics</tt> object to force the current page to be
+printed.  You can call <tt CLASS=literal>PrintJob.getGraphics()</tt> and
+<tt CLASS=literal>Graphics.dispose()</tt> repeatedly to print any number of
+pages required by your application.  Note, however, that if
+the <tt CLASS=literal>lastPageFirst()</tt> method returns <tt CLASS=literal>true</tt>,
+the user has requested that pages be printed in reverse
+order.  It is up to your application to implement this
+feature.
+
+<P CLASS=para>
+The <tt CLASS=literal>getPageDimension()</tt> method returns the size of
+the page in pixels.  <tt CLASS=literal>getPageResolution()</tt> returns the
+resolution of the page in pixels per inch.  This resolution
+is closer to a screen resolution (70 to 100 pixels per
+inch) rather than a typical printer resolution (300 to 600
+pixels per inch).  This means that on-screen drawings can be
+drawn directly to the printer without scaling.  It also
+means, however, that you cannot take full advantage of the
+extra resolution provided by printers.
+
+<P CLASS=para>
+When you are done with a <tt CLASS=literal>PrintJob</tt>, and you have called
+<tt CLASS=literal>dispose()</tt> on the <tt CLASS=literal>Graphics</tt> object returned by
+<tt CLASS=literal>getGraphics()</tt>, you should call <tt CLASS=literal>end()</tt> to
+terminate the job.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class <tt CLASS=literal>PrintJob</tt> extends Object {
+    // <tt CLASS=literal>Default Constructor: public PrintJob()</tt>
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public abstract void <tt CLASS=literal>end</tt>();
+            public void <tt CLASS=literal>finalize</tt>();  //<tt CLASS=literal> Overrides Object</tt>
+            public abstract Graphics <tt CLASS=literal>getGraphics</tt>();
+            public abstract Dimension <tt CLASS=literal>getPageDimension</tt>();
+            public abstract int <tt CLASS=literal>getPageResolution</tt>();
+            public abstract boolean <tt CLASS=literal>lastPageFirst</tt>();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-51.2">Returned By:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>PrintGraphics.getPrintJob(), 
+Toolkit.getPrintJob()</tt>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_50.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_52.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.awt.PrintGraphics (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.awt.Rectangle (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

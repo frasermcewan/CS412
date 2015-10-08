@@ -1,0 +1,598 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 8] 8.2 URL Objects</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:16:57 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 8<br>Networking</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch09_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-8-SECT-2">8.2 URL Objects</A></h2>
+
+<P CLASS=para>
+<A NAME="CH08.URL"></A><A NAME="CH08.URL2"></A>The <tt CLASS=literal>URL</tt> class provides higher-level access to data
+than sockets do. A <tt CLASS=literal>URL</tt> object encapsulates a
+Uniform Resource Locator (URL) specification. Once you have created a
+<tt CLASS=literal>URL</tt> object, you can use it to access the data in
+the location specified by the <tt CLASS=literal>URL</tt>.  A
+<tt CLASS=literal>URL</tt> allows you to access the data without needing
+to be aware of the details of the protocol being used, such as HTTP or
+FTP. For some types of data, a <tt CLASS=literal>URL</tt> object provides
+a way to get the data already encapsulated in an appropriate kind of
+object. For example, a <tt CLASS=literal>URL</tt> can provide JPEG data
+encapsulated in an <tt CLASS=literal>ImageProducer</tt> object or text data encapsulated in a
+<tt CLASS=literal>String</tt> object.
+
+<P CLASS=para>
+You can create a <tt CLASS=literal>URL</tt> object 
+as follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    URL js = new URL("http://www.javasoft.com/index.html");
+}catch (MalformedURLException e) {
+    return;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This type of URL specification is called an absolute URL specification because 
+it completely specifies where to find the data. It is also possible to 
+create a <tt CLASS=literal>URL</tt> object with a 
+relative URL specification that is combined with an absolute specification: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+   URL jdk = new URL(js,"java.sun.com/products/JDK/index.html");
+}catch (MalformedURLException e) {
+    return;
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, the <tt CLASS=literal>URL</tt> created in the previous
+example is combined with a relative URL specification that doesn't
+specify a network address or a root directory. The constructor can only combine the specifications if the protocol for both
+specifications is the same. If no protocol is specified, HTTP is
+assumed. The rules for combining the specifications depend on the
+protocol. In fact, the syntax rules for the portion of the URL after
+the protocol and up to an optional <tt CLASS=literal>#</tt> depend on the
+protocol. If there's a <tt CLASS=literal>#</tt> in the URL specification,
+the portion of the spec after the <tt CLASS=literal>#</tt> is
+considered reference information that specifies a location within a
+file.
+
+<P CLASS=para>
+Once you have created a <tt CLASS=literal>URL</tt> 
+object, you can use the following access methods to get the information 
+that the <tt CLASS=literal>URL</tt> object encapsulates: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem><tt CLASS=literal></tt><tt CLASS=literal>getProtocol()</tt> 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal></tt><tt CLASS=literal>getHost()</tt> 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>getFile()</tt> 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>getPort()</tt> 
+
+<P>
+<li CLASS=listitem><tt CLASS=literal>getRef()</tt> 
+
+<P>
+</UL>
+<P CLASS=para>
+If you want to determine if two <tt CLASS=literal>URL</tt> objects refer
+to the same file, you can use the <tt CLASS=literal>sameFile(URL)</tt>
+method, which compares all the information in two
+<tt CLASS=literal>URL</tt> objects except the reference information.
+
+<P CLASS=para>
+The highest level of functionality available from a
+<tt CLASS=literal>URL</tt> object is provided by the
+<tt CLASS=literal>getContent()</tt> method. The
+<tt CLASS=literal>getContent()</tt> method tries to determine the type of
+data in the file specified by the <tt CLASS=literal>URL</tt>, and then it
+returns the contents of the file encapsulated in an appropriate object
+for that type of data. For example, if the file contains GIF data,
+<tt CLASS=literal>getContent()</tt> returns an ImageProducer object. If
+the type of data is not explicitly specified,
+<tt CLASS=literal>getContent()</tt> tries to guess the type from the
+filename extension and possibly also from the contents of the
+file. The data type names that Java uses conform to the naming scheme
+for MIME data types, as do the filename extensions that are
+recognized. The data types that correspond to various file extensions
+are shown in <A HREF="ch08_02.htm#JFC-CH-8-TAB-2">Table 8.2</A>.<A NAME="CH08.DATA"></A>
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JFC-CH-8-TAB-2">Table 8.2: File Extensions and Data Types</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="LEFT">Suffix</TH>
+<TH ALIGN="LEFT">Data Type</TH>
+<TH ALIGN="LEFT">Suffix</TH>
+<TH ALIGN="LEFT">Data Type</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.a</i> [1]</TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.ms</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-troff-ms</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.ai</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/postscript</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.mv</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>video/x-sgi-movie</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.aif</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>audio/x-aiff</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.nc</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-netcdf</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.aifc</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>audio/x-aiff</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.o</i> [1]</TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.aiff</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>audio/x-aiff</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.obj</i> [2]</TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.arc</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.oda</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/oda</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.au</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>audio/basic</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.pbm</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-portable-bitmap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.avi</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-troff-msvideo</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.pdf</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/pdf</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.bcpio</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-bcpio</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.pgm</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-portable-graymap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.bin</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.pl</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.c</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.pnm</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-portable-anymap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.c++</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.ppm</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-portable-pixmap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.cc</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.ps</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/postscript</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.cdf</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-netcdf</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.qt</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>video/quicktime</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.cpio</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-cpio</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.ras</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-cmu-rast</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.dump</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.rgb</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-rgb</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.dvi</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-dvi</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.roff</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-troff</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.el</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.rtf</i>  [2]</TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/rtf</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.eps</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/postscript</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.rtx</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/rtf</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.etx</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/x-setext</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.saveme</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.exe</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.sh</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-shar</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.gif</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/gif</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.shar</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-shar</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.gtar</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-gtar</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.snd</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>audio/basic</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.gz</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.src</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-wais-source</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.h</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.sv4cpio</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-sv4cpio</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.hdf</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-hdf</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.sv4crc</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-sv4crc</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.hqx</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.t</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-troff</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.htm</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/html</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.tar</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-tar</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.html</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/html</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.tex</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-tex</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.ief</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/ief</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.texi</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-texinfo</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.java</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.texinfo</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-texinfo</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.jfif</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/jpeg</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.text</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.jfif-tbnl</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/jpeg</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.tif</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/tiff</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.jpe</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/jpeg</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.tiff</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/tiff</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.jpeg</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/jpeg</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.tr</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-troff</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.jpg</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/jpeg</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.tsv</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/tab-separated-values</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.latex</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-latex</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.txt</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>text/plain</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.lib</i> [2]</TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.ustar</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-ustar</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.man</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-troff-man</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.uu</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.me</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-troff-me</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.wav</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>audio/x-wav</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.mime</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>message/rfc822</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.wsrc</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/x-wais-source</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.mov</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>video/quicktime</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.xbm</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-xbitmap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.movie</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>video/x-sgi-movie</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.xpm</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-xpixmap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.mpe</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>video/mpeg</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.xwd</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>image/x-xwindowdump</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.mpeg</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>video/mpeg</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.z</i> [2]</TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/octet-stream</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT"><i CLASS=filename>.mpg</i></TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>video/mpeg</tt></TD>
+<TD ALIGN="LEFT"><i CLASS=filename>.zip</i>  [2]</TD>
+<TD ALIGN="LEFT"><tt CLASS=literal>application/zip</tt></TD>
+</TR>
+<tr>
+<td colspan=4>
+<p>
+<b>Footnotes:</b>
+<p>
+<blockquote>
+<p class=para>
+[1] 
+UNIX only.
+
+<p class=para>
+[2] 
+Windows only.
+</blockquote></td></tr>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+If the filename does not end with a recognized extension, the first
+few bytes of the file are examined. If the first few bytes match the
+signature of a known type, the file is assumed to be of that
+type. <A HREF="ch08_02.htm#JFC-CH-8-TAB-3">Table 8.3</A> shows the byte combinations that
+are recognized.
+
+<P>
+<DIV CLASS=table>
+<TABLE BORDER>
+<CAPTION><A CLASS="TITLE" NAME="JFC-CH-8-TAB-3">Table 8.3: File Contents and Corresponding File Type</A></CAPTION>
+<TR CLASS=row>
+<TH ALIGN="left">
+
+<P CLASS=para>
+File Begins with</TH>
+<TH ALIGN="left">
+
+<P CLASS=para>
+Inferred Data Type</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>"GIF8"</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>image/gif</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>"#def"</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>image/x-bitmap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>"! XPM2"</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>image/x-pixmap</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>"&lt;html&gt;"</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>text/html</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>"&lt;head&gt;"</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>text/html</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>"&lt;body&gt;"</tt></TD>
+<TD ALIGN="left">
+
+<P CLASS=para>
+<tt CLASS=literal>text/html</tt></TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+<P CLASS=para>
+If you want to access the raw contents of a file instead of getting it 
+encapsulated in an object, you can call the <tt CLASS=literal>openStream()</tt> 
+method of a <tt CLASS=literal>URL</tt>. The <tt CLASS=literal>openStream()</tt> 
+method returns a reference to an <tt CLASS=literal>InputStream</tt> 
+object that you can use to read the file. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-8-SECT-2.1">URLConnection Objects</A></h3>
+
+<P CLASS=para>
+After a <tt CLASS=literal>URL</tt> object has parsed its specification,
+it actually creates a <tt CLASS=literal>URLConnection</tt> object that is
+responsible for the protocol that it uses. The
+<tt CLASS=literal>URLConnection</tt> is also responsible for determining
+the type of data in the file. The object is an instance of a subclass
+of <tt CLASS=literal>URLConnection</tt> that is specific to the protocol
+specified by the <tt CLASS=literal>URL</tt> object. As of Java 1.1, the
+<tt CLASS=literal>java.net</tt> package includes the
+<tt CLASS=literal>HttpURLConnection</tt> class for the HTTP protocol.
+
+<P CLASS=para>
+The <tt CLASS=literal>URLConnection</tt> object for a
+<tt CLASS=literal>URL</tt> provides complete control over the downloading
+of data from that URL. Unfortunately, the functionality of
+<tt CLASS=literal>URLConnection</tt> is quite complex and goes beyond the
+scope of this book. For a detailed explanation of
+<tt CLASS=literal>URLConnection</tt>, see <i CLASS=citetitle>Java Network
+Programming</i> by Eliotte Rusty Harold, published by
+O'Reilly &amp; Associates.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch09_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Sockets</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Security</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

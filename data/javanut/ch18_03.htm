@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 18] 18.3 java.awt.AWTEventMulticaster (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:09:17 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 18<br>The java.awt Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch18_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-3">18.3 java.awt.AWTEventMulticaster (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-3.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+<tt CLASS=literal>AWTEventMulticaster</tt> is a convenience class used when
+writing a custom AWT component.  It provides an easy way
+to maintain a list of AWT <tt CLASS=literal>EventListener</tt> objects, and to
+notify the listeners on that list when an event occurs.
+
+<P CLASS=para>
+<tt CLASS=literal>AWTEventMulticaster</tt> implements each of the event
+listener interfaces defined in the <tt CLASS=literal>java.awt.event</tt>
+package, which means that an <tt CLASS=literal>AWTEventMulticaster</tt>
+object can serve as any desired type of event listener.  (It
+also means, as you can see below, that the class defines 
+quite a few methods.)  <tt CLASS=literal>AWTEventMulticaster</tt>
+implements what amounts to a linked list of
+<tt CLASS=literal>EventListener</tt> objects.  When you invoke one of the
+<tt CLASS=literal>EventListener</tt> methods of an
+<tt CLASS=literal>AWTEventMulticaster</tt>, it invokes the same method on
+all of the <tt CLASS=literal>EventListener</tt> objects in the linked list.
+
+<P CLASS=para>
+Rather than instantiate an <tt CLASS=literal>AWTEventMulticaster</tt>
+object directly, you use the static <tt CLASS=literal>add()</tt> and
+<tt CLASS=literal>remove()</tt> methods of the class to add and remove
+<tt CLASS=literal>EventListener</tt> objects from the linked list.  Doing
+so returns an <tt CLASS=literal>AWTEventMulticaster</tt> with the
+appropriate <tt CLASS=literal>EventListener</tt> object registered.
+The API for using an <tt CLASS=literal>AWTEventMulticaster</tt> is somewhat
+non-intuitive.  Here is some example code that shows its use:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class MyList extends Component {   // a class that sends ItemEvents
+  // this will be the head of a linked list of AWTEventMulticaster objects
+  protected ItemListener listener = null;
+  public void addItemListener(ItemListener l) {      // add a listener
+    listener = AWTEventMulticaster.add(listener, l);
+  }
+  public void removeItemListener(ItemListener l) {   // remove a listener
+    listener = AWTEventMulticaster.remove(listener, l);
+  }
+  protected void fireItemEvent(ItemEvent e) {        // notify all listeners
+    if (listener != null) listener.itemStateChanged(e);
+  }
+  // The rest of the class goes here
+}
+</PRE>
+</DIV>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class AWTEvent Multicaster  extends Object 
+                                   implements ComponentListener, ContainerListener, FocusListener, KeyListener, MouseListener, MouseMotionListener, WindowListener, ActionListener,ItemListener, AdjustmentListener, TextListener {
+    // <tt CLASS=literal>Protected Constructor</tt>
+            protected <tt CLASS=literal>AWTEventMulticaster</tt>(EventListener <tt CLASS=literal>a</tt>, EventListener <tt CLASS=literal>b</tt>);
+    // <tt CLASS=literal>Protected Instance Variables</tt>
+            protected EventListener <tt CLASS=literal>a</tt>;
+            protected EventListener <tt CLASS=literal>b</tt>;
+    // <tt CLASS=literal>Class Methods</tt>
+            public static ComponentListener <tt CLASS=literal>add</tt>(ComponentListener <tt CLASS=literal>a</tt>, ComponentListener <tt CLASS=literal>b</tt>);
+            public static ContainerListener <tt CLASS=literal>add</tt>(ContainerListener <tt CLASS=literal>a</tt>, ContainerListener <tt CLASS=literal>b</tt>);
+            public static FocusListener <tt CLASS=literal>add</tt>(FocusListener <tt CLASS=literal>a</tt>, FocusListener <tt CLASS=literal>b</tt>);
+            public static KeyListener <tt CLASS=literal>add</tt>(KeyListener <tt CLASS=literal>a</tt>, KeyListener <tt CLASS=literal>b</tt>);
+            public static MouseListener <tt CLASS=literal>add</tt>(MouseListener <tt CLASS=literal>a</tt>, MouseListener <tt CLASS=literal>b</tt>);
+            public static MouseMotionListener <tt CLASS=literal>add</tt>(MouseMotionListener <tt CLASS=literal>a</tt>, MouseMotionListener <tt CLASS=literal>b</tt>);
+            public static WindowListener <tt CLASS=literal>add</tt>(WindowListener <tt CLASS=literal>a</tt>, WindowListener <tt CLASS=literal>b</tt>);
+            public static ActionListener <tt CLASS=literal>add</tt>(ActionListener <tt CLASS=literal>a</tt>, ActionListener <tt CLASS=literal>b</tt>);
+            public static ItemListener <tt CLASS=literal>add</tt>(ItemListener <tt CLASS=literal>a</tt>, ItemListener <tt CLASS=literal>b</tt>);
+            public static AdjustmentListener <tt CLASS=literal>add</tt>(AdjustmentListener <tt CLASS=literal>a</tt>, AdjustmentListener <tt CLASS=literal>b</tt>);
+            public static TextListener <tt CLASS=literal>add</tt>(TextListener <tt CLASS=literal>a</tt>, TextListener <tt CLASS=literal>b</tt>);
+            protected static EventListener <tt CLASS=literal>addInternal</tt>(EventListener <tt CLASS=literal>a</tt>, EventListener <tt CLASS=literal>b</tt>);
+            public static ComponentListener <tt CLASS=literal>remove</tt>(ComponentListener <tt CLASS=literal>l</tt>, ComponentListener <tt CLASS=literal>oldl</tt>);
+            public static ContainerListener <tt CLASS=literal>remove</tt>(ContainerListener <tt CLASS=literal>l</tt>, ContainerListener <tt CLASS=literal>oldl</tt>);
+            public static FocusListener <tt CLASS=literal>remove</tt>(FocusListener <tt CLASS=literal>l</tt>, FocusListener <tt CLASS=literal>oldl</tt>);
+            public static KeyListener <tt CLASS=literal>remove</tt>(KeyListener <tt CLASS=literal>l</tt>, KeyListener <tt CLASS=literal>oldl</tt>);
+            public static MouseListener <tt CLASS=literal>remove</tt>(MouseListener <tt CLASS=literal>l</tt>, MouseListener <tt CLASS=literal>oldl</tt>);
+            public static MouseMotionListener <tt CLASS=literal>remove</tt>(MouseMotionListener <tt CLASS=literal>l</tt>, MouseMotionListener <tt CLASS=literal>oldl</tt>);
+            public static WindowListener <tt CLASS=literal>remove</tt>(WindowListener <tt CLASS=literal>l</tt>, WindowListener <tt CLASS=literal>oldl</tt>);
+            public static ActionListener <tt CLASS=literal>remove</tt>(ActionListener <tt CLASS=literal>l</tt>, ActionListener <tt CLASS=literal>oldl</tt>);
+            public static ItemListener <tt CLASS=literal>remove</tt>(ItemListener <tt CLASS=literal>l</tt>, ItemListener <tt CLASS=literal>oldl</tt>);
+            public static AdjustmentListener <tt CLASS=literal>remove</tt>(AdjustmentListener <tt CLASS=literal>l</tt>, AdjustmentListener <tt CLASS=literal>oldl</tt>);
+            public static TextListener <tt CLASS=literal>remove</tt>(TextListener <tt CLASS=literal>l</tt>, TextListener <tt CLASS=literal>oldl</tt>);
+            protected static EventListener <tt CLASS=literal>removeInternal</tt>(EventListener <tt CLASS=literal>l</tt>, EventListener <tt CLASS=literal>oldl</tt>);
+            protected static void <tt CLASS=literal>save</tt>(ObjectOutputStream <tt CLASS=literal>s</tt>, String <tt CLASS=literal>k</tt>, EventListener <tt CLASS=literal>l</tt>) throws IOException;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public void <tt CLASS=literal>actionPerformed</tt>(ActionEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From ActionListener</tt>
+            public void <tt CLASS=literal>adjustmentValueChanged</tt>(AdjustmentEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From AdjustmentListener</tt>
+            public void <tt CLASS=literal>componentAdded</tt>(ContainerEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From ContainerListener</tt>
+            public void <tt CLASS=literal>componentHidden</tt>(ComponentEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From ComponentListener</tt>
+            public void <tt CLASS=literal>componentMoved</tt>(ComponentEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From ComponentListener</tt>
+            public void <tt CLASS=literal>componentRemoved</tt>(ContainerEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From ContainerListener</tt>
+            public void <tt CLASS=literal>componentResized</tt>(ComponentEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From ComponentListener</tt>
+            public void <tt CLASS=literal>componentShown</tt>(ComponentEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From ComponentListener</tt>
+            public void <tt CLASS=literal>focusGained</tt>(FocusEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From FocusListener</tt>
+            public void <tt CLASS=literal>focusLost</tt>(FocusEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From FocusListener</tt>
+            public void <tt CLASS=literal>itemStateChanged</tt>(ItemEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From ItemListener</tt>
+            public void <tt CLASS=literal>keyPressed</tt>(KeyEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From KeyListener</tt>
+            public void <tt CLASS=literal>keyReleased</tt>(KeyEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From KeyListener</tt>
+            public void <tt CLASS=literal>keyTyped</tt>(KeyEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From KeyListener</tt>
+            public void <tt CLASS=literal>mouseClicked</tt>(MouseEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From MouseListener</tt>
+            public void <tt CLASS=literal>mouseDragged</tt>(MouseEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From MouseMotionListener</tt>
+            public void <tt CLASS=literal>mouseEntered</tt>(MouseEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From MouseListener</tt>
+            public void <tt CLASS=literal>mouseExited</tt>(MouseEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From MouseListener</tt>
+            public void <tt CLASS=literal>mouseMoved</tt>(MouseEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From MouseMotionListener</tt>
+            public void <tt CLASS=literal>mousePressed</tt>(MouseEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From MouseListener</tt>
+            public void <tt CLASS=literal>mouseReleased</tt>(MouseEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From MouseListener</tt>
+            public void <tt CLASS=literal>textValueChanged</tt>(TextEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From TextListener</tt>
+            public void <tt CLASS=literal>windowActivated</tt>(WindowEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From WindowListener</tt>
+            public void <tt CLASS=literal>windowClosed</tt>(WindowEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From WindowListener</tt>
+            public void <tt CLASS=literal>windowClosing</tt>(WindowEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From WindowListener</tt>
+            public void <tt CLASS=literal>windowDeactivated</tt>(WindowEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From WindowListener</tt>
+            public void <tt CLASS=literal>windowDeiconified</tt>(WindowEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From WindowListener</tt>
+            public void <tt CLASS=literal>windowIconified</tt>(WindowEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From WindowListener</tt>
+            public void <tt CLASS=literal>windowOpened</tt>(WindowEvent <tt CLASS=literal>e</tt>);  //<tt CLASS=literal> From WindowListener</tt>
+    // <tt CLASS=literal>Protected Instance Methods</tt>
+            protected EventListener <tt CLASS=literal>remove</tt>(EventListener <tt CLASS=literal>oldl</tt>);
+            protected void <tt CLASS=literal>saveInternal</tt>(ObjectOutputStream <tt CLASS=literal>s</tt>, String <tt CLASS=literal>k</tt>) throws IOException;
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-18-SECT-3.2">Hierarchy:</A></h3>
+
+<P CLASS=para>
+<tt CLASS=literal>Object->AWTEventMulticaster(ComponentListener(EventListener), ContainerListener(EventListener), FocusListener(EventListener), KeyListener(EventListener), MouseListener(EventListener), MouseMotionListener(EventListener), WindowListener(EventListener), ActionListener(EventListener), ItemListener(EventListener), AdjustmentListener(EventListener), TextListener(EventListener))</tt>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch18_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch18_04.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.awt.AWTEvent (JDK 1.1)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.awt.AWTException (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

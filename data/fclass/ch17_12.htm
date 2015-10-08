@@ -1,0 +1,1440 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 17] Locale</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 17:42:57 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 17<br>The java.util Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch17_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>Locale</H1>
+
+<H2>Name</H2>
+
+Locale
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.81">Synopsis</A></h2>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Class Name:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.util.Locale</tt>
+
+<p>
+<DT CLASS=varlistentry>Superclass:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Object</tt>
+
+<p>
+<DT CLASS=varlistentry>Immediate Subclasses:<br>
+<DD>
+
+<P CLASS=para>
+None
+
+<p>
+<DT CLASS=varlistentry>Interfaces Implemented:<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>java.lang.Cloneable</tt>, 
+<tt CLASS=literal>java.io.Serializable</tt>
+
+<p>
+<DT CLASS=varlistentry>Availability:<br>
+<DD>
+
+<P CLASS=para>
+New as of JDK 1.1 </DL>
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.82">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> class is 
+used for internationalization. Instances of <tt CLASS=literal>Locale</tt> 
+specify language and formatting customs by identifying a language and a
+country. A <tt CLASS=literal>Locale</tt> object may also specify a 
+platform-specific variant.
+Other classes throughout the JDK use <tt CLASS=literal>Locale</tt> 
+objects to determine how to represent themselves to the user. The tasks 
+performed by these classes are called locale-sensitive tasks; the tasks 
+should be done in a way that conforms with the conventions of a particular 
+country and language. 
+
+<P CLASS=para>
+There are a number of classes provided with Java that have
+<tt CLASS=literal>static</tt> methods that create instances of 
+locale-specific subclasses. For example, the <tt CLASS=literal>NumberFormat</tt> 
+class contains <tt CLASS=literal>static</tt> methods named 
+<tt CLASS=literal>getInstance()</tt> that create and 
+return locale-specific instances of subclasses of 
+<tt CLASS=literal>NumberFormat</tt>. A particular 
+<tt CLASS=literal>NumberFormat</tt> instance knows 
+how to format numbers, currency values, and percentages appropriately for 
+a particular locale. Note that it is the responsibiity of a 
+class like <tt CLASS=literal>NumberFormat</tt> to implement the 
+logic needed to translate locale-identifying information
+into actual subclass instances.
+
+<P CLASS=para>
+Classes like <tt CLASS=literal>NumberFormat</tt> that can create 
+locale-specific instances are expected to follow certain conventions:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Methods like <tt CLASS=literal>getInstance()</tt> in
+<tt CLASS=literal>NumberFormat</tt> are expected to have
+two variants: one that takes a <tt CLASS=literal>Locale</tt> argument 
+and one that does not. The variant that does not take a locale argument
+is expected to use the default locale, which is normally 
+determined by calling <tt CLASS=literal>Locale.getDefault()</tt>.
+
+<P>
+<li CLASS=listitem>Classes that can create a variety of locale-specific
+instances are expected to implement a method that has
+the following signature:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public static Locale[] getAvailableLocales()
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This requirement is not specified through an interface
+declaration because interfaces cannot declare <tt CLASS=literal>static</tt> 
+methods. The purpose of this method is to facilitate presenting the
+user with a list or menu of locale choices. The
+<tt CLASS=literal>getAvailableLocales()</tt> method should return an 
+array of <tt CLASS=literal>Locale</tt> objects that identifies 
+all of the locales for which the class can create locale-specific instances.
+
+<P CLASS=para>
+Two additional methods are recommended for helping to
+display the locale choices:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public static final String getDisplayName(Locale objectLocale)
+public static String getDisplayName(Locale objectLocale,
+                                    Locale displayLocale)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first form of <tt CLASS=literal>getDisplayName()</tt> 
+should return a description of <tt CLASS=literal>objectLocale</tt> 
+that is suitable for display in the default locale. The second form 
+should return a description of <tt CLASS=literal>objectLocale</tt> 
+that is suitable for display in the locale specified by 
+<tt CLASS=literal>displayLocale</tt>. Implementations of these 
+methods generally call the <tt CLASS=literal>getDisplayName()</tt> method
+of the <tt CLASS=literal>Locale</tt> object.
+
+<P>
+</UL>
+<P CLASS=para>
+The language, country and variant information that are
+encapsulated by a <tt CLASS=literal>Locale</tt> object are 
+specified to a constructor as strings. The language for a 
+<tt CLASS=literal>Locale</tt> should be specified as 
+one of the two-letter lowercase language codes defined by ISO-639.
+Look for a complete list at
+<I CLASS=emphasis>http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt</I>.
+
+<P CLASS=para>
+The country for a <tt CLASS=literal>Locale</tt> object should
+be specified as either <tt CLASS=literal>""</tt> to indicate
+that no country is specified, or as one of the two-letter
+uppercase country codes defined by ISO-3166. 
+Check the site,
+<I CLASS=emphasis>http://www.chemie.fu-berlin.de/diverse/doc/ISO_3166.html</I>,
+for a complete list
+
+<P CLASS=para>
+Variant codes are platform-specific.
+
+<P CLASS=para>
+Although the <tt CLASS=literal>Locale</tt> 
+is constructed from these three types of codes, human-readable names can 
+be obtained by calling <tt CLASS=literal>getDisplayLanguage()</tt>, 
+<tt CLASS=literal>getDisplayCountry()</tt>, and <tt CLASS=literal>getDisplayVariant()</tt>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>Locale</tt> class defines a 
+number of constant <tt CLASS=literal>Locale</tt> objects 
+that represent some of the major languages and countries of the world. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.83">Class Summary</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class java.util.Locale extends java.lang.Object
+                      implements java.lang.Cloneable, java.io.Serializable {
+  // Constants
+  public final static Locale CANADA;
+  public final static Locale CANADA_FRENCH;
+  public final static Locale CHINA;
+  public final static Locale CHINESE;
+  public final static Locale ENGLISH;
+  public final static Locale FRANCE;
+  public final static Locale FRENCH;
+  public final static Locale GERMAN;
+  public final static Locale GERMANY;
+  public final static Locale ITALIAN;
+  public final static Locale ITALY;
+  public final static Locale JAPAN;
+  public final static Locale JAPANESE;
+  public final static Locale KOREA;
+  public final static Locale KOREAN;
+  public final static Locale PRC;
+  public final static Locale SIMPLIFIED_CHINESE;
+  public final static Locale TAIWAN;
+  public final static Locale TRADITIONAL_CHINESE;
+  public final static Locale UK;
+  public final static Locale US;
+  // Constructors
+  public Locale(String language, String country);
+  public Locale(String language, String country, String variant);
+  // Class Methods
+  public static synchronized Locale getDefault();
+  public static synchronized void setDefault(Locale newLocale);
+  // Instance Methods
+  public Object clone();
+  public boolean equals(Object obj);
+  public String getCountry();
+  public final String getDisplayCountry();
+  public String getDisplayCountry(Locale inLocale);
+  public final String getDisplayLanguage();
+  public String getDisplayLanguage(Locale inLocale);
+  public final String getDisplayName();
+  public String getDisplayName(Locale inLocale);
+  public final String getDisplayVariant();
+  public String getDisplayVariant(Locale inLocale);
+  public String getISO3Country();
+  public String getISO3Language();
+  public String getLanguage();
+  public String getVariant();
+  public synchronized int hashCode();
+  public final String toString();
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.84">Constants</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.168">CANADA</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.190">public final static Locale CANADA</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents English-speaking Canada.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.169">CANADA_FRENCH</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.191">public final static Locale CANADA_FRENCH</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents French-speaking Canada.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.170">CHINA</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.192">public final static Locale CHINA</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents China.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.171">CHINESE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.193">public final static Locale CHINESE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the Chinese language.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.172">ENGLISH</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.194">public final static Locale ENGLISH</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the English language.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.173">FRANCE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.195">public final static Locale FRANCE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents France.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.174">FRENCH</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.196">public final static Locale FRENCH</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the French language.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.175">GERMAN</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.197">public final static Locale GERMAN</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the German language.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.176">GERMANY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.198">public final static Locale GERMANY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents Germany.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.177">ITALIAN</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.199">public final static Locale ITALIAN</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the Italian language.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.178">ITALY</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.200">public final static Locale ITALY</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents Italy.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.179">JAPAN</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.201">public final static Locale JAPAN</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents Japan.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.180">JAPANESE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.202">public final static Locale JAPANESE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the Japanese language.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.181">KOREA</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.203">public final static Locale KOREA</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents Korea.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.182">KOREAN</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.204">public final static Locale KOREAN</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the Korean language.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.183">PRC</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.205">public final static Locale PRC</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the People's Republic of China. 
+It is equivalent to <tt CLASS=literal>CHINA</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.184">SIMPLIFIED_CHINESE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.206">public final static Locale SIMPLIFIED_CHINESE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the Chinese language as used in mainland China.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.185">TAIWAN</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.207">public final static Locale TAIWAN</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents Taiwan.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.186">TRADITIONAL_CHINESE</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.208">public final static Locale TRADITIONAL_CHINESE</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the Chinese language as used in Taiwan.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.187">UK</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.209">public final static Locale UK</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the United Kingdom.</DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.188">US</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.210">public final static Locale US</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+A locale that represents the United States.</DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.85">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.189">Locale</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.211">public Locale(String language, String country)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>language</tt><br>
+<DD>
+
+<P CLASS=para>
+A two-letter ISO-639 
+language code.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>country</tt><br>
+<DD>
+
+<P CLASS=para>
+A two-letter ISO-3166 
+country code or <tt CLASS=literal>""</tt> to omit the country specification.</DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Locale</tt> 
+that represents the given language and country. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.212">public Locale(String language, String country, String variant)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>language</tt><br>
+<DD>
+
+<P CLASS=para>
+A two-letter ISO-639 
+language code.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>country</tt><br>
+<DD>
+
+<P CLASS=para>
+A two-letter ISO-3166 
+country code or <tt CLASS=literal>""</tt> to omit the country specification.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>variant</tt><br>
+<DD>
+
+<P CLASS=para>
+A vendor-specific 
+variant code. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>Locale</tt> 
+that represents the given language, country, and variant. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.86">Class Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.190">getDefault</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.213">public static synchronized Locale getDefault()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The default <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the current default <tt CLASS=literal>Locale</tt>. 
+An application or applet uses this method to find out how to present locale-sensitive 
+information, such as textual strings and numbers. The method is generally 
+called during application initialization to get the default <tt CLASS=literal>Locale</tt>. 
+Once the locale is set, it almost never changes. If you do change the 
+locale, you should probably reload the GUI for your application, so that 
+any locale-sensitive information in the interface is changed.
+
+<P CLASS=para>
+The initial default <tt CLASS=literal>Locale</tt> 
+is set by the host system. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.191">setDefault</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.214">public static synchronized void setDefault(Locale newLocale)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>newLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The new default locale. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method changes the current default locale to <tt CLASS=literal>newLocale</tt>. 
+Note that calling <tt CLASS=literal>setDefault()</tt> 
+does not change the default locale of the host system. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.87">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.192">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.215">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method creates a copy of this <tt CLASS=literal>Locale</tt> 
+and returns it. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.193">equals</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.216">public boolean equals(Object obj)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>obj</tt><br>
+<DD>
+
+<P CLASS=para>
+The object to be compared with this object. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>true</tt> if the objects are equal; 
+<tt CLASS=literal>false</tt> if they are not. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.equals()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns <tt CLASS=literal>true</tt> if 
+<tt CLASS=literal>obj</tt> is an instance of <tt CLASS=literal>Locale</tt>, 
+and it contains the same value as the object this method is associated 
+with. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.194">getCountry</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.217">public String getCountry()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>The country of this Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>String</tt> that represents
+the country of this <tt CLASS=literal>Locale</tt>. This <tt CLASS=literal>String</tt>
+is the same <tt CLASS=literal>String</tt> that was passed to the constructor
+of this <tt CLASS=literal>Locale</tt> object. The <tt CLASS=literal>String</tt>
+is normally a two-letter ISO-3166 country code. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.195">getDisplayCountry</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.218">public final String getDisplayCountry()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>The country of this Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the country of this <tt CLASS=literal>Locale</tt> 
+as a country name in a form appropriate for this <tt CLASS=literal>Locale</tt>. 
+If the country name cannot be found, this method returns the same value 
+as <tt CLASS=literal>getCountry()</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.219">public String getDisplayCountry(Locale inLocale)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>inLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The locale to use when finding the country name. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The country of this <tt CLASS=literal>Locale</tt>, 
+localized to the given locale. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the country of this <tt CLASS=literal>Locale</tt> 
+as a country name in a form appropriate for <tt CLASS=literal>inLocale</tt>. 
+For example, <tt CLASS=literal>Locale.ITALY.getDisplayCountry(Locale.GERMAN)</tt> 
+returns the German name for Italy, Italien. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.196">getDisplayLanguage</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.220">public final String getDisplayLanguage()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The language of this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the language of this <tt CLASS=literal>Locale</tt> 
+as a language name in a form appropriate for this <tt CLASS=literal>Locale</tt>. 
+If the language name cannot be found, this method returns the same value 
+as <tt CLASS=literal>getLanguage()</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.221">public String getDisplayLanguage(Locale inLocale)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>inLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The locale to 
+use when finding the language name. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The language of this <tt CLASS=literal>Locale</tt>, 
+localized to the given locale. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the language of this <tt CLASS=literal>Locale</tt> 
+as a language name in a form appropriate for <tt CLASS=literal>inLocale</tt>. 
+For example, <tt CLASS=literal>Locale.ITALY.getDisplayLanguage(Locale.GERMAN)</tt> 
+returns the German name for the Italian language, Italienisch. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.197">getDisplayName</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.222">public final String getDisplayName()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string that represents this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method constructs a string that represents this <tt CLASS=literal>Locale</tt> 
+by calling <tt CLASS=literal>getDisplayLanguage()</tt>, 
+<tt CLASS=literal>getDisplayCountry()</tt>, and <tt CLASS=literal>getDisplayVariant()</tt>. 
+In other words, the method returns a string that contains the country name, 
+language name, and variant in a form appropriate for this <tt CLASS=literal>Locale</tt>. 
+If any of the names cannot be found, the 
+<tt CLASS=literal>String</tt> that was passed to the constructor
+of this <tt CLASS=literal>Locale</tt> object is used instead. 
+These strings are normally two-letter ISO codes. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.223">public String getDisplayName(Locale inLocale)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>inLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The locale to 
+use when constructing the string representation. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string that represents this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method constructs a string that represents this <tt CLASS=literal>Locale</tt> 
+by calling <tt CLASS=literal>getDisplayLanguage(inLocale)</tt>, 
+<tt CLASS=literal>getDisplayCountry(inLocale)</tt>, 
+and <tt CLASS=literal>getDisplayVariant(inLocale)</tt>. 
+In other words, the method returns a string that contains the country name, 
+language name, and variant in a form appropriate for <tt CLASS=literal>inLocale</tt>. 
+If any of the names cannot be found, the 
+<tt CLASS=literal>String</tt> that was passed to the constructor
+of this <tt CLASS=literal>Locale</tt> object is used instead. 
+These strings are normally two-letter ISO codes. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.198">getDisplayVariant</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.224">public final String getDisplayVariant()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>The variant of this Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the variant of this <tt CLASS=literal>Locale</tt> 
+as a human-readable string in a form appropriate for this <tt CLASS=literal>Locale</tt>. 
+If the variant name cannot be found, this method returns the same value 
+as <tt CLASS=literal>getVariant()</tt>. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.225">public String getDisplayVariant(Locale inLocale)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>inLocale</tt><br>
+<DD>
+
+<P CLASS=para>
+The locale to 
+use when finding the variant name. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The variant of this <tt CLASS=literal>Locale</tt>, 
+localized to the given locale. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the variant of this <tt CLASS=literal>Locale</tt> 
+as a human-readable string in a form appropriate for <tt CLASS=literal>inLocale</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.199">getISO3Country</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.226">public String getISO3Country() throws MissingResourceException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The ISO three-letter country code of this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>MissingResourceException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the requested code cannot be found. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the country of this <tt CLASS=literal>Locale</tt> 
+as a three-letter ISO country code. The country code is obtained from a 
+<tt CLASS=literal>ResourceBundle</tt> for this <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.200">getISO3Language</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.227">public String getISO3Language() throws MissingResourceException</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The ISO three-letter language code of this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Throws<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>MissingResourceException</tt><br>
+<DD>
+
+<P CLASS=para>
+If the requested code cannot be found. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the language of this <tt CLASS=literal>Locale</tt> 
+as a three-letter ISO language code. The language code is obtained from 
+a <tt CLASS=literal>ResourceBundle</tt> for this <tt CLASS=literal>Locale</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.201">getLanguage</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.228">public String getLanguage()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The language of this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a <tt CLASS=literal>String</tt> that represents
+the language of this <tt CLASS=literal>Locale</tt>. This <tt CLASS=literal>String</tt>
+is the same <tt CLASS=literal>String</tt> that was passed to the constructor
+of this <tt CLASS=literal>Locale</tt> object. The <tt CLASS=literal>String</tt>
+is normally a two-letter ISO-639 language code. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.202">getVariant</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.229">public String getVariant()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+The variant of this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns the variant code of this <tt CLASS=literal>Locale</tt>. 
+If no variant code is specified for this <tt CLASS=literal>Locale</tt>, 
+an empty string is returned. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.203">hashCode</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.230">public synchronized int hashCode()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A hashcode for this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.hashCode()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a hashcode for this object. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch17-REFSECT2-AUTOID.204">toString</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch17-REFSECT3-AUTOID.231">public final String toString()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A string representation of this <tt CLASS=literal>Locale</tt>. 
+
+<p>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object.toString()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+This method returns a string representation of this <tt CLASS=literal>Locale</tt>, 
+constructed from the language code, country code, and variant code. The 
+various codes are separated by underscore characters. If a code is missing, 
+it is omitted. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.88">Inherited Methods</A></h2>
+
+<DIV CLASS=informaltable>
+<P>
+<TABLE CLASS=INFORMALTABLE>
+<TR CLASS=row>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Method</TH>
+<TH ALIGN="LEFT">
+
+<P CLASS=para>
+Inherited From</TH>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>finalize()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>getClass()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notify()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>notifyAll()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait()</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+</TR>
+<TR CLASS=row>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>wait(long, int)</tt></TD>
+<TD ALIGN="LEFT">
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+<P>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch17-REFSECT1-AUTOID.89">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Cloneable</tt>, 
+<tt CLASS=literal>DateFormat</tt>, 
+<tt CLASS=literal>NumberFormat</tt>, 
+<tt CLASS=literal>ResourceBundle</tt>, 
+<tt CLASS=literal>Serializable</tt> 
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch17_11.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch17_13.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ListResourceBundle</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>MissingResourceException</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

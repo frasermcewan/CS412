@@ -1,0 +1,227 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 17] Printing</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 14:58:02 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 17</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch17_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JAWT-CH-17">17. Printing</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+PrintGraphics Interface<br>
+<A HREF="ch17_02.htm">PrintJob Class</A><BR>
+<A HREF="ch17_03.htm">Component Methods</A><BR>
+<A HREF="ch17_04.htm">Printing Example</A><BR>
+<A HREF="ch17_05.htm">Printing Arbitrary Content</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+Java 1.1 introduces the ability to print, a capability that was sadly missing 
+in Java 1.0, even though the <tt CLASS=literal>Component</tt> 
+class had <tt CLASS=literal>print()</tt> and <tt CLASS=literal>printAll()</tt> 
+methods. However, it is possible to print arbitrary content, including multipage documents. The printing facility in Java 1.1 is designed primarily to let a program 
+print its display area or any of the components within its display.<A NAME="CH17.PRINT"></A>
+
+<P CLASS=para>
+Printing is implemented with the help of one public interface, <tt CLASS=literal>PrintGraphics</tt>, 
+and one public class, <tt CLASS=literal>PrintJob</tt>, 
+of AWT. The real work is hidden behind classes provided with the toolkit 
+for your platform. On Windows NT/95 platforms, these classes are <tt CLASS=literal>sun.awt.windows.WPrintGraphics</tt> 
+and <tt CLASS=literal>sun.awt.windows.WPrintJob</tt>. 
+Other platforms have similarly named classes. 
+
+<P CLASS=para>
+Printing from an applet has security implications and is restricted by 
+the <tt CLASS=literal>SecurityManager</tt>. It is 
+reasonable to suppose that a browser will make it possible to print a page 
+containing an applet; in fact, Netscape has done so ever since Navigator 3.0. However, 
+this ability might not take advantage of Java's printing facility. 
+It isn't reasonable to suppose that an applet will be able to initiate 
+a print job on its own. You might allow a signed applet coming from a trusted 
+source to do so, but you wouldn't want to give any random applet 
+access to your printer. (If you don't understand why, imagine the 
+potential for abuse.) 
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JAWT-CH-17-SECT-1">17.1 PrintGraphics Interface</A></h2>
+
+<P CLASS=para>
+<A NAME="CH17.PRINT2"></A><A NAME="CH17.PRINT3"></A>Printing is similar to drawing an object on the screen. Just as you draw 
+onto a graphics context to display something on the screen, you draw onto 
+a "printing context" to create an image for printing. Furthermore, 
+the printing context and graphics context are very closely related. The 
+graphics context is an instance of the class <tt CLASS=literal>Graphics</tt>. 
+The printing context is also an instance of <tt CLASS=literal>Graphics</tt>, 
+with the additional requirement that it implement the <tt CLASS=literal>PrintGraphics</tt> 
+interface. Therefore, any methods that you use to draw graphics can also 
+be used for printing. Furthermore, the <tt CLASS=literal>paint()</tt> 
+method (which a component uses to draw itself on the screen) is also called 
+when a component must draw itself for printing. 
+
+<P CLASS=para>
+In short, to print, you get a special <tt CLASS=literal>Graphics</tt> 
+object that implements the <tt CLASS=literal>PrintGraphics</tt> 
+interface by calling the <tt CLASS=literal>getGraphics()</tt> 
+method of <tt CLASS=literal>PrintJob</tt> (discussed 
+later in this chapter) through <tt CLASS=literal>Toolkit</tt>. You 
+then call a component's <tt CLASS=literal>print()</tt> 
+or <tt CLASS=literal>printAll()</tt> method or a container's 
+<tt CLASS=literal>printComponents()</tt> method, with 
+this object as the argument. These methods arrange for a call to <tt CLASS=literal>paint()</tt>, 
+which can draw on the printing context to its heart's content. In 
+the simple case where you're just rendering the component on paper, 
+you shouldn't have to change <tt CLASS=literal>paint()</tt> 
+at all. Of course, if you are doing something more complex (that is, printing 
+something that doesn't look exactly like your component), you'll 
+have to modify <tt CLASS=literal>paint()</tt> to determine 
+whether it's painting on screen or on paper, and act accordingly. 
+The code would look something like this: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public void paint(Graphics g) {
+    if (g instanceof PrintGraphics) {
+        // Printing
+    }else {
+        // Painting
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If the graphics object you receive is an instance of <tt CLASS=literal>PrintGraphics</tt>, 
+you know that <tt CLASS=literal>paint()</tt> has been 
+called for a print request and can do anything specific to printing. As 
+I said earlier, you can use all the methods of <tt CLASS=literal>Graphics</tt> 
+to draw on <tt CLASS=literal>g</tt>. If you're 
+printing, though, you might do anything from making sure that you print 
+in black and white to drawing something completely different. (This might 
+be the trick you use to print the contents of a component rather than the 
+component itself. However, as of Java 1.1, it's impossible to prevent 
+the component from drawing itself. Remember that your <tt CLASS=literal>paint()</tt> 
+method was never responsible for drawing the component; it only drew additions 
+to the basic component. For the time being, it's the same with printing.) 
+
+<P CLASS=para>
+When you call <tt CLASS=literal>printComponents()</tt> 
+on a <tt CLASS=literal>Container</tt>, all the components 
+within the container will be printed. Early beta versions of 1.1 only painted 
+the outline of components within the container. The component should print as it appears on the screen. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JAWT-CH-17-SECT-1.1">Methods</A></h3>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>public abstract PrintJob getPrintJob () <img src="gifs/bstar.gif" alt="(New)" border=0> </I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>getPrintJob()</tt> method returns 
+the <tt CLASS=literal>PrintJob</tt> instance that 
+created this <tt CLASS=literal>PrintGraphics</tt> 
+instance. 
+
+<P CLASS=para>
+This seems like circular logic: you need a <tt CLASS=literal>PrintJob</tt> 
+to create a <tt CLASS=literal>PrintGraphics</tt> object, 
+but you can get a <tt CLASS=literal>PrintJob</tt> 
+only from a <tt CLASS=literal>PrintGraphics</tt> object. 
+To break the circle, you can get an initial <tt CLASS=literal>PrintJob</tt> 
+by calling the <tt CLASS=literal>getPrintJob()</tt> 
+method of <tt CLASS=literal>Toolkit</tt>. <tt CLASS=literal>getPrintJob()</tt> 
+looks like it will be useful primarily within <tt CLASS=literal>paint()</tt>, 
+where you don't have access to the original <tt CLASS=literal>PrintJob</tt> 
+object and need to get it from the graphics context. </DL>
+<P CLASS=para>
+System-provided <tt CLASS=literal>PrintGraphics</tt> 
+objects inherit their other methods from the <tt CLASS=literal>Graphics</tt> 
+class, which is discussed in <A HREF="ch02_01.htm">Chapter 2, <i>Simple Graphics</i></A>.[1] 
+The one method that's worth noting here is <tt CLASS=literal>dispose()</tt>. 
+In a regular <tt CLASS=literal>Graphics</tt> object, 
+calling <tt CLASS=literal>dispose()</tt> frees any 
+system resources the object requires. For a <tt CLASS=literal>PrintGraphics</tt> 
+object, <tt CLASS=literal>dispose()</tt> sends the 
+current object to the printer prior to deallocating its resources. Calling 
+<tt CLASS=literal>dispose()</tt> is therefore equivalent 
+to sending a form feed to eject the current page. 
+
+<blockquote class=footnote>
+<P CLASS=para>[1] 
+ 
+Anything can implement the <tt CLASS=literal>PrintGraphics</tt> 
+interface, not just subclasses of <tt CLASS=literal>Graphics</tt>. 
+However, in order for <tt CLASS=literal>paint()</tt> 
+and <tt CLASS=literal>print()</tt> to work, it must 
+be a subclass of <tt CLASS=literal>Graphics</tt>.
+</blockquote>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch16_07.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch17_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Reading and Writing the Clipboard</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>PrintJob Class</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

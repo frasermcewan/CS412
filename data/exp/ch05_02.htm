@@ -1,0 +1,657 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 5] 5.2 Methods</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:52:38 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 5<br>Objects in Java</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-2">5.2 Methods</A></h2>
+
+<P CLASS=para>
+<A NAME="CH05.METH"></A>Methods appear inside class bodies. They contain local variable declarations 
+and other Java statements that are executed by a calling
+thread when the method is invoked. Method declarations in Java look
+like ANSI C-style function declarations with two
+restrictions:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>A method in Java always specifies a return type (there's no
+default). The returned value can be a primitive numeric type, a
+reference type, or the type <tt CLASS=literal>void</tt>, which indicates
+no returned value.
+
+<P>
+<li CLASS=listitem>A method always 
+has a fixed number of arguments. The combination of method overloading 
+and true arrays removes most of the need for a variable number of arguments. 
+These techniques are type-safe and easier to use than C's variable 
+argument list mechanism. 
+
+<P>
+</UL>
+<P CLASS=para>
+Here's a simple example: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Bird { 
+    int xPos, yPos; 
+ 
+    double fly ( int x, int y ) { 
+        double distance = Math.sqrt( x*x + y*y ); 
+        flap( distance ); 
+        xPos = x; 
+        yPos = y; 
+        return distance; 
+    } 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, the class <tt CLASS=literal>Bird</tt> defines 
+a method, <tt CLASS=literal>fly()</tt>, that takes as arguments two 
+integers: <tt CLASS=literal>x</tt> and <tt CLASS=literal>y</tt>. It 
+returns a <tt CLASS=literal>double</tt> type value as a result. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-2.1">Local Variables</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>fly()</tt> method declares a local variable called
+<tt CLASS=literal>distance</tt> that it uses to compute the distance
+flown. A local variable is temporary;  it exists only
+within the scope of its method. Local variables are allocated and
+initialized when a method is invoked; they are normally destroyed when the
+method returns. They can't be referenced from outside the method
+itself. If the method is executing concurrently in different threads,
+each thread has its own copies of the method's local
+variables. A method's arguments also serve as local variables
+within the scope of the method.
+
+<P CLASS=para>
+An object created within a method and assigned to a
+local variable may or may not persist after the method has
+returned. As with all objects in Java, it depends on whether any
+references to the object remain. If an object is created, assigned to
+a local variable, and never used anywhere else, that object will no
+longer be referenced when the local variable is destroyed, so garbage
+collection will remove the object. If, however, we assign the object to
+an instance variable, pass it as an argument to another method, or
+pass it back as a return value, it may be saved by another variable
+holding its reference. We'll discuss object creation and garbage
+collection in more detail shortly.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-2.2">Shadowing</A></h3>
+
+<P CLASS=para>
+If a local variable and an instance variable have the same name, the
+local variable <I CLASS=emphasis>shadows</I> or hides the name of the
+instance variable within the scope of the method. In the following
+example, the local variables <tt CLASS=literal>xPos</tt> and
+<tt CLASS=literal>yPos</tt> hide the instance variables of the same name:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Bird { 
+    int xPos, yPos; 
+    int xNest, yNest; 
+    ... 
+    double flyToNest() { 
+        int xPos = xNest; 
+        int yPos = yNest: 
+        return ( fly( xPos, yPos ) ); 
+    } 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+When we set the values of the local variables in
+<tt CLASS=literal>flyToNest()</tt>, it has no effect on the values of the
+instance variables.
+
+<DIV CLASS=sect3>
+<h4 CLASS=sect3><A CLASS="TITLE" NAME="ch05-SECT3-AUTOID.1">this</A></h4>
+
+<P CLASS=para>
+The special reference <tt CLASS=literal>this</tt> refers to the
+current object.  You can use it any time you need to refer explicitly to the
+current object instance. Often, you don't need to use
+<tt CLASS=literal>this</tt> because the reference to the current object is
+implicit; this is the case with using instance variables and methods
+inside of a class. But we can use <tt CLASS=literal>this</tt> to refer
+explicitly to instance variables in the object, even if they are
+shadowed.
+
+<P CLASS=para>
+The subsequent example shows how we can use
+<tt CLASS=literal>this</tt> to allow us argument names that shadow
+instance variable names. This is a fairly common technique, as it
+saves your having to deliberately make up alternate
+names (as we'll try to emphasize in this book, names are important). 
+Here's how we could implement our
+<tt CLASS=literal>fly()</tt> method with shadowed variables:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Bird { 
+    int xPos, yPos; 
+ 
+    double fly ( int xPos, int yPos ) { 
+        double distance = Math.sqrt( xPos*xPos + yPos*yPos ); 
+        flap( distance ); 
+        this.xPos = xPos; 
+        this.yPos = yPos; 
+        return distance; 
+    } 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this example, the expression <tt CLASS=literal>this.xPos</tt>
+refers to the instance variable <tt CLASS=literal>xPos</tt> and assigns it
+the value of the local variable <tt CLASS=literal>xPos</tt>, which would
+otherwise hide its name. The only reason we need to use
+<tt CLASS=literal>this</tt> in the above example is because we've
+used argument names that hide our instance variables, and we want to
+refer to the instance variables.
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-2.3">Static Methods</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.STAT6"></A><A NAME="CH05.STAT7"></A>Static methods (class methods), like static variables, belong to the
+class and not to an individual instance of the class. What does this
+mean?  
+Well, foremost, a static method lives outside of any particular class
+instance.  It can be invoked by name, through the class name, without any 
+objects around.  
+Because it is not bound to a particular object instance, a static method 
+can only directly access other static members of classes.  
+It can't directly see any instance variables or call any instance methods,
+because to do so we'd have to ask: "on which instance?"
+Static methods can be called from instances, just like instance methods, but
+the important thing is that they can also be used independently.
+
+<P CLASS=para>
+Our <tt CLASS=literal>fly()</tt> method uses a static method:
+<tt CLASS=literal>Math.sqrt()</tt>. This method is defined by the
+<tt CLASS=literal>java.lang.Math</tt> class; we'll explore this
+class in detail in <A HREF="ch07_01.htm">Chapter 7, <i>Basic Utility Classes</i></A>. 
+For now, the important
+thing to note is that <tt CLASS=literal>Math</tt> is the name of a class
+and not an instance of a <tt CLASS=literal>Math</tt> object (you can't even make an instance of
+<tt CLASS=literal>Math</tt>). Because <tt CLASS=literal>static</tt> methods
+can be invoked wherever the class name is available, class methods are
+closer to normal C-style functions. Static methods are
+particularly useful for utility methods that perform work that might
+be useful either independently of instances of the class or in
+creating instances of the class.
+
+<P CLASS=para>
+For example, in our <tt CLASS=literal>Bird</tt> class we can enumerate 
+all types of birds that can be created: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Bird { 
+    ... 
+    static String [] getBirdTypes( ) { 
+    String [] types; 
+    // Create list...
+        return types; 
+    } 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here we've defined a <tt CLASS=literal>static</tt> method
+<tt CLASS=literal>getBirdTypes()</tt> that returns an array of strings
+containing bird names. We can use <tt CLASS=literal>getBirdTypes()</tt>
+from within an instance of <tt CLASS=literal>Bird</tt>, just like an
+instance method. However, we can also call it from other classes,
+using the <tt CLASS=literal>Bird</tt> class name as a reference:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+String [] names = Bird.getBirdTypes(); 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Perhaps a special version of the <tt CLASS=literal>Bird</tt> class
+constructor accepts the name of a bird type. We could use this list to
+decide what kind of bird to create.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-2.4">Local Variable Initialization</A></h3>
+
+<P CLASS=para>
+In the <tt CLASS=literal>flyToNest()</tt> example, we made a point of
+initializing the local variables <tt CLASS=literal>xPos</tt> and
+<tt CLASS=literal>yPos</tt>. Unlike instance variables, local variables
+must be initialized before they can be used. It's a compile-time
+error to try to access a local variable without first assigning it a value:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+void myMethod() { 
+    int foo = 42; 
+    int bar; 
+ 
+    // bar += 1;       // Compile time error, bar uninitialized
+ 
+    bar = 99; 
+    bar += 1;       // ok here
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Notice that this doesn't imply local variables have to be
+initialized when declared, just that the first time they are
+referenced must be in an assignment. More subtle possibilities arise
+when making assignments inside of conditionals:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+void myMethod { 
+    int foo; 
+ 
+    if ( someCondition ) { 
+        foo = 42; 
+        ... 
+    } 
+ 
+    foo += 1;                  // Compile time error 
+                               // foo may not have been initialized 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In the above example, <tt CLASS=literal>foo</tt> is initialized only if
+<tt CLASS=literal>someCondition</tt> is <tt CLASS=literal>true</tt>. The
+compiler doesn't let you make this wager, so it flags the use of
+<tt CLASS=literal>foo</tt> as an error. We could correct this situation in
+several ways. We could initialize the variable to a default value in
+advance or move the usage inside of the conditional. We could also make sure
+the path of execution doesn't reach the uninitialized variable through
+some other means, depending on what makes sense for our particular
+application. For example, we could return from the method
+abruptly:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+int foo; 
+... 
+if ( someCondition ) { 
+    foo = 42; 
+    ... 
+} else 
+    return;   
+ 
+foo += 1; 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this case, there's no chance of reaching <tt CLASS=literal>foo</tt> in
+an unused state and the compiler allows the use of
+<tt CLASS=literal>foo</tt> after the conditional.
+
+<P CLASS=para>
+Why is Java so picky about local variables? One of the most common (and 
+insidious) sources of error in C or C++ is forgetting to initialize local 
+variables, so Java tries to help us out. If it didn't, Java would suffer the same potential irregularities as C or C++.[2]
+
+<blockquote class=footnote>
+<P CLASS=para>[2] 
+As with <tt CLASS=literal>malloc</tt>'ed storage in C or C++, Java objects
+and their instance variables are allocated on a heap, which allows
+them default values once, when they are created. Local
+variables, however, are allocated on the Java virtual machine
+stack. As with the stack in C and C++, failing to initialize these
+could mean successive method calls could receive garbage values,
+and program execution might be inconsistent or implementation
+dependent.
+</blockquote>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-2.5">Argument Passing and References</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.PASS1"></A><A NAME="CH05.PASS2"></A><A NAME="CH05.PASS3"></A>Let's consider what happens when you pass arguments to a method.
+All primitive data types (e.g., <tt CLASS=literal>int</tt>,
+<tt CLASS=literal>char</tt>, <tt CLASS=literal>float</tt>) are passed by
+value. Now you're probably used to the idea that reference types
+(i.e., any kind of object, including arrays and strings) are used
+through references. An important distinction (that we discussed briefly
+in Chapter 4) is that the references themselves (the pointers to these objects) 
+are actually primitive types, and are passed by value too.
+
+<P CLASS=para>
+Consider the following piece of code: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// somewhere
+    int i = 0; 
+    SomeKindOfObject obj = new SomeKindOfObject(); 
+    myMethod( i, obj ); 
+    ... 
+void myMethod(int j, SomeKindOfObject o) { 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The first chunk of code calls <tt CLASS=literal>myMethod()</tt>, passing 
+it two arguments. The first argument, <tt CLASS=literal>i</tt>, is passed 
+by value; when the method is called, the value of <tt CLASS=literal>i</tt> 
+is copied into the method's parameter <tt CLASS=literal>j</tt>. 
+If <tt CLASS=literal>myMethod()</tt> changes the value of <tt CLASS=literal>i</tt>, 
+it's changing only its copy of the local variable. 
+
+<P CLASS=para>
+In the same way, a copy of the reference to
+<tt CLASS=literal>obj</tt> is placed into the reference variable
+<tt CLASS=literal>o</tt> of <tt CLASS=literal>myMethod()</tt>. Both
+references refer to the same object, of course, and any changes made
+through either reference affect the actual (single) object instance,
+but there are two copies of the pointer. If we change the value of,
+say, <tt CLASS=literal>o.size</tt>, the change is visible through either
+reference. However, if <tt CLASS=literal>myMethod()</tt> changes the
+reference <tt CLASS=literal>o</tt> itself--to point to another
+object--it's affecting only its copy. In this sense, passing the
+reference is like passing a pointer in C and
+<I CLASS=emphasis>unlike</I> passing by reference in C++.
+
+<P CLASS=para>
+What if <tt CLASS=literal>myMethod()</tt> needs to modify the calling 
+method's notion of the <tt CLASS=literal>obj</tt> reference as well (i.e., 
+make <tt CLASS=literal>obj</tt> point to a different object)? The easy 
+way to do that is to wrap <tt CLASS=literal>obj</tt> inside some kind 
+of object.  A good candidate would be to wrap the object up as the lone
+element in an array:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+SomeKindOfObject [] wrapper = { obj };
+</PRE>
+</DIV>
+
+<P CLASS=para>
+All parties could then refer to the object as wrapper[0] and would have
+the ability to change the reference.  This is not very asthetically 
+pleasing, but it does illustrate that what is needed is the level of 
+indirection.  Another possibility is to use 
+<tt CLASS=literal>this</tt> to pass a reference 
+to the calling object. 
+
+<P CLASS=para>
+Let's look at another piece of code that could be from an implementation of 
+a linked list: 
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class Element { 
+    public Element nextElement; 
+ 
+    void addToList( List list ) { 
+        list.addToList( this ); 
+    } 
+} 
+ 
+class List { 
+    void addToList( Element element ) { 
+        ... 
+        element.nextElement = getNextElement(); 
+    } 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Every element in a linked list contains a pointer to the next element
+in the list. In this code, the <tt CLASS=literal>Element</tt> class
+represents one element; it includes a method for adding itself to the
+list. The <tt CLASS=literal>List</tt> class itself contains a method for
+adding an arbitrary <tt CLASS=literal>Element</tt> to the list. The method
+<tt CLASS=literal>addToList()</tt> calls
+<tt CLASS=literal>addToList()</tt> with the argument
+<tt CLASS=literal>this</tt> (which is, of course, an
+<tt CLASS=literal>Element</tt>). <tt CLASS=literal>addToList()</tt> can use
+the <tt CLASS=literal>this</tt> reference to modify the
+<tt CLASS=literal>Element</tt>'s <tt CLASS=literal>nextElement</tt>
+instance variable. The same technique can be used in conjunction with 
+interfaces to implement callbacks for arbitrary method invocations.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-5-SECT-2.6">Method Overloading</A></h3>
+
+<P CLASS=para>
+<A NAME="CH05.OVER1"></A><A NAME="CH05.OVER2"></A><I CLASS=emphasis>Method overloading</I> is the ability to define 
+multiple methods with the same name in a class; when the method is invoked, 
+the compiler picks the correct one based on the arguments passed to the 
+method. This implies, of course, that overloaded methods must have different 
+numbers or types of arguments. In a later section we'll look at method 
+overriding, which occurs when we declare methods with identical signatures 
+in different classes. 
+
+<P CLASS=para>
+<A NAME="CH05.PRINT"></A>Method overloading is a powerful and useful feature. It's another form of 
+polymorphism (ad-hoc polymorphism).  The idea is to create methods that act 
+in the same way on different types of arguments and have what appears to
+be a single method that operates on any of the types. The Java
+<tt CLASS=literal>PrintStream</tt>'s <tt CLASS=literal>print()</tt>
+method is a good example of method overloading in action. As you've
+probably deduced by now, you 
+can print a string representation of just
+about anything using the expression:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+System.out.print( <tt CLASS=replaceable><i>argument</i></tt> ) 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The variable <tt CLASS=literal>out</tt> is a reference to an object (a
+<tt CLASS=literal>PrintStream</tt>) that defines nine different versions
+of the <tt CLASS=literal>print()</tt> method. They take, respectively,
+arguments of the following types: <tt CLASS=literal>Object</tt>,
+<tt CLASS=literal>String</tt>, <tt CLASS=literal>char[]</tt>,
+<tt CLASS=literal>char</tt>, <tt CLASS=literal>int</tt>,
+<tt CLASS=literal>long</tt>, <tt CLASS=literal>float</tt>,
+<tt CLASS=literal>double</tt>, and <tt CLASS=literal>boolean</tt>.
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+class PrintStream { 
+    void print( Object arg ) { ... } 
+    void print( String arg ) { ... } 
+    void print( char [] arg ) { ... } 
+    ... 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can invoke the <tt CLASS=literal>print()</tt> method 
+with any of these types as an argument, and it's printed in an appropriate 
+way. In a language without method overloading, this would require something 
+more cumbersome, such as a separate method for printing each type 
+of object. Then it would be your responsibility to remember what method 
+to use for each data type. 
+
+<P CLASS=para>
+In the above example, <tt CLASS=literal>print()</tt> has been
+overloaded to support two reference types: <tt CLASS=literal>Object</tt>
+and <tt CLASS=literal>String</tt>. What if we try to call
+<tt CLASS=literal>print()</tt> with some other reference type? Say,
+perhaps, a <tt CLASS=literal>Date</tt> object?  The answer is that since
+<tt CLASS=literal>Date</tt> is a subclass of <tt CLASS=literal>Object</tt>,
+the <tt CLASS=literal>Object</tt> method is selected. When there's not an
+exact type match, the compiler searches for an acceptable, assignable
+match. Since <tt CLASS=literal>Date</tt>, like all classes, is a subclass
+of <tt CLASS=literal>Object</tt>, a <tt CLASS=literal>Date</tt> object can be
+assigned to a variable of type <tt CLASS=literal>Object</tt>. It's
+therefore an acceptable match, and the <tt CLASS=literal>Object</tt>
+method is selected.
+
+<P CLASS=para>
+But what if there's more than one possible match? Say, for
+example, we tried to print a subclass of <tt CLASS=literal>String</tt>
+called <tt CLASS=literal>MyString</tt>. (Of course, the
+<tt CLASS=literal>String</tt> class is <tt CLASS=literal>final</tt>, so it
+can't be subclassed, but allow me this brief transgression for
+purposes of explanation.) <tt CLASS=literal>MyString</tt> is assignable to
+either <tt CLASS=literal>String</tt> or to <tt CLASS=literal>Object</tt>.
+Here the compiler makes a determination as to which match is "better"
+and selects that method. In this case it's the 
+<tt CLASS=literal>String</tt> method.
+
+<P CLASS=para>
+The intuitive explanation is that the <tt CLASS=literal>String</tt> class
+is closer to <tt CLASS=literal>MyString</tt> in the inheritance hierarchy.
+It is a <I CLASS=emphasis>more specific</I> match.  A more rigorous way
+of specifying it would be to say that a given method is more specific
+than another method with respect to some arguments it wants to accept
+if the argument types of the first method are all assignable to the
+argument types of the second method.  In this case, the
+<tt CLASS=literal>String</tt> method is more specific to a subclass of
+<tt CLASS=literal>String</tt> than the <tt CLASS=literal>Object</tt> method
+because type <tt CLASS=literal>String</tt> is assignable to type
+<tt CLASS=literal>Object</tt>.  The reverse is obviously not true.
+
+<P CLASS=para>
+If you're paying close attention, you may have noticed I
+said that the compiler resolves overloaded methods. Method overloading
+is not something that happens at run-time; this is an important
+distinction. It means that the selected method is chosen once, when
+the code is compiled. Once the overloaded method is selected, the
+choice is fixed until the code is recompiled, even if the class
+containing the called method is later revised and an even more specific
+overloaded method is added. This is in contrast to overridden
+(virtual) methods, which are located at run-time and can be found even
+if they didn't exist when the calling class was compiled. We'll
+talk about method overriding later in the chapter.
+
+<P CLASS=para>
+One last note about overloading. In earlier chapters, we've pointed 
+out that Java doesn't support programmer-defined overloaded operators, 
+and that <tt CLASS=literal>+</tt> is the only system-defined overloaded 
+operator. If you've been wondering what an overloaded operator is, 
+I can finally clear up that mystery. In a language like C++, you can customize 
+operators such as <tt CLASS=literal>+</tt> and <tt CLASS=literal>*</tt> 
+to work with objects that you create. For example, you could create a class 
+<tt CLASS=literal>Complex</tt> that implements complex numbers, and 
+then overload methods corresponding to <tt CLASS=literal>+</tt> 
+and <tt CLASS=literal>*</tt> to add and multiply 
+<tt CLASS=literal>Complex</tt> objects.
+Some people argue that operator overloading makes for elegant and readable 
+programs, while others say it's just "syntactic sugar" 
+that makes for obfuscated code. The Java designers clearly espoused 
+the later opinion when they chose not to support programmer-defined overloaded 
+operators.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_01.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch05_03.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Classes</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Object Creation</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

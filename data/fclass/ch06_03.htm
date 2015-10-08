@@ -1,0 +1,329 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] 6.3 File Manipulation</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:13:59 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6<br>I/O</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-6-SECT-3">6.3 File Manipulation</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.FILES"></A>While streams are used to handle most types of I/O in Java, there 
+are some nonstream-oriented classes in <tt CLASS=literal>java.io</tt> 
+that are provided for file manipulation. Namely, the <tt CLASS=literal>File</tt> 
+class represents a file on the local filesystem, while the <tt CLASS=literal>RandomAccessFile</tt> 
+class provides nonsequential access to data in a file. In addition, the 
+<tt CLASS=literal>FilenameFilter</tt> interface can 
+be used to filter a list of filenames. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-3.1">File</A></h3>
+
+<P CLASS=para>
+<A NAME="CH06.CLASS"></A>
+The <tt CLASS=literal>File</tt> class represents a file on the local
+filesystem. You can use an instance of the <tt CLASS=literal>File</tt>
+class to identify a file, obtain information about the file, and even
+change information about the file. The easiest way to create a
+<tt CLASS=literal>File</tt> is to pass a filename to the
+<tt CLASS=literal>File</tt> constructor, like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new File("readme.txt")
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Although the methods that the <tt CLASS=literal>File</tt> class provides
+for manipulating file information are relatively platform independent,
+filenames must follow the rules of the local filesystem.  The
+<tt CLASS=literal>File</tt> class does provide some information that can
+be helpful in interpreting filenames and path
+specifications. The variable <tt CLASS=literal>separatorChar</tt>
+specifies the system-specific character used to separate the name of a
+directory from what follows.[3]
+In a Windows environment, this is a backslash
+(<tt CLASS=literal>\</tt>), while in a UNIX or Macintosh environment
+it is a forward slash (<tt CLASS=literal>/</tt>).  You can create a
+<tt CLASS=literal>File</tt> object that refers to a file called
+<tt CLASS=literal>readme.txt</tt> in a directory called
+<tt CLASS=literal>myDir</tt> as follows:
+
+<blockquote class=footnote>
+<P CLASS=para>[3] 
+ 
+This information is also available as
+<tt CLASS=literal>System.getProperty('file.separator')</tt>,
+which is how the <tt CLASS=literal>File</tt> class gets it.
+</blockquote>
+<DIV CLASS=screen>
+<P>
+<PRE>
+new File("myDir" + File.separatorChar + "readme.txt")
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>File</tt> class also provides some constructors that
+make this task easier. For example, there is a <tt CLASS=literal>File</tt>
+constructor that takes two strings as arguments: the first string is
+the name of a directory and the second string is the name of a
+file. The following example does the exact same thing as the previous
+example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+new File("myDir", "readme.txt")
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>File</tt> class has another 
+constructor that allows you to specify the directory of a file using a 
+<tt CLASS=literal>File</tt> object instead of a <tt CLASS=literal>String</tt>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+File dir = new File("myDir");
+File f = new File(dir, "readme.txt");
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Sometimes a program needs to process a list of files that have been passed 
+to it in a string. For example, such a list of files is passed to the Java 
+environment by the <tt CLASS=literal>CLASSPATH</tt> 
+environment variable and can be accessed by the expression: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+System.getProperty("java.class.path")
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This list contains one or more filenames separated by separator characters. 
+In a Windows or Macintosh environment, the separator character is a semicolon 
+(<tt CLASS=literal>;</tt>), while in a UNIX environment, 
+the separator character is a colon (<tt CLASS=literal>:</tt>). 
+The system-specific separator character is specified by the <tt CLASS=literal>pathSeparatorChar</tt> 
+variable. Thus, to turn the value of <tt CLASS=literal>CLASSPATH</tt> 
+into a collection of <tt CLASS=literal>File</tt> objects, 
+we can write: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+StringTokenizer s;
+Vector v = new Vector();
+s = new StringTokenizer(System.getProperty("java.class.path"), 
+                        File.pathSeparator);
+while (s.hasMoreTokens())
+    v.addElement(new File(s.nextToken()));
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can retrieve the pathname of the file represented by a <tt CLASS=literal>File</tt> 
+object with <tt CLASS=literal>getPath()</tt>, the 
+filename without any path information with <tt CLASS=literal>getName()</tt>, 
+and the directory name with <tt CLASS=literal>getParent()</tt>. 
+
+<P CLASS=para>
+The <tt CLASS=literal>File</tt> class also defines 
+methods that return information about the actual file represented by a 
+<tt CLASS=literal>File</tt> object. Use <tt CLASS=literal>exists()</tt> 
+to check whether or not the file exists. <tt CLASS=literal>isDirectory()</tt> 
+and <tt CLASS=literal>isFile()</tt> tell whether the 
+file is a file or a directory. If the file is a directory, you can use 
+<tt CLASS=literal>list()</tt> to get an array of filenames 
+for the files in that directory. The <tt CLASS=literal>canRead()</tt> 
+and <tt CLASS=literal>canWrite()</tt> methods indicate 
+whether or not a program is allowed to read from or write to a file. You 
+can also retrieve the length of a file with <tt CLASS=literal>length()</tt> 
+and its last modified date with <tt CLASS=literal>lastModified()</tt>. 
+
+<P CLASS=para>
+A few <tt CLASS=literal>File</tt> methods allow you 
+to change the information about a file. For example, you can rename a file 
+with <tt CLASS=literal>rename()</tt> and delete it 
+with <tt CLASS=literal>delete()</tt>. The <tt CLASS=literal>mkdir()</tt> 
+and <tt CLASS=literal>mkdirs()</tt> methods provide 
+a way to create directories within the filesystem. 
+
+<P CLASS=para>
+Many of these methods can throw a <tt CLASS=literal>SecurityException</tt> 
+if a program does not have permission to access the filesystem, or particular 
+files within it. If a <tt CLASS=literal>SecurityManager</tt> 
+has been installed, the <tt CLASS=literal>checkRead()</tt> 
+and <tt CLASS=literal>checkWrite()</tt> methods of 
+the <tt CLASS=literal>SecurityManager</tt> verify whether or not the program has permission to access the filesystem. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-3.2">FilenameFilter</A></h3>
+
+<P CLASS=para>
+The purpose of the <tt CLASS=literal>FilenameFilter</tt> interface is to
+provide a way for an object to decide which filenames should be
+included in a list of filenames. A class that implements the
+<tt CLASS=literal>FilenameFilter</tt>
+interface must define a method called
+<tt CLASS=literal>accept()</tt>.  This method is passed
+a <tt CLASS=literal>File</tt> object that identifies a directory and a
+<tt CLASS=literal>String</tt> that names a file. The
+<tt CLASS=literal>accept()</tt> method is expected to
+return <tt CLASS=literal>true</tt> if the specified file should be
+included in the list, or <tt CLASS=literal>false</tt> if the file should
+not be included. Here is an example of a simple
+<tt CLASS=literal>FilenameFilter</tt>
+class that only allows files with a specified suffix to be in a list:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.io.File;
+import java.io.FilenameFilter;
+public class SuffixFilter implements FilenameFilter {
+    private String suffix;
+    public SuffixFilter(String suffix) {
+        this.suffix = "." + suffix;
+    }
+    public boolean accept(File dir, String name) {
+        return name.endsWith(suffix);
+    }
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+A <tt CLASS=literal>FilenameFilter</tt> object can be passed as a
+parameter to the <tt CLASS=literal>list()</tt> method
+of <tt CLASS=literal>File</tt> to filter the list that it creates. You can
+also use a <tt CLASS=literal>FilenameFilter</tt> to limit the choices
+shown in a <tt CLASS=literal>FileDialog</tt>.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-3.3">RandomAccessFile</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>RandomAccessFile</tt> class provides a way to read
+from and write to a file in a nonsequential manner.  The
+<tt CLASS=literal>RandomAccessFile</tt> class has two constructors that
+both take two arguments. The first argument specifies the file to
+open, either as a <tt CLASS=literal>String</tt> or a
+<tt CLASS=literal>File</tt> object. The second argument is a
+<tt CLASS=literal>String</tt> that must be either <tt CLASS=literal>"r"</tt>
+or <tt CLASS=literal>"rw"</tt>.  If the second argument is
+<tt CLASS=literal>"r"</tt>, the file is opened for reading only. If the
+argument is <tt CLASS=literal>"rw"</tt>, however, the file is opened for
+both reading and writing. The
+<tt CLASS=literal>close()</tt> method closes the
+file. Both constructors and all the methods of the
+<tt CLASS=literal>RandomAccessFile</tt> class can throw an
+<tt CLASS=literal>IOException</tt> if they encounter an error.
+
+<P CLASS=para>
+The <tt CLASS=literal>RandomAccessFile</tt> class defines three different
+<tt CLASS=literal>read()</tt> methods for reading bytes from a file. The
+<tt CLASS=literal>RandomAccessFile</tt> class also implements the
+<tt CLASS=literal>DataInput</tt> interface, so it provides additional
+methods for reading from a file. Most of these additional methods are
+related to reading Java primitive types in a machine-independent
+way. Multibyte quantities are read assuming the most significant byte
+is first and the least significant byte is last.  All of these methods
+handle an attempt to read past the end of file by throwing an
+<tt CLASS=literal>EOFException</tt>.
+
+<P CLASS=para>
+The <tt CLASS=literal>RandomAccessFile</tt> class also defines three
+different <tt CLASS=literal>write()</tt> methods for writing bytes of
+output. The <tt CLASS=literal>RandomAccessFile</tt> class also implements
+the <tt CLASS=literal>DataOutput</tt> interface, so it provides additional
+methods for writing to a file. Most of these additional methods are
+related to writing Java primitive types in a machine-independent
+way. Again, multibyte quantities are written with the most
+significant byte first and the least significant byte last.
+
+<P CLASS=para>
+The <tt CLASS=literal>RandomAccessFile</tt> class would not live up to its
+name if it did not provide a way to access a file in a nonsequential
+manner. The <tt CLASS=literal>getFilePointer()</tt> method returns the
+current position in the file, while the <tt CLASS=literal>seek()</tt>
+method provides a way to set the position. Finally, the
+<tt CLASS=literal>length()</tt> method returns the length of the file in bytes.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Output Streams and Writers</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Object Serialization</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

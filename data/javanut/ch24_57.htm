@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 24] 24.57 java.io.Reader (JDK 1.1)</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 16:22:57 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch24_56.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 24<br>The java.io Package</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch24_58.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-57">24.57 java.io.Reader (JDK 1.1)</A></h2>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-57.1"></A></h3>
+</DIV>
+
+<P CLASS=para>
+This abstract class is the superclass of all character input
+streams.  It is an analog to <tt CLASS=literal>InputStream</tt>, which is
+the superclass of all byte input streams.  <tt CLASS=literal>Reader</tt>
+defines the basic methods that all character output streams
+provide.
+
+<P CLASS=para>
+<tt CLASS=literal>read()</tt> returns a single character or an array (or
+subarray) of characters, blocking if necessary.  It returns
+<tt CLASS=literal>-1</tt> if the end of the stream has been reached.
+<tt CLASS=literal>ready()</tt> returns <tt CLASS=literal>true</tt> if there are characters
+available for reading.  If <tt CLASS=literal>ready()</tt> returns
+<tt CLASS=literal>true</tt>, the next call to <tt CLASS=literal>read()</tt> is
+guaranteed not to block.  <tt CLASS=literal>close()</tt> closes the
+character input stream.  <tt CLASS=literal>skip()</tt> skips a specified
+number of characters in the input stream.  If
+<tt CLASS=literal>markSupported()</tt> returns <tt CLASS=literal>true</tt>, then
+<tt CLASS=literal>mark()</tt> "marks" a position in the stream and, if
+necessary, creates a look-ahead buffer of the specified size.
+Future calls to <tt CLASS=literal>reset()</tt> restore the stream to
+the marked position, if they occur within the specified
+look-ahead limit.  Note that not all stream  types support
+this mark-and-reset functionality.
+
+<P CLASS=para>
+To create a subclass of <tt CLASS=literal>Reader</tt>, you need only
+implement the three-argument version of <tt CLASS=literal>read()</tt> and
+<tt CLASS=literal>close()</tt>.  Most subclasses implement additional
+methods as well, however.
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public abstract class <tt CLASS=literal>Reader</tt> extends Object {
+    // <tt CLASS=literal>Protected Constructors</tt>
+            protected <tt CLASS=literal>Reader</tt>();
+            protected <tt CLASS=literal>Reader</tt>(Object <tt CLASS=literal>lock</tt>);
+    // <tt CLASS=literal>Protected Instance Variables</tt>
+            protected Object <tt CLASS=literal>lock</tt>;
+    // <tt CLASS=literal>Public Instance Methods</tt>
+            public abstract void <tt CLASS=literal>close</tt>() throws IOException;
+            public void <tt CLASS=literal>mark</tt>(int <tt CLASS=literal>readAheadLimit</tt>) throws IOException;
+            public boolean <tt CLASS=literal>markSupported</tt>();
+            public int <tt CLASS=literal>read</tt>() throws IOException;
+            public int <tt CLASS=literal>read</tt>(char[] <tt CLASS=literal>cbuf</tt>) throws IOException;
+            public abstract int <tt CLASS=literal>read</tt>(char[] <tt CLASS=literal>cbuf</tt>, int <tt CLASS=literal>off</tt>, int <tt CLASS=literal>len</tt>) throws IOException;
+            public boolean <tt CLASS=literal>ready</tt>() throws IOException;
+            public void <tt CLASS=literal>reset</tt>() throws IOException;
+            public long <tt CLASS=literal>skip</tt>(long <tt CLASS=literal>n</tt>) throws IOException;
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-57.2">Extended By:</A></h3>
+
+<P CLASS=para>
+BufferedReader, 
+CharArrayReader, 
+FilterReader, 
+InputStreamReader, 
+PipedReader, 
+StringReader
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-57.3">Passed To:</A></h3>
+
+<P CLASS=para>
+BufferedReader(), 
+FilterReader(), 
+LineNumberReader(), 
+PushbackReader(), 
+StreamTokenizer()
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JNUT2-CH-24-SECT-57.4">Type Of:</A></h3>
+
+<P CLASS=para>
+FilterReader.in
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch24_56.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch24_58.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>java.io.RandomAccessFile (JDK 1.0)</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>java.io.SequenceInputStream (JDK 1.0)</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

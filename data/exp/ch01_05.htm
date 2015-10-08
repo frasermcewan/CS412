@@ -1,0 +1,366 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 1] 1.5 Safety of Implementation</TITLE>
+<META NAME="author" CONTENT="Pat Niemeyer and Josh Peck">
+<META NAME="date" CONTENT="Tue Jul 22 18:47:21 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Exploring Java">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Exploring Java" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 1<br>Yet Another Language?</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch01_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-5">1.5 Safety of Implementation</A></h2>
+
+<P CLASS=para>
+<A NAME="CH01.ENCAP2"></A><A NAME="CH01.ENCAP1"></A>It's one thing to create a language that prevents you from shooting
+yourself in the foot; it's quite another to create one that prevents
+others from shooting you in the foot.
+
+<P CLASS=para>
+Encapsulation is a technique for hiding data and behavior
+within a class; it's an important part of object-oriented design. It
+helps you write clean, modular software. In most languages however,
+the visibility of data items is simply part of the relationship
+between the programmer and the compiler.  It's a matter of semantics,
+not an assertion about the actual security of the data in the context
+of the running program's environment.
+
+<P CLASS=para>
+When Bjarne Stroustrup chose the keyword
+<tt CLASS=literal>private</tt> to designate hidden members of classes in
+C++, he was probably thinking about shielding you from the messy
+details of a class developer's code, not the issues of shielding
+that developer's classes and objects from the onslaught of
+someone else's viruses and trojan horses. Arbitrary casting and
+pointer arithmetic in C or C++ make it trivial to violate access
+permissions on classes without breaking the rules of the
+language. Consider the following code:
+
+<DIV CLASS=programlisting>
+<P>
+<PRE>
+// C++  
+ 
+class Finances { 
+    private: 
+        char creditCardNumber[16]; 
+        ... 
+    }; 
+ 
+main() { 
+    Finances finances; 
+ 
+    // Forge a pointer to peek inside the class 
+    char *cardno = (char *)finances; 
+    printf("Card Number = %s\n", cardno); 
+} 
+</PRE>
+</DIV>
+
+<P CLASS=para>
+In this little C++ drama, we have written some code that
+violates the encapsulation of the <tt CLASS=literal>Finances</tt> class
+and pulls out some secret information. If this example seems
+unrealistic, consider how important it is to protect the foundation
+(system) classes of the run-time environment from similar kinds of
+attacks. If untrusted code can corrupt the components that provide
+access to real resources, such as the filesystem, the network, or the
+windowing system, it certainly has a chance at stealing your
+credit card numbers.
+
+<P CLASS=para>
+In Visual BASIC, it's also possible to
+compromise the system by peeking, poking, and, under
+DOS, installing interrupt handlers. Even some
+recent languages that have some commonalities with Java lack important
+security features. For example, the Apple Newton uses an
+object-oriented language called NewtonScript that is compiled into an
+interpreted byte-code format.  However, NewtonScript has no concept of
+public and private members, so a Newton application has free reign to
+access any information it finds.  General Magic's Telescript
+language is another example of a device-independent language that does
+not fully address security concerns.
+
+<P CLASS=para>
+If a Java application is to dynamically download code from an
+untrusted source on the Internet and run it alongside applications
+that might contain confidential information, protection has to extend
+very deep. The Java security model wraps three layers of protection
+around imported classes, as shown in <A HREF="ch01_05.htm#EXJ-CH-1-FIG-3">Figure 1.3</A>.
+
+<DIV CLASS=figure>
+<h4 CLASS=figure><A CLASS="TITLE" NAME="EXJ-CH-1-FIG-3">Figure 1.3: The Java security model</A></h4>
+
+
+<p>
+<img align=middle src="./figs/je0103.gif" alt="[Graphic: Figure 1-3]" width=503 height=182 border=0>
+
+</DIV>
+
+<P CLASS=para>
+At the outside, application-level security decisions are made
+by a security manager. A security manager controls access to system
+resources like the filesystem, network ports, and the windowing
+environment. A security manager relies on the ability of a class
+loader to protect basic system classes.  A class loader handles
+loading classes from the network. At the inner level, all system
+security ultimately rests on the Java verifier, which guarantees the
+integrity of incoming classes.
+
+<P CLASS=para>
+<A NAME="CH01.VERIFY1"></A><A NAME="CH01.VERIFY2"></A>The Java byte-code verifier is an integral part of the Java
+run-time system.  Class loaders and security managers, however, are
+implemented by applications that load applets, such as applet viewers
+and Web browsers. All these pieces need to be functioning properly
+to ensure security in the Java environment.[4]
+
+<blockquote class=footnote>
+<P CLASS=para>[4] 
+You may have seen reports about various security flaws in Java. While
+these weaknesses are real, it's important to realize that they have
+been found in the implementations of various components, namely
+Sun's byte-code verifier and Netscape's class loader and
+security manager, not in the basic security model itself. One of the
+reasons Sun has released the source code for Java is to encourage
+people to search for weaknesses, so they can be removed.
+</blockquote>
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-5.1">The Verifier</A></h3>
+
+<P CLASS=para>
+Java's first line of defense is the byte-code
+<I CLASS=emphasis>verifier</I>. The verifier reads byte-code before
+they are run and makes sure they are well-behaved and obey the
+basic rules of the Java language. A trusted Java compiler won't
+produce code that does otherwise. However, it's possible for a
+mischievous person to deliberately assemble bad code. It's the
+verifier's job to detect this.
+
+<P CLASS=para>
+Once code has been verified, it's considered safe from
+certain inadvertent or malicious errors. For example, verified code
+can't forge pointers or violate access permissions on objects. It
+can't perform illegal casts or use objects in ways other than they
+are intended. It can't even cause certain types of internal errors,
+such as overflowing or underflowing the operand stack. These
+fundamental guarantees underlie all of Java's security.
+
+<P CLASS=para>
+You might be wondering, isn't this kind of safety
+implicit in lots of interpreted languages? Well, while it's true that
+you shouldn't be able to corrupt the interpreter with bogus
+BASIC code, remember that the protection in most
+interpreted languages happens at a higher level.  Those languages are
+likely to have heavyweight interpreters that do a great deal of
+run-time work, so they are necessarily slower and more cumbersome.
+
+<P CLASS=para>
+By comparison, Java byte-code is a relatively light, low-level
+instruction set. The ability to statically verify the Java byte-code
+before execution lets the Java interpreter run at full speed with full
+safety, without expensive run-time checks. Of course, you are always
+going to pay the price of running an interpreter, but that's not
+a serious problem with the speed of modern
+CPUs. Java byte-code can also be compiled on the
+fly to native machine code, which has even less run-time overhead.
+
+<P CLASS=para>
+The verifier is a type of theorem prover. It steps through the
+Java byte-code and applies simple, inductive rules to determine
+certain aspects of how the byte-code will behave. This kind of
+analysis is possible because compiled Java byte-code has a lot more
+type information stored within it than other languages of this
+kind. The byte-code also has to obey a few extra rules that simplify
+its behavior. First, most byte-code instructions operate only on
+individual data types.  For example, with stack operations, there are
+separate instructions for object references and for each of the
+numeric types in Java. Similarly, there is a different instruction for
+moving each type of value into and out of a local variable.
+
+<P CLASS=para>
+Second, the type of object resulting from any operation is
+always known in advance. There are no byte-code operations that
+consume values and produce more than one possible type of value as
+output. As a result, it's always possible to look at the next
+instruction and its operands, and know the type of value that will
+result.
+
+<P CLASS=para>
+Because an operation always produces a known type, by looking
+at the starting state, it's possible to determine the types of all
+items on the stack and in local variables at any point in the
+future. The collection of all this type information at any given
+time is called the <I CLASS=emphasis>type state</I> of the stack; this
+is what Java tries to analyze before it runs an application. Java
+doesn't know anything about the actual values of stack and
+variable items at this time, just what kind of items they
+are. However, this is enough information to enforce the security rules
+and to insure that objects are not manipulated illegally.
+
+<P CLASS=para>
+To make it feasible to analyze the type state of the stack,
+Java places an additional restriction on how Java byte-code
+instructions are executed: all paths to the same point in the code
+have to arrive with exactly the same type state.[5]
+ This restriction makes it possible for the verifier to trace each
+branch of the code just once and still know the type state at all
+points. Thus, the verifier can insure that instruction types and stack
+value types always correspond, without actually following the
+execution of the code.
+
+<blockquote class=footnote>
+<P CLASS=para>[5] 
+The implications of this rule are mainly of interest to compiler
+writers.  The rule means that Java byte-code can't perform certain
+types of iterative actions within a single frame of execution. A
+common example would be looping and pushing values onto the
+stack. This is not allowed because the path of execution would return
+to the top of the loop with a potentially different type state on each
+pass, and there is no way that a static analysis of the code can
+determine whether it obeys the security rules.
+</blockquote>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-5.2">Class Loader</A></h3>
+
+<P CLASS=para>
+Java adds a second layer of security with a <I CLASS=emphasis>class
+loader</I>.  A class loader is responsible for bringing Java
+binary classes that contain byte-code into the interpreter. Every
+application that loads classes from the network must use a class
+loader to handle this task.
+
+<P CLASS=para>
+After a class has been loaded and passed through the verifier,
+it remains associated with its class loader. As a result, classes are
+effectively partitioned into separate namespaces based on their
+origin. When a class references another class, the request is served
+by its original class loader.  This means that classes retrieved from
+a specific source can be restricted to interact only with other
+classes retrieved from that same location.  For example, a
+Java-enabled Web browser can use a class loader to build a separate
+space for all the classes loaded from a given uniform resource
+locator (URL).
+
+<P CLASS=para>
+The search for classes always begins with the built-in Java
+system classes.  These classes are loaded from the locations specified
+by the Java interpreter's class path (see <A HREF="ch03_01.htm">Chapter 3, <i>Tools of the Trade</i></A>). Classes in the class path are loaded by the
+system only once and can't be replaced. This means that it's
+impossible for an applet to replace fundamental system classes with
+its own versions that change their functionality.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="EXJ-CH-1-SECT-5.3">Security Manager</A></h3>
+
+<P CLASS=para>
+<A NAME="CH01.SM7"></A>Finally, a security manager is responsible for making
+application-level security decisions. A security manager is an object
+that can be installed by an application to restrict access to system
+resources. The security manager is consulted every time the
+application tries to access items like the filesystem, network ports,
+external processes, and the windowing environment, so the security
+manager can allow or deny the request.
+
+<P CLASS=para>
+A security manager is most useful for applications that run
+untrusted code as part of their normal operation. Since a Java-enabled
+Web browser can run applets that may be retrieved from untrusted
+sources on the Net, such a browser needs to install a security manager
+as one of its first actions.  This security manager then restricts
+the kinds of access allowed after that point. This lets the
+application impose an effective level of trust before running an
+arbitrary piece of code. And once a security manager is installed, it
+can't be replaced.
+
+<P CLASS=para>
+A security manager can be as simple or complex as a particular
+application warrants. Sometimes it's sufficient simply to deny access
+to all resources or to general categories of services such as the
+filesystem or network.  But it's also possible to make sophisticated
+decisions based on high-level information. For example, a Java-enabled
+Web browser could implement a security manager that lets users
+specify how much an applet is to be trusted or that allows or denies
+access to specific resources on a case-by-case basis. Of course, this
+assumes that the browser can determine which applets it ought to
+trust. We'll see how this problem is solved shortly.
+
+<P CLASS=para>
+The integrity of a security manager is based on the protection
+afforded by the lower levels of the Java security model. Without the
+guarantees provided by the verifier and the class loader, high-level
+assertions about the safety of system resources are meaningless. The
+safety provided by the Java byte-code verifier means that the
+interpreter can't be corrupted or subverted, and that Java code has to
+use components as they are intended. This, in turn, means that a
+class loader can guarantee that an application is using the core Java
+system classes and that these classes are the only means of accessing
+basic system resources. With these restrictions in place, it's
+possible to centralize control over those resources with a security
+manager.
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch01_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch01_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Safety of Design</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Application and User Level Security</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

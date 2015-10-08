@@ -1,0 +1,860 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 6] I/O</TITLE>
+<META NAME="author" CONTENT="Mark Grand and Jonathan Knudsen">
+<META NAME="date" CONTENT="Fri Aug  8 16:13:39 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java Fundamental Classes Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Fundamental Classes Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 6</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<H1 CLASS=chapter><A CLASS="TITLE" NAME="JFC-CH-6">6. I/O</A></H1>
+
+<DIV CLASS=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Input Streams and Readers<br>
+<A HREF="ch06_02.htm">Output Streams and Writers</A><BR>
+<A HREF="ch06_03.htm">File Manipulation</A><BR>
+
+<p>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>java.io</tt> package contains the fundamental
+classes for performing input and output operations in Java. These I/O classes can be divided into four basic groups:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Classes for reading input from a stream. 
+
+<P>
+<li CLASS=listitem>Classes for writing output to a stream. 
+
+<P>
+<li CLASS=listitem>Classes for manipulating files. 
+
+<P>
+<li CLASS=listitem>Classes for serializing objects. 
+
+<P>
+</UL>
+<P CLASS=para>
+<A NAME="CH06.STREAMS"></A>All fundamental I/O in Java is based on <I CLASS=emphasis>streams</I>.
+A stream represents a flow of data, or a channel of
+communication. Conceptually, there is a reading process at one end of
+the stream and a writing process at the other end. Java 1.0 supported
+only byte streams, which meant that Unicode characters were not always
+handled correctly. As of Java 1.1, there are classes in
+<tt CLASS=literal>java.io</tt> for both byte streams and character
+streams. The character stream classes, which are called
+<I CLASS=emphasis>readers</I> and <I CLASS=emphasis>writers</I>, handle
+Unicode characters appropriately.
+
+<P CLASS=para>
+The rest of this chapter describes the classes in
+<tt CLASS=literal>java.io</tt> that read from and write to streams, as
+well as the classes that manipulate files. The classes for serializing
+objects are described in <A HREF="ch07_01.htm">Chapter 7, <i>Object Serialization</i></A>.
+
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1">6.1 Input Streams and Readers</A></h2>
+
+<P CLASS=para>
+<A NAME="CH06.IS"></A>The <tt CLASS=literal>InputStream</tt> class is an
+<tt CLASS=literal>abstract</tt> class that defines methods to read
+sequentially from a stream of bytes. Java provides subclasses of the
+<tt CLASS=literal>InputStream</tt> class for reading from files,
+<tt CLASS=literal>StringBuffer</tt> objects, and byte arrays, among other
+things. Other subclasses of <tt CLASS=literal>InputStream</tt> can be
+chained together to provide additional logic, such as keeping track of
+the current line number or combining multiple input sources into one
+logical input stream. It is also easy to define a subclass of
+<tt CLASS=literal>InputStream</tt> that reads from any other kind of data
+source.
+
+<P CLASS=para>
+In Java 1.1, the <tt CLASS=literal>Reader</tt> class 
+is an <tt CLASS=literal>abstract</tt> class that defines 
+methods to read sequentially from a stream of characters. Many of the byte-oriented 
+<tt CLASS=literal>InputStream</tt> subclasses have 
+character-based <tt CLASS=literal>Reader</tt> counterparts. 
+Thus, there are subclasses of <tt CLASS=literal>Reader</tt> 
+for reading from files, character arrays, and <tt CLASS=literal>String</tt> 
+objects. 
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.1">InputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>InputStream</tt> class is the 
+<tt CLASS=literal>abstract</tt> superclass of all 
+other byte input stream classes. It defines three <tt CLASS=literal>read()</tt> 
+methods for reading from a raw stream of bytes: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+read()
+read(byte[] b)
+read(byte[] b, int off, int len)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If there is no data available to read, these methods block until input 
+is available. The class also defines an <tt CLASS=literal>available()</tt> 
+method that returns the number of bytes that can be read without blocking 
+and a <tt CLASS=literal>skip()</tt> method that skips 
+ahead a specified number of bytes. The <tt CLASS=literal>InputStream</tt> 
+class defines a mechanism for marking a position in the stream and returning 
+to it later, via the <tt CLASS=literal>mark()</tt> 
+and <tt CLASS=literal>reset()</tt> methods. The <tt CLASS=literal>markSupported()</tt> 
+method returns <tt CLASS=literal>true</tt> in subclasses 
+that support these methods. 
+
+<P CLASS=para>
+Because the <tt CLASS=literal>InputStream</tt> class 
+is <tt CLASS=literal>abstract</tt>, you cannot create 
+a "pure" <tt CLASS=literal>InputStream</tt>. 
+However, the various subclasses of <tt CLASS=literal>InputStream</tt> 
+can be used interchangeably. For example, methods often take an <tt CLASS=literal>InputStream</tt> 
+as a parameter. Such a method accepts any subclass of <tt CLASS=literal>InputStream</tt> 
+as an argument. 
+
+<P CLASS=para>
+<tt CLASS=literal>InputStream</tt> is designed so that
+<tt CLASS=literal>read(byte[])</tt> and <tt CLASS=literal>read(byte[],</tt>
+<tt CLASS=literal>int,</tt> <tt CLASS=literal>int)</tt> both call
+<tt CLASS=literal>read()</tt>. Thus, when you subclass
+<tt CLASS=literal>InputStream</tt>, you only need to define the
+<tt CLASS=literal>read()</tt> method. However, for efficiency's sake, you
+should also override <tt CLASS=literal>read(byte[],</tt>
+<tt CLASS=literal>int,</tt> <tt CLASS=literal>int)</tt> with a method that can
+read a block of data more efficiently than reading each byte
+separately.
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.2">Reader</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>Reader</tt> class is the <tt CLASS=literal>abstract</tt> 
+superclass of all other character input stream classes. It defines nearly 
+the same methods as <tt CLASS=literal>InputStream</tt>, 
+except that the <tt CLASS=literal>read()</tt> methods 
+deal with characters instead of bytes: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+read()
+read(char[] cbuf)
+read(char[] cbuf, int off, int len)
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>available()</tt> method of <tt CLASS=literal>InputStream</tt> 
+has been replaced by the <tt CLASS=literal>ready()</tt> 
+method of <tt CLASS=literal>Reader</tt>, which simply 
+returns a flag that indicates whether or not the stream must block to read 
+the next character. 
+
+<P CLASS=para>
+<tt CLASS=literal>Reader</tt> is designed so that 
+<tt CLASS=literal>read()</tt> and <tt CLASS=literal>read(char[])</tt> 
+both call <tt CLASS=literal>read(char[],</tt> <tt CLASS=literal>int,</tt> 
+<tt CLASS=literal>int)</tt>. Thus, when you subclass 
+<tt CLASS=literal>Reader</tt>, you only need to define 
+the <tt CLASS=literal>read(char[],</tt> <tt CLASS=literal>int,</tt> 
+<tt CLASS=literal>int)</tt> method. Note that this 
+design is different from, and more efficient than, that of <tt CLASS=literal>InputStream</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.3">InputStreamReader</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>InputStreamReader</tt> class serves as a bridge
+between <tt CLASS=literal>InputStream</tt> objects and
+<tt CLASS=literal>Reader</tt> objects. Although an
+<tt CLASS=literal>InputStreamReader</tt> acts like a character stream, it
+gets its input from an underlying byte stream and uses a character
+encoding scheme to translate bytes into characters. When you create
+an <tt CLASS=literal>InputStreamReader</tt>, specify the underlying
+<tt CLASS=literal>InputStream</tt> and, optionally, the name of an
+encoding scheme. For example, the following code fragment creates an
+<tt CLASS=literal>InputStreamReader</tt> that reads characters from a file
+that is encoded using the ISO 8859-5 encoding:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+String fileName = "encodedfile.txt"; String encodingName = "8859_5";
+InputStreamReader in;
+try {
+   x FileInputStream fileIn = new FileInputStream(fileName);
+    in = new InputStreamReader(fileIn, encodingName);
+} catch (UnsupportedEncodingException e1) {
+    System.out.println(encodingName + " is not a supported encoding scheme.");
+} catch (IOException e2) {
+    System.out.println("The file " + fileName + " could not be opened.");
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.4">FileInputStream and FileReader</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>FileInputStream</tt> class is 
+a subclass of <tt CLASS=literal>InputStream</tt> that 
+allows a stream of bytes to be read from a file. The <tt CLASS=literal>FileInputStream</tt> 
+class has no explicit open method. Instead, the file is implicitly opened, 
+if appropriate, when the <tt CLASS=literal>FileInputStream</tt> 
+is created. There are three ways to create a <tt CLASS=literal>FileInputStream</tt>: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>You can create a <tt CLASS=literal>FileInputStream</tt> 
+by passing the name of a file to be read: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream f1 = new FileInputStream("foo.txt");
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>You can create a <tt CLASS=literal>FileInputStream</tt> 
+with a <tt CLASS=literal>File</tt> object: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+File f = new File("foo.txt");
+FileInputStream f2 = new FileInputStream(f);
+</PRE>
+</DIV>
+
+<P>
+<li CLASS=listitem>You can create a <tt CLASS=literal>FileInputStream</tt> 
+with a <tt CLASS=literal>FileDescriptor</tt> object. 
+A <tt CLASS=literal>FileDescriptor</tt> object encapsulates 
+the native operating system's representation of an open file. You 
+can get a <tt CLASS=literal>FileDescriptor</tt> from 
+a <tt CLASS=literal>RandomAccessFile</tt> by calling 
+its <tt CLASS=literal>getFD()</tt> 
+method. You create a <tt CLASS=literal>FileInputStream</tt> 
+that reads from the open file associated with a <tt CLASS=literal>RandomAccessFile</tt> 
+as follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+RandomAccessFile raf;
+raf = new RandomAccessFile("z.txt","r");
+FileInputStream f3 = new FileInputStream(raf.getFD());
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>FileReader</tt> class is a subclass of
+<tt CLASS=literal>Reader</tt> that reads a stream of
+characters from a file. The bytes in the file are converted to
+characters using the default character encoding scheme. If you do not
+want to use the default encoding scheme, you need to wrap an
+<tt CLASS=literal>InputStreamReader</tt> around a
+<tt CLASS=literal>FileInputStream</tt>, as shown above. You can create a
+<tt CLASS=literal>FileReader</tt> from a filename, a
+<tt CLASS=literal>File</tt> object, or a <tt CLASS=literal>FileDescriptor</tt>
+object, as described above for <tt CLASS=literal>FileInputStream</tt>.
+
+<P>
+</UL>
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.5">StringReader and StringBufferInputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>StringReader</tt> class is a 
+subclass of <tt CLASS=literal>Reader</tt> that gets 
+its input from a <tt CLASS=literal>String</tt> object. 
+The <tt CLASS=literal>StringReader</tt> class supports 
+mark-and-reset functionality via the <tt CLASS=literal>mark()</tt> 
+and <tt CLASS=literal>reset()</tt> methods. The following 
+example shows the use of <tt CLASS=literal>StringReader</tt>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+StringReader sr = new StringReader("abcdefg");
+try {
+    char[] buffer = new char[3];
+    sr.read(buffer);
+    System.out.println(buffer);
+} catch (IOException e) {
+    System.out.println("There was an error while reading.");
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This code fragment produces the following output: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+abc
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>StringBufferInputStream</tt> 
+class is the byte-based relative of <tt CLASS=literal>StringReader</tt>. 
+The entire class is deprecated as of Java 1.1 because it does not properly 
+convert the characters of the string to a byte stream; it simply chops 
+off the high eight bits of each character. Although the <tt CLASS=literal>markSupported()</tt> 
+method of <tt CLASS=literal>StringBufferInputStream</tt> 
+returns <tt CLASS=literal>false</tt>, the <tt CLASS=literal>reset()</tt> 
+method causes the next read operation to read from the beginning of 
+the <tt CLASS=literal>String</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.6">CharArrayReader and ByteArrayInputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>CharArrayReader</tt> 
+class is a subclass of <tt CLASS=literal>Reader</tt> 
+that reads a stream of characters from an array of characters. The <tt CLASS=literal>CharArrayReader</tt> 
+class supports mark-and-reset functionality via the <tt CLASS=literal>mark()</tt> 
+and <tt CLASS=literal>reset()</tt> methods. You can 
+create a <tt CLASS=literal>CharArrayReader</tt> 
+by passing a reference to a <tt CLASS=literal>char</tt> 
+array to a constructor like this:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+char[] c;
+...
+CharArrayReader r;
+r = new CharArrayReader(c);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can also create a <tt CLASS=literal>CharArrayReader</tt> 
+that only reads from part of an array of characters by passing an offset 
+and a length to the constructor. For example, to create a <tt CLASS=literal>CharArrayReader</tt> 
+that reads elements 5 through 24 of a <tt CLASS=literal>char</tt> 
+array you would write: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+r = new CharArrayReader(c, 5, 20);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>ByteArrayInputStream</tt> class 
+is just like <tt CLASS=literal>CharArrayReader</tt>, 
+except that it deals with bytes instead of characters. In Java 1.0, <tt CLASS=literal>ByteArrayInputStream</tt> 
+did not fully support <tt CLASS=literal>mark()</tt> 
+and <tt CLASS=literal>reset()</tt>; in Java 1.1 these 
+methods are completely supported. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.7">PipedInputStream and PipedReader</A></h3>
+
+<P CLASS=para>
+
+The <tt CLASS=literal>PipedInputStream</tt> class is a subclass of
+<tt CLASS=literal>InputStream</tt> that facilitates communication between
+threads. Because it reads bytes written by a connected
+<tt CLASS=literal>PipedOutputStream</tt>, a
+<tt CLASS=literal>PipedInputStream</tt> must be connected to a
+<tt CLASS=literal>PipedOutputStream</tt> to be useful. There are a few
+ways to connect a <tt CLASS=literal>PipedInputStream</tt> to a
+<tt CLASS=literal>PipedOutputStream</tt>. You can first create the
+<tt CLASS=literal>PipedOutputStream</tt> and pass it to the
+<tt CLASS=literal>PipedInputStream</tt> constructor like this:
+<DIV CLASS=screen>
+<P>
+<PRE>
+PipedOutputStream po = new PipedOutputStream();
+PipedInputStream pi = new PipedInputStream(po);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+You can also create the <tt CLASS=literal>PipedInputStream</tt> 
+first and pass it to the <tt CLASS=literal>PipedOutputStream</tt> 
+constructor like this: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PipedInputStream pi = new PipedInputStream();
+PipedOutputStream po = new PipedOutputStream(pi);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+
+The <tt CLASS=literal>PipedInputStream</tt> and
+<tt CLASS=literal>PipedOutputStream</tt> classes each have a
+<tt CLASS=literal>connect()</tt> method you can use to explicitly connect
+a <tt CLASS=literal>PipedInputStream</tt> and a
+<tt CLASS=literal>PipedOutputStream</tt> as follows:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PipedInputStream pi = new PipedInputStream();
+PipedOutputStream po = new PipedOutputStream();
+pi.connect(po);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Or you can use <tt CLASS=literal>connect()</tt> as 
+follows: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+PipedInputStream pi = new PipedInputStream();
+PipedOutputStream po = new PipedOutputStream();
+po.connect(pi);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Multiple <tt CLASS=literal>PipedOutputStream</tt> objects can be connected
+to a single <tt CLASS=literal>PipedInputStream</tt> at one time, but the
+results are unpredictable. If you connect a
+<tt CLASS=literal>PipedOutputStream</tt> to an already connected <tt CLASS=literal>PipedInputStream</tt>,
+any unread bytes from the previously connected
+<tt CLASS=literal>PipedOutputStream</tt> are lost. Once the two
+<tt CLASS=literal>PipedOutputStream</tt> objects are connected, the
+<tt CLASS=literal>PipedInputStream</tt> reads bytes written by either
+<tt CLASS=literal>PipedOutputStream</tt> in the order that it receives
+them. The scheduling of different threads may vary from one execution
+of the program to the next, so the order in which the
+<tt CLASS=literal>PipedInputStream</tt> receives bytes from multiple
+<tt CLASS=literal>PipedOutputStream</tt> objects can be inconsistent.
+
+<P CLASS=para>
+The <tt CLASS=literal>PipedReader</tt> class is the character-based
+equivalent of <tt CLASS=literal>PipedInputStream</tt>.  It works in the
+same way, except that a <tt CLASS=literal>PipedReader</tt> is connected to
+a <tt CLASS=literal>PipedWriter</tt> to complete the pipe, using either
+the appropriate constructor or the <tt CLASS=literal>connect()</tt>
+method.
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.8">FilterInputStream and FilterReader</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>FilterInputStream</tt> class 
+is a wrapper class for <tt CLASS=literal>InputStream</tt> 
+objects. Conceptually, an object that belongs to a subclass of <tt CLASS=literal>FilterInputStream</tt> 
+is wrapped around another <tt CLASS=literal>InputStream</tt> 
+object. The constructor for this class requires an <tt CLASS=literal>InputStream</tt>. 
+The constructor sets the object's <tt CLASS=literal>in</tt> 
+instance variable to reference the specified <tt CLASS=literal>InputStream</tt>, 
+so from that point on, the <tt CLASS=literal>FilterInputStream</tt> 
+is associated with the given <tt CLASS=literal>InputStream</tt>. 
+All of the methods in <tt CLASS=literal>FilterInputStream</tt> 
+work by calling the corresponding methods in the underlying <tt CLASS=literal>InputStream</tt>. 
+Because the <tt CLASS=literal>close()</tt> 
+method of a <tt CLASS=literal>FilterInputStream</tt> 
+calls the <tt CLASS=literal>close()</tt> 
+method of the <tt CLASS=literal>InputStream</tt> that 
+it wraps, you do not need to explicitly close the underlying <tt CLASS=literal>InputStream</tt>. 
+
+<P CLASS=para>
+A <tt CLASS=literal>FilterInputStream</tt> does not 
+add any functionality to the object that it wraps, so by itself it is not 
+very useful. However, subclasses of the <tt CLASS=literal>FilterInputStream</tt> 
+class do add functionality to the objects that they wrap in two ways: 
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>Some subclasses add logic to the <tt CLASS=literal>InputStream</tt> 
+methods. For example, the <tt CLASS=literal>InflaterInputStream</tt> 
+class in the <tt CLASS=literal>java.util.zip</tt> 
+package decompresses data automatically in the <tt CLASS=literal>read()</tt> 
+methods. 
+
+<P>
+<li CLASS=listitem>Some subclasses add new methods. An example is <tt CLASS=literal>DataInputStream</tt>, 
+which provides methods for reading primitive Java data types from the stream. 
+
+<P>
+</UL>
+<P CLASS=para>
+The <tt CLASS=literal>FilterReader</tt> class is the 
+character-based equivalent of <tt CLASS=literal>FilterInputStream</tt>. 
+A <tt CLASS=literal>FilterReader</tt> is wrapped around 
+an underlying <tt CLASS=literal>Reader</tt> object; 
+the methods of <tt CLASS=literal>FilterReader</tt> 
+call the corresponding methods of the underlying <tt CLASS=literal>Reader</tt>. 
+However, unlike <tt CLASS=literal>FilterInputStream</tt>, 
+<tt CLASS=literal>FilterReader</tt> is an <tt CLASS=literal>abstract</tt> 
+class, so you cannot instantiate it directly. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.9">DataInputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>DataInputStream</tt> class is 
+a subclass of <tt CLASS=literal>FilterInputStream</tt> 
+that provides methods for reading a variety of data types. The <tt CLASS=literal>DataInputStream</tt> 
+class implements the <tt CLASS=literal>DataInput</tt> 
+interface, so it defines methods for reading all of the primitive Java 
+data types. 
+
+<P CLASS=para>
+You create a <tt CLASS=literal>DataInputStream</tt> by passing a reference
+to an underlying <tt CLASS=literal>InputStream</tt> to the
+constructor. Here is an example that creates a
+<tt CLASS=literal>DataInputStream</tt> and uses it to read an
+<tt CLASS=literal>int</tt> that represents the length of an array and then
+to read the array of <tt CLASS=literal>long</tt> values:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+long[] readLongArray(InputStream in) throws IOException {
+    DataInputStream din = new DataInputStream(in);
+    int count = din.readInt();
+    long[] a = new long[count];
+    for (int i = 0; i &lt; count; i++) {
+        a[i] = din.readLong();
+    }
+    return a;
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.10">BufferedReader and BufferedInputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>BufferedReader</tt> 
+class is a subclass of <tt CLASS=literal>Reader</tt> 
+that buffers input from an underlying <tt CLASS=literal>Reader</tt>. 
+A <tt CLASS=literal>BufferedReader</tt> 
+object reads enough characters from its underlying <tt CLASS=literal>Reader</tt> 
+to fill a relatively large buffer, and then it satisfies read operations 
+by supplying characters that are already in the buffer. If most read operations 
+read just a few characters, using a <tt CLASS=literal>BufferedReader</tt> 
+can improve performance because it reduces the number of read operations 
+that the program asks the operating system to perform. There is generally 
+a measurable overhead associated with each call to the operating system, 
+so reducing the number of calls into the operating system improves performance. 
+The <tt CLASS=literal>BufferedReader</tt> class supports 
+mark-and-reset functionality via the <tt CLASS=literal>mark()</tt> 
+and <tt CLASS=literal>reset()</tt> methods. 
+
+<P CLASS=para>
+Here is an example that shows how to create a
+<tt CLASS=literal>BufferedReader</tt> to improve the efficiency of reading
+from a file:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    FileReader fileIn = new FileReader("data.dat");
+    BufferedReader in = new BufferedReader(fileIn);
+    // read from the file
+} catch (IOException e) {
+    System.out.println(e);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>BufferedInputStream</tt> class 
+is the byte-based counterpart of <tt CLASS=literal>BufferedReader</tt>. 
+It works in the same way as <tt CLASS=literal>BufferedReader</tt>, 
+except that it buffers input from an underlying <tt CLASS=literal>InputStream</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.11">LineNumberReader and LineNumberInputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>LineNumberReader</tt> 
+class is a subclass of <tt CLASS=literal>BufferedReader</tt>. 
+Its <tt CLASS=literal>read()</tt> methods contain 
+additional logic to count end-of-line characters and thereby maintain a 
+line number. Since different platforms use different characters to represent 
+the end of a line, <tt CLASS=literal>LineNumberReader</tt> 
+takes a flexible approach and recognizes <tt CLASS=literal>"\n"</tt>, 
+<tt CLASS=literal>"\r"</tt>, or <tt CLASS=literal>"\r\n"</tt> 
+as the end of a line. Regardless of the end-of-line character it reads, 
+<tt CLASS=literal>LineNumberReader</tt> returns only 
+<tt CLASS=literal>"\n"</tt> from 
+its <tt CLASS=literal>read()</tt> methods. 
+
+<P CLASS=para>
+You can create a <tt CLASS=literal>LineNumberReader</tt> 
+by passing its constructor a <tt CLASS=literal>Reader</tt>. 
+The following example prints out the first five lines of a file, with each 
+line prefixed by its number. If you try this example, you'll see 
+that the line numbers begin at <tt CLASS=literal>0</tt> by default: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+try {
+    FileReader fileIn = new FileReader("text.txt");
+    LineNumberReader in = new LineNumberReader(fileIn);
+    for (int i = 0; i &lt; 5; i++)
+        System.out.println(in.getLineNumber() + " " + in.readLine());
+}catch (IOException e) {
+    System.out.println(e);
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>LineNumberReader</tt> 
+class has two methods pertaining to line numbers. The <tt CLASS=literal>getLineNumber()</tt> 
+method returns the current line number. If you want to change the current 
+line number of a <tt CLASS=literal>LineNumberReader</tt>, 
+use <tt CLASS=literal>setLineNumber()</tt>. This method 
+does not affect the stream position; it merely sets the value of the line 
+number. 
+
+<P CLASS=para>
+The <tt CLASS=literal>LineNumberInputStream</tt> is 
+the byte-based equivalent of <tt CLASS=literal>LineNumberReader</tt>. 
+The entire class is deprecated in Java 1.1 because it does not convert 
+bytes to characters properly. Apart from the conversion problem, <tt CLASS=literal>LineNumberInputStream</tt> 
+works the same as <tt CLASS=literal>LineNumberReader</tt>, 
+except that it takes its input from an <tt CLASS=literal>InputStream</tt> 
+instead of a <tt CLASS=literal>Reader</tt>. 
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.12">SequenceInputStream</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>SequenceInputStream</tt> class 
+is used to sequence together multiple <tt CLASS=literal>InputStream</tt> 
+objects. Consider this example: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream f1 = new FileInputStream("data1.dat");
+FileInputStream f2 = new FileInputStream("data2.dat");
+SequenceInputStream s = new SequenceInputStream(f1, f2);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This example creates a <tt CLASS=literal>SequenceInputStream</tt> 
+that reads all of the bytes from <tt CLASS=literal>f1</tt> 
+and then reads all of the bytes from <tt CLASS=literal>f2</tt> 
+before reporting that it has encountered the end of the stream. You can 
+also cascade <tt CLASS=literal>SequenceInputStream</tt> 
+object themselves, to allow more than two input streams to be read as if 
+they were one. You would write it like this: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream f3 = new FileInputStream("data3.dat");
+SequenceInputStream s2 = new SequenceInputStream(s, f3);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>SequenceInputStream</tt> class 
+has one other constructor that may be more appropriate for wrapping more 
+than two <tt CLASS=literal>InputStream</tt> objects 
+together. It takes an <tt CLASS=literal>Enumeration</tt> 
+of <tt CLASS=literal>InputStream</tt> objects as its 
+argument. The following example shows how to create a <tt CLASS=literal>SequenceInputStream</tt> 
+in this manner: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+Vector v = new Vector();
+v.add(new FileInputStream("data1.dat"));
+v.add(new FileInputStream("data2.dat"));
+v.add(new FileInputStream("data3.dat"));
+Enumeration e = v.elements();
+SequenceInputStream s = new SequenceInputStream(e);
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JFC-CH-6-SECT-1.13">PushbackInputStream and PushbackReader</A></h3>
+
+<P CLASS=para>
+The <tt CLASS=literal>PushbackInputStream</tt> class 
+is a <tt CLASS=literal>FilterInputStream</tt> that 
+allows data to be pushed back into the input stream and reread by the 
+next read operation. This functionality is useful for implementing things 
+like parsers that need to read data and then return it to the input stream. 
+The Java 1.0 version of <tt CLASS=literal>PushbackInputStream</tt> 
+supported only a one-byte pushback buffer; in Java 1.1 this class has been 
+enhanced to support a larger pushback buffer. 
+
+<P CLASS=para>
+To create a <tt CLASS=literal>PushbackInputStream</tt>, 
+pass an <tt CLASS=literal>InputStream</tt> to 
+its constructor like this: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileInputStream ef = new FileInputStream("expr.txt");
+PushbackInputStream pb = new PushbackInputStream(ef);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+This constructor creates a <tt CLASS=literal>PushbackInputStream</tt> 
+that uses a default one-byte pushback buffer. When you have data that you 
+want to push back into the input stream to be read by the next read operation, 
+you pass the data to one of the <tt CLASS=literal>unread()</tt> 
+methods. 
+
+<P CLASS=para>
+The <tt CLASS=literal>PushbackReader</tt> class is 
+the character-based equivalent of <tt CLASS=literal>PushbackInputStream</tt>. 
+In the following example, we create a <tt CLASS=literal>PushbackReader</tt> 
+with a pushback buffer of 48 characters: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+FileReader fileIn = new FileReader("expr.txt");
+PushbackReader in = new PushbackReader(fileIn, 48);
+</PRE>
+</DIV>
+
+<P CLASS=para>
+Here is an example that shows the use of a <tt CLASS=literal>PushbackReader</tt>: 
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public String readDigits(PushbackReader pb) {
+    char c;
+    StringBuffer buffer = new StringBuffer();
+    try {
+        while (true) {
+            c = (char)pb.read();
+            if (!Character.isDigit(c))
+                break;
+            buffer.append(c);
+        }
+        if (c != -1)
+            pb.unread(c);
+    }catch (IOException e) {}
+    return buffer.toString();
+}
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The above example shows a method that reads characters corresponding to 
+digits from a <tt CLASS=literal>PushbackReader</tt>. 
+When it reads a character that is not a digit, it calls the <tt CLASS=literal>unread()</tt> 
+method so that the nondigit can be read by the next read operation. It 
+then returns a string that contains the digits that were read. 
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch05_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch06_02.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Hashtables</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Output Streams and Writers</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,412 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.6 Applets</TITLE>
+<META NAME="author" CONTENT="Mark Grand">
+<META NAME="date" CONTENT="Thu Jul 31 13:15:47 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="java">
+<META NAME="title" CONTENT="Java Language Reference">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java Language Reference" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Program Structure</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JLR2-CH-7-SECT-6">7.6 Applets</A></h2>
+
+<P CLASS=para>
+<A NAME="CH07.APP2"></A><A NAME="CH07.APP3"></A>A Java applet must be run from
+within another program, called a host application. At this point,
+most host applications are Web browsers. The interaction between
+an applet and its host application is rather involved.
+
+<P CLASS=para>
+From the viewpoint of an applet, the interaction involves defining a
+subclass of the <tt CLASS=literal>java.applet.Applet</tt> class. The
+<tt CLASS=literal>Applet</tt> class defines a number of methods that
+control the applet. A subclass of <tt CLASS=literal>Applet</tt> overrides
+one or more of the methods:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>init()</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>init()</tt> method is called to
+initialize the applet. Most initialization of an applet is done
+here instead of in a constructor because the constructor may be
+called before the hosting program is ready to provide all of the
+services needed for initialization.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>start()</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>start()</tt> method is called
+in a separate thread to tell the applet to start doing whatever
+it is supposed to do.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>paint()</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>paint()</tt> method is called
+at unpredictable times to draw the applet onto the screen.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>stop()</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>stop()</tt> method is called to
+tell the applet to stop doing whatever it does.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>destroy()</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>destroy()</tt> method is called
+to tell the applet to release any resources that it holds.</DL>
+<P CLASS=para>
+From the viewpoint of the host application, the interaction
+typically follows a standard sequence of events. The host application
+usually does the following:
+
+<P>
+<OL CLASS=orderedlist>
+<li CLASS=listitem>Installs a <tt CLASS=literal>SecurityManager</tt>
+object to implement a security policy.
+
+<P>
+<li CLASS=listitem>Creates a <tt CLASS=literal>ClassLoader</tt> object
+to load the applet.
+
+<P>
+<li CLASS=listitem>Loads the applet and calls its default constructor.
+
+<P>
+<li CLASS=listitem>Passes an <tt CLASS=literal>AppletStub</tt> object to
+the applet's <tt CLASS=literal>setStub()</tt> method.
+
+<P>
+<li CLASS=listitem>Calls the applet's <tt CLASS=literal>init()</tt> method
+in a separate thread.
+
+<P>
+<li CLASS=listitem>Marks the applet as active.
+
+<P>
+<li CLASS=listitem>Starts a new thread to run the applet's <tt CLASS=literal>start()</tt>
+method.
+
+<P>
+<li CLASS=listitem>Calls the applet's <tt CLASS=literal>show()</tt> method,
+which makes the applet visible and causes the applet's
+<tt CLASS=literal>paint()</tt> method to be called for the first time.
+
+<P>
+<li CLASS=listitem>Calls the applet's <tt CLASS=literal>paint()</tt> method
+whenever the applet needs to be refreshed.
+
+<P>
+<li CLASS=listitem>Calls the applet's <tt CLASS=literal>start()</tt> and
+<tt CLASS=literal>stop()</tt> methods when the host wants the applet
+to start or stop. These methods are typically called when the applet
+is exposed or hidden.
+
+<P>
+<li CLASS=listitem>Calls the applet's <tt CLASS=literal>hide()</tt> method
+followed by its <tt CLASS=literal>destroy()</tt> method when the host
+wants to shut down the applet.
+
+<P>
+</OL>
+<DIV CLASS=sect2>
+<h3 CLASS=sect2><A CLASS="TITLE" NAME="JLR2-CH-7-SECT-6.1">Embedding an Applet in a Web Page</A></h3>
+
+<P CLASS=para>
+<A NAME="CH07.WWW1"></A><A NAME="CH07.WWW2"></A>Web pages are written in a language called HTML. This explanation of
+how to embed an applet in a Web page assumes that you have some
+knowledge of basic HTML. An applet is embedded in a Web page using
+an <tt CLASS=literal>&lt;applet&gt;</tt> tag. A minimal
+<tt CLASS=literal>&lt;applet&gt;</tt> tag looks as follows:<A NAME="CH07.WWW3"></A><A NAME="CH07.WWW4"></A>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;applet code=Clock height=300 width=350&gt;
+&lt;/applet&gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The <tt CLASS=literal>code</tt> attribute of this sample 
+<tt CLASS=literal>&lt;applet&gt;</tt> tag specifies that the applet
+to be run is a class named <tt CLASS=literal>Clock</tt>. The
+<tt CLASS=literal>width</tt> and <tt CLASS=literal>height</tt>
+attributes specify that the applet should be given a screen area
+that is 300 pixels high and 350 pixels wide.
+
+<P CLASS=para>
+The following list shows all of the attributes that can be specified
+in an <tt CLASS=literal>&lt;applet&gt;</tt>
+tag. The attributes should be specified in the order in which they
+are listed. The <tt CLASS=literal>code</tt>, <tt CLASS=literal>height</tt>,
+and <tt CLASS=literal>width</tt> attributes are required in an
+<tt CLASS=literal>&lt;applet&gt;</tt> tag; the other attributes are optional:
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><tt CLASS=literal>codebase</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>codebase</tt> attribute should
+specify a URL that identifies the directory used to find the
+<I CLASS=emphasis>.class</I>
+files needed for the applet. Files for classes that belong to the
+default package should be in this directory. Files for classes that
+belong to named packages should be in subdirectories of this directory,
+where the relative path is specified by individual identifiers in
+the package name. If <tt CLASS=literal>codebase</tt> is not specified,
+the <tt CLASS=literal>&lt;applet&gt;</tt> tag uses the directory that
+contains the HTML file as a default.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>code</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>code</tt> attribute specifies
+the name of the class that implements the applet. If the applet
+is part of a named package, you must specify the fully qualified
+class name. So, if the name of the class is
+<tt CLASS=literal>DataPlot</tt>
+and it is part of a package called <tt CLASS=literal>COM.geomaker.graph</tt>,
+the value of the <tt CLASS=literal>code</tt> attribute should be:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+code=COM.geomaker.graph.DataPlot.class
+</PRE>
+</DIV>
+
+<P CLASS=para>
+The browser locates the compiled code for the class
+by appending <I CLASS=emphasis>.class</I> to the filename and searching
+the directory specified by the base URL for the document.
+
+<DT CLASS=varlistentry><tt CLASS=literal>object</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>object</tt> attribute specifies the name of a file
+that contains a serialized representation of an applet. If this
+attribute is specified, the applet is created by deserialization,
+rather than by calling its default constructor.  The serialization is
+assumed to have occurred after the applet's <tt CLASS=literal>init()</tt>
+method has been invoked, so the <tt CLASS=literal>start()</tt> method is called
+instead of the <tt CLASS=literal>init()</tt> method.  Any attributes
+specified when the applet was serialized are not restored; the applet
+sees the attributes specified for this invocation.
+
+<P CLASS=para>
+The <tt CLASS=literal>object</tt> attribute is new as of Java 1.1.  An
+<tt CLASS=literal>&lt;applet&gt;</tt> tag must include either the
+<tt CLASS=literal>code</tt> attribute or the <tt CLASS=literal>object</tt>
+attribute, but it cannot include both.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>archive</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>archive</tt> attribute specifies a list of one or
+more archives that contain classes or other resources for an
+applet. Archives can be JAR or ZIP files. If this attribute is
+specified, the resources in the archives are loaded before the applet
+is run.
+If multiple archives are listed, they should be separated by
+commas.  The <tt CLASS=literal>archive</tt> attribute is new for Java
+1.1.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>alt</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>alt</tt> attribute specifies the
+text that should be displayed by Web browsers that understand the
+<tt CLASS=literal>&lt;applet&gt;</tt> tag but cannot run Java applets.
+If the text contains space characters, it should be enclosed in
+quotation marks.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>name</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>name</tt> attribute specifies
+a name for a particular instance of an applet. An applet can get a
+reference to another applet on the same Web page using the
+<tt CLASS=literal>getApplet()</tt> method.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>width</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>width</tt> attribute specifies
+the width of the applet in pixels.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>height</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>height</tt> attribute specifies
+the height of the applet in pixels.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>align</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>align</tt> attribute specifies
+the positioning of the applet. The possible values are:
+<tt CLASS=literal>left</tt>,
+<tt CLASS=literal>right</tt>, <tt CLASS=literal>top</tt>, <tt CLASS=literal>texttop</tt>,
+<tt CLASS=literal>middle</tt>, <tt CLASS=literal>absmiddle</tt>,
+<tt CLASS=literal>baseline</tt>, <tt CLASS=literal>bottom</tt>, or
+<tt CLASS=literal>absbottom</tt>.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>vspace</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>vspace</tt> attribute specifies
+the amount of vertical space above and below the applet in pixels.
+
+<p>
+<DT CLASS=varlistentry><tt CLASS=literal>hspace</tt><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>hspace</tt> attribute specifies
+the amount of horizontal space to the left and right of the applet
+in pixels.</DL>
+<P CLASS=para>
+Applet-specific
+parameters can be provided to an applet using <tt CLASS=literal>&lt;param&gt;</tt>
+tags inside the <tt CLASS=literal>&lt;applet&gt;</tt> tag.
+A <tt CLASS=literal>&lt;param&gt;</tt> tag must specify
+<tt CLASS=literal>name</tt> and <tt CLASS=literal>value</tt> attributes. For example:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;param name=speed value=65&gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a Web browser does not support the <tt CLASS=literal>&lt;applet&gt;</tt>
+tag, it ignores the tag and simply displays any HTML content provided
+inside the tag. However, if the browser understands the
+<tt CLASS=literal>&lt;applet&gt;</tt>
+tag, this HTML content is ignored. This means that you can provide
+HTML content inside an <tt CLASS=literal>&lt;applet&gt;</tt> tag to inform
+users of non-Java-enabled browsers about what they are missing.
+
+<P CLASS=para>
+Here is an example that combines all of these elements:
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+&lt;applet code=Compass height=400 width=300&gt;
+&lt;param name=direction value=north&gt;
+&lt;param name=speed value=65&gt;
+&lt;p&gt;
+&lt;i&gt;If you can see this message, your Web browser is not Java enabled. 
+There is a Java applet on this Web page that you are not seeing.&lt;/i&gt;
+&lt;p&gt;
+&lt;/applet&gt;
+</PRE>
+</DIV>
+
+<P CLASS=para>
+If a non-Java-enabled browser is used to view this HTML file, the following
+text is displayed:
+
+<P CLASS=blockquote><BLOCKQUOTE><P>
+<P CLASS=para>
+If you can see this message, your Web browser
+is not Java-enabled.  There is a Java applet on this Web page that
+you are not seeing.
+</BLOCKQUOTE><P>
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch08_01.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Applications</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Threads</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

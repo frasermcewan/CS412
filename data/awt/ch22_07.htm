@@ -1,0 +1,647 @@
+<HTML>
+<HEAD>
+<TITLE>[Chapter 22] ImageFilter</TITLE>
+<META NAME="author" CONTENT="John Zukowski">
+<META NAME="date" CONTENT="Thu Jul 31 15:25:17 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java AWT">
+<META NAME="title" CONTENT="Java AWT">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java AWT" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 22<br>java.awt.image Reference</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch22_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=refnamediv>
+<H1>ImageFilter</H1>
+
+<H2>Name</H2>
+
+ImageFilter
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.39"></A></h2>
+</DIV>
+
+
+<p>
+<img align=middle src="./figs/imagefi.gif" alt="[Graphic: Figure from the text]" width=503 height=173 border=0>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.40">Description</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageFilter</tt> class sits 
+between the <tt CLASS=literal>ImageProducer</tt> and 
+<tt CLASS=literal>ImageConsumer</tt> as an image is 
+being created to provide a filtered version of that image. Image filters 
+are always used in conjunction with a <tt CLASS=literal>FilteredImageSource</tt>. 
+As an implementer of the <tt CLASS=literal>ImageConsumer</tt> 
+interface, an image filter receives pixel data from the original image's 
+source and delivers it to another image consumer. The <tt CLASS=literal>ImageFilter</tt> 
+class implements a null filter (i.e., the new image is the same as the 
+original); to produce a filter that modifies an image, create a subclass 
+of <tt CLASS=literal>ImageFilter</tt>. 
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.41">Class Definition</A></h2>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+public class java.awt.image.ImageFilter
+    extends java.lang.Object 
+    implements java.awt.image.ImageConsumer, java.lang.Cloneable {
+  // Variables
+  protected ImageConsumer consumer;
+  // Constructors
+  public ImageFilter();
+  // Instance Methods
+  public Object clone();
+  public ImageFilter getFilterInstance (ImageConsumer ic);
+  public void imageComplete (int status);
+  public void resendTopDownLeftRight (ImageProducer ip);
+  public void setColorModel (ColorModel model);
+  public void setDimensions (int width, int height);
+  public void setHints (int hints);
+  public void setPixels (int x, int y, int width, int height, 
+      ColorModel model, byte[] pixels, int offset, int scansize);
+  public void setPixels (int x, int y, int width, int height, 
+      ColorModel model, int[] pixels, int offset, int scansize);
+  public void setProperties (Hashtable properties);
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.42">Protected Variables</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.49">consumer</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.53">protected ImageConsumer consumer</A></h4>
+
+<P CLASS=para>
+The consumer variable is a reference to the actual <tt CLASS=literal>ImageConsumer</tt> 
+for the <tt CLASS=literal>Image</tt>. 
+
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.43">Constructors</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.50">ImageFilter</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.54">public ImageFilter()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Constructs an empty <tt CLASS=literal>ImageFilter</tt> 
+instance. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.44">Instance Methods</A></h2>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.51">clone</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.55">public Object clone()</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Overrides<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>Object</tt><tt CLASS=literal>.clone()</tt> 
+
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of the <tt CLASS=literal>ImageFilter</tt> instance. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.52">getFilterInstance</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.56">public ImageFilter getFilterInstance (ImageConsumer ic)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ic</I><br>
+<DD>
+
+<P CLASS=para>
+The consumer in question. </DL>
+<p>
+<DT CLASS=varlistentry>Returns<br>
+<DD>
+
+<P CLASS=para>
+A copy of the <tt CLASS=literal>ImageFilter</tt> instance. 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Returns the filter that will do the filtering for <tt CLASS=literal>ic</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.53">imageComplete</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.57">void imageComplete (int status)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>status</I><br>
+<DD>
+
+<P CLASS=para>
+Image loading completion status flags. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.imageComplete(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Called by the <tt CLASS=literal>ImageProducer</tt> 
+to indicate an image's completion status. <tt CLASS=literal>ImageFilter</tt> 
+passes these flags to the consumer unchanged. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.54">resendTopDownLeftRight</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.58">public void resendTopDownLeftRight (ImageProducer ip)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>ip</I><br>
+<DD>
+
+<P CLASS=para>
+The <tt CLASS=literal>ImageProducer</tt> 
+generating the original image. </DL>
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Called by the <tt CLASS=literal>ImageConsumer</tt> 
+to ask the filter to resend the image data in the top-down, left-to-right 
+order. In <tt CLASS=literal>ImageFilter</tt>, this 
+method calls the same method in the <tt CLASS=literal>ImageProducer</tt>, 
+thus relaying the request. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.55">setColorModel</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.59">void setColorModel (ColorModel model)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+The color model for the image. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setColorModel(</tt><tt CLASS=literal>ColorModel</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the image's color model. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.56">setDimensions</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.60">void setDimensions (int width, int height)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width for image.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height for image. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setDimensions(</tt><tt CLASS=literal>int, 
+int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Sets the image's dimensions. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.57">setHints</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.61">void setHints (int hints)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>hints</I><br>
+<DD>
+
+<P CLASS=para>
+Image consumption hints. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setHints(</tt><tt CLASS=literal>int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Called by the <tt CLASS=literal>ImageProducer</tt> 
+to deliver hints about how the image data will be delivered. <tt CLASS=literal>ImageFilter</tt> 
+passes these hints on to the <tt CLASS=literal>ImageConsumer</tt>. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.58">setPixels</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.62">void setPixels (int x, int y, int width, int height, ColorModel model, byte[] pixels, int offset, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+Color model of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of the pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setPixels(</tt><tt CLASS=literal>int, 
+int, int, int, ColorModel, byte[], int, int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Delivers a rectangular block of pixels to the <tt CLASS=literal>ImageFilter</tt>. 
+<tt CLASS=literal>ImageFilter</tt> passes these pixels 
+on to the consumer unchanged. </DL>
+</DIV>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.63">void setPixels (int x, int y, int width, int height, ColorModel model, int[] pixels, int offset, int scansize)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>x</I><br>
+<DD>
+
+<P CLASS=para>
+x-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>y</I><br>
+<DD>
+
+<P CLASS=para>
+y-coordinate of top-left corner of pixel data delivered 
+with this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>width</I><br>
+<DD>
+
+<P CLASS=para>
+Width of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>height</I><br>
+<DD>
+
+<P CLASS=para>
+Height of the rectangle of pixel data delivered with 
+this method call.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>model</I><br>
+<DD>
+
+<P CLASS=para>
+Color model of image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>pixels</I><br>
+<DD>
+
+<P CLASS=para>
+Image data.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>offset</I><br>
+<DD>
+
+<P CLASS=para>
+Offset from beginning of the pixels array.
+
+<p>
+<DT CLASS=varlistentry><I CLASS=emphasis>scansize</I><br>
+<DD>
+
+<P CLASS=para>
+Size of each line of data in pixels array. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setPixels(</tt><tt CLASS=literal>int, 
+int, int, int, ColorModel, int[], int, int</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Delivers a rectangular block of pixels to the <tt CLASS=literal>ImageFilter</tt>. 
+<tt CLASS=literal>ImageFilter</tt> passes these pixels 
+on to the consumer unchanged. </DL>
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect2>
+<h3 CLASS=refsect2><A CLASS="TITLE" NAME="ch22-REFSECT2-AUTOID.59">setProperties</A></h3>
+
+<DIV CLASS=refsect3>
+<h4 CLASS=refsect3><A CLASS="TITLE" NAME="ch22-REFSECT3-AUTOID.64">void setProperties (Hashtable properties)</A></h4>
+
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry>Parameters<br>
+<DD>
+
+<P>
+<DL CLASS=variablelist>
+<DT CLASS=varlistentry><I CLASS=emphasis>properties</I><br>
+<DD>
+
+<P CLASS=para>
+The properties for the image. </DL>
+<p>
+<DT CLASS=varlistentry>Implements<br>
+<DD>
+
+<P CLASS=para>
+<tt CLASS=literal>ImageConsumer.setProperties(</tt><tt CLASS=literal>Hashtable</tt><tt CLASS=literal>)</tt> 
+
+<p>
+<DT CLASS=varlistentry>Description<br>
+<DD>
+
+<P CLASS=para>
+Initializes the image's properties. <tt CLASS=literal>ImageFilter</tt> 
+adds the property "filter" to the <tt CLASS=literal>Hashtable</tt>, 
+and passes the result on to the image consumer; the value of the property 
+is the string returned by the filter's <tt CLASS=literal>toString()</tt> 
+method. If the property "filter" is already in the <tt CLASS=literal>Hashtable</tt>, 
+<tt CLASS=literal>ImageFilter</tt> adds the string 
+returned by its <tt CLASS=literal>toString()</tt> 
+method to the value already associated with that property. </DL>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+<DIV CLASS=refsect1>
+<h2 CLASS=refsect1><A CLASS="TITLE" NAME="ch22-REFSECT1-AUTOID.45">See Also</A></h2>
+
+<P CLASS=para>
+<tt CLASS=literal>Cloneable</tt>, <tt CLASS=literal>ColorModel</tt>, 
+<tt CLASS=literal>CropImageFilter</tt>, <tt CLASS=literal>Hashtable</tt>, 
+<tt CLASS=literal>ImageConsumer</tt>, <tt CLASS=literal>ImageProducer</tt>, 
+<tt CLASS=literal>Object</tt>, <tt CLASS=literal>ReplicateImageFilter</tt>, 
+<tt CLASS=literal>RGBImageFilter</tt> 
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch22_06.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch22_08.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>ImageConsumer</td>
+<td width=171 align=center valign=top><a href="index/idx_a.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>ImageObserver</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

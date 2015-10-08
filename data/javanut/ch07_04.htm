@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 7] 7.4 Scribbling in Java 1.1</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:55:12 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 7<br>Events</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-7-SECT-4">7.4 Scribbling in Java 1.1</A></h2>
+
+<P CLASS=para>
+The Java 1.1 event model is quite flexible, and, as we'll
+see, there are several different ways you can use it to
+structure your event-handling code.
+<A HREF="ch07_04.htm#JNUT2-CH-7-EX-2">Example 7.2</A>
+shows the first technique.  Once again, this is our basic
+<tt CLASS=literal>Scribble</tt> applet, this time using the
+Java 1.1 event model.  This version of the applet
+implements the <tt CLASS=literal>MouseListener</tt> and
+<tt CLASS=literal>MouseMotionListener</tt> interfaces itself, and registers
+itself with its own <tt CLASS=literal>addMouseListener()</tt> and
+<tt CLASS=literal>addMouseMotionListener()</tt> methods.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-7-EX-2">Example 7.2: Scribble: Implementing the Listener Interfaces Directly</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class Scribble2 extends Applet
+                      implements MouseListener,  MouseMotionListener {
+  private int last_x, last_y;
+  public void init() {
+    // Tell this applet what MouseListener and MouseMotionListener
+    // objects to notify when mouse and mouse motion events occur.
+    // Since we implement the interfaces ourself, our own methods are called.
+    this.addMouseListener(this);
+    this.addMouseMotionListener(this);
+  }
+  // A method from the MouseListener interface.  Invoked when the
+  // user presses a mouse button.
+  public void mousePressed(MouseEvent e) {
+    last_x = e.getX();
+    last_y = e.getY();
+  }
+  // A method from the MouseMotionListener interface.  Invoked when the
+  // user drags the mouse with a button pressed.
+  public void mouseDragged(MouseEvent e) {
+    Graphics g = this.getGraphics();
+    int x = e.getX(), y = e.getY();
+    g.drawLine(last_x, last_y, x, y);
+    last_x = x; last_y = y;
+  }
+  // The other, unused methods of the MouseListener interface.
+  public void mouseReleased(MouseEvent e) {;}
+  public void mouseClicked(MouseEvent e) {;}
+  public void mouseEntered(MouseEvent e) {;}
+  public void mouseExited(MouseEvent e) {;}
+  // The other method of the MouseMotionListener interface.
+  public void mouseMoved(MouseEvent e) {;}
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch07_03.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch07_05.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>The Java 1.1 Event Model</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Scribbling with Inner Classes</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>

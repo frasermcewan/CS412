@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//ORA//DTD CD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>[Chapter 10] 10.5 Specifying Bean Information</TITLE>
+<META NAME="author" CONTENT="David Flanagan">
+<META NAME="date" CONTENT="Thu Jul 31 15:57:49 1997">
+<META NAME="form" CONTENT="html">
+<META NAME="metadata" CONTENT="dublincore.0.1">
+<META NAME="objecttype" CONTENT="book part">
+<META NAME="otheragent" CONTENT="gmat dbtohtml">
+<META NAME="publisher" CONTENT="O'Reilly &amp; Associates, Inc.">
+<META NAME="source" CONTENT="SGML">
+<META NAME="subject" CONTENT="Java">
+<META NAME="title" CONTENT="Java in a Nutshell">
+<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
+</HEAD>
+<body vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#FFFFFF" link="#0000ee">
+
+<DIV CLASS=htmlnav>
+<H1><a href='index.htm'><IMG SRC="gifs/smbanner.gif"
+     ALT="Java in a Nutshell" border=0></a></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><B><FONT FACE="ARIEL,HELVETICA,HELV,SANSERIF" SIZE="-1">Chapter 10<br>Java Beans</FONT></B></TD>
+<td width=172 align=right valign=top><A HREF="ch10_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+</table>
+
+&nbsp;
+<hr align=left width=515>
+</DIV>
+<DIV CLASS=sect1>
+<h2 CLASS=sect1><A CLASS="TITLE" NAME="JNUT2-CH-10-SECT-5">10.5 Specifying Bean Information</A></h2>
+
+<P CLASS=para>
+The <tt CLASS=literal>YesNoDialog</tt> class itself and the
+<tt CLASS=literal>AnswerEvent</tt> and <tt CLASS=literal>AnswerListener</tt> classes it
+relies on are all a required part of our bean.  When an
+application that uses the bean is shipped, it has to
+include all three of these class files.  There are other
+kinds of classes, however, that are often bundled with a bean
+that are not intended for use by the
+application developer.  These classes are used
+by the beanbox tool that manipulates the bean.
+The bean class itself does not refer to any of
+these auxiliary beanbox classes so that it is not dependent
+on them and they do not have to be shipped with the bean in
+finished products.
+
+<P CLASS=para>
+<A NAME="CH10.JAVABEANS.AP2"></A>The first of these optional, auxiliary classes is a
+<tt CLASS=literal>BeanInfo</tt> class.  As explained earlier, a beanbox
+discovers the properties, events, and methods exported by a
+bean through "introspection" based on the Java Reflection
+API.  A bean developer who wants to provide additional
+information about a bean, or who wants to refine the
+(somewhat rough) information available through introspection,
+should define a class that implements the <tt CLASS=literal>BeanInfo</tt>
+interface to provide that information.  A <tt CLASS=literal>BeanInfo</tt>
+class typically subclasses <tt CLASS=literal>SimpleBeanInfo</tt>, which
+provides a no-op implementation of the <tt CLASS=literal>BeanInfo</tt>
+interface.  When you only want to override one or two
+methods, it is easier to subclass <tt CLASS=literal>SimpleBeanInfo</tt>
+than to implement <tt CLASS=literal>BeanInfo</tt> directly.
+Beanbox tools rely on a naming convention in order to find the
+<tt CLASS=literal>BeanInfo</tt> class for a given bean: a <tt CLASS=literal>BeanInfo</tt> class
+should have the same name as the bean, with the string
+"BeanInfo" appended. 
+<A HREF="ch10_05.htm#JNUT2-CH-10-EX-5">Example 10.5</A>
+shows an implementation of the <tt CLASS=literal>YesNoDialogBeanInfo</tt>
+class.
+
+<P CLASS=para>
+This <tt CLASS=literal>BeanInfo</tt> class specifies a number of pieces of
+information for our bean:
+
+<P>
+<UL CLASS=itemizedlist>
+<li CLASS=listitem>An icon that can be used to represent the bean.
+
+<P>
+<li CLASS=listitem>A <tt CLASS=literal>BeanDescriptor</tt> object, which includes a reference
+to a <tt CLASS=literal>Customizer</tt> class for the bean.  We'll see an
+implementation of this class later in the chapter.
+
+<P>
+<li CLASS=listitem>A list of the supported properties of the bean, along with a
+short description of each one.  Some beanbox tools (but not Sun's
+<I CLASS=emphasis>beanbox</I>) display these strings to
+the user in some useful way.
+
+<P>
+<li CLASS=listitem>A method that returns the most commonly customized property
+of the bean--this is called the "default" property.
+
+<P>
+<li CLASS=listitem>References to <tt CLASS=literal>PropertyEditor</tt> classes for two of the
+properties.  We'll see implementations of these property
+editor classes later in the chapter.
+
+<P>
+<li CLASS=listitem>A list of the methods supported by the bean, again with a
+short description of each one.
+
+<P>
+</UL>
+<P CLASS=para>
+Besides specifying this information, a
+<tt CLASS=literal>BeanInfo</tt> class can also provide information about the
+events it generates and specify a default event.  The
+various <tt CLASS=literal>FeatureDescriptor</tt> objects used to provide
+information about such things as properties and methods can also
+include other information not provided by
+<tt CLASS=literal>YesNoDialogBeanInfo</tt>, such as a localized display
+name that is distinct from the programmatic name.
+
+<DIV CLASS=example>
+<h4 CLASS=example><A CLASS="TITLE" NAME="JNUT2-CH-10-EX-5">Example 10.5: The YesNoDialogBeanInfo Class</A></h4>
+
+<DIV CLASS=screen>
+<P>
+<PRE>
+package oreilly.beans.yesno;
+import java.beans.*;
+import java.lang.reflect.*;
+import java.awt.*;
+/** The BeanInfo class for the YesNoDialog bean. */
+public class YesNoDialogBeanInfo extends SimpleBeanInfo {
+  /** Return an icon for the bean.  We should really check the kind argument
+   *  to see what size icon the beanbox wants, but since we only have one
+   *  icon to offer, we just return it and let the beanbox deal with it. */
+  public Image getIcon(int kind) {
+    return loadImage("YesNoDialogIcon.gif");
+  }
+  /** Return a descriptor for the bean itself.  It specifies a customizer
+   *  for the bean class.  We could also add a description string here. */
+  public BeanDescriptor getBeanDescriptor() {
+    return new BeanDescriptor(YesNoDialog.class, YesNoDialogCustomizer.class);
+  }
+  /** This is a convenience routine for creating PropertyDescriptor objects. */
+  public static PropertyDescriptor property(String name, String description)
+       throws IntrospectionException
+  {
+    PropertyDescriptor p = new PropertyDescriptor(name, YesNoDialog.class);
+    p.setShortDescription(description);
+    return p;
+  }
+  /** This method returns an array of PropertyDescriptor objects that specify
+   *  additional information about the properties supported by the bean.
+   *  By explicitly specifying property descriptors, we are able to provide
+   *  simple help strings for each property; these would not be available to
+   *  the beanbox through simple introspection.  We are also able to register
+   *  special property editors for two of the properties.
+   */
+  public PropertyDescriptor[] getPropertyDescriptors() {
+    try {
+      PropertyDescriptor[] props = {
+        property("title", "The string that appears in the dialog title bar"),
+        property("message", "The string that appears in the dialog body"),
+        property("yesLabel", "The label for the 'Yes' button, if any"),
+        property("noLabel", "The label for the 'No' button, if any"),
+        property("cancelLabel", "The label for the 'Cancel' button, if any"),
+        property("alignment", "The alignment of the message text"),
+        property("font", "The font to use for message and buttons"),
+        property("background", "The background color for the dialog"),
+        property("foreground", "The text color for message and buttons")
+      };
+      props[1].setPropertyEditorClass(YesNoDialogMessageEditor.class);
+      props[5].setPropertyEditorClass(YesNoDialogAlignmentEditor.class);
+      return props;
+    }
+    catch (IntrospectionException e) {return super.getPropertyDescriptors(); }
+  }
+  /** The message property is most often customized; make it the default. */
+  public int getDefaultPropertyIndex() { return 1; }
+  /** This is a convenience method for creating MethodDescriptors.  Note that
+   *  it assumes we are talking about methods with no arguments. */
+  public static MethodDescriptor method(String name, String description)
+       throws NoSuchMethodException, SecurityException {
+    Method m = YesNoDialog.class.getMethod(name, new Class[] {});
+    MethodDescriptor md = new MethodDescriptor(m);
+    md.setShortDescription(description);
+    return md;
+  }
+  /** This method returns an array of method descriptors for the supported
+   *  methods of a bean. This allows us to provide useful description strings,
+   *  but it also allows us to filter out non-useful methods like wait()
+   *  and notify() that the bean inherits and which might otherwise be
+   *  displayed by the beanbox.
+   */
+  public MethodDescriptor[] getMethodDescriptors() {
+    try {
+      MethodDescriptor[] methods = {
+        method("display", "Pop up the dialog; make it visible")
+      };
+      return methods;
+    }
+    catch (Exception e) {
+      return super.getMethodDescriptors();
+    }
+  }
+}
+</PRE>
+</DIV>
+
+</DIV>
+
+</DIV>
+
+
+<DIV CLASS=htmlnav>
+
+<P>
+<HR align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><A HREF="ch10_04.htm"><IMG SRC="gifs/txtpreva.gif" ALT="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src='gifs/txthome.gif' border=0 alt='Home'></a></td>
+<td width=172 align=right valign=top><A HREF="ch10_06.htm"><IMG SRC="gifs/txtnexta.gif" ALT="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Custom Events</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm"><img src='gifs/index.gif' alt='Book Index' border=0></a></td>
+<td width=172 align=right valign=top>Defining a Simple Property Editor</td>
+</tr>
+</table>
+<hr align=left width=515>
+
+<IMG SRC="gifs/smnavbar.gif" USEMAP="#map" BORDER=0> 
+<MAP NAME="map"> 
+<AREA SHAPE=RECT COORDS="0,0,108,15" HREF="../javanut/index.htm"
+alt="Java in a Nutshell"> 
+<AREA SHAPE=RECT COORDS="109,0,200,15" HREF="../langref/index.htm" 
+alt="Java Language Reference"> 
+<AREA SHAPE=RECT COORDS="203,0,290,15" HREF="../awt/index.htm" 
+alt="Java AWT"> 
+<AREA SHAPE=RECT COORDS="291,0,419,15" HREF="../fclass/index.htm" 
+alt="Java Fundamental Classes"> 
+<AREA SHAPE=RECT COORDS="421,0,514,15" HREF="../exp/index.htm" 
+alt="Exploring Java"> 
+</MAP>
+</DIV>
+
+</BODY>
+</HTML>
