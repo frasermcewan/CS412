@@ -36,7 +36,10 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 /** Simple command-line based search demo. */
 public class SearchFiles {
-  private SearchFiles() {}
+  private static String Holder = null;
+private SearchFiles(String Holder) {
+	  Holder = this.Holder;
+  }
   /** Simple command-line based search demo. */
   public static void main(String[] args) throws Exception {
     String usage =
@@ -93,9 +96,10 @@ public class SearchFiles {
     QueryParser parser = new QueryParser(field, analyzer);
     while (true) {
       if (queries == null && queryString == null) {                        // prompt the user
-        System.out.println("Enter query: ");
+       // System.out.println("Enter query: ");
       }
-      String line = queryString != null ? queryString : in.readLine();
+     // String line = queryString != null ? queryString : in.readLine();
+      String line = Holder;
       if (line == null || line.length() == -1) {
         break;
       }
