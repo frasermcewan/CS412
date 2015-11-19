@@ -5,21 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-
+import javax.swing.*;
 
 
 public class SearchWindow {
@@ -100,8 +86,15 @@ public class SearchWindow {
 			JRadioButton radButton1 = new JRadioButton("SimpleSearch",true);
 			JRadioButton radButton2 = new JRadioButton("Complex Search", false);
 			JRadioButton radButton3 = new JRadioButton("Related Search Items",false);
-			
-			
+
+			//Group the radio buttons.
+			ButtonGroup group = new ButtonGroup();
+			group.add(radButton1);
+			group.add(radButton2);
+			group.add(radButton3);
+
+
+
 			/****** Buttons ******/
 			JButton commenceSearch = new JButton("Search");
 			JButton btnCloseProgram = new JButton("Close");
