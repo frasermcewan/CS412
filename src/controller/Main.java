@@ -1,6 +1,6 @@
+package controller;
 
-
-import javax.swing.SwingUtilities;
+import view.SearchWindow;
 
 public class Main {
 

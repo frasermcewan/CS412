@@ -1,4 +1,4 @@
-
+package view;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -9,13 +9,9 @@ import javax.swing.*;
 
 
 public class SearchWindow {
-	
-
-		
-
 
 		public void run() {
-			JFrame frameMain = new JFrame("Java e-book search");
+			JFrame frameMain = new JFrame("Java E-Book Search");
 			frameMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frameMain.setPreferredSize(new Dimension(800, 500));
 			
