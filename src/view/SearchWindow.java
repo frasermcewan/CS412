@@ -33,6 +33,7 @@ public class SearchWindow {
 		//Initlizing menu system
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuSearch = new JMenu("Search");
+		
 		// create them
 		JMenuItem menuCreate = new JMenuItem("Create...");
 		JMenuItem menuExit = new JMenuItem("Exit");
@@ -41,6 +42,14 @@ public class SearchWindow {
 		menuBar.add(menuSearch);
 		menuSearch.add(menuCreate);
 		menuSearch.add(menuExit);
+		
+		// Options Menu
+		JMenu menuOption = new JMenu("Options");
+		JMenuItem menuhelp = new JMenuItem("Help");
+		JMenuItem menuabout = new JMenuItem("About");
+		menuBar.add(menuOption);
+		menuOption.add(menuhelp);
+		menuOption.add(menuabout);
 			
 		//TODO Menu Actions
 		menuCreate.addActionListener(new ActionListener() {
@@ -51,9 +60,6 @@ public class SearchWindow {
 			}
 				
 		});
-			
-		
-			
 			
 		menuExit.addActionListener(new ActionListener() {
 
