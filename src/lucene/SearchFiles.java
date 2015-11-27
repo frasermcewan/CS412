@@ -27,7 +27,7 @@ import org.apache.lucene.store.FSDirectory;
 
 /** Simple command-line based search demo. */
 public class SearchFiles {
-
+ 
 
 	String index = "index";
 	static String field = "contents";
