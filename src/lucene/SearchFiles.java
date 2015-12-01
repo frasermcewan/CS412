@@ -169,8 +169,8 @@ public class SearchFiles {
             //System.out.println("Title: " + doc.get("title"));
 
           }
-          System.out.println(path + " - " + title);
-          result.put(path, title);
+          System.out.println(title + " - " + path);
+          result.put(title, path);
 
         } else {
           //System.out.println((i+1) + ". " + "No path for this document");

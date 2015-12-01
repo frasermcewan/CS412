@@ -97,7 +97,17 @@ public class MiniBrowser extends JFrame
         displayEditorPane.setEditable(false);
         displayEditorPane.addHyperlinkListener(this);
 
-        File file = new File("data\\index.htm");
+        
+        // parameterise this
+        
+        
+        String fileLocation = "";
+        File file = new File(fileLocation);
+        
+        //File file = new File("data\\index.htm");
+        
+        
+        
         try {
             displayEditorPane.setPage(file.toURI().toURL());
         } catch (IOException e) {

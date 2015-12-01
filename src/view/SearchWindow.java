@@ -124,8 +124,8 @@ public class SearchWindow implements HyperlinkListener {
 
 				try {
 					Map<String, String> results = searcher.newsearch(holder);
-					
-					File file = new File("data\\index.htm");
+					File file = new File("");
+					//File file = new File("data\\index.htm");
 			        try {
 			            displayEditorPane.setPage(file.toURI().toURL());
 			        } catch (IOException e) {
@@ -194,8 +194,17 @@ public class SearchWindow implements HyperlinkListener {
         displayEditorPane.setContentType("text/html");
         displayEditorPane.setEditable(false);
         displayEditorPane.addHyperlinkListener(this);
-
+        
+        
+        // parameter this
+        
+        String fileLocation = "";
+        //File file = new File(fileLocation);
         File file = new File("data\\index.htm");
+        
+        
+        
+        
         try {
             displayEditorPane.setPage(file.toURI().toURL());
         } catch (IOException e) {
