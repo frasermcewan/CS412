@@ -1,23 +1,33 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import lucene.SearchFiles;
 
 
-public class SearchWindow {
+public class SearchWindow implements HyperlinkListener {
+	// Editor pane for displaying pages.
+    private JEditorPane displayEditorPane;
+    
 	public void run() {
 		JFrame frameMain = new JFrame("Java E-Book Search");
 		frameMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frameMain.setPreferredSize(new Dimension(800, 500));
+		frameMain.setPreferredSize(new Dimension(800, 800));
 
 		/****** Different Panels ******/
 		JPanel panelMain = new JPanel();
@@ -113,7 +123,15 @@ public class SearchWindow {
 				SearchFiles searcher = new SearchFiles();
 
 				try {
-					searcher.newsearch(holder);
+					Map<String, String> results = searcher.newsearch(holder);
+					
+					File file = new File("data\\index.htm");
+			        try {
+			            displayEditorPane.setPage(file.toURI().toURL());
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
@@ -170,12 +188,49 @@ public class SearchWindow {
 
 		//Add to main Window
 		panelMain.add(tabbedPane);
+		
+		// Set up page display.
+        displayEditorPane = new JEditorPane();
+        displayEditorPane.setContentType("text/html");
+        displayEditorPane.setEditable(false);
+        displayEditorPane.addHyperlinkListener(this);
+
+        File file = new File("data\\index.htm");
+        try {
+            displayEditorPane.setPage(file.toURI().toURL());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 		// all bar bottom buttons should be within a tab
 		panelMain.add(panelBottomButtons);
+		panelMain.add(displayEditorPane);
+		panelMain.add(new JScrollPane(displayEditorPane),
+                BorderLayout.CENTER);
 		frameMain.add(panelMain);
 		frameMain.setResizable(false);
 		frameMain.pack();
 		frameMain.setVisible(true);
 	}
+
+	// Handle hyperlink's being clicked.
+    public void hyperlinkUpdate(HyperlinkEvent event) {
+        HyperlinkEvent.EventType eventType = event.getEventType();
+        if (eventType == HyperlinkEvent.EventType.ACTIVATED) {
+            if (event instanceof HTMLFrameHyperlinkEvent) {
+                HTMLFrameHyperlinkEvent linkEvent =
+                        (HTMLFrameHyperlinkEvent) event;
+                HTMLDocument document =
+                        (HTMLDocument) displayEditorPane.getDocument();
+                document.processHTMLFrameHyperlinkEvent(linkEvent);
+            } else {
+            	try {
+					displayEditorPane.setPage(event.getURL());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        }
+    }
 
 }

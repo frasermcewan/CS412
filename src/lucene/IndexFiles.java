@@ -69,7 +69,7 @@ public class IndexFiles {
 				+ "This indexes the documents in DOCS_PATH, creating a Lucene index"
 				+ "in INDEX_PATH that can be searched with SearchFiles";
 		String indexPath = "index";
-		String docPath = "C:/Users/User/git/CS412/data";
+		String docPath = "data";
 		boolean create = true;
 
 
