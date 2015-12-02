@@ -1,4 +1,4 @@
-package lucene;
+package model;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -20,8 +20,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,12 +30,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
-import org.jsoup.examples.HtmlToPlainText;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -60,36 +56,14 @@ import org.apache.lucene.store.FSDirectory;
  */
 public class IndexFiles {
 
-	private IndexFiles() {}
+	public IndexFiles() {
 	/** Index all text files under a directory. */
-	public static void main(String[] args) {
 
-		String usage = "java org.apache.lucene.demo.IndexFiles"
-				+ " [-index INDEX_PATH] [-docs DOCS_PATH] [-update]\n\n"
-				+ "This indexes the documents in DOCS_PATH, creating a Lucene index"
-				+ "in INDEX_PATH that can be searched with SearchFiles";
 		String indexPath = "index";
 		String docPath = "data";
 		boolean create = true;
 
-
-		for(int i=0;i<args.length;i++) {
-			if ("-index".equals(args[i])) {
-				System.out.println("here1");
-				indexPath = args[i+1];
-				i++;
-			} else if ("-docs".equals(args[i])) {
-				System.out.println("here2");
-				docPath = args[i+1];
-				i++;
-			} else if ("-update".equals(args[i])) {
-				System.out.println("here3");
-
-				create = false;
-			}
-		}
 		if (docPath == null) {
-			System.err.println("Usage: " + usage);
 			System.exit(1);
 		}
 		final Path docDir = Paths.get(docPath);

@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 
-import lucene.SearchFiles;
+import model.SearchFiles;
 
 
 public class SearchWindow implements HyperlinkListener {
@@ -33,7 +34,7 @@ public class SearchWindow implements HyperlinkListener {
 		JPanel panelMain = new JPanel();
 		JPanel panelTab = new JPanel();
 		JPanel panelcreateSearch = new JPanel();
-		JPanel panelTable = new JPanel();
+        final JList panelTable = new JList();
 		JPanel panelBottomButtons = new JPanel();
 
 		panelMain.setLayout(new FlowLayout());
@@ -121,6 +122,7 @@ public class SearchWindow implements HyperlinkListener {
 			public void actionPerformed(ActionEvent arg0) {
 				String holder = searchQuery.getText();
 				SearchFiles searcher = new SearchFiles();
+                ArrayList<String> listResults;
 
 				try {
 					Map<String, String> results = searcher.newsearch(holder);
@@ -128,6 +130,15 @@ public class SearchWindow implements HyperlinkListener {
 					//File file = new File("data\\index.htm");
 			        try {
 			            displayEditorPane.setPage(file.toURI().toURL());
+
+//                        for (Map.Entry<String, String> entry : results.entrySet())
+//                        {
+//                            listResults.
+//                            listModel.addElement(entry.getKey());
+//                        }
+//
+//                        panelTable.setListData(listModel);
+
 			        } catch (IOException e) {
 			            e.printStackTrace();
 			        }
@@ -137,6 +148,8 @@ public class SearchWindow implements HyperlinkListener {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+
+
 
 			}
 		});
@@ -175,9 +188,18 @@ public class SearchWindow implements HyperlinkListener {
 		//Adding return list 
 		panelTable.add(scrollPane);
 
+        // Set up page display.
+        displayEditorPane = new JEditorPane();
+        displayEditorPane.setContentType("text/html");
+        displayEditorPane.setEditable(false);
+        displayEditorPane.addHyperlinkListener(this);
+
 		//Adding individual tab menu options
 		panelTab.add(panelcreateSearch);
-		panelTab.add(panelTable);
+        JSplitPane panelSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+                displayEditorPane, displayEditorPane);
+        panelSplitPanel.setResizeWeight(.5d);
+		panelTab.add(panelSplitPanel);
 
 		//Allows several searches at once
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -189,11 +211,7 @@ public class SearchWindow implements HyperlinkListener {
 		//Add to main Window
 		panelMain.add(tabbedPane);
 		
-		// Set up page display.
-        displayEditorPane = new JEditorPane();
-        displayEditorPane.setContentType("text/html");
-        displayEditorPane.setEditable(false);
-        displayEditorPane.addHyperlinkListener(this);
+
         
         
         // parameter this
@@ -201,20 +219,15 @@ public class SearchWindow implements HyperlinkListener {
         String fileLocation = "";
         //File file = new File(fileLocation);
         File file = new File("data\\index.htm");
-        
-        
-        
-        
+
         try {
             displayEditorPane.setPage(file.toURI().toURL());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 		// all bar bottom buttons should be within a tab
 		panelMain.add(panelBottomButtons);
-		panelMain.add(displayEditorPane);
-		panelMain.add(new JScrollPane(displayEditorPane),
-                BorderLayout.CENTER);
 		frameMain.add(panelMain);
 		frameMain.setResizable(false);
 		frameMain.pack();
