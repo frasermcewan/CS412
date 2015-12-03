@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 
@@ -202,13 +203,13 @@ public class SearchGUI extends Observable implements HyperlinkListener {
     }
 
     private JEditorPane makeDisplayPanel() {
-        final JEditorPane displayEditorPane = new JEditorPane();
+        displayEditorPane = new JEditorPane();
 
         displayEditorPane.setContentType("text/html");
         displayEditorPane.setEditable(false);
         displayEditorPane.addHyperlinkListener(this);
 
-        File file = new File("data\\index.htm");
+        File file = new File("data/index.htm");
 
         try {
             displayEditorPane.setPage(file.toURI().toURL());
@@ -232,6 +233,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 document.processHTMLFrameHyperlinkEvent(linkEvent);
             } else {
                 try {
+                    System.out.println(event.getURL());
                     displayEditorPane.setPage(event.getURL());
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
