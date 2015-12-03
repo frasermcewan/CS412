@@ -69,7 +69,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    if(results == null) {
+                    if(results != null) {
                         // parameter this
                         final List<String> selectedValuesList = listScrollPane.getSelectedValuesList();
                         String fileLocation = results.get(selectedValuesList.get(0));
@@ -77,7 +77,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
                         try {
                             System.out.println(file.toURI().toURL());
-//                            displayEditorPane.setPage(file.toURI().toURL());
+                            displayEditorPane.setPage(file.toURI().toURL());
                         } catch (IOException event) {
                             event.printStackTrace();
                         }
@@ -129,26 +129,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
     private JSplitPane makeSplitPane() {
 
-        ListSelectionListener listSelectionListener = new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                System.out.println("First index: " + listSelectionEvent.getFirstIndex());
-                System.out.println(", Last index: " + listSelectionEvent.getLastIndex());
-                boolean adjust = listSelectionEvent.getValueIsAdjusting();
-                System.out.println(", Adjusting? " + adjust);
-                if (!adjust) {
-                    JList list = (JList) listSelectionEvent.getSource();
-                    int selections[] = list.getSelectedIndices();
-                    Object selectionValues[] = list.getSelectedValues();
-                    for (int i = 0, n = selections.length; i < n; i++) {
-                        if (i == 0) {
-                            System.out.println(" Selections: ");
-                        }
-                        System.out.println(selections[i] + "/" + selectionValues[i] + " ");
-                    }
-                }
-            }
-        };
-
         JScrollPane scrollListPane = new JScrollPane(listScrollPane);
         JScrollPane scrollDisplayPane = new JScrollPane(makeDisplayPanel());
 
@@ -171,15 +151,15 @@ public class SearchGUI extends Observable implements HyperlinkListener {
         JTextField searchQuery = new JTextField(15);
 
         /***** Radio Button *****/
-        JRadioButton radButton1 = new JRadioButton("SimpleSearch",true);
-        JRadioButton radButton2 = new JRadioButton("Complex Search", false);
-        JRadioButton radButton3 = new JRadioButton("Related Search Items",false);
-
-        //Group the radio buttons.
-        ButtonGroup group = new ButtonGroup();
-        group.add(radButton1);
-        group.add(radButton2);
-        group.add(radButton3);
+//        JRadioButton radButton1 = new JRadioButton("SimpleSearch",true);
+//        JRadioButton radButton2 = new JRadioButton("Complex Search", false);
+//        JRadioButton radButton3 = new JRadioButton("Related Search Items",false);
+//
+//        //Group the radio buttons.
+//        ButtonGroup group = new ButtonGroup();
+//        group.add(radButton1);
+//        group.add(radButton2);
+//        group.add(radButton3);
 
         /****** Buttons ******/
         JButton commenceSearch = new JButton("Search");
@@ -187,9 +167,9 @@ public class SearchGUI extends Observable implements HyperlinkListener {
         // Add Panel
         panelCreateSearch.add(new JLabel("Enter Query"));
         panelCreateSearch.add(searchQuery);
-        panelCreateSearch.add(radButton1);
-        panelCreateSearch.add(radButton2);
-        panelCreateSearch.add(radButton3);
+//        panelCreateSearch.add(radButton1);
+//        panelCreateSearch.add(radButton2);
+//        panelCreateSearch.add(radButton3);
         panelCreateSearch.add(commenceSearch);
 
         commenceSearch.addActionListener(new ActionListener() {
@@ -200,8 +180,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 SearchFiles searcher = new SearchFiles();
 
                 ((DefaultListModel)listScrollPane.getModel()).clear();
-                ((DefaultListModel)listScrollPane.getModel()).addElement("WOO");
-                ((DefaultListModel)listScrollPane.getModel()).addElement( "Bloop" );
 
                 try {
                     results = searcher.newsearch(holder);

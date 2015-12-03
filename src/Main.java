@@ -1,3 +1,4 @@
+import model.IndexFiles;
 import view.SearchGUI;
 import view.SearchWindow;
 
@@ -10,6 +11,7 @@ public class Main {
 //		gui.run();
 
 		SearchGUI gui = new SearchGUI();
+		IndexFiles index = new IndexFiles();
 
 		gui.window.setVisible(true);
 	}
