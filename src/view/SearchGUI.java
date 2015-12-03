@@ -15,9 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Observable;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by Grant on 02/12/2015.
@@ -45,7 +44,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
     private Map<String, String> results;
 
-    private JList listScrollPane = new JList(new DefaultListModel<String>());
+    private JList<String> listScrollPane = new JList<>(new DefaultListModel<>());
 
     public SearchGUI () {
         window.setTitle("Java E-Book Search");
@@ -72,12 +71,13 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 if (!e.getValueIsAdjusting()) {
                     if(results == null) {
                         // parameter this
-                        String fileLocation = results.get(listScrollPane.getSelectedValuesList().get(0));
+                        final List<String> selectedValuesList = listScrollPane.getSelectedValuesList();
+                        String fileLocation = results.get(selectedValuesList.get(0));
                         File file = new File(fileLocation);
 
                         try {
                             System.out.println(file.toURI().toURL());
-                            displayEditorPane.setPage(file.toURI().toURL());
+//                            displayEditorPane.setPage(file.toURI().toURL());
                         } catch (IOException event) {
                             event.printStackTrace();
                         }
@@ -203,18 +203,18 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 ((DefaultListModel)listScrollPane.getModel()).addElement("WOO");
                 ((DefaultListModel)listScrollPane.getModel()).addElement( "Bloop" );
 
-//                try {
-//                    results = searcher.newsearch(holder);
-//
-//                    for (String key : results.keySet()) {
-//                        ((DefaultListModel)listScrollPane.getModel()).addElement( key );
-//                    }
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    results = searcher.newsearch(holder);
+
+                    for (String key : results.keySet()) {
+                        ((DefaultListModel)listScrollPane.getModel()).addElement( key );
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
 
             }
