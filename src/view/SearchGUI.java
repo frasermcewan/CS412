@@ -72,10 +72,15 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 if (!e.getValueIsAdjusting()) {
                     if(results != null) {
                         // parameter this
+                    	
                         final List<String> selectedValuesList = listScrollPane.getSelectedValuesList();
                         String fileLocation = results.get(selectedValuesList.get(0));
                         File file = new File(fileLocation);
-
+                        
+                       System.out.println("HERE  " + results.get(selectedValuesList.get(0)));
+                       
+ 
+                    	
                         try {
                             System.out.println(file.toURI().toURL());
                             displayEditorPane.setPage(file.toURI().toURL());
@@ -83,6 +88,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                             event.printStackTrace();
                         }
                     }
+                    
                 }
             }
         });
@@ -177,6 +183,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+            	panelCreateSearch.setFocusable(true);
                 String holder = searchQuery.getText();
                 SearchFiles searcher = new SearchFiles();
 
