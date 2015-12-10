@@ -10,8 +10,8 @@ public class Main {
 //		SearchWindow gui = new SearchWindow();
 //		gui.run();
 
+		new IndexFiles();
 		SearchGUI gui = new SearchGUI();
-		IndexFiles index = new IndexFiles();
 
 		gui.window.setVisible(true);
 	}
