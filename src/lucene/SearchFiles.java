@@ -22,10 +22,13 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -87,7 +90,20 @@ private SearchFiles(String Holder) {
     
     IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
     IndexSearcher searcher = new IndexSearcher(reader);
-    Analyzer analyzer = new StandardAnalyzer();
+    
+	final List<String> stopWords = Arrays.asList(
+			"a", "an", "are", "as", "at", "be", "but", "by",
+			"in", "into", "is", "it",
+			"no", "on", "or", "such",
+			"that", "the", "their", "then", "there", "these",
+			"they", "to", "was", "will", "with"
+			);
+	
+	//final List<String> stopWords = Arrays.asList("for", "if");	
+	
+	final CharArraySet stopSet = new CharArraySet(stopWords, true);
+    
+    Analyzer analyzer = new StandardAnalyzer(stopSet);
     BufferedReader in = null;
     if (queries != null) {
       in = Files.newBufferedReader(Paths.get(queries), StandardCharsets.UTF_8);
