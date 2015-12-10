@@ -120,9 +120,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		menuFileOpen = new JMenuItem();
 		menuFileOpen.setText("Re-Index");
 		menuFile.add(menuFileOpen);
-<<<<<<< HEAD
-=======
-		
+
 		menuFileOpen.addActionListener(new ActionListener() {
 
 			@Override
@@ -131,7 +129,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 			}
 
 		});
->>>>>>> origin/master
 
         menuFileExit = new JMenuItem();
         menuFileExit.setText("Close program");
