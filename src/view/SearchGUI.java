@@ -42,6 +42,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
     private JMenuItem menuFileSave;
     private JMenuItem menuFileSaveAs;
     private JMenuItem menuFileExit;
+    private String Holder;
 
     private Map<String, String> results;
 
@@ -120,14 +121,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		menuFileOpen = new JMenuItem();
 		menuFileOpen.setText("Re-Index");
 		menuFile.add(menuFileOpen);
-//
-//		menuFileSave = new JMenuItem();
-//		menuFileSave.setText("Save folio");
-//		menuFile.add(menuFileSave);
-//
-//		menuFileSaveAs = new JMenuItem();
-//		menuFileSaveAs.setText("Save folio As");
-//		menuFile.add(menuFileSaveAs);
 
         menuFileExit = new JMenuItem();
         menuFileExit.setText("Close program");
@@ -178,19 +171,24 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 //        panelCreateSearch.add(radButton2);
 //        panelCreateSearch.add(radButton3);
         panelCreateSearch.add(commenceSearch);
-
+    	
         commenceSearch.addActionListener(new ActionListener() {
-
+        
+        	
+        	
+   
+        	
             @Override
             public void actionPerformed(ActionEvent arg0) {
             	panelCreateSearch.setFocusable(true);
-                String holder = searchQuery.getText();
+            	topPanel.setVisible(true);
+                 Holder = searchQuery.getText();
                 SearchFiles searcher = new SearchFiles();
 
                 ((DefaultListModel)listScrollPane.getModel()).clear();
 
                 try {
-                    results = searcher.newsearch(holder);
+                    results = searcher.newsearch(Holder);
 
                     for (String key : results.keySet()) {
                         ((DefaultListModel)listScrollPane.getModel()).addElement( key );
@@ -204,7 +202,9 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 
             }
+        	
         });
+        
 
         return panelCreateSearch;
     }
