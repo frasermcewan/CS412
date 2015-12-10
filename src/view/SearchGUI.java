@@ -1,5 +1,6 @@
 package view;
 
+import model.IndexFiles;
 import model.SearchFiles;
 import org.apache.lucene.queryparser.classic.ParseException;
 
@@ -39,8 +40,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
     private JMenu menuFile;
     private JMenuItem menuFileNew;
     private JMenuItem menuFileOpen;
-    private JMenuItem menuFileSave;
-    private JMenuItem menuFileSaveAs;
     private JMenuItem menuFileExit;
     private String Holder;
 
@@ -121,10 +120,42 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		menuFileOpen = new JMenuItem();
 		menuFileOpen.setText("Re-Index");
 		menuFile.add(menuFileOpen);
+<<<<<<< HEAD
+=======
+		
+		menuFileOpen.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new IndexFiles();
+			}
+
+		});
+>>>>>>> origin/master
 
         menuFileExit = new JMenuItem();
         menuFileExit.setText("Close program");
         menuFile.add(menuFileExit);
+        
+        menuFileExit.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int replyInt = JOptionPane.showConfirmDialog(
+						window,
+						"Close?",
+						"Close Program",
+						JOptionPane.YES_NO_OPTION);
+				if (replyInt == 0) {
+					System.out.println("User did quit.");
+					//save?
+					System.exit(0);
+				} else {
+					System.out.println("User did not quit.");
+				}
+			}
+
+		});
     }
 
     private JSplitPane makeSplitPane() {
