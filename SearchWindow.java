@@ -1,3 +1,4 @@
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -11,7 +12,6 @@ public class SearchWindow {
 		JFrame frame1 = new JFrame("Java e-book search");
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame1.setPreferredSize(new Dimension(1200, 800));
-
 
 		/****** Different Panels ******/
 		JPanel panelMain = new JPanel();
@@ -32,40 +32,38 @@ public class SearchWindow {
 		panelTable2.setLayout(new BoxLayout(panelTable2, BoxLayout.Y_AXIS));
 		panelTab1.setLayout(new BoxLayout(panelTab1, BoxLayout.Y_AXIS));
 		panelTab2.setLayout(new BoxLayout(panelTab2, BoxLayout.Y_AXIS));
-		
 
-		panelBottomButtons.setLayout(new BoxLayout(panelBottomButtons,
-				BoxLayout.X_AXIS));
+		panelBottomButtons.setLayout(new BoxLayout(panelBottomButtons, BoxLayout.X_AXIS));
 
 		// Initlizing menu system
 		JMenuBar menuBar = new JMenuBar();
-		JMenu menuSearch = new JMenu("Search");
+		JMenu menuSearch = new JMenu("File");
 		// create them
-		JMenuItem menuCreate = new JMenuItem("Create...");
-		JMenuItem menuSwap = new JMenuItem("Swap search mode(Basic <--> Advanced)");
+		JMenuItem menuHelp = new JMenuItem("Help");
+		JMenuItem menuInfo = new JMenuItem("Info");
 		JMenuItem menuExit = new JMenuItem("Exit");
 		// add them
 		frame1.setJMenuBar(menuBar);
 		menuBar.add(menuSearch);
-		menuSearch.add(menuCreate);
-		menuSearch.add(menuSwap);
+		menuSearch.add(menuHelp);
+		menuSearch.add(menuInfo);
 		menuSearch.add(menuExit);
-		
+
 		// TODO Menu Actions
-		menuCreate.addActionListener(new ActionListener() {
+		menuHelp.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Create Tab Searches?
+				createHelpDialogBox();
 			}
 
 		});
-		
-		menuSwap.addActionListener(new ActionListener() {
+
+		menuInfo.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Create Tab Searches?
+				createInfoDialogBox();
 			}
 
 		});
@@ -79,8 +77,7 @@ public class SearchWindow {
 			}
 
 		});
-		
-	
+
 		// Return Search List
 		JTable searchList = new JTable();
 		JScrollPane scrollPane1 = new JScrollPane(searchList);
@@ -120,8 +117,7 @@ public class SearchWindow {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				{
-					int replyInt = JOptionPane.showConfirmDialog(frame1,
-							"Close?", "Close Program",
+					int replyInt = JOptionPane.showConfirmDialog(frame1, "Close?", "Close Program",
 							JOptionPane.YES_NO_OPTION);
 					if (replyInt == 0) {
 						System.out.println("User did quit.");
@@ -139,7 +135,7 @@ public class SearchWindow {
 		panelcreateSearch.add(new JLabel("Enter Query"));
 		panelcreateSearch.add(searchQuery);
 		panelcreateSearch.add(commenceSearch);
-		
+
 		panelcreateSearchAdvanced1.add(new JLabel("Standard Search(OR)"));
 		panelcreateSearchAdvanced1.add(searchQueryStandard);
 		panelcreateSearchAdvanced1.add(commenceSearchOR);
@@ -152,29 +148,27 @@ public class SearchWindow {
 		panelcreateSearchAdvanced4.add(new JLabel("Exact search(Quoted search)"));
 		panelcreateSearchAdvanced4.add(searchQueryExactQuote);
 		panelcreateSearchAdvanced4.add(commenceSearchQUOTED);
-		
+
 		// Adding return list
 		panelTable1.add(scrollPane1);
 		panelTable2.add(scrollPane2);
-		
+
 		// Adding individual tab menu options
 		panelTab1.add(panelcreateSearch);
 		panelTab1.add(panelTable1);
 		panelTab1.setVisible(true);
-		
-	    panelTab2.add(panelcreateSearchAdvanced1);
-	    panelTab2.add(panelcreateSearchAdvanced2);
-	    panelTab2.add(panelcreateSearchAdvanced3);
-	    panelTab2.add(panelcreateSearchAdvanced4);
+
+		panelTab2.add(panelcreateSearchAdvanced1);
+		panelTab2.add(panelcreateSearchAdvanced2);
+		panelTab2.add(panelcreateSearchAdvanced3);
+		panelTab2.add(panelcreateSearchAdvanced4);
 		panelTab2.add(panelTable2);
 		panelTab2.setVisible(true);
-		
 
 		// Allows several searches at once
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Basic Search", panelTab1);
 		tabbedPane.addTab("Advanced Search", panelTab2);
-		
 
 		// Add Close Button
 		panelBottomButtons.add(btnCloseProgram);
@@ -188,6 +182,41 @@ public class SearchWindow {
 		frame1.pack();
 		frame1.setVisible(true);
 
+	}
+
+	private void createHelpDialogBox() {
+		Object[] options = { "Close" };
+		Component frame = null;
+		int n = JOptionPane.showOptionDialog(frame, "STANDARD SEARCH \n" + "\n To use standard search, "
+				+ "simply select the standard search tab and then input your \n search words into the "
+				+ "search box. \n \n Once you click search, select one of the search results shown below "
+				+ "the search \n on the left to view the page. \n \n ADVANCED SEARCH \n \n"
+				+ "OR: The OR search is identical to the standard searches search.\n"
+				+ "AND: The AND search allows you to search for multiple words in \n"
+				+ "the same document. \n"
+				+ "NOT: NOT allows you to add related words which you wish to ignore. \n"
+				+ "Quoted Search: This allows you to search for a full quote "
+				+ "in a document \n(Watch your punctuation when using this search)\n"
+				+ "", 
+				"Help", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options,
+				options[0]);
+
+	}
+
+	private void createInfoDialogBox() {
+		Object[] options = { "Close" };
+		Component frame = null;
+		int n = JOptionPane.showOptionDialog(frame, "INFORMATION \n \n This search engine was designed "
+				+ "for \n CS412 at Strathclyde University in 2015. Authors: \n"
+				+ "Fraser McEwan \n"
+				+ "Graeme Sutters \n"
+				+ "Jhordan Tease \n"
+				+ "David Thomson \n"
+				+ "Grant Toghill \n"
+				+ "\n Framework for Search Engine provided by Apache Lucene. \n \n"
+				+ "https://lucene.apache.org/ \n", 
+				"Information", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
+				options[0]);
 	}
 
 }
