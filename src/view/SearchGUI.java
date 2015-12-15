@@ -5,6 +5,7 @@ import model.SearchFiles;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
@@ -34,6 +35,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JPanel panelcreateSearchAdvanced2 = new JPanel();
 	private JPanel panelcreateSearchAdvanced3 = new JPanel();
 	private JPanel panelcreateSearchAdvanced4 = new JPanel();
+	private JPanel bottomPanel;
 
 	// Pane Objects
 	private JEditorPane displayEditorPane;
@@ -44,6 +46,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JMenu menuFile;
 	private JMenuItem menuFileNew;
 	private JMenuItem menuFileOpen;
+	private JMenuItem menuFileHelp;
+	private JMenuItem menuFileInfo;
 	private JMenuItem menuFileExit;
 	private String Holder;
 	private String AdvancedHolder;
@@ -52,6 +56,11 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JButton commenceSearchAND = new JButton("Search");
 	private JButton commenceSearchNOT = new JButton("Search");
 	private JButton commenceSearchQUOTED = new JButton("Search");
+	
+	private JButton RelatedSearchButton1 = new JButton("");
+	private JButton RelatedSearchButton2 = new JButton("");
+	private JButton RelatedSearchButton3 = new JButton("");
+
 
 	private JTextField searchQueryStandard = new JTextField(25);
 	private JTextField searchQueryIncludes = new JTextField(25);
@@ -66,15 +75,14 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	public SearchGUI() {
 		window.setTitle("Java E-Book Search");
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		window.setSize(1000, 700);
+		window.setSize(1200, 800);
 		window.setResizable(false);
 
-		
+		makeMenu();
 		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout());
 		panel1.add(makeSearchPanel(), BorderLayout.NORTH);
-		makeMenu();
 		panel1.add(makeSplitPane(), BorderLayout.CENTER);
 		
 		
@@ -82,7 +90,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new BorderLayout());
 		panel2.add(makeComplexSearchPanel(), BorderLayout.NORTH);
-		makeMenu();
 		panel2.add(makeSplitPane2(), BorderLayout.CENTER);
 
 	
@@ -91,6 +98,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		tabbedPane.addTab("Basic Search", panel1);
 		tabbedPane.addTab("Advanced Search", panel2);
 		window.getContentPane().add(tabbedPane);
+		
+		//makeBottom();
 
 		listScrollPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listScrollPane.addListSelectionListener(new ListSelectionListener() {
@@ -120,7 +129,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		});
 
 		
-listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		listScrollPane2.addListSelectionListener(new ListSelectionListener() {
 		
@@ -188,6 +197,32 @@ listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new IndexFiles();
+			}
+
+		});
+		
+		menuFileHelp = new JMenuItem();
+		menuFileHelp.setText("Help");
+		menuFile.add(menuFileHelp);
+
+		menuFileHelp.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createHelpDialogBox();
+			}
+
+		});
+		
+		menuFileInfo = new JMenuItem();
+		menuFileInfo.setText("Info");
+		menuFile.add(menuFileInfo);
+
+		menuFileInfo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createInfoDialogBox();
 			}
 
 		});
@@ -495,6 +530,26 @@ listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		return displayEditorPane2;
 	}
 	
+	private void makeBottom() {
+		bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BorderLayout());
+		window.getContentPane().add(bottomPanel);
+		
+		bottomPanel.setVisible(true);
+		
+		RelatedSearchButton1 = new JButton("Related1");
+		RelatedSearchButton1.setSize(10, 10);
+		bottomPanel.add(RelatedSearchButton1);
+		
+		RelatedSearchButton2 = new JButton("Related2");
+		RelatedSearchButton2.setSize(10, 10);
+		bottomPanel.add(RelatedSearchButton2);
+		
+		RelatedSearchButton3 = new JButton("Related3");
+		RelatedSearchButton3.setSize(10, 10);
+		bottomPanel.add(RelatedSearchButton3);
+	}
+	
 
 	@Override
 	public void hyperlinkUpdate(HyperlinkEvent event) {
@@ -519,5 +574,43 @@ listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	public void changeButtons() {
 
 	}
+	
+	private void createHelpDialogBox() {
+		Object[] options = { "Close" };
+		Component frame = null;
+		int n = JOptionPane.showOptionDialog(frame, "STANDARD SEARCH \n" + "\n To use standard search, "
+				+ "simply select the standard search tab and then input your \n search words into the "
+				+ "search box. \n \n Once you click search, select one of the search results shown below "
+				+ "the search \n on the left to view the page. \n \n ADVANCED SEARCH \n \n"
+				+ "OR: The OR search is identical to the standard searches search.\n\n"
+				+ "AND: The AND search allows you to search for multiple words in \n"
+				+ "the same document. \n \n"
+				+ "NOT: NOT allows you to add related words which you wish to ignore. \n\n"
+				+ "Quoted Search: This allows you to search for a full quote "
+				+ "in a document \n(Watch your punctuation when using this search)\n"
+				+ "", 
+				"Help", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options,
+				options[0]);
+
+	}
+
+	private void createInfoDialogBox() {
+		Object[] options = { "Close" };
+		Component frame = null;
+		int n = JOptionPane.showOptionDialog(frame, "INFORMATION \n \n This search engine was designed "
+				+ "for \n CS412 at Strathclyde University in 2015. Authors: \n\n"
+				+ "Fraser McEwan \n"
+				+ "Graeme Sutters \n"
+				+ "Jhordan Tease \n"
+				+ "David Thomson \n"
+				+ "Grant Toghill \n"
+				+ "\n Framework for Search Engine provided by Apache Lucene. \n \n"
+				+ "https://lucene.apache.org/ \n"
+				+ "\n GUI designed using the Swing Java Toolkit. ",
+				"Information", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
+				options[0]);
+	}
 
 }
+
+
