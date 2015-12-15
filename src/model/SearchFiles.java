@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -54,7 +57,16 @@ public class SearchFiles {
     int repeat = 0;
 
 
-    Analyzer analyzer = new StandardAnalyzer();
+    final List<String> stopWords = Arrays.asList(
+			"a", "an", "and", "are", "as", "at", "be", "but", "by",
+			"in", "into", "is", "it",
+			"no", "not", "of", "on", "or", "such",
+			"that", "the", "their", "then", "there", "these",
+			"they", "to", "was", "will", "with"
+			);
+    final CharArraySet stopSet = new CharArraySet(stopWords, false);
+    
+    Analyzer analyzer = new StandardAnalyzer(stopSet);
     AnalyzingQueryParser parser = new AnalyzingQueryParser(field, analyzer);
     Query query = parser.parse(q);
     BufferedReader in = null;
