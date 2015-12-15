@@ -94,7 +94,7 @@ private SearchFiles(String Holder) {
 	final List<String> stopWords = Arrays.asList(
 			"a", "an", "are", "as", "at", "be", "but", "by",
 			"in", "into", "is", "it",
-			"no", "on", "or", "such",
+			"no", "on", "such",
 			"that", "the", "their", "then", "there", "these",
 			"they", "to", "was", "will", "with"
 			);
@@ -126,7 +126,7 @@ private SearchFiles(String Holder) {
       }
       
       Query query = parser.parse(line);
-      System.out.println("Searching for: " + query.toString(field));
+      System.out.println("Searching for111111: " + query.toString(field));
             
       if (repeat > 0) {                           // repeat & time as benchmark
         Date start = new Date();

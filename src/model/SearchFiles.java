@@ -17,10 +17,16 @@ import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.analyzing.AnalyzingQueryParser;
+import org.apache.lucene.queryparser.complexPhrase.ComplexPhraseQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.BooleanQuery.Builder;
 import org.apache.lucene.search.Explanation;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -60,21 +66,61 @@ public class SearchFiles {
 		final List<String> stopWords = Arrays.asList(
 				"a", "an", "are", "as", "at", "be", "but", "by",
 				"in", "into", "is", "it",
-				"no", "on", "or", "such",
+				"no", "on", "such",
 				"that", "the", "their", "then", "there", "these",
 				"they", "to", "was", "will", "with"
 				);
-
-		//final List<String> stopWords = Arrays.asList("for", "if");	
 
 		final CharArraySet stopSet = new CharArraySet(stopWords, false);
 
 
 		Analyzer analyzer = new StandardAnalyzer(stopSet);
 		AnalyzingQueryParser parser = new AnalyzingQueryParser(field, analyzer);
-		Query query = parser.parse(q);
-		BufferedReader in = null;
 
+		String[] items = q.split(" ");
+		List<String> itemList = Arrays.asList(items);
+		Query query = null;
+		
+		PhraseQuery.Builder builder = new PhraseQuery.Builder();
+		for (String word : itemList) {
+			builder.add(new Term("contents", word));
+		}
+		PhraseQuery pq = builder.build();
+
+
+//		PhraseQuery pq1 = new PhraseQuery();
+//		String[] words = sentence.split(" ");
+//		for (String word : words) {
+//		    pq.add(new Term("contents", word));
+//		}
+//		booleanQuery.add(pq1, BooleanClause.Occur.MUST);
+		
+		
+		for (int i=0;i<itemList.size();i++){
+			
+		}
+		
+		
+//		String query1 = "";
+//		String query2 = "";
+//
+//		for (int i=0;i<itemList.size();i++){
+//			if (itemList.get(i).equalsIgnoreCase("and")){
+//				query1=itemList.get(i-1);
+//				query2=itemList.get(i+1);
+//				Query query11 = parser.createBooleanQuery(field, query1, Occur.MUST);
+//				query11 = parser.createBooleanQuery(field, query1+" " +query2, Occur.MUST);
+//				query = query11;
+//			}
+//			
+//		}
+		
+		if (query==null){
+			query = parser.parse(q);
+		}
+		
+		
+		BufferedReader in = null;
 		in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
 		System.out.println("Searching for: " + query);
@@ -100,7 +146,10 @@ public class SearchFiles {
 		// Collect enough docs to show 5 pages
 		TopDocs results = searcher.search(query, 5 * hitsPerPage);
 
-		Explanation results2 = searcher.explain(query, 268);
+		if (results.totalHits==0){
+			System.out.println("got here");
+
+		}
 
 		//System.out.println(results2);
 
