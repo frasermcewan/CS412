@@ -7,8 +7,8 @@ public class Main {
 	
 	public static void main(String[] args)  {
 //		IndexFiles index = new IndexFiles();
-//		SearchWindow gui = new SearchWindow();
-//		gui.run();
+//		SearchWindow gui1 = new SearchWindow();
+//		gui1.run();
 
 		new IndexFiles();
 		SearchGUI gui = new SearchGUI();
