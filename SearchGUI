@@ -5,6 +5,7 @@ import model.SearchFiles;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
@@ -55,6 +56,11 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JButton commenceSearchAND = new JButton("Search");
 	private JButton commenceSearchNOT = new JButton("Search");
 	private JButton commenceSearchQUOTED = new JButton("Search");
+	
+	private JButton RelatedSearchButton1 = new JButton("");
+	private JButton RelatedSearchButton2 = new JButton("");
+	private JButton RelatedSearchButton3 = new JButton("");
+
 
 	private JTextField searchQueryStandard = new JTextField(25);
 	private JTextField searchQueryIncludes = new JTextField(25);
@@ -69,15 +75,14 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	public SearchGUI() {
 		window.setTitle("Java E-Book Search");
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		window.setSize(1000, 700);
+		window.setSize(1200, 800);
 		window.setResizable(false);
 
-		
+		makeMenu();
 		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout());
 		panel1.add(makeSearchPanel(), BorderLayout.NORTH);
-		makeMenu();
 		panel1.add(makeSplitPane(), BorderLayout.CENTER);
 		
 		
@@ -85,7 +90,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new BorderLayout());
 		panel2.add(makeComplexSearchPanel(), BorderLayout.NORTH);
-		makeMenu();
 		panel2.add(makeSplitPane2(), BorderLayout.CENTER);
 
 	
@@ -94,6 +98,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		tabbedPane.addTab("Basic Search", panel1);
 		tabbedPane.addTab("Advanced Search", panel2);
 		window.getContentPane().add(tabbedPane);
+		
+		//makeBottom();
 
 		listScrollPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listScrollPane.addListSelectionListener(new ListSelectionListener() {
@@ -123,7 +129,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		});
 
 		
-listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		listScrollPane2.addListSelectionListener(new ListSelectionListener() {
 		
@@ -522,6 +528,26 @@ listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		}
 
 		return displayEditorPane2;
+	}
+	
+	private void makeBottom() {
+		bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BorderLayout());
+		window.getContentPane().add(bottomPanel);
+		
+		bottomPanel.setVisible(true);
+		
+		RelatedSearchButton1 = new JButton("Related1");
+		RelatedSearchButton1.setSize(10, 10);
+		bottomPanel.add(RelatedSearchButton1);
+		
+		RelatedSearchButton2 = new JButton("Related2");
+		RelatedSearchButton2.setSize(10, 10);
+		bottomPanel.add(RelatedSearchButton2);
+		
+		RelatedSearchButton3 = new JButton("Related3");
+		RelatedSearchButton3.setSize(10, 10);
+		bottomPanel.add(RelatedSearchButton3);
 	}
 	
 
