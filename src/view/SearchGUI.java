@@ -1,6 +1,7 @@
 package view;
 
 import model.IndexFiles;
+import model.RelatedSearches;
 import model.SearchFiles;
 import org.apache.lucene.queryparser.classic.ParseException;
 
@@ -36,6 +37,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JPanel panelcreateSearchAdvanced3 = new JPanel();
 	private JPanel panelcreateSearchAdvanced4 = new JPanel();
 	private JPanel bottomPanel;
+    private JPanel relatedSearchesPanel;
 
 	// Pane Objects
 	private JEditorPane displayEditorPane;
@@ -65,7 +67,9 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JTextField searchQueryExactQuote = new JTextField(25);
 
 	private Map<String, String> results;
-
+	 private List<String> related;
+	 private RelatedSearches rsearches = new RelatedSearches();
+	 
 	private JList<String> listScrollPane = new JList<>(new DefaultListModel<>());
 	private JList<String> listScrollPane2 = new JList<>(new DefaultListModel<>());
 
@@ -74,6 +78,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		window.setSize(1200, 800);
 		window.setResizable(false);
+		relatedSearchesPanel = new JPanel();
+        relatedSearchesPanel.add(new JLabel("Related Searches"));
 
 		makeMenu();
 		
@@ -96,7 +102,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		tabbedPane.addTab("Advanced Search", panel2);
 		window.getContentPane().add(tabbedPane);
 		
-		makeBottom();
+	//	makeBottom();
 
 		listScrollPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listScrollPane.addListSelectionListener(new ListSelectionListener() {
@@ -303,7 +309,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				((DefaultListModel) listScrollPane.getModel()).clear();
 
 				try {
-					results = searcher.directQuoteSearch(Holder);
+					results = searcher.newsearch(Holder);
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
@@ -321,6 +327,17 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 		return panelCreateSearch;
 	}
+	
+	 private JPanel relatedPanel(){
+	    	JPanel panel = new JPanel();
+			//panel.add(new JLabel("Related Searches"));
+			
+			for (String s : related){
+				JButton button = new JButton(s);
+				panel.add(button, BorderLayout.CENTER);
+			}
+			return panel;
+	 }
 
 	private JPanel makeComplexSearchPanel() {
 		final JPanel panelComplexSearch = new JPanel();
@@ -370,11 +387,17 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				((DefaultListModel) listScrollPane2.getModel()).clear();
 
 				try {
-					results = searcher.directQuoteSearch(AdvancedHolder);
+					results = searcher.newsearch(AdvancedHolder);
+					related = rsearches.getRelated(AdvancedHolder);
+                    System.out.println(related.toString());
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
 					}
+					
+					JPanel rpanel = relatedPanel();
+                    relatedSearchesPanel.add(rpanel, BorderLayout.SOUTH);
+                    window.repaint();
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -426,7 +449,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		return displayEditorPane2;
 	}
 	
-	private void makeBottom() {
+	private void makeBottom(List<String> related) {
 		bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridLayout(0,3));
 		window.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
