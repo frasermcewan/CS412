@@ -306,7 +306,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				((DefaultListModel) listScrollPane.getModel()).clear();
 
 				try {
-					results = searcher.newsearch(Holder);
+					results = searcher.directQuoteSearch(Holder);
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
@@ -379,7 +379,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				((DefaultListModel) listScrollPane2.getModel()).clear();
 
 				try {
-					results = searcher.newsearch(AdvancedHolder);
+					results = searcher.directQuoteSearch(AdvancedHolder);
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
@@ -411,7 +411,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				((DefaultListModel) listScrollPane2.getModel()).clear();
 
 				try {
-					results = searcher.newsearch(AdvancedHolder);
+					results = searcher.directQuoteSearch(AdvancedHolder);
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
@@ -443,7 +443,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				((DefaultListModel) listScrollPane2.getModel()).clear();
 
 				try {
-					results = searcher.newsearch(AdvancedHolder);
+					results = searcher.directQuoteSearch(AdvancedHolder);
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
@@ -474,7 +474,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				((DefaultListModel) listScrollPane2.getModel()).clear();
 
 				try {
-					results = searcher.newsearch(AdvancedHolder);
+					results = searcher.directQuoteSearch(AdvancedHolder);
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);

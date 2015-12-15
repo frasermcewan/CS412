@@ -84,7 +84,7 @@ public class IndexFiles {
 			final List<String> stopWords = Arrays.asList(
 					"a", "an", "are", "as", "at", "be", "but", "by",
 					"in", "into", "is", "it",
-					"no", "on", "or", "such",
+					"no", "on", "such",
 					"that", "the", "their", "then", "there", "these",
 					"they", "to", "was", "will", "with"
 					);
@@ -92,9 +92,7 @@ public class IndexFiles {
 			//final List<String> stopWords = Arrays.asList("for", "if");	
 			
 			final CharArraySet stopSet = new CharArraySet(stopWords, false);
-			
-			System.out.println(stopSet.toString());
-			
+						
 			Analyzer analyzer = new StandardAnalyzer(stopSet);
 						
 			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
@@ -259,13 +257,7 @@ public class IndexFiles {
 	}
 
 	public static String html2text(String html, String pathField, HashMap<String,String> mappingPathToTitle) {
-		final List<String> stopWords = Arrays.asList(
-				"a", "an", "and", "are", "as", "at", "be", "but", "by",
-				"in", "into", "is", "it",
-				"no", "not", "of", "on", "or", "such",
-				"that", "the", "their", "then", "there", "these",
-				"they", "to", "was", "will", "with"
-				);
+
 		Pattern pattern = Pattern.compile("<TITLE>(.+?)</TITLE>");
 		Matcher matcher = pattern.matcher(html.toUpperCase());
 
