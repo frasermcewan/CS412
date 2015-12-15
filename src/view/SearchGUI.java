@@ -222,7 +222,7 @@ listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		final JSplitPane panelSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollListPane,
 				scrollDisplayPane);
 
-		panelSplitPane.setResizeWeight(0.5);
+		panelSplitPane.setResizeWeight(0.3);
 		panelSplitPane.setOneTouchExpandable(true);
 		panelSplitPane.setContinuousLayout(true);
 
@@ -236,7 +236,7 @@ listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		final JSplitPane panelSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollListPane,
 				scrollDisplayPane);
 
-		panelSplitPane.setResizeWeight(0.5);
+		panelSplitPane.setResizeWeight(0.3);
 		panelSplitPane.setOneTouchExpandable(true);
 		panelSplitPane.setContinuousLayout(true);
 
