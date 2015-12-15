@@ -52,10 +52,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private String Holder;
 	private String AdvancedHolder;
 
-	private JButton commenceSearchOR = new JButton("Search");
-	private JButton commenceSearchAND = new JButton("Search");
-	private JButton commenceSearchNOT = new JButton("Search");
-	private JButton commenceSearchQUOTED = new JButton("Search");
+	private JButton commenceSearch = new JButton("Search");
 	
 	private JButton RelatedSearchButton1 = new JButton("");
 	private JButton RelatedSearchButton2 = new JButton("");
@@ -99,7 +96,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		tabbedPane.addTab("Advanced Search", panel2);
 		window.getContentPane().add(tabbedPane);
 		
-		//makeBottom();
+		makeBottom();
 
 		listScrollPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listScrollPane.addListSelectionListener(new ListSelectionListener() {
@@ -337,26 +334,20 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		searchQueryExcludes = new JTextField(25);
 		searchQueryExactQuote = new JTextField(25);
 
-		commenceSearchOR = new JButton("Search");
-		commenceSearchAND = new JButton("Search");
-		commenceSearchNOT = new JButton("Search");
-		commenceSearchQUOTED = new JButton("Search");
+		commenceSearch = new JButton("Search");
 
 		panelcreateSearchAdvanced1.add(new JLabel("Standard Search(OR)"));
 		panelcreateSearchAdvanced1.add(searchQueryStandard);
-		panelcreateSearchAdvanced1.add(commenceSearchOR);
 
 		panelcreateSearchAdvanced2.add(new JLabel("Included search(AND)"));
 		panelcreateSearchAdvanced2.add(searchQueryIncludes);
-		panelcreateSearchAdvanced2.add(commenceSearchAND);
 
 		panelcreateSearchAdvanced3.add(new JLabel("Excluded search(NOT)"));
 		panelcreateSearchAdvanced3.add(searchQueryExcludes);
-		panelcreateSearchAdvanced3.add(commenceSearchNOT);
 
 		panelcreateSearchAdvanced4.add(new JLabel("Exact search(Quoted search)"));
 		panelcreateSearchAdvanced4.add(searchQueryExactQuote);
-		panelcreateSearchAdvanced4.add(commenceSearchQUOTED);
+		panelcreateSearchAdvanced4.add(commenceSearch);
 
 		panelComplexSearch.add(panelcreateSearchAdvanced1);
 		panelComplexSearch.add(panelcreateSearchAdvanced2);
@@ -364,7 +355,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		panelComplexSearch.add(panelcreateSearchAdvanced4);
 		panelComplexSearch.setVisible(true);
 
-		commenceSearchOR.addActionListener(new ActionListener() {
+		commenceSearch.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -374,101 +365,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				searchQueryIncludes.setText(null);
 				searchQueryExcludes.setText(null);
 				searchQueryExactQuote.setText(null);
-				SearchFiles searcher = new SearchFiles();
-
-				((DefaultListModel) listScrollPane2.getModel()).clear();
-
-				try {
-					results = searcher.directQuoteSearch(AdvancedHolder);
-
-					for (String key : results.keySet()) {
-						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-
-			}
-
-		});
-
-		commenceSearchAND.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				panelComplexSearch.setFocusable(true);
-				topPanel.setVisible(true);
-				AdvancedHolder = searchQueryIncludes.getText();
-				searchQueryStandard.setText(null);
-				searchQueryExcludes.setText(null);
-				searchQueryExactQuote.setText(null);
-
-				SearchFiles searcher = new SearchFiles();
-
-				((DefaultListModel) listScrollPane2.getModel()).clear();
-
-				try {
-					results = searcher.directQuoteSearch(AdvancedHolder);
-
-					for (String key : results.keySet()) {
-						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-
-			}
-
-		});
-
-		commenceSearchNOT.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				panelComplexSearch.setFocusable(true);
-				topPanel.setVisible(true);
-				AdvancedHolder = searchQueryExcludes.getText();
-				searchQueryIncludes.setText(null);
-				searchQueryStandard.setText(null);
-				searchQueryExactQuote.setText(null);
-
-				SearchFiles searcher = new SearchFiles();
-
-				((DefaultListModel) listScrollPane2.getModel()).clear();
-
-				try {
-					results = searcher.directQuoteSearch(AdvancedHolder);
-
-					for (String key : results.keySet()) {
-						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-
-			}
-
-		});
-
-		commenceSearchQUOTED.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				panelComplexSearch.setFocusable(true);
-				topPanel.setVisible(true);
-				AdvancedHolder = searchQueryExactQuote.getText();
-				searchQueryIncludes.setText(null);
-				searchQueryExcludes.setText(null);
-				searchQueryStandard.setText(null);
 				SearchFiles searcher = new SearchFiles();
 
 				((DefaultListModel) listScrollPane2.getModel()).clear();
@@ -532,21 +428,18 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	
 	private void makeBottom() {
 		bottomPanel = new JPanel();
-		bottomPanel.setLayout(new BorderLayout());
-		window.getContentPane().add(bottomPanel);
+		bottomPanel.setLayout(new GridLayout(0,3));
+		window.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
 		bottomPanel.setVisible(true);
 		
 		RelatedSearchButton1 = new JButton("Related1");
-		RelatedSearchButton1.setSize(10, 10);
 		bottomPanel.add(RelatedSearchButton1);
 		
 		RelatedSearchButton2 = new JButton("Related2");
-		RelatedSearchButton2.setSize(10, 10);
 		bottomPanel.add(RelatedSearchButton2);
 		
 		RelatedSearchButton3 = new JButton("Related3");
-		RelatedSearchButton3.setSize(10, 10);
 		bottomPanel.add(RelatedSearchButton3);
 	}
 	
