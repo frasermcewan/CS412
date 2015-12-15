@@ -99,7 +99,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		tabbedPane.addTab("Advanced Search", panel2);
 		window.getContentPane().add(tabbedPane);
 		
-		//makeBottom();
+		makeBottom();
 
 		listScrollPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listScrollPane.addListSelectionListener(new ListSelectionListener() {
@@ -532,21 +532,18 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	
 	private void makeBottom() {
 		bottomPanel = new JPanel();
-		bottomPanel.setLayout(new BorderLayout());
-		window.getContentPane().add(bottomPanel);
+		bottomPanel.setLayout(new GridLayout(0,3));
+		window.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
 		bottomPanel.setVisible(true);
 		
 		RelatedSearchButton1 = new JButton("Related1");
-		RelatedSearchButton1.setSize(10, 10);
 		bottomPanel.add(RelatedSearchButton1);
 		
 		RelatedSearchButton2 = new JButton("Related2");
-		RelatedSearchButton2.setSize(10, 10);
 		bottomPanel.add(RelatedSearchButton2);
 		
 		RelatedSearchButton3 = new JButton("Related3");
-		RelatedSearchButton3.setSize(10, 10);
 		bottomPanel.add(RelatedSearchButton3);
 	}
 	
