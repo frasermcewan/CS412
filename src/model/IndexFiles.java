@@ -35,7 +35,10 @@ import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.StopFilter;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongField;
@@ -47,6 +50,7 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 //import org.apache.lucene.StopAnalyzer.ENGLISH_STOP_WORDS_SET*;
 
 /** Index all text files under a directory.
@@ -76,8 +80,25 @@ public class IndexFiles {
 		try {
 			System.out.println("Indexing to directory '" + indexPath + "'...");
 			Directory dir = FSDirectory.open(Paths.get(indexPath));
-			Analyzer analyzer = new StandardAnalyzer();
+			
+			final List<String> stopWords = Arrays.asList(
+					"a", "an", "are", "as", "at", "be", "but", "by",
+					"in", "into", "is", "it",
+					"no", "on", "or", "such",
+					"that", "the", "their", "then", "there", "these",
+					"they", "to", "was", "will", "with"
+					);
+			
+			//final List<String> stopWords = Arrays.asList("for", "if");	
+			
+			final CharArraySet stopSet = new CharArraySet(stopWords, false);
+			
+			System.out.println(stopSet.toString());
+			
+			Analyzer analyzer = new StandardAnalyzer(stopSet);
+						
 			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+			
 			if (create) {
 				// Create a new index in the directory, removing any
 				// previously indexed documents:
