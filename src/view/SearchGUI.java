@@ -2,6 +2,7 @@ package view;
 
 import model.IndexFiles;
 import model.SearchFiles;
+import model.RelatedSearches;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import javax.swing.*;
@@ -70,16 +71,19 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 	private Map<String, String> results;
 
+    private RelatedSearches rsearches = new RelatedSearches();
+    private List<String> related;
+
 	private JList<String> listScrollPane = new JList<>(new DefaultListModel<>());
 	private JList<String> listScrollPane2 = new JList<>(new DefaultListModel<>());
 
 	public SearchGUI() {
 		window.setTitle("Java E-Book Search");
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		window.setSize(900, 750);
+		window.setSize(1000, 800);
 		window.setResizable(false);
 
-		makeMenu();
+        makeMenu();
 		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout());
@@ -104,65 +108,63 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 		listScrollPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listScrollPane.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (e.getValueIsAdjusting()) {
-					if (results != null) {
-						// parameter this
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting()) {
+                    if (results != null) {
+                        // parameter this
 
-						final List<String> selectedValuesList = listScrollPane.getSelectedValuesList();
-						String fileLocation = results.get(selectedValuesList.get(0));
-						File file = new File(fileLocation);
+                        final List<String> selectedValuesList = listScrollPane.getSelectedValuesList();
+                        String fileLocation = results.get(selectedValuesList.get(0));
+                        File file = new File(fileLocation);
 
-						System.out.println("HERE  " + results.get(selectedValuesList.get(0)));
+                        System.out.println("HERE  " + results.get(selectedValuesList.get(0)));
 
-						try {
-							System.out.println(file.toURI().toURL());
-							displayEditorPane.setPage(file.toURI().toURL());
-						} catch (IOException event) {
-							event.printStackTrace();
-						}
-						
-					}
-			
-				}
-			}
+                        try {
+                            System.out.println(file.toURI().toURL());
+                            displayEditorPane.setPage(file.toURI().toURL());
+                        } catch (IOException event) {
+                            event.printStackTrace();
+                        }
+
+                    }
+
+                }
+            }
 		});
 
 		
 		listScrollPane2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		listScrollPane2.addListSelectionListener(new ListSelectionListener() {
-		
-		public void valueChanged(ListSelectionEvent e) {
-			if (e.getValueIsAdjusting()) {
-				if (results != null) {
-					// parameter this
 
-					final List<String> selectedValuesList2 = listScrollPane2.getSelectedValuesList();
-					
-					if(!selectedValuesList2.get(0).equals(null)) {
-						
-					
-					String fileLocation = results.get(selectedValuesList2.get(0));
-					File file = new File(fileLocation);
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting()) {
+                    if (results != null) {
+                        // parameter this
 
-					System.out.println("HERE  " + results.get(selectedValuesList2.get(0)));
-					
-					
+                        final List<String> selectedValuesList2 = listScrollPane2.getSelectedValuesList();
 
-					try {
-						System.out.println(file.toURI().toURL());
-						displayEditorPane2.setPage(file.toURI().toURL());
-					}
-					catch (IOException event) {
-						event.printStackTrace();
-					}
-				}
-				}
-			}
-		}
-	});
+                        if (!selectedValuesList2.get(0).equals(null)) {
+
+
+                            String fileLocation = results.get(selectedValuesList2.get(0));
+                            File file = new File(fileLocation);
+
+                            System.out.println("HERE  " + results.get(selectedValuesList2.get(0)));
+
+
+                            try {
+                                System.out.println(file.toURI().toURL());
+                                displayEditorPane2.setPage(file.toURI().toURL());
+                            } catch (IOException event) {
+                                event.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+		});
 
 		
 		
@@ -304,133 +306,128 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	
 		
 		contentQuery.addKeyListener(new KeyListener() {
-			
-		
-			@Override
-			public void keyPressed(KeyEvent k) {
-				int i = 0;
-				if(k.getKeyCode() == KeyEvent.VK_ENTER) {
-	            
-	             
-				Holder = contentQuery.getText().toLowerCase();
-				System.out.println("Key: " + Holder);
-				SearchFiles searcher = new SearchFiles();
 
-				((DefaultListModel) listScrollPane.getModel()).clear();
 
-				try {
-					results = searcher.directQuoteSearch(Holder, "content");
-					
-					for (String key : results.keySet()) {
-						((DefaultListModel) listScrollPane.getModel()).addElement(key);
-						System.out.println(key);
-						i++;
-					}
-					((DefaultListModel) listScrollPane2.getModel()).addElement(i);
+            @Override
+            public void keyPressed(KeyEvent k) {
+                int i = 0;
+                if (k.getKeyCode() == KeyEvent.VK_ENTER) {
 
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				
-			}
-			}
 
-			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+                    Holder = contentQuery.getText().toLowerCase();
+                    System.out.println("Key: " + Holder);
+                    SearchFiles searcher = new SearchFiles();
 
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+                    ((DefaultListModel) listScrollPane.getModel()).clear();
 
-			
-	    
-			
-		});
+                    try {
+                        results = searcher.directQuoteSearch(Holder, "content");
+
+                        for (String key : results.keySet()) {
+                            ((DefaultListModel) listScrollPane.getModel()).addElement(key);
+                            System.out.println(key);
+                            i++;
+                        }
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement(i);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+
+        });
 		
 		titleQuery.addKeyListener(new KeyListener() {
-			
-			
-			@Override
-			public void keyPressed(KeyEvent k) {
-				int i =0 ;
-				if(k.getKeyCode() == KeyEvent.VK_ENTER) {
-					Holder = titleQuery.getText().toLowerCase();
-					SearchFiles searcher = new SearchFiles();
 
-					((DefaultListModel) listScrollPane.getModel()).clear();
 
-					try {
-						results = searcher.directQuoteSearch(Holder, "title");
-						
-						
-						for (String key : results.keySet()) {
-							((DefaultListModel) listScrollPane.getModel()).addElement(key);
-							i++;
-						}
-						((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-	         
-				
-			}
-			}
+            @Override
+            public void keyPressed(KeyEvent k) {
+                int i = 0;
+                if (k.getKeyCode() == KeyEvent.VK_ENTER) {
+                    Holder = titleQuery.getText().toLowerCase();
+                    SearchFiles searcher = new SearchFiles();
 
-			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+                    ((DefaultListModel) listScrollPane.getModel()).clear();
 
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+                    try {
+                        results = searcher.directQuoteSearch(Holder, "title");
 
-			
-	    
-			
-		});
+
+                        for (String key : results.keySet()) {
+                            ((DefaultListModel) listScrollPane.getModel()).addElement(key);
+                            i++;
+                        }
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+
+        });
 		
 		
 		contentSearch.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int i = 0;
-				Holder = contentQuery.getText().toLowerCase();
-				System.out.println("hi: " + Holder);
-				SearchFiles searcher = new SearchFiles();
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                int i = 0;
+                Holder = contentQuery.getText().toLowerCase();
+                System.out.println("hi: " + Holder);
+                SearchFiles searcher = new SearchFiles();
 
-				((DefaultListModel) listScrollPane.getModel()).clear();
+                ((DefaultListModel) listScrollPane.getModel()).clear();
 
-				try {
-					results = searcher.directQuoteSearch(Holder, "content");
-					
-					
+                try {
+                    results = searcher.directQuoteSearch(Holder, "content");
 
-					for (String key : results.keySet()) {
-						((DefaultListModel) listScrollPane.getModel()).addElement(key);
-						i++;
-					}
-					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
 
-			}
+                    for (String key : results.keySet()) {
+                        ((DefaultListModel) listScrollPane.getModel()).addElement(key);
+                        i++;
+                    }
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+            }
 
 		});
 		
@@ -523,12 +520,16 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 				try {
 					results = searcher.directQuoteSearch(AdvancedHolder, "content");
+					related = rsearches.getRelated(AdvancedHolder);
+                    System.out.println(related.toString());
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
 						i++;
 					}
-					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+					changeButtons(related);
+                    window.repaint();
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -585,8 +586,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		bottomPanel.setLayout(new GridLayout(0,3));
 		window.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
-		bottomPanel.setVisible(true);
-		
+		bottomPanel.setVisible(false);
+
 		RelatedSearchButton1 = new JButton("Related1");
 		bottomPanel.add(RelatedSearchButton1);
 		
@@ -595,6 +596,126 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		
 		RelatedSearchButton3 = new JButton("Related3");
 		bottomPanel.add(RelatedSearchButton3);
+
+        RelatedSearchButton1.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                int i = 0;
+                topPanel.setVisible(true);
+                AdvancedHolder = RelatedSearchButton1.getText();
+                SearchFiles searcher = new SearchFiles();
+
+                ((DefaultListModel) listScrollPane2.getModel()).clear();
+
+                try {
+                    results = searcher.directQuoteSearch(AdvancedHolder, "content");
+                    related = rsearches.getRelated(AdvancedHolder);
+                    System.out.println(related.toString());
+
+                    for (String key : results.keySet()) {
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+                        i++;
+                    }
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                    changeButtons(related);
+                    window.repaint();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
+        RelatedSearchButton2.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                int i = 0;
+                topPanel.setVisible(true);
+                AdvancedHolder = RelatedSearchButton2.getText();
+                SearchFiles searcher = new SearchFiles();
+
+                ((DefaultListModel) listScrollPane2.getModel()).clear();
+
+                try {
+                    results = searcher.directQuoteSearch(AdvancedHolder, "content");
+                    related = rsearches.getRelated(AdvancedHolder);
+                    System.out.println(related.toString());
+
+                    for (String key : results.keySet()) {
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+                        i++;
+                    }
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                    changeButtons(related);
+                    window.repaint();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
+        RelatedSearchButton3.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                int i = 0;
+                topPanel.setVisible(true);
+                AdvancedHolder = RelatedSearchButton3.getText();
+                SearchFiles searcher = new SearchFiles();
+
+                ((DefaultListModel) listScrollPane2.getModel()).clear();
+
+                try {
+                    results = searcher.directQuoteSearch(AdvancedHolder, "content");
+                    related = rsearches.getRelated(AdvancedHolder);
+                    System.out.println(related.toString());
+
+                    for (String key : results.keySet()) {
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+                        i++;
+                    }
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                    changeButtons(related);
+                    window.repaint();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
+	}
+
+	private void changeButtons(List<String> related){
+		if(related.get(0).equals("")){
+            RelatedSearchButton1.setVisible(false);
+            RelatedSearchButton2.setVisible(false);
+            RelatedSearchButton3.setVisible(false);
+            bottomPanel.setVisible(false);
+		}
+		else{
+            RelatedSearchButton1.setVisible(true);
+            RelatedSearchButton2.setVisible(true);
+            RelatedSearchButton3.setVisible(true);
+            bottomPanel.setVisible(true);
+		}
+
+		RelatedSearchButton1.setText(related.get(0));
+		RelatedSearchButton2.setText(related.get(1));
+		RelatedSearchButton3.setText(related.get(2));
+
 	}
 	
 
@@ -616,10 +737,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				}
 			}
 		}
-	}
-
-	public void changeButtons() {
-
 	}
 	
 	private void createHelpDialogBox() {
