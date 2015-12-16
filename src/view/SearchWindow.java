@@ -86,7 +86,7 @@ public class SearchWindow {
 		// Return Search List
 		JTable searchList = new JTable();
 		JScrollPane scrollPane = new JScrollPane(searchList);
-		scrollPane.setPreferredSize(new Dimension(1200, 600));
+		scrollPane.setPreferredSize(new Dimension(800, 600));
 
 		/****** Text Fields ******/
 		JTextField searchQuery = new JTextField(25);

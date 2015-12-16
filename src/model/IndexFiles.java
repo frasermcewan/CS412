@@ -187,21 +187,15 @@ public class IndexFiles {
 			
 			
 			String path = file.toString();
-			
-			//System.out.println("what is path?? " + path);
-			
+						
 			String pathContents=readFileToString(path, path,mappingPathToTitle);
 			Field pathContents1 = new TextField("contents", pathContents, Field.Store.YES);
 
 			if (!mappingPathToTitle.isEmpty()){
 				
-				Field title = new StringField("title", mappingPathToTitle.get(path), Field.Store.YES);
-				
+				Field title = new TextField("title", mappingPathToTitle.get(path), Field.Store.YES);
 				doc.add(title);
 			}
-			
-			//System.out.println("pls work :" + doc.get("title"));
-
 			
 			doc.add(pathField);
 			doc.add(pathContents1);
