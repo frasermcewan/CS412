@@ -318,12 +318,15 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 				try {
 					results = searcher.directQuoteSearch(Holder, "content");
-
+					if (results.size() == 0) {
+						results.put("Results = 0", "");
+						
+					} else {
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
 					}
 
-				} catch (IOException e) {
+				} }catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -362,12 +365,16 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 					try {
 						results = searcher.directQuoteSearch(Holder, "title");
-
+						if (results.size() == 0) {
+							results.put("Results = 0", "");
+							
+						} else {
+						
 						for (String key : results.keySet()) {
 							((DefaultListModel) listScrollPane.getModel()).addElement(key);
 						}
 
-					} catch (IOException e) {
+					} }catch (IOException e) {
 						e.printStackTrace();
 					} catch (ParseException e) {
 						e.printStackTrace();
@@ -408,11 +415,16 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 				try {
 					results = searcher.directQuoteSearch(Holder, "content");
+					
+					if (results.size() == 0) {
+						results.put("Results = 0", "");
+						
+					}else{
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
 					}
-
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
@@ -437,8 +449,14 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				try {
 					results = searcher.directQuoteSearch(Holder, "title");
 
+					if (results.size() == 0) {
+						results.put("Results = 0", "");
+						
+					}else {
+					
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
+					}
 					}
 
 				} catch (IOException e) {
@@ -486,6 +504,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		panelComplexSearch.add(panelcreateSearchAdvanced3);
 		panelComplexSearch.add(panelcreateSearchAdvanced4);
 		panelComplexSearch.setVisible(true);
+		
+		
 
 		contentSearch.addActionListener(new ActionListener() {
 
