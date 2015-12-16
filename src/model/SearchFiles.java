@@ -199,7 +199,7 @@ public class SearchFiles {
 		// Collect enough docs to show 5 pages
 		TopDocs results = searcher.search(query, 5 * hitsPerPage);
 		//TopDocs results = searcher.search(bqb.build(), 5 * hitsPerPage);
-		if (results.totalHits==0){
+		if (results.totalHits==0){	
 			System.out.println("got here");
 
 		}

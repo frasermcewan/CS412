@@ -15,6 +15,8 @@ import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -73,7 +75,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	public SearchGUI() {
 		window.setTitle("Java E-Book Search");
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		window.setSize(1000, 800);
+		window.setSize(900, 750);
 		window.setResizable(false);
 
 		makeMenu();
@@ -298,13 +300,106 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 		panelCreateSearch.add(titleSearch);
 		panelCreateSearch.add(titleQuery);
+	
+		
+		contentQuery.addKeyListener(new KeyListener() {
+			
+		
+			@Override
+			public void keyPressed(KeyEvent k) {
+				if(k.getKeyCode() == KeyEvent.VK_ENTER) {
+	            
+	             
+				Holder = contentQuery.getText().toLowerCase();
+				System.out.println("Key: " + Holder);
+				SearchFiles searcher = new SearchFiles();
+
+				((DefaultListModel) listScrollPane.getModel()).clear();
+
+				try {
+					results = searcher.directQuoteSearch(Holder, "content");
+
+					for (String key : results.keySet()) {
+						((DefaultListModel) listScrollPane.getModel()).addElement(key);
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
+	    
+			
+		});
+		
+		titleQuery.addKeyListener(new KeyListener() {
+			
+			
+			@Override
+			public void keyPressed(KeyEvent k) {
+				if(k.getKeyCode() == KeyEvent.VK_ENTER) {
+					Holder = titleQuery.getText().toLowerCase();
+					SearchFiles searcher = new SearchFiles();
+
+					((DefaultListModel) listScrollPane.getModel()).clear();
+
+					try {
+						results = searcher.directQuoteSearch(Holder, "title");
+
+						for (String key : results.keySet()) {
+							((DefaultListModel) listScrollPane.getModel()).addElement(key);
+						}
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+	         
+				
+			}
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
+	    
+			
+		});
+		
 		
 		contentSearch.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				panelCreateSearch.setFocusable(true);
-				topPanel.setVisible(true);
+				
 				Holder = contentQuery.getText().toLowerCase();
 				System.out.println("hi: " + Holder);
 				SearchFiles searcher = new SearchFiles();
@@ -371,7 +466,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		searchQueryExcludes = new JTextField(25);
 		searchQueryExactQuote = new JTextField(25);
 
-		contentSearch = new JButton("Content Search");
+		contentSearch = new JButton("Complex Search");
 
 		panelcreateSearchAdvanced1.add(new JLabel("Standard Search(OR)"));
 		panelcreateSearchAdvanced1.add(searchQueryStandard);
