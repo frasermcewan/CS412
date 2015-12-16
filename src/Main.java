@@ -1,6 +1,6 @@
 import model.IndexFiles;
 import view.SearchGUI;
-import view.SearchWindow;
+
 
 public class Main {
 
