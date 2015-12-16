@@ -38,6 +38,7 @@ public class SearchFiles {
 
 	static String index = "index";
 	static String field = "contents";
+	static String title = "title";
 
 	public SearchFiles() {}
 
@@ -49,13 +50,21 @@ public class SearchFiles {
 	 * When the query is executed for the first time, then only enough results are collected
 	 * to fill 5 result pages. If the user wants to page beyond this limit, then the query
 	 * is executed another time and all hits are collected.
+	 * @param contentOrTitle 
 	 * @throws IOException
 	 * @throws ParseException
 	 *
 	 */
 
-	public Map<String, String> directQuoteSearch (String q) throws IOException, ParseException{
+	public Map<String, String> directQuoteSearch (String q, String contentOrTitle) throws IOException, ParseException{
 
+		
+		if (contentOrTitle.equals("content")){
+			contentOrTitle=field;
+		} else if (contentOrTitle.equals("title")){
+			contentOrTitle=title;
+		}
+		
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
 		IndexSearcher searcher = new IndexSearcher(reader);
 		int hitsPerPage = 20;
@@ -66,7 +75,8 @@ public class SearchFiles {
 		final CharArraySet stopSet = new CharArraySet(stopWords, true);
 
 		Analyzer analyzer = new StandardAnalyzer(stopSet);
-		AnalyzingQueryParser parser = new AnalyzingQueryParser(field, analyzer);
+		//AnalyzingQueryParser parser = new AnalyzingQueryParser(field, analyzer);
+		AnalyzingQueryParser parser = new AnalyzingQueryParser(contentOrTitle, analyzer);
 		
 		String[] items = q.split(" ");
 		List<String> itemList = Arrays.asList(items);
@@ -85,7 +95,7 @@ public class SearchFiles {
 		
 		PhraseQuery.Builder builder = new PhraseQuery.Builder();
 		for (String word : itemList) {
-			builder.add(new Term("contents", word));
+			builder.add(new Term(contentOrTitle, word));
 		}
 		
 		PhraseQuery pq = builder.build();
@@ -138,50 +148,50 @@ public class SearchFiles {
 
 	}
 
-	public Map<String, String> newSearch (String q) throws IOException, ParseException{
-
-		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
-		IndexSearcher searcher = new IndexSearcher(reader);
-		int hitsPerPage = 20;
-		boolean raw = false;
-		int repeat = 0;
-
-		// custom made list of stop words, removing key words like for, this, etc.
-		final List<String> stopWords = Arrays.asList(
-				"a", "an", "are", "as", "at", "be", "but", "by",
-				"in", "into", "is", "it",
-				"no", "on", "such",
-				"that", "the", "their", "then", "there", "these",
-				"they", "to", "was", "will", "with"
-				);
-
-		final CharArraySet stopSet = new CharArraySet(stopWords, true);
-
-
-		Analyzer analyzer = new StandardAnalyzer(stopSet);
-		AnalyzingQueryParser parser = new AnalyzingQueryParser(field, analyzer);
-		
-		Query query = parser.parse(q);
-		
-		
-		BufferedReader in = null;
-		in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-
-		System.out.println("Searching for: " + query);
-		if (repeat > 0) {                           // repeat & time as benchmark
-			Date start = new Date();
-			for (int i = 0; i < repeat; i++) {
-				searcher.search(query, 100);
-			}
-			Date end = new Date();
-			System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
-		}
-
-		//return doPagingSearch(in, searcher, query, hitsPerPage, raw, true, bqb);
-		return doPagingSearch(in, searcher, query, hitsPerPage, raw, true);
-
-	}
-	
+//	public Map<String, String> newSearch (String q) throws IOException, ParseException{
+//
+//		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
+//		IndexSearcher searcher = new IndexSearcher(reader);
+//		int hitsPerPage = 20;
+//		boolean raw = false;
+//		int repeat = 0;
+//
+//		// custom made list of stop words, removing key words like for, this, etc.
+//		final List<String> stopWords = Arrays.asList(
+//				"a", "an", "are", "as", "at", "be", "but", "by",
+//				"in", "into", "is", "it",
+//				"no", "on", "such",
+//				"that", "the", "their", "then", "there", "these",
+//				"they", "to", "was", "will", "with"
+//				);
+//
+//		final CharArraySet stopSet = new CharArraySet(stopWords, true);
+//
+//
+//		Analyzer analyzer = new StandardAnalyzer(stopSet);
+//		AnalyzingQueryParser parser = new AnalyzingQueryParser(contentOrTitle, analyzer);
+//		
+//		Query query = parser.parse(q);
+//		
+//		
+//		BufferedReader in = null;
+//		in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+//
+//		System.out.println("Searching for: " + query);
+//		if (repeat > 0) {                           // repeat & time as benchmark
+//			Date start = new Date();
+//			for (int i = 0; i < repeat; i++) {
+//				searcher.search(query, 100);
+//			}
+//			Date end = new Date();
+//			System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
+//		}
+//
+//		//return doPagingSearch(in, searcher, query, hitsPerPage, raw, true, bqb);
+//		return doPagingSearch(in, searcher, query, hitsPerPage, raw, true);
+//
+//	}
+//	
 	public static Map<String, String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query,
 			int hitsPerPage, boolean raw, boolean interactive) throws IOException {
 		Map<String,String> result = new HashMap<String,String>();
@@ -270,7 +280,7 @@ public class SearchFiles {
 					//System.out.println((i+1) + ". " + path);
 					String title = doc.get("title");
 					if (title != null) {
-						//System.out.println("Title: " + doc.get("title"));
+						System.out.println("Title: " + doc.get("title"));
 
 					}
 					//          System.out.println(title + " - " + path);
