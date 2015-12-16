@@ -323,6 +323,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     try {
                         results = searcher.directQuoteSearch(Holder, "content");
 
+                        ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
                         for (String key : results.keySet()) {
                             ((DefaultListModel) listScrollPane.getModel()).addElement(key);
                             System.out.println(key);
@@ -369,7 +370,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     try {
                         results = searcher.directQuoteSearch(Holder, "title");
 
-
+                        ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
                         for (String key : results.keySet()) {
                             ((DefaultListModel) listScrollPane.getModel()).addElement(key);
                             i++;
@@ -415,7 +416,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 try {
                     results = searcher.directQuoteSearch(Holder, "content");
 
-
+                    ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
                     for (String key : results.keySet()) {
                         ((DefaultListModel) listScrollPane.getModel()).addElement(key);
                         i++;
@@ -446,8 +447,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				try {
 					results = searcher.directQuoteSearch(Holder, "title");
 
-					 
-			
+
+                    ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
 						i++;
@@ -523,6 +524,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 					related = rsearches.getRelated(AdvancedHolder);
                     System.out.println(related.toString());
 
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
 						i++;
@@ -613,6 +615,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     related = rsearches.getRelated(AdvancedHolder);
                     System.out.println(related.toString());
 
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
                     for (String key : results.keySet()) {
                         ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
                         i++;
@@ -646,6 +649,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     related = rsearches.getRelated(AdvancedHolder);
                     System.out.println(related.toString());
 
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
                     for (String key : results.keySet()) {
                         ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
                         i++;
@@ -679,6 +683,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     related = rsearches.getRelated(AdvancedHolder);
                     System.out.println(related.toString());
 
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
                     for (String key : results.keySet()) {
                         ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
                         i++;
