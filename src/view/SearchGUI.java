@@ -1,7 +1,6 @@
 package view;
 
 import model.IndexFiles;
-import model.RelatedSearches;
 import model.SearchFiles;
 import org.apache.lucene.queryparser.classic.ParseException;
 
@@ -37,7 +36,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JPanel panelcreateSearchAdvanced3 = new JPanel();
 	private JPanel panelcreateSearchAdvanced4 = new JPanel();
 	private JPanel bottomPanel;
-    private JPanel relatedSearchesPanel;
 
 	// Pane Objects
 	private JEditorPane displayEditorPane;
@@ -54,8 +52,9 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private String Holder;
 	private String AdvancedHolder;
 
-	private JButton commenceSearch = new JButton("Search");
-	
+	private JButton contentSearch = new JButton("Content Search");
+	private JButton titleSearch = new JButton("Title Search");
+
 	private JButton RelatedSearchButton1 = new JButton("");
 	private JButton RelatedSearchButton2 = new JButton("");
 	private JButton RelatedSearchButton3 = new JButton("");
@@ -67,19 +66,15 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JTextField searchQueryExactQuote = new JTextField(25);
 
 	private Map<String, String> results;
-	 private List<String> related;
-	 private RelatedSearches rsearches = new RelatedSearches();
-	 
+
 	private JList<String> listScrollPane = new JList<>(new DefaultListModel<>());
 	private JList<String> listScrollPane2 = new JList<>(new DefaultListModel<>());
 
 	public SearchGUI() {
 		window.setTitle("Java E-Book Search");
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		window.setSize(1200, 800);
+		window.setSize(1000, 800);
 		window.setResizable(false);
-		relatedSearchesPanel = new JPanel();
-        relatedSearchesPanel.add(new JLabel("Related Searches"));
 
 		makeMenu();
 		
@@ -102,7 +97,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		tabbedPane.addTab("Advanced Search", panel2);
 		window.getContentPane().add(tabbedPane);
 		
-	//	makeBottom();
+		makeBottom();
 
 		listScrollPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listScrollPane.addListSelectionListener(new ListSelectionListener() {
@@ -284,32 +279,68 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 	private JPanel makeSearchPanel() {
 
-		final JPanel panelCreateSearch = new JPanel();
+		final JPanel panelCreateSearch = new JPanel();		
+		panelCreateSearch.setLayout(new BoxLayout(panelCreateSearch, BoxLayout.X_AXIS));
+
 
 		/****** Text Fields ******/
-		JTextField searchQuery = new JTextField(15);
+		JTextField contentQuery = new JTextField(25);
+		JTextField titleQuery = new JTextField(25);
 
 		/****** Buttons ******/
-		JButton commenceSearch = new JButton("Search");
+		JButton contentSearch = new JButton("Content Search");
+		JButton titleSearch = new JButton("Title Search");
 
 		// Add Panel
 		panelCreateSearch.add(new JLabel("Enter Query"));
-		panelCreateSearch.add(searchQuery);
-		panelCreateSearch.add(commenceSearch);
+		panelCreateSearch.add(contentQuery);
+		panelCreateSearch.add(contentSearch);
 
-		commenceSearch.addActionListener(new ActionListener() {
+		panelCreateSearch.add(titleSearch);
+		panelCreateSearch.add(titleQuery);
+		
+		contentSearch.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				panelCreateSearch.setFocusable(true);
 				topPanel.setVisible(true);
-				Holder = searchQuery.getText();
+				Holder = contentQuery.getText().toLowerCase();
+				System.out.println("hi: " + Holder);
 				SearchFiles searcher = new SearchFiles();
 
 				((DefaultListModel) listScrollPane.getModel()).clear();
 
 				try {
-					results = searcher.newsearch(Holder);
+					results = searcher.directQuoteSearch(Holder, "content");
+
+					for (String key : results.keySet()) {
+						((DefaultListModel) listScrollPane.getModel()).addElement(key);
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+		});
+		
+		titleSearch.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				panelCreateSearch.setFocusable(true);
+				topPanel.setVisible(true);
+				Holder = titleQuery.getText().toLowerCase();
+				SearchFiles searcher = new SearchFiles();
+
+				((DefaultListModel) listScrollPane.getModel()).clear();
+
+				try {
+					results = searcher.directQuoteSearch(Holder, "title");
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
@@ -327,17 +358,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 		return panelCreateSearch;
 	}
-	
-	 private JPanel relatedPanel(){
-	    	JPanel panel = new JPanel();
-			//panel.add(new JLabel("Related Searches"));
-			
-			for (String s : related){
-				JButton button = new JButton(s);
-				panel.add(button, BorderLayout.CENTER);
-			}
-			return panel;
-	 }
 
 	private JPanel makeComplexSearchPanel() {
 		final JPanel panelComplexSearch = new JPanel();
@@ -351,7 +371,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		searchQueryExcludes = new JTextField(25);
 		searchQueryExactQuote = new JTextField(25);
 
-		commenceSearch = new JButton("Search");
+		contentSearch = new JButton("Content Search");
 
 		panelcreateSearchAdvanced1.add(new JLabel("Standard Search(OR)"));
 		panelcreateSearchAdvanced1.add(searchQueryStandard);
@@ -364,7 +384,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 		panelcreateSearchAdvanced4.add(new JLabel("Exact search(Quoted search)"));
 		panelcreateSearchAdvanced4.add(searchQueryExactQuote);
-		panelcreateSearchAdvanced4.add(commenceSearch);
+		panelcreateSearchAdvanced4.add(contentSearch);
 
 		panelComplexSearch.add(panelcreateSearchAdvanced1);
 		panelComplexSearch.add(panelcreateSearchAdvanced2);
@@ -372,7 +392,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		panelComplexSearch.add(panelcreateSearchAdvanced4);
 		panelComplexSearch.setVisible(true);
 
-		commenceSearch.addActionListener(new ActionListener() {
+		contentSearch.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -387,17 +407,11 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				((DefaultListModel) listScrollPane2.getModel()).clear();
 
 				try {
-					results = searcher.newsearch(AdvancedHolder);
-					related = rsearches.getRelated(AdvancedHolder);
-                    System.out.println(related.toString());
+					results = searcher.directQuoteSearch(AdvancedHolder, "content");
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
 					}
-					
-					JPanel rpanel = relatedPanel();
-                    relatedSearchesPanel.add(rpanel, BorderLayout.SOUTH);
-                    window.repaint();
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -449,7 +463,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		return displayEditorPane2;
 	}
 	
-	private void makeBottom(List<String> related) {
+	private void makeBottom() {
 		bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridLayout(0,3));
 		window.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -528,3 +542,4 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	}
 
 }
+
