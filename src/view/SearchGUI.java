@@ -329,7 +329,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                             System.out.println(key);
                             i++;
                         }
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement(i);
+                        ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -375,7 +375,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                             ((DefaultListModel) listScrollPane.getModel()).addElement(key);
                             i++;
                         }
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                        ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ParseException e) {
@@ -421,7 +421,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                         ((DefaultListModel) listScrollPane.getModel()).addElement(key);
                         i++;
                     }
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                    ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ParseException e) {
@@ -454,7 +454,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 						i++;
 					}
 					
-					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+					((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
 
 				} catch (IOException e) {
 					e.printStackTrace();
