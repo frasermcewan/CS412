@@ -321,12 +321,12 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 					if (results.size() == 0) {
 						results.put("Results = 0", "");
 						
-					} else {
+					}else {
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
 					}
 
-				} }catch (IOException e) {
+				}} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
 					e.printStackTrace();

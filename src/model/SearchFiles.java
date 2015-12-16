@@ -200,6 +200,7 @@ public class SearchFiles {
 		TopDocs results = searcher.search(query, 5 * hitsPerPage);
 		//TopDocs results = searcher.search(bqb.build(), 5 * hitsPerPage);
 		if (results.totalHits==0){	
+			result.put("There are 0 results", "");
 			System.out.println("got here");
 
 		}
@@ -311,6 +312,8 @@ public class SearchFiles {
 		TopDocs results = searcher.search(pq, 5 * hitsPerPage);
 		//TopDocs results = searcher.search(bqb.build(), 5 * hitsPerPage);
 		if (results.totalHits==0){
+			
+			result.put("There are 0 results", "");
 			System.out.println("got here");
 
 		}
