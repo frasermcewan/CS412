@@ -191,7 +191,7 @@ public class SearchFiles {
 //		return doPagingSearch(in, searcher, query, hitsPerPage, raw, true);
 //
 //	}
-//	
+	
 	public static Map<String, String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query,
 			int hitsPerPage, boolean raw, boolean interactive) throws IOException {
 		Map<String,String> result = new HashMap<String,String>();
