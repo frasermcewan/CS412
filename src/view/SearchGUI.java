@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
+
 /**
  * Created by Grant on 02/12/2015.
  */
@@ -307,6 +308,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		
 			@Override
 			public void keyPressed(KeyEvent k) {
+				int i = 0;
 				if(k.getKeyCode() == KeyEvent.VK_ENTER) {
 	            
 	             
@@ -318,15 +320,15 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 				try {
 					results = searcher.directQuoteSearch(Holder, "content");
-					if (results.size() == 0) {
-						results.put("Results = 0", "");
-						
-					}else {
+					
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
+						System.out.println(key);
+						i++;
 					}
+					((DefaultListModel) listScrollPane2.getModel()).addElement(i);
 
-				}} catch (IOException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -357,6 +359,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 			
 			@Override
 			public void keyPressed(KeyEvent k) {
+				int i =0 ;
 				if(k.getKeyCode() == KeyEvent.VK_ENTER) {
 					Holder = titleQuery.getText().toLowerCase();
 					SearchFiles searcher = new SearchFiles();
@@ -365,16 +368,14 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 					try {
 						results = searcher.directQuoteSearch(Holder, "title");
-						if (results.size() == 0) {
-							results.put("Results = 0", "");
-							
-						} else {
+						
 						
 						for (String key : results.keySet()) {
 							((DefaultListModel) listScrollPane.getModel()).addElement(key);
+							i++;
 						}
-
-					} }catch (IOException e) {
+						((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (ParseException e) {
 						e.printStackTrace();
@@ -406,7 +407,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				int i = 0;
 				Holder = contentQuery.getText().toLowerCase();
 				System.out.println("hi: " + Holder);
 				SearchFiles searcher = new SearchFiles();
@@ -416,15 +417,13 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				try {
 					results = searcher.directQuoteSearch(Holder, "content");
 					
-					if (results.size() == 0) {
-						results.put("Results = 0", "");
-						
-					}else{
+					
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
+						i++;
 					}
-					}
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
@@ -439,6 +438,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				int i = 0;
 				panelCreateSearch.setFocusable(true);
 				topPanel.setVisible(true);
 				Holder = titleQuery.getText().toLowerCase();
@@ -449,15 +449,14 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				try {
 					results = searcher.directQuoteSearch(Holder, "title");
 
-					if (results.size() == 0) {
-						results.put("Results = 0", "");
-						
-					}else {
-					
+					 
+			
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
+						i++;
 					}
-					}
+					
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -511,6 +510,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				int i = 0;
 				panelComplexSearch.setFocusable(true);
 				topPanel.setVisible(true);
 				AdvancedHolder = searchQueryStandard.getText();
@@ -526,7 +526,9 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+						i++;
 					}
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
 
 				} catch (IOException e) {
 					e.printStackTrace();
