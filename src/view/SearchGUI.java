@@ -82,6 +82,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		window.setSize(1000, 800);
 		window.setResizable(false);
+		window.getContentPane().setBackground(Color.ORANGE);
 
         makeMenu();
 		
