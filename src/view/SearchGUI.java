@@ -814,7 +814,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				+ "David Thomson \n"
 				+ "Grant Toghill \n"
 				+ "\n Framework for Search Engine provided by Apache Lucene. \n \n"
-				+ "https://lucene.apache.org/ \n"
+				+ "<html><a href=\" " + "\">https://lucene.apache.org/</a></html> \n"
 				+ "\n GUI designed using the Swing Java Toolkit. ",
 				"Information", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
 				options[0]);
