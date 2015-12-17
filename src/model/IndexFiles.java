@@ -260,32 +260,6 @@ public class IndexFiles {
 		}
 		
 		return Jsoup.parse(html).text();
-		//String htmlToText = Jsoup.parse(html).text();
-		//
-		//		//System.out.println("before**: " + htmlToText);
-		//
-		//		String[] arr = htmlToText.split(" ");  
-		//		//System.out.println(arr);
-		//		for (int i=0;i<arr.length;i++){
-		//
-		//			for (int j=0;j<stopWords.size();j++){
-		//				if (arr[i].equals(stopWords.get(j))){
-		//					arr[i]=null; // gets rid of stopwords
-		//					break;
-		//				}
-		//			}
-		//		}
-		//
-		//		String output ="";
-		//		for(String str: arr)
-		//			output=output+str+" ";
-		//		//System.out.println("Output: " + output);
-		//
-		//		//System.out.println("after**: " + htmlToText);
-		//
-		//
-		//		return output;
-
 
 	}
 

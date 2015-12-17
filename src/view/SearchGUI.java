@@ -513,7 +513,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				AdvancedHolder = searchQueryStandard.getText();
 				SearchFiles searcher = new SearchFiles();
 //
-//				((DefaultListModel) listScrollPane2.getModel()).clear();
+				((DefaultListModel) listScrollPane2.getModel()).clear();
 
 				try {
 					results = searcher.directQuoteSearch(AdvancedHolder, "content");
