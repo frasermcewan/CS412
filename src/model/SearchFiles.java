@@ -75,122 +75,29 @@ public class SearchFiles {
 		final CharArraySet stopSet = new CharArraySet(stopWords, true);
 
 		Analyzer analyzer = new StandardAnalyzer(stopSet);
-		//AnalyzingQueryParser parser = new AnalyzingQueryParser(field, analyzer);
 		AnalyzingQueryParser parser = new AnalyzingQueryParser(contentOrTitle, analyzer);
 		
 		String[] items = q.split(" ");
 		List<String> itemList = Arrays.asList(items);
-		Query query = null;
-		
-//		System.out.println("print this: " + itemList);
-//		BooleanQuery.Builder bqb = new BooleanQuery.Builder();
-//
-//		for (int i=0;i<itemList.size();i++){
-//			
-//			Query tempQuery = parser.createBooleanQuery(field, itemList.get(i));
-//			
-//			bqb.add(tempQuery, Occur.MUST);
-//		}
-
-		
-		PhraseQuery.Builder builder = new PhraseQuery.Builder();
-		for (String word : itemList) {
-			builder.add(new Term(contentOrTitle, word));
-		}
-		
-		PhraseQuery pq = builder.build();
-
-
-//		PhraseQuery pq1 = new PhraseQuery();
-//		String[] words = sentence.split(" ");
-//		for (String word : words) {
-//		    pq.add(new Term("contents", word));
-//		}
-//		booleanQuery.add(pq1, BooleanClause.Occur.MUST);
-		
-		
-//		String query1 = "";
-//		String query2 = "";
-//
-//		for (int i=0;i<itemList.size();i++){
-//			if (itemList.get(i).equalsIgnoreCase("and")){
-//				query1=itemList.get(i-1);
-//				query2=itemList.get(i+1);
-//				Query query11 = parser.createBooleanQuery(field, query1, Occur.MUST);
-//				query11 = parser.createBooleanQuery(field, query1+" " +query2, Occur.MUST);
-//				query = query11;
-//			}
-//			
-//		}
-//		
-		if (query==null){
-			query = parser.parse(q);
-		}
+		Query query =parser.parse(q);
 		
 		
 		BufferedReader in = null;
 		in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
-		//System.out.println("Searching for: " + query);
-		System.out.println("Searching for: " + pq);
+		System.out.println("Searching for: " + query);
+		//System.out.println("Searching for: " + pq);
 		if (repeat > 0) {                           // repeat & time as benchmark
 			Date start = new Date();
 			for (int i = 0; i < repeat; i++) {
-				//searcher.search(query, 100);
-				searcher.search(pq, 100);
+				searcher.search(query, 100);
 			}
 			Date end = new Date();
 			System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
 		}
 
-		//return doPagingSearch(in, searcher, query, hitsPerPage, raw, true, bqb);
-		return doPagingSearch(in, searcher, query, hitsPerPage, raw, true, pq);
-
+		return doPagingSearch(in, searcher, query, hitsPerPage, raw, true);
 	}
-
-//	public Map<String, String> newSearch (String q) throws IOException, ParseException{
-//
-//		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
-//		IndexSearcher searcher = new IndexSearcher(reader);
-//		int hitsPerPage = 20;
-//		boolean raw = false;
-//		int repeat = 0;
-//
-//		// custom made list of stop words, removing key words like for, this, etc.
-//		final List<String> stopWords = Arrays.asList(
-//				"a", "an", "are", "as", "at", "be", "but", "by",
-//				"in", "into", "is", "it",
-//				"no", "on", "such",
-//				"that", "the", "their", "then", "there", "these",
-//				"they", "to", "was", "will", "with"
-//				);
-//
-//		final CharArraySet stopSet = new CharArraySet(stopWords, true);
-//
-//
-//		Analyzer analyzer = new StandardAnalyzer(stopSet);
-//		AnalyzingQueryParser parser = new AnalyzingQueryParser(contentOrTitle, analyzer);
-//		
-//		Query query = parser.parse(q);
-//		
-//		
-//		BufferedReader in = null;
-//		in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-//
-//		System.out.println("Searching for: " + query);
-//		if (repeat > 0) {                           // repeat & time as benchmark
-//			Date start = new Date();
-//			for (int i = 0; i < repeat; i++) {
-//				searcher.search(query, 100);
-//			}
-//			Date end = new Date();
-//			System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
-//		}
-//
-//		//return doPagingSearch(in, searcher, query, hitsPerPage, raw, true, bqb);
-//		return doPagingSearch(in, searcher, query, hitsPerPage, raw, true);
-//
-//	}
 	
 	public static Map<String, String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query,
 			int hitsPerPage, boolean raw, boolean interactive) throws IOException {
