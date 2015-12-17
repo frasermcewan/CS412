@@ -313,8 +313,8 @@ public class SearchFiles {
 		//TopDocs results = searcher.search(bqb.build(), 5 * hitsPerPage);
 		if (results.totalHits==0){
 			
-			result.put("There are 0 results", "");
-			System.out.println("got here");
+			
+			System.out.println("Zero Result Checker");
 
 		}
 

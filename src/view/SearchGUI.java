@@ -483,29 +483,21 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 		// panelTab2.setLayout(new BoxLayout(panelTab2, BoxLayout.Y_AXIS));
 
-		searchQueryStandard = new JTextField(25);
-		searchQueryIncludes = new JTextField(25);
-		searchQueryExcludes = new JTextField(25);
-		searchQueryExactQuote = new JTextField(25);
+		searchQueryStandard = new JTextField(30);
+	
 
 		contentSearch = new JButton("Complex Search");
 
-		panelcreateSearchAdvanced1.add(new JLabel("Standard Search(OR)"));
+		panelcreateSearchAdvanced1.add(new JLabel("Enter Boolean Search"));
 		panelcreateSearchAdvanced1.add(searchQueryStandard);
 
-		panelcreateSearchAdvanced2.add(new JLabel("Included search(AND)"));
-		panelcreateSearchAdvanced2.add(searchQueryIncludes);
-
-		panelcreateSearchAdvanced3.add(new JLabel("Excluded search(NOT)"));
-		panelcreateSearchAdvanced3.add(searchQueryExcludes);
+	
 
 		panelcreateSearchAdvanced4.add(new JLabel("Exact search(Quoted search)"));
 		panelcreateSearchAdvanced4.add(searchQueryExactQuote);
 		panelcreateSearchAdvanced4.add(contentSearch);
 
 		panelComplexSearch.add(panelcreateSearchAdvanced1);
-		panelComplexSearch.add(panelcreateSearchAdvanced2);
-		panelComplexSearch.add(panelcreateSearchAdvanced3);
 		panelComplexSearch.add(panelcreateSearchAdvanced4);
 		panelComplexSearch.setVisible(true);
 		
@@ -519,12 +511,9 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				panelComplexSearch.setFocusable(true);
 				topPanel.setVisible(true);
 				AdvancedHolder = searchQueryStandard.getText();
-				searchQueryIncludes.setText(null);
-				searchQueryExcludes.setText(null);
-				searchQueryExactQuote.setText(null);
 				SearchFiles searcher = new SearchFiles();
-
-				((DefaultListModel) listScrollPane2.getModel()).clear();
+//
+//				((DefaultListModel) listScrollPane2.getModel()).clear();
 
 				try {
 					results = searcher.directQuoteSearch(AdvancedHolder, "content");
