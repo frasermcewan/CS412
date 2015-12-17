@@ -48,9 +48,9 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	// Menu Objects
 	private JMenuBar menuBar;
 	private JMenu menuFile;
-	private JMenuItem menuFileNew;
 	private JMenuItem menuFileOpen;
 	private JMenuItem menuFileHelp;
+	private JMenuItem menuFileCommands;
 	private JMenuItem menuFileInfo;
 	private JMenuItem menuFileExit;
 	private String Holder;
@@ -82,6 +82,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		window.setSize(1000, 800);
 		window.setResizable(false);
+		window.getContentPane().setBackground(Color.ORANGE);
 
         makeMenu();
 		
@@ -186,11 +187,6 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		menuFile = new JMenu("File");
 		menuBar.add(menuFile);
 
-
-		menuFileNew = new JMenuItem();
-		menuFileNew.setText("New Search");
-		menuFile.add(menuFileNew);
-
 		menuFileOpen = new JMenuItem();
 		menuFileOpen.setText("Re-Index");
 		menuFile.add(menuFileOpen);
@@ -215,6 +211,19 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				createHelpDialogBox();
 			}
 
+		});
+		
+		menuFileCommands = new JMenuItem();
+		menuFileCommands.setText("Commands");
+		menuFile.add(menuFileCommands);
+
+		menuFileCommands.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createCommandsDialogBox();
+			}
+			
 		});
 		
 		menuFileInfo = new JMenuItem();
@@ -747,21 +756,52 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private void createHelpDialogBox() {
 		Object[] options = { "Close" };
 		Component frame = null;
-		int n = JOptionPane.showOptionDialog(frame, "STANDARD SEARCH \n" + "\n To use standard search, "
-				+ "simply select the standard search tab and then input your \n search words into the "
-				+ "search box. \n \n Once you click search, select one of the search results shown below "
-				+ "the search \n on the left to view the page. \n \n ADVANCED SEARCH \n \n"
-				+ "OR: The OR search is identical to the standard searches search.\n\n"
-				+ "AND: The AND search allows you to search for multiple words in \n"
-				+ "the same document. \n \n"
-				+ "NOT: NOT allows you to add related words which you wish to ignore. \n\n"
-				+ "Quoted Search: This allows you to search for a full quote "
-				+ "in a document \n(Watch your punctuation when using this search)\n"
+		int n = JOptionPane.showOptionDialog(frame, "STANDARD SEARCH \n \n"
+				+ "Standard search has two search boxes. The box on the left allows you to search all \n"
+				+ "of the documents in the indexed list. The search box to the right allows you to search \n "
+				+ "through only the titles of the indexed documents.\n \n After you type in your search"
+				+ "query, a pane on the left side of the screen will be updated \n with a list of relevant"
+				+ " documents.\n \n Clicking on one of these will load it into the screen on the "
+				+ "right and from there you can \n read the document. \n \n You can also use the inbuilt "
+				+ "hyperlinks within the document to traverse the book. \n \n"
+				+ "ADVANCED SEARCH \n \n"
+				+ "Advanced Search allows the searching of queries in both the standard way \n"
+				+ "and as whole quotes through the use of the quoted search. \n \n"
+				+ "When you perform a search using the advanced search, you may recieve \n"
+				+ "buttons appearing at the bottom of the screen. These are a list of \n"
+				+ "words related to your search query and selecting one of these will \n"
+				+ "search for that word."
+				+ ""
+				+ ""
+				+ ""
 				+ "", 
 				"Help", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options,
 				options[0]);
 
 	}
+	
+	private void createCommandsDialogBox() {
+		Object[] options = { "Close" };
+		Component frame = null;
+		int n = JOptionPane.showOptionDialog(frame, ""
+				+ "Enter: Hitting enter on standard search will perform a search. \n \n"
+				+ "AND: A boolean operator that allows for searching for multiple words \n"
+				+ "within the same document(String AND 1234).\n \n"
+				+ "OR: A boolean operator that allows for searching for multiple words \n"
+				+ "within the entire index(String OR 1234).\n \n"
+				+ "NOT: A boolean operator that allows for the removal of search results \n"
+				+ "containing certain words(String NOT 1234). \n \n"
+				+ "*/?: Wildcard operators that can be inserted into words if you do not \n"
+				+ "know the exact spelling. * allows for one missing letter while ? \n"
+				+ "allows for multiple missing letters(Str*ng). \n \n"
+				+ "^: Boosted operator that allows you to increase the importance of a \n"
+				+ "particular search term(String^20 OR 1234). \n \n"
+				+ "",
+				"Commands", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options,
+				options[0]);
+	}
+	
+	
 
 	private void createInfoDialogBox() {
 		Object[] options = { "Close" };
