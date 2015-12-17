@@ -50,6 +50,10 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JMenu menuFile;
 	private JMenuItem menuFileOpen;
 	private JMenuItem menuFileHelp;
+	private JMenu resultsFile;
+	private JMenuItem resultsFile10;
+	private JMenuItem resultsFile20;
+	private JMenuItem resultsFile30;
 	private JMenuItem menuFileCommands;
 	private JMenuItem menuFileInfo;
 	private JMenuItem menuFileExit;
@@ -76,6 +80,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
 	private JList<String> listScrollPane = new JList<>(new DefaultListModel<>());
 	private JList<String> listScrollPane2 = new JList<>(new DefaultListModel<>());
+	
+	private int results_per_page = 20;
 
 	public SearchGUI() {
 		window.setTitle("Java E-Book Search");
@@ -196,6 +202,48 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new IndexFiles();
+			}
+
+		});
+		
+		resultsFile = new JMenu("No. of Results");
+		menuFile.add(resultsFile);
+		
+		resultsFile10 = new JMenuItem();
+		resultsFile10.setText("Return 10 results");
+		resultsFile.add(resultsFile10);
+
+		resultsFile10.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					results_per_page = 10;
+			}
+
+		});
+		
+		resultsFile20 = new JMenuItem();
+		resultsFile20.setText("Return 20 results");
+		resultsFile.add(resultsFile20);
+
+		resultsFile20.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				results_per_page = 20;
+			}
+
+		});
+		
+		resultsFile30 = new JMenuItem();
+		resultsFile30.setText("Return 30 results");
+		resultsFile.add(resultsFile30);
+
+		resultsFile30.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				results_per_page = 30;
 			}
 
 		});
@@ -326,6 +374,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     Holder = contentQuery.getText().toLowerCase();
                     System.out.println("Key: " + Holder);
                     SearchFiles searcher = new SearchFiles();
+                    searcher.getHitsPerPage(results_per_page);
 
                     ((DefaultListModel) listScrollPane.getModel()).clear();
 
@@ -373,6 +422,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 if (k.getKeyCode() == KeyEvent.VK_ENTER) {
                     Holder = titleQuery.getText().toLowerCase();
                     SearchFiles searcher = new SearchFiles();
+                    searcher.getHitsPerPage(results_per_page);
 
                     ((DefaultListModel) listScrollPane.getModel()).clear();
 
@@ -419,11 +469,13 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 Holder = contentQuery.getText().toLowerCase();
                 System.out.println("hi: " + Holder);
                 SearchFiles searcher = new SearchFiles();
-
+                searcher.getHitsPerPage(results_per_page);
+                
                 ((DefaultListModel) listScrollPane.getModel()).clear();
 
                 try {
                     results = searcher.directQuoteSearch(Holder, "content");
+                    
 
                     ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
                     for (String key : results.keySet()) {
@@ -450,6 +502,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				topPanel.setVisible(true);
 				Holder = titleQuery.getText().toLowerCase();
 				SearchFiles searcher = new SearchFiles();
+				searcher.getHitsPerPage(results_per_page);
 
 				((DefaultListModel) listScrollPane.getModel()).clear();
 
@@ -515,6 +568,9 @@ public class SearchGUI extends Observable implements HyperlinkListener {
     				topPanel.setVisible(true);
     				AdvancedHolder = searchQueryStandard.getText();
     				SearchFiles searcher = new SearchFiles();
+    				searcher.getHitsPerPage(results_per_page);
+    				
+    				
 
     				((DefaultListModel) listScrollPane2.getModel()).clear();
 
@@ -569,6 +625,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
     				topPanel.setVisible(true);
     				AdvancedHolder = searchQueryExactQuote.getText();
     				SearchFiles searcher = new SearchFiles();
+    				searcher.getHitsPerPage(results_per_page);
 
     				((DefaultListModel) listScrollPane2.getModel()).clear();
 
@@ -621,6 +678,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				topPanel.setVisible(true);
 				AdvancedHolder = searchQueryExactQuote.getText();
 				SearchFiles searcher = new SearchFiles();
+				searcher.getHitsPerPage(results_per_page);
 
 				((DefaultListModel) listScrollPane2.getModel()).clear();
 
@@ -658,6 +716,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				topPanel.setVisible(true);
 				AdvancedHolder = searchQueryStandard.getText();
 				SearchFiles searcher = new SearchFiles();
+				searcher.getHitsPerPage(results_per_page);
 
 				((DefaultListModel) listScrollPane2.getModel()).clear();
 
@@ -749,6 +808,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 topPanel.setVisible(true);
                 AdvancedHolder = RelatedSearchButton1.getText();
                 SearchFiles searcher = new SearchFiles();
+                searcher.getHitsPerPage(results_per_page);
 
                 ((DefaultListModel) listScrollPane2.getModel()).clear();
 
@@ -783,6 +843,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 topPanel.setVisible(true);
                 AdvancedHolder = RelatedSearchButton2.getText();
                 SearchFiles searcher = new SearchFiles();
+                searcher.getHitsPerPage(results_per_page);
 
                 ((DefaultListModel) listScrollPane2.getModel()).clear();
 
@@ -817,6 +878,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 topPanel.setVisible(true);
                 AdvancedHolder = RelatedSearchButton3.getText();
                 SearchFiles searcher = new SearchFiles();
+                searcher.getHitsPerPage(results_per_page);
 
                 ((DefaultListModel) listScrollPane2.getModel()).clear();
 
