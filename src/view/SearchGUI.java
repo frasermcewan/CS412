@@ -54,6 +54,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	private JMenuItem resultsFile10;
 	private JMenuItem resultsFile20;
 	private JMenuItem resultsFile30;
+	private JMenuItem resultsFile40;
+	private JMenuItem resultsFile50;
 	private JMenuItem menuFileCommands;
 	private JMenuItem menuFileInfo;
 	private JMenuItem menuFileExit;
@@ -244,6 +246,32 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				results_per_page = 30;
+			}
+
+		});
+		
+		resultsFile40 = new JMenuItem();
+		resultsFile40.setText("Return 40 results");
+		resultsFile.add(resultsFile40);
+
+		resultsFile40.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				results_per_page = 40;
+			}
+
+		});
+		
+		resultsFile50 = new JMenuItem();
+		resultsFile50.setText("Return 50 results");
+		resultsFile.add(resultsFile50);
+
+		resultsFile50.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				results_per_page = 50;
 			}
 
 		});
