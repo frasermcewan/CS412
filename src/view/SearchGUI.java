@@ -80,7 +80,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	public SearchGUI() {
 		window.setTitle("Java E-Book Search");
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		window.setSize(1000, 800);
+		window.setSize(1000, 700);
 		window.setResizable(false);
 		window.getContentPane().setBackground(Color.ORANGE);
 
@@ -332,13 +332,13 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     try {
                         results = searcher.directQuoteSearch(Holder, "content");
 
-                        ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
+              
                         for (String key : results.keySet()) {
                             ((DefaultListModel) listScrollPane.getModel()).addElement(key);
-                            System.out.println(key);
-                            i++;
+                         
+                           
                         }
-                        ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
+                        
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -379,12 +379,11 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     try {
                         results = searcher.directQuoteSearch(Holder, "title");
 
-                        ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
                         for (String key : results.keySet()) {
                             ((DefaultListModel) listScrollPane.getModel()).addElement(key);
-                            i++;
+                            
                         }
-                        ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
+                        
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ParseException e) {
@@ -425,12 +424,12 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 try {
                     results = searcher.directQuoteSearch(Holder, "content");
 
-                    ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
+                 
                     for (String key : results.keySet()) {
                         ((DefaultListModel) listScrollPane.getModel()).addElement(key);
-                        i++;
+                     
                     }
-                    ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
+                  
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ParseException e) {
@@ -457,13 +456,12 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 					results = searcher.directQuoteSearch(Holder, "title");
 
 
-                    ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane.getModel()).addElement(key);
-						i++;
+						
 					}
 					
-					((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
+		
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -533,12 +531,12 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 					related = rsearches.getRelated(AdvancedHolder);
                     System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+                  
 					for (String key : results.keySet()) {
 						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-						i++;
+						
 					}
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                    
 					changeButtons(related);
                     window.repaint();
 
@@ -624,12 +622,12 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     related = rsearches.getRelated(AdvancedHolder);
                     System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+                
                     for (String key : results.keySet()) {
                         ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-                        i++;
+                     
                     }
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                   
                     changeButtons(related);
                     window.repaint();
 
@@ -658,12 +656,12 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     related = rsearches.getRelated(AdvancedHolder);
                     System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+                    
                     for (String key : results.keySet()) {
                         ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-                        i++;
+                        
                     }
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                 
                     changeButtons(related);
                     window.repaint();
 
@@ -692,12 +690,12 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                     related = rsearches.getRelated(AdvancedHolder);
                     System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+                
                     for (String key : results.keySet()) {
                         ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-                        i++;
+                        
                     }
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+                
                     changeButtons(related);
                     window.repaint();
 
