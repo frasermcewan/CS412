@@ -80,7 +80,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 	public SearchGUI() {
 		window.setTitle("Java E-Book Search");
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		window.setSize(1000, 800);
+		window.setSize(1000, 700);
 		window.setResizable(false);
 		window.getContentPane().setBackground(Color.ORANGE);
 
@@ -486,33 +486,132 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		// panelTab2.setLayout(new BoxLayout(panelTab2, BoxLayout.Y_AXIS));
 
 		searchQueryStandard = new JTextField(25);
-		searchQueryIncludes = new JTextField(25);
-		searchQueryExcludes = new JTextField(25);
 		searchQueryExactQuote = new JTextField(25);
 
-		contentSearch = new JButton("Complex Search");
+		JButton booleanSearch = new JButton("Boolean Search");
+		contentSearch = new JButton("Exact Quote Search");
 
-		panelcreateSearchAdvanced1.add(new JLabel("Standard Search(OR)"));
+	;
 		panelcreateSearchAdvanced1.add(searchQueryStandard);
+		panelcreateSearchAdvanced1.add(booleanSearch);
 
-		panelcreateSearchAdvanced2.add(new JLabel("Included search(AND)"));
-		panelcreateSearchAdvanced2.add(searchQueryIncludes);
-
-		panelcreateSearchAdvanced3.add(new JLabel("Excluded search(NOT)"));
-		panelcreateSearchAdvanced3.add(searchQueryExcludes);
-
-		panelcreateSearchAdvanced4.add(new JLabel("Exact search(Quoted search)"));
+		
 		panelcreateSearchAdvanced4.add(searchQueryExactQuote);
 		panelcreateSearchAdvanced4.add(contentSearch);
 
 		panelComplexSearch.add(panelcreateSearchAdvanced1);
-		panelComplexSearch.add(panelcreateSearchAdvanced2);
-		panelComplexSearch.add(panelcreateSearchAdvanced3);
 		panelComplexSearch.add(panelcreateSearchAdvanced4);
 		panelComplexSearch.setVisible(true);
 		
 		
+	
+		searchQueryStandard.addKeyListener( new KeyListener() {
 
+			@Override
+			public void keyPressed(KeyEvent k) {
+                if (k.getKeyCode() == KeyEvent.VK_ENTER) {
+                	int i = 0;
+    				panelComplexSearch.setFocusable(true);
+    				topPanel.setVisible(true);
+    				AdvancedHolder = searchQueryStandard.getText();
+    				SearchFiles searcher = new SearchFiles();
+
+    				((DefaultListModel) listScrollPane2.getModel()).clear();
+
+    				try {
+    					results = searcher.directQuoteSearch(AdvancedHolder, "content");
+    					related = rsearches.getRelated(AdvancedHolder);
+                        System.out.println(related.toString());
+
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+    					for (String key : results.keySet()) {
+    						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+    						i++;
+    					}
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+    					changeButtons(related);
+                        window.repaint();
+
+    				} catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+	
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+			@Override
+			public void keyReleased(KeyEvent K) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		
+		});
+
+		
+		searchQueryExactQuote.addKeyListener( new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent k) {
+                int i = 0;
+                if (k.getKeyCode() == KeyEvent.VK_ENTER) {
+    				panelComplexSearch.setFocusable(true);
+    				topPanel.setVisible(true);
+    				AdvancedHolder = searchQueryExactQuote.getText();
+    				SearchFiles searcher = new SearchFiles();
+
+    				((DefaultListModel) listScrollPane2.getModel()).clear();
+
+    				try {
+    					results = searcher.directQuoteSearch(AdvancedHolder, "content");
+    					related = rsearches.getRelated(AdvancedHolder);
+                        System.out.println(related.toString());
+
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+    					for (String key : results.keySet()) {
+    						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+    						i++;
+    					}
+                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+    					changeButtons(related);
+                        window.repaint();
+
+    				} catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+	
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+			@Override
+			public void keyReleased(KeyEvent K) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		
+		});
+		
 		contentSearch.addActionListener(new ActionListener() {
 
 			@Override
@@ -520,10 +619,44 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				int i = 0;
 				panelComplexSearch.setFocusable(true);
 				topPanel.setVisible(true);
+				AdvancedHolder = searchQueryExactQuote.getText();
+				SearchFiles searcher = new SearchFiles();
+
+				((DefaultListModel) listScrollPane2.getModel()).clear();
+
+				try {
+					results = searcher.directQuoteSearch(AdvancedHolder, "content");
+					related = rsearches.getRelated(AdvancedHolder);
+                    System.out.println(related.toString());
+
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+					for (String key : results.keySet()) {
+						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+						i++;
+					}
+                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+					changeButtons(related);
+                    window.repaint();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+		});
+		
+		
+			booleanSearch.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int i = 0;
+				panelComplexSearch.setFocusable(true);
+				topPanel.setVisible(true);
 				AdvancedHolder = searchQueryStandard.getText();
-				searchQueryIncludes.setText(null);
-				searchQueryExcludes.setText(null);
-				searchQueryExactQuote.setText(null);
 				SearchFiles searcher = new SearchFiles();
 
 				((DefaultListModel) listScrollPane2.getModel()).clear();
