@@ -39,6 +39,7 @@ public class SearchFiles {
 	static String index = "index";
 	static String field = "contents";
 	static String title = "title";
+	int hitsPerPage = 20;
 
 	public SearchFiles() {}
 
@@ -67,7 +68,6 @@ public class SearchFiles {
 		
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
 		IndexSearcher searcher = new IndexSearcher(reader);
-		int hitsPerPage = 20;
 		boolean raw = false;
 		int repeat = 0;
 
@@ -76,6 +76,8 @@ public class SearchFiles {
 
 		Analyzer analyzer = new StandardAnalyzer(stopSet);
 		AnalyzingQueryParser parser = new AnalyzingQueryParser(contentOrTitle, analyzer);
+		
+
 		
 		String[] items = q.split(" ");
 		List<String> itemList = Arrays.asList(items);
@@ -319,5 +321,9 @@ public class SearchFiles {
 		}
 
 		return result;
+	}
+	
+	public void getHitsPerPage(int value){
+		hitsPerPage = value;
 	}
 }
