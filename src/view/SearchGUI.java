@@ -310,8 +310,8 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		panelCreateSearch.add(contentQuery);
 		panelCreateSearch.add(contentSearch);
 
-		panelCreateSearch.add(titleSearch);
 		panelCreateSearch.add(titleQuery);
+		panelCreateSearch.add(titleSearch);
 	
 		
 		contentQuery.addKeyListener(new KeyListener() {
