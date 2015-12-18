@@ -742,7 +742,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				int i = 0;
 				panelComplexSearch.setFocusable(true);
 				topPanel.setVisible(true);
-				AdvancedHolder = searchQueryStandard.getText();
+				AdvancedHolder = searchQueryStandard.getText().toUpperCase();
 				SearchFiles searcher = new SearchFiles();
 				searcher.getHitsPerPage(results_per_page);
 
