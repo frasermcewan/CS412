@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -17,6 +20,8 @@ import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.analyzing.AnalyzingQueryParser;
 import org.apache.lucene.queryparser.complexPhrase.ComplexPhraseQueryParser;
@@ -81,7 +86,18 @@ public class SearchFiles {
 		
 		String[] items = q.split(" ");
 		List<String> itemList = Arrays.asList(items);
-		Query query =parser.parse(q);
+		Query query=null;
+		
+		System.out.println("whats here: " + q);
+		
+		if (q.equals("")){
+			System.out.println("no input");
+			
+		} else {
+			query = parser.parse(q);
+
+		}
+
 		
 		
 		BufferedReader in = null;
@@ -107,17 +123,40 @@ public class SearchFiles {
 
 		// Collect enough docs to show 5 pages
 		TopDocs results = searcher.search(query, 5 * hitsPerPage);
+				
 		//TopDocs results = searcher.search(bqb.build(), 5 * hitsPerPage);
 		if (results.totalHits==0){	
 			
 		}
 
-		//System.out.println(results2);
+		System.out.println(results.totalHits);
+		
+		ArrayList<Double> docNumbers = new ArrayList<Double>();
 
 		for (int i=0;i<results.scoreDocs.length;i++){
-			//	System.out.println(i+1 + ": " + results.scoreDocs[i]);
+			Explanation results2 = searcher.explain(query, results.scoreDocs[i].doc);
+			
+			String stats = results2.toString();
+		
+			System.out.println("ok: " + stats);
+			
+			if (stats.contains("termFreq")){
+				int positionTerm = stats.indexOf("termFreq");
+				
+				String termRange = stats.substring(positionTerm+9, positionTerm+17);
+				double termFreq = Double.parseDouble(termRange);
+							
+				docNumbers.add(termFreq);
+			} else if (stats.contains("phraseFreq")){
+				int positionTerm = stats.indexOf("phraseFreq");
+				
+				String phraseRange = stats.substring(positionTerm+11, positionTerm+17);
+				double phraseFreq = Double.parseDouble(phraseRange);
+							
+				docNumbers.add(phraseFreq);
+			}
 		}
-
+		
 		ScoreDoc[] hits = results.scoreDocs;
 
 		int numTotalHits = results.totalHits;
@@ -139,54 +178,19 @@ public class SearchFiles {
 			}
 
 			end = Math.min(hits.length, start + hitsPerPage);
-
+			
 			for (int i = start; i < end; i++) {
 
-				Document doc = searcher.doc(hits[i].doc);
-
-				String actualQueryString = query.toString().substring(9, query.toString().length());
-				int sizeOfActualQueryString = actualQueryString.length();
-
-				String termBeingSearched = doc.get("contents");
-
-
-				for (int j = -1; (j = termBeingSearched.indexOf(actualQueryString, j + 1)) != -1; ) {
-
-					// need to check the term is within the +25 and -25 otherwise it's out of bounds
-					// can fix this later on
-
-					//System.out.println(termBeingSearched);
-					int startIndexOfTermBeingSearched = j;
-					//System.out.println(startIndexOfTermBeingSearched);
-					int endIndexOfTermBeingSearched = startIndexOfTermBeingSearched+sizeOfActualQueryString;
-					//System.out.println(endIndexOfTermBeingSearched);
-
-					if (startIndexOfTermBeingSearched<25){
-						startIndexOfTermBeingSearched = 0;
-					} else {
-						startIndexOfTermBeingSearched=startIndexOfTermBeingSearched-25;
-					}
-					int temp = endIndexOfTermBeingSearched+25;
-					int termLength = termBeingSearched.length();
-					if (temp>=termLength){
-						endIndexOfTermBeingSearched=termLength;
-					} else {
-						endIndexOfTermBeingSearched=endIndexOfTermBeingSearched+25;
-					}
-
-					String trial = termBeingSearched.substring(startIndexOfTermBeingSearched, endIndexOfTermBeingSearched);
-					//System.out.println();
-					//System.out.println("term in context of the page:");
-					//System.out.println("... \" " + trial + " \"...");
-
-				}
-
+				Document doc = searcher.doc(hits[i].doc);	
+				double termFrequency = docNumbers.get(i);
+								
 				String path = doc.get("path");
 
 				if (path != null) {
 					//System.out.println();
 					//System.out.println((i+1) + ". " + path);
 					String title = doc.get("title");
+					title = title+" || Term Frequency: " + termFrequency;
 					if (title != null) {
 						System.out.println("Title: " + doc.get("title"));
 
