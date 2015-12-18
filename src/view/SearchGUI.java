@@ -127,7 +127,7 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                         String fileLocation = results.get(selectedValuesList.get(0));
                         
                         if (fileLocation==null){
-                        	
+                        	System.out.println("no html page for this result");
                         } else {
                             File file = new File(fileLocation);
 
