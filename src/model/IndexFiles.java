@@ -61,7 +61,7 @@ import org.apache.lucene.util.Version;
 public class IndexFiles {
 
 	public IndexFiles() {
-	/** Index all text files under a directory. */
+		/** Index all text files under a directory. */
 
 		String indexPath = "index";
 		String docPath = "data";
@@ -80,7 +80,7 @@ public class IndexFiles {
 		try {
 			System.out.println("Indexing to directory '" + indexPath + "'...");
 			Directory dir = FSDirectory.open(Paths.get(indexPath));
-			
+
 			final List<String> stopWords = Arrays.asList(
 					"a", "an", "are", "as", "at", "be", "but", "by",
 					"in", "into", "is", "it",
@@ -88,15 +88,15 @@ public class IndexFiles {
 					"that", "the", "their", "then", "there", "these",
 					"they", "to", "was", "will", "with"
 					);
-			
+
 			//final List<String> stopWords = Arrays.asList("for", "if");	
-			
+
 			final CharArraySet stopSet = new CharArraySet(stopWords, false);
-						
+
 			Analyzer analyzer = new StandardAnalyzer(stopSet);
-						
+
 			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-			
+
 			if (create) {
 				// Create a new index in the directory, removing any
 				// previously indexed documents:
@@ -170,7 +170,7 @@ public class IndexFiles {
 	/** Indexes a single document */
 	static void indexDoc(IndexWriter writer, Path file, long lastModified) throws IOException {
 		HashMap<String,String> mappingPathToTitle = new HashMap<String, String>();
-		
+
 		try (InputStream stream = Files.newInputStream(file)) {
 			// make a new, empty document
 			Document doc = new Document();
@@ -184,19 +184,19 @@ public class IndexFiles {
 			// or positional information:
 			Field pathField = new StringField("path", file.toString(), Field.Store.YES);
 			//System.out.println(pathField);
-			
-			
+
+
 			String path = file.toString();
-						
+
 			String pathContents=readFileToString(path, path,mappingPathToTitle);
 			Field pathContents1 = new TextField("contents", pathContents, Field.Store.YES);
 
 			if (!mappingPathToTitle.isEmpty()){
-				
+
 				Field title = new TextField("title", mappingPathToTitle.get(path), Field.Store.YES);
 				doc.add(title);
 			}
-			
+
 			doc.add(pathField);
 			doc.add(pathContents1);
 
@@ -258,7 +258,7 @@ public class IndexFiles {
 		if (matcher.find()){
 			mappingPathToTitle.put(pathField, matcher.group(1));
 		}
-		
+
 		return Jsoup.parse(html).text();
 
 	}
