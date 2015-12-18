@@ -88,7 +88,6 @@ public class SearchFiles {
 		List<String> itemList = Arrays.asList(items);
 		Query query=null;
 		
-		System.out.println("whats here: " + q);
 		
 		if (q.equals("")){
 			System.out.println("no input");
@@ -126,8 +125,6 @@ public class SearchFiles {
 			System.out.println("Zero Result Checker");
 
 		}
-
-		System.out.println(results.totalHits);
 		
 		ArrayList<Double> docNumbers = new ArrayList<Double>();
 
@@ -136,7 +133,6 @@ public class SearchFiles {
 			
 			String stats = results2.toString();
 		
-			System.out.println("ok: " + stats);
 			
 			if (stats.contains("termFreq")){
 				int positionTerm = stats.indexOf("termFreq");
