@@ -125,15 +125,20 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 
                         final List<String> selectedValuesList = listScrollPane.getSelectedValuesList();
                         String fileLocation = results.get(selectedValuesList.get(0));
-                        File file = new File(fileLocation);
+                        
+                        if (fileLocation==null){
+                        	
+                        } else {
+                            File file = new File(fileLocation);
 
-                        System.out.println("HERE  " + results.get(selectedValuesList.get(0)));
+                            System.out.println("HERE  " + results.get(selectedValuesList.get(0)));
 
-                        try {
-                            System.out.println(file.toURI().toURL());
-                            displayEditorPane.setPage(file.toURI().toURL());
-                        } catch (IOException event) {
-                            event.printStackTrace();
+                            try {
+                                System.out.println(file.toURI().toURL());
+                                displayEditorPane.setPage(file.toURI().toURL());
+                            } catch (IOException event) {
+                                event.printStackTrace();
+                            }
                         }
 
                     }
