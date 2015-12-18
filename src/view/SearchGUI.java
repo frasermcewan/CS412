@@ -405,30 +405,31 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 int i = 0;
                 if (k.getKeyCode() == KeyEvent.VK_ENTER) {
 
+					if (!contentQuery.getText().equals("")) {
+						Holder = contentQuery.getText().toLowerCase();
+						System.out.println("Key: " + Holder);
+						SearchFiles searcher = new SearchFiles();
+						searcher.getHitsPerPage(results_per_page);
 
-                    Holder = contentQuery.getText().toLowerCase();
-                    System.out.println("Key: " + Holder);
-                    SearchFiles searcher = new SearchFiles();
-                    searcher.getHitsPerPage(results_per_page);
+						((DefaultListModel) listScrollPane.getModel()).clear();
 
-                    ((DefaultListModel) listScrollPane.getModel()).clear();
+						try {
+							results = searcher.directQuoteSearch(Holder, "content");
 
-                    try {
-                        results = searcher.directQuoteSearch(Holder, "content");
+							((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
+							for (String key : results.keySet()) {
+								((DefaultListModel) listScrollPane.getModel()).addElement(key);
+								System.out.println(key);
+								i++;
+							}
+							((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
 
-                        ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
-                        for (String key : results.keySet()) {
-                            ((DefaultListModel) listScrollPane.getModel()).addElement(key);
-                            System.out.println(key);
-                            i++;
-                        }
-                        ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
 
                 }
             }
@@ -455,26 +456,28 @@ public class SearchGUI extends Observable implements HyperlinkListener {
             public void keyPressed(KeyEvent k) {
                 int i = 0;
                 if (k.getKeyCode() == KeyEvent.VK_ENTER) {
-                    Holder = titleQuery.getText().toLowerCase();
-                    SearchFiles searcher = new SearchFiles();
-                    searcher.getHitsPerPage(results_per_page);
+					if (!titleQuery.getText().equals("")) {
+						Holder = titleQuery.getText().toLowerCase();
+						SearchFiles searcher = new SearchFiles();
+						searcher.getHitsPerPage(results_per_page);
 
-                    ((DefaultListModel) listScrollPane.getModel()).clear();
+						((DefaultListModel) listScrollPane.getModel()).clear();
 
-                    try {
-                        results = searcher.directQuoteSearch(Holder, "title");
+						try {
+							results = searcher.directQuoteSearch(Holder, "title");
 
-                        ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
-                        for (String key : results.keySet()) {
-                            ((DefaultListModel) listScrollPane.getModel()).addElement(key);
-                            i++;
-                        }
-                        ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+							((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
+							for (String key : results.keySet()) {
+								((DefaultListModel) listScrollPane.getModel()).addElement(key);
+								i++;
+							}
+							((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
 
 
                 }
@@ -501,28 +504,29 @@ public class SearchGUI extends Observable implements HyperlinkListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 int i = 0;
-                Holder = contentQuery.getText().toLowerCase();
-                System.out.println("hi: " + Holder);
-                SearchFiles searcher = new SearchFiles();
-                searcher.getHitsPerPage(results_per_page);
-                
-                ((DefaultListModel) listScrollPane.getModel()).clear();
+				if (!contentQuery.getText().equals("")) {
+					Holder = contentQuery.getText().toLowerCase();
+					SearchFiles searcher = new SearchFiles();
+					searcher.getHitsPerPage(results_per_page);
 
-                try {
-                    results = searcher.directQuoteSearch(Holder, "content");
-                    
+					((DefaultListModel) listScrollPane.getModel()).clear();
 
-                    ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
-                    for (String key : results.keySet()) {
-                        ((DefaultListModel) listScrollPane.getModel()).addElement(key);
-                        i++;
-                    }
-                    ((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+					try {
+						results = searcher.directQuoteSearch(Holder, "content");
+
+
+						((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
+						for (String key : results.keySet()) {
+							((DefaultListModel) listScrollPane.getModel()).addElement(key);
+							i++;
+						}
+						((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
 
             }
 
@@ -535,28 +539,30 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				int i = 0;
 				panelCreateSearch.setFocusable(true);
 				topPanel.setVisible(true);
-				Holder = titleQuery.getText().toLowerCase();
-				SearchFiles searcher = new SearchFiles();
-				searcher.getHitsPerPage(results_per_page);
+				if (!titleQuery.getText().equals("")) {
+					Holder = titleQuery.getText().toLowerCase();
+					SearchFiles searcher = new SearchFiles();
+					searcher.getHitsPerPage(results_per_page);
 
-				((DefaultListModel) listScrollPane.getModel()).clear();
+					((DefaultListModel) listScrollPane.getModel()).clear();
 
-				try {
-					results = searcher.directQuoteSearch(Holder, "title");
+					try {
+						results = searcher.directQuoteSearch(Holder, "title");
 
 
-                    ((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
-					for (String key : results.keySet()) {
-						((DefaultListModel) listScrollPane.getModel()).addElement(key);
-						i++;
+						((DefaultListModel) listScrollPane.getModel()).addElement("Search Query: " + Holder);
+						for (String key : results.keySet()) {
+							((DefaultListModel) listScrollPane.getModel()).addElement(key);
+							i++;
+						}
+
+						((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
 					}
-					
-					((DefaultListModel) listScrollPane.getModel()).addElement("Number of results: " + i);
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
 				}
 
 			}
@@ -601,33 +607,34 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 	int i = 0;
     				panelComplexSearch.setFocusable(true);
     				topPanel.setVisible(true);
-    				AdvancedHolder = searchQueryStandard.getText();
-    				SearchFiles searcher = new SearchFiles();
-    				searcher.getHitsPerPage(results_per_page);
-    				
-    				
+					if (!searchQueryStandard.getText().equals("")) {
+						AdvancedHolder = searchQueryStandard.getText();
+						SearchFiles searcher = new SearchFiles();
+						searcher.getHitsPerPage(results_per_page);
 
-    				((DefaultListModel) listScrollPane2.getModel()).clear();
 
-    				try {
-    					results = searcher.directQuoteSearch(AdvancedHolder, "content");
-    					related = rsearches.getRelated(AdvancedHolder);
-                        System.out.println(related.toString());
+						((DefaultListModel) listScrollPane2.getModel()).clear();
 
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
-    					for (String key : results.keySet()) {
-    						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-    						i++;
-    					}
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-    					changeButtons(related);
-                        window.repaint();
+						try {
+							results = searcher.directQuoteSearch(AdvancedHolder, "content");
+							related = rsearches.getRelated(AdvancedHolder);
+							System.out.println(related.toString());
 
-    				} catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+							((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+							for (String key : results.keySet()) {
+								((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+								i++;
+							}
+							((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+							changeButtons(related);
+							window.repaint();
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
 
 
                 }
@@ -658,31 +665,33 @@ public class SearchGUI extends Observable implements HyperlinkListener {
                 if (k.getKeyCode() == KeyEvent.VK_ENTER) {
     				panelComplexSearch.setFocusable(true);
     				topPanel.setVisible(true);
-    				AdvancedHolder = searchQueryExactQuote.getText();
-    				SearchFiles searcher = new SearchFiles();
-    				searcher.getHitsPerPage(results_per_page);
+					if (!searchQueryExactQuote.getText().equals("")) {
+						AdvancedHolder = searchQueryExactQuote.getText();
+						SearchFiles searcher = new SearchFiles();
+						searcher.getHitsPerPage(results_per_page);
 
-    				((DefaultListModel) listScrollPane2.getModel()).clear();
+						((DefaultListModel) listScrollPane2.getModel()).clear();
 
-    				try {
-    					results = searcher.directQuoteSearch(AdvancedHolder, "content");
-    					related = rsearches.getRelated(AdvancedHolder);
-                        System.out.println(related.toString());
+						try {
+							results = searcher.directQuoteSearch(AdvancedHolder, "content");
+							related = rsearches.getRelated(AdvancedHolder);
+							System.out.println(related.toString());
 
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
-    					for (String key : results.keySet()) {
-    						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-    						i++;
-    					}
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-    					changeButtons(related);
-                        window.repaint();
+							((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+							for (String key : results.keySet()) {
+								((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+								i++;
+							}
+							((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+							changeButtons(related);
+							window.repaint();
 
-    				} catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
 
 
                 }
@@ -711,30 +720,32 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				int i = 0;
 				panelComplexSearch.setFocusable(true);
 				topPanel.setVisible(true);
-				AdvancedHolder = searchQueryExactQuote.getText();
-				SearchFiles searcher = new SearchFiles();
-				searcher.getHitsPerPage(results_per_page);
+				if (!searchQueryExactQuote.getText().equals("")) {
+					AdvancedHolder = searchQueryExactQuote.getText();
+					SearchFiles searcher = new SearchFiles();
+					searcher.getHitsPerPage(results_per_page);
 
-				((DefaultListModel) listScrollPane2.getModel()).clear();
+					((DefaultListModel) listScrollPane2.getModel()).clear();
 
-				try {
-					results = searcher.directQuoteSearch(AdvancedHolder, "content");
-					related = rsearches.getRelated(AdvancedHolder);
-                    System.out.println(related.toString());
+					try {
+						results = searcher.directQuoteSearch(AdvancedHolder, "content");
+						related = rsearches.getRelated(AdvancedHolder);
+						System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
-					for (String key : results.keySet()) {
-						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-						i++;
+						((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+						for (String key : results.keySet()) {
+							((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+							i++;
+						}
+						((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+						changeButtons(related);
+						window.repaint();
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
 					}
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-					changeButtons(related);
-                    window.repaint();
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
 				}
 
 			}
@@ -749,30 +760,32 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 				int i = 0;
 				panelComplexSearch.setFocusable(true);
 				topPanel.setVisible(true);
-				AdvancedHolder = searchQueryStandard.getText().toUpperCase();
-				SearchFiles searcher = new SearchFiles();
-				searcher.getHitsPerPage(results_per_page);
+				if (!searchQueryStandard.getText().equals("")) {
+					AdvancedHolder = searchQueryStandard.getText().toUpperCase();
+					SearchFiles searcher = new SearchFiles();
+					searcher.getHitsPerPage(results_per_page);
 
-				((DefaultListModel) listScrollPane2.getModel()).clear();
+					((DefaultListModel) listScrollPane2.getModel()).clear();
 
-				try {
-					results = searcher.directQuoteSearch(AdvancedHolder, "content");
-					related = rsearches.getRelated(AdvancedHolder);
-                    System.out.println(related.toString());
+					try {
+						results = searcher.directQuoteSearch(AdvancedHolder, "content");
+						related = rsearches.getRelated(AdvancedHolder);
+						System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
-					for (String key : results.keySet()) {
-						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-						i++;
+						((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+						for (String key : results.keySet()) {
+							((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+							i++;
+						}
+						((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+						changeButtons(related);
+						window.repaint();
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
 					}
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-					changeButtons(related);
-                    window.repaint();
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
 				}
 
 			}
@@ -835,107 +848,107 @@ public class SearchGUI extends Observable implements HyperlinkListener {
 		RelatedSearchButton3 = new JButton("Related3");
 		bottomPanel.add(RelatedSearchButton3);
 
-        RelatedSearchButton1.addActionListener(new ActionListener() {
+		RelatedSearchButton1.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                int i = 0;
-                topPanel.setVisible(true);
-                AdvancedHolder = RelatedSearchButton1.getText();
-                SearchFiles searcher = new SearchFiles();
-                searcher.getHitsPerPage(results_per_page);
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int i = 0;
+				topPanel.setVisible(true);
+				AdvancedHolder = RelatedSearchButton1.getText();
+				SearchFiles searcher = new SearchFiles();
+				searcher.getHitsPerPage(results_per_page);
 
-                ((DefaultListModel) listScrollPane2.getModel()).clear();
+				((DefaultListModel) listScrollPane2.getModel()).clear();
 
-                try {
-                    results = searcher.directQuoteSearch(AdvancedHolder, "content");
-                    related = rsearches.getRelated(AdvancedHolder);
-                    System.out.println(related.toString());
+				try {
+					results = searcher.directQuoteSearch(AdvancedHolder, "content");
+					related = rsearches.getRelated(AdvancedHolder);
+					System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
-                    for (String key : results.keySet()) {
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-                        i++;
-                    }
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-                    changeButtons(related);
-                    window.repaint();
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+					for (String key : results.keySet()) {
+						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+						i++;
+					}
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+					changeButtons(related);
+					window.repaint();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
             }
 
         });
 
-        RelatedSearchButton2.addActionListener(new ActionListener() {
+		RelatedSearchButton2.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                int i = 0;
-                topPanel.setVisible(true);
-                AdvancedHolder = RelatedSearchButton2.getText();
-                SearchFiles searcher = new SearchFiles();
-                searcher.getHitsPerPage(results_per_page);
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int i = 0;
+				topPanel.setVisible(true);
+				AdvancedHolder = RelatedSearchButton2.getText();
+				SearchFiles searcher = new SearchFiles();
+				searcher.getHitsPerPage(results_per_page);
 
-                ((DefaultListModel) listScrollPane2.getModel()).clear();
+				((DefaultListModel) listScrollPane2.getModel()).clear();
 
-                try {
-                    results = searcher.directQuoteSearch(AdvancedHolder, "content");
-                    related = rsearches.getRelated(AdvancedHolder);
-                    System.out.println(related.toString());
+				try {
+					results = searcher.directQuoteSearch(AdvancedHolder, "content");
+					related = rsearches.getRelated(AdvancedHolder);
+					System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
-                    for (String key : results.keySet()) {
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-                        i++;
-                    }
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-                    changeButtons(related);
-                    window.repaint();
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+					for (String key : results.keySet()) {
+						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+						i++;
+					}
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+					changeButtons(related);
+					window.repaint();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
             }
 
         });
 
-        RelatedSearchButton3.addActionListener(new ActionListener() {
+		RelatedSearchButton3.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                int i = 0;
-                topPanel.setVisible(true);
-                AdvancedHolder = RelatedSearchButton3.getText();
-                SearchFiles searcher = new SearchFiles();
-                searcher.getHitsPerPage(results_per_page);
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int i = 0;
+				topPanel.setVisible(true);
+				AdvancedHolder = RelatedSearchButton3.getText();
+				SearchFiles searcher = new SearchFiles();
+				searcher.getHitsPerPage(results_per_page);
 
-                ((DefaultListModel) listScrollPane2.getModel()).clear();
+				((DefaultListModel) listScrollPane2.getModel()).clear();
 
-                try {
-                    results = searcher.directQuoteSearch(AdvancedHolder, "content");
-                    related = rsearches.getRelated(AdvancedHolder);
-                    System.out.println(related.toString());
+				try {
+					results = searcher.directQuoteSearch(AdvancedHolder, "content");
+					related = rsearches.getRelated(AdvancedHolder);
+					System.out.println(related.toString());
 
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
-                    for (String key : results.keySet()) {
-                        ((DefaultListModel) listScrollPane2.getModel()).addElement(key);
-                        i++;
-                    }
-                    ((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
-                    changeButtons(related);
-                    window.repaint();
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Search Query: " + AdvancedHolder);
+					for (String key : results.keySet()) {
+						((DefaultListModel) listScrollPane2.getModel()).addElement(key);
+						i++;
+					}
+					((DefaultListModel) listScrollPane2.getModel()).addElement("Number of results: " + i);
+					changeButtons(related);
+					window.repaint();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
             }
 
         });
